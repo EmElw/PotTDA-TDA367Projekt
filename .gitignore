@@ -30,6 +30,7 @@ www-test/
 *.iml
 /android/out/
 com_crashlytics_export_strings.xml
+<<<<<<< HEAD
 
 ## Eclipse
 
@@ -112,3 +113,90 @@ gradle-app.setting
 ## OS Specific
 .DS_Store
 Thumbs.db
+=======
+
+## Eclipse
+
+.classpath
+.project
+.metadata/
+/android/bin/
+/core/bin/
+/desktop/bin/
+/html/bin/
+/ios/bin/
+/ios-moe/bin/
+*.tmp
+*.bak
+*.swp
+*~.nib
+.settings/
+.loadpath
+.externalToolBuilders/
+*.launch
+
+## NetBeans
+
+/nbproject/private/
+/android/nbproject/private/
+/core/nbproject/private/
+/desktop/nbproject/private/
+/html/nbproject/private/
+/ios/nbproject/private/
+/ios-moe/nbproject/private/
+
+/build/
+/android/build/
+/core/build/
+/desktop/build/
+/html/build/
+/ios/build/
+/ios-moe/build/
+
+/nbbuild/
+/android/nbbuild/
+/core/nbbuild/
+/desktop/nbbuild/
+/html/nbbuild/
+/ios/nbbuild/
+/ios-moe/nbbuild/
+
+/dist/
+/android/dist/
+/core/dist/
+/desktop/dist/
+/html/dist/
+/ios/dist/
+/ios-moe/dist/
+
+/nbdist/
+/android/nbdist/
+/core/nbdist/
+/desktop/nbdist/
+/html/nbdist/
+/ios/nbdist/
+/ios-moe/nbdist/
+
+nbactions.xml
+nb-configuration.xml
+
+## Gradle
+
+/local.properties
+.gradle/
+gradle-app.setting
+/build/
+/android/build/
+/core/build/
+/desktop/build/
+/html/build/
+/ios/build/
+/ios-moe/build/
+
+## OS Specific
+.DS_Store
+Thumbs.db
+
+# Ignore documentation
+*.pdf
+>>>>>>> 3ad64f2cf269b5f587aaa9148cadf0e27f6a873c
