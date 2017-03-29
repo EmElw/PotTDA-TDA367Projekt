@@ -18,7 +18,7 @@ android {
         exclude 'META-INF/robovm/ios/robovm.xml'
     }
     defaultConfig {
-        applicationId "com.panicontdancefloor.shooter"
+        applicationId "com.pottda.game"
         minSdkVersion 9
         targetSdkVersion 25
     }
@@ -71,7 +71,7 @@ task run(type: Exec) {
     }
 
     def adb = path + "/platform-tools/adb"
-    commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.panicontdancefloor.shooter/com.panicontdancefloor.shooter.AndroidLauncher'
+    commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.pottda.game/com.pottda.game.AndroidLauncher'
 }
 
 // sets up the Android Eclipse project, using the old Ant based build.
