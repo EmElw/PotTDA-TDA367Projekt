@@ -15,6 +15,7 @@ hs_err_pid*
 /core/build/
 /build/
 /android/build/
+/desktop/build/
 
 /local.properties
 .gradle/
