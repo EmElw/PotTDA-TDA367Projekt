@@ -1,18 +1,18 @@
 package com.pottda.game.Model;
 
-import java.util.Vector;
+
+import com.pottda.game.Controller.AbstractController;
 
 /**
- * Created by rikar on 2017-04-07.
+ * Created by Gustav Lahti on 2017-04-07.
  */
 
 public abstract class Actor {
     public boolean isProjectile;
     public int team;
+    public AbstractController controller;
 
-    public void collide(Actor actor) {
+    public abstract void collide(Actor other);
 
-    }
-
-    public abstract Vector getMove();
+    public abstract VectorType getMove();
 }

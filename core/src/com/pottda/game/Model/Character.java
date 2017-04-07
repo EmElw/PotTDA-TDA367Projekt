@@ -6,9 +6,9 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
- * Created by Gustav Lahti on 05/04/2017.
+ * Created by Gustav Lahti on 2017-04-07.
  */
-public abstract class Character {
+public abstract class Character extends Actor {
     public Inventory inventory;
 
     private static final int baseHealth = 100;
@@ -36,7 +36,7 @@ public abstract class Character {
         currentHealth = health;
 
         // Init cooldown
-        cooldown = baseCooldown + item.getCooldown();
+        cooldown = baseCooldown + inventory.getCooldown();
         lastAttackTime = System.currentTimeMillis() - cooldown;
 
         accel = baseAccel + inventory.getAccel();
