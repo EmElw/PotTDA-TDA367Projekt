@@ -6,6 +6,4 @@ package com.pottda.game.Controller;
 
 public abstract class AbstractController {
 
-    public abstract void control(Controllable c);
-
 }
