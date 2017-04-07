@@ -32,14 +32,14 @@ public abstract class Character extends Actor {
         this.team = team;
 
         // Init health
-        health = baseHealth + inventory.getHealth;
+        health = baseHealth + inventory.getHealth();
         currentHealth = health;
 
         // Init cooldown
         cooldown = baseCooldown + inventory.getCooldown();
         lastAttackTime = System.currentTimeMillis() - cooldown;
 
-        accel = baseAccel + inventory.getAccel();
+        accel = baseAccel + inventory.getAcceleration();
     }
 
     // -- Public methods --

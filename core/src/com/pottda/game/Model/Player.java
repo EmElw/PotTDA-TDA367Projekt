@@ -5,4 +5,13 @@ package com.pottda.game.Model;
  */
 
 public class Player extends Character {
+
+    public Player(Inventory inventory, int team) {
+        super(inventory, team);
+    }
+
+    @Override
+    public void collide(Actor other) {
+
+    }
 }

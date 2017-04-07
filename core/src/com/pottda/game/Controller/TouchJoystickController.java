@@ -6,8 +6,5 @@ package com.pottda.game.Controller;
 
 public class TouchJoystickController extends InputController {
 
-    @Override
-    public void control(Controllable c) {
-
-    }
+    
 }

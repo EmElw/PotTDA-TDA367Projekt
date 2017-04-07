@@ -1,7 +1,6 @@
-package com.pottda.game;
+package com.pottda.game.Controller;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+
 import com.badlogic.gdx.math.Vector2;
 import com.pottda.game.Controller.InputController;
 

@@ -1,7 +1,6 @@
 package com.pottda.game.Model;
 
 import java.util.List;
-import java.util.Vector;
 
 /**
  * Created by rikar on 2017-04-07.
@@ -13,7 +12,12 @@ public class Projectile extends Actor {
     List<Character> hasDamaged;
 
     @Override
-    public Vector getMove() {
+    public void collide(Actor other) {
+
+    }
+
+    @Override
+    public VectorType getMove() {
         return null;
     }
 }
