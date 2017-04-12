@@ -11,6 +11,12 @@ public class Projectile extends Actor {
     List<ProjectileListener> projectileListeners;
     List<Character> hasDamaged;
 
+    public Projectile(int damage, List<ProjectileListener> projectileListeners, List<Character> hasDamaged){
+        this.damage = damage;
+        this.projectileListeners = projectileListeners;
+        this.hasDamaged = hasDamaged;
+    }
+
     @Override
     public void collide(Actor other) {
 
