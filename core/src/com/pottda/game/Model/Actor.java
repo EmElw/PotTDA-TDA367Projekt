@@ -14,5 +14,5 @@ public abstract class Actor {
 
     public abstract void collide(Actor other);
 
-    public abstract VectorType getMove();
+    //public abstract VectorType getMove();
 }

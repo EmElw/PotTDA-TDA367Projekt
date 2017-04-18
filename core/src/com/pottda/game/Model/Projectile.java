@@ -22,8 +22,8 @@ public class Projectile extends Actor {
 
     }
 
-    @Override
+    /*@Override
     public VectorType getMove() {
         return null;
-    }
+    }*/
 }

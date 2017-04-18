@@ -8,9 +8,9 @@ import java.util.List;
  */
 
 public class Inventory {
-    List<AttackItem> attackItems;
-    List<SupportItem> supportItems;
-    List<Item> inactiveItems;
+    public List<AttackItem> attackItems;
+    public List<SupportItem> supportItems;
+    public List<Item> inactiveItems;
 
     public Inventory(List<AttackItem> attackItems, List<SupportItem> supportItems, List<Item> inactiveItems) {
         this.attackItems = attackItems;
@@ -58,7 +58,7 @@ public class Inventory {
 
     }
 
-    private int getDamage() {
+    public int getDamage() {
         int damage = 0;
         for (AttackItem attackItem : attackItems) {
             damage += attackItem.damage;
@@ -66,7 +66,7 @@ public class Inventory {
         return damage;
     }
 
-    private List<ProjectileListener> getProjectileListeners() {
+    public List<ProjectileListener> getProjectileListeners() {
         List<ProjectileListener> projectileListeners = new ArrayList<ProjectileListener>();
         for (AttackItem attackItem : attackItems) {
             if (attackItem.projectileListener != null) {
@@ -76,7 +76,7 @@ public class Inventory {
         return projectileListeners;
     }
 
-    private int getProjectileAmount(){
+    public int getProjectileAmount(){
         int projectileAmount = 1;
         for(AttackItem attackItem : attackItems){
             // Need to subtract by one so multiple Items that has one Projectile each makes the Character shoot

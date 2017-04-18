@@ -1,7 +1,5 @@
 package com.pottda.game.Model;
 
-import com.sun.xml.internal.ws.client.sei.ResponseBuilder;
-
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -56,12 +54,12 @@ public abstract class Character extends Actor {
         }
     }
 
-    public VectorType getMove(){
+    /*public VectorType getMove(){
         VectorType v = controller.getMove();
         v.x *= accel;
         v.y *= accel;
         return v;
-    }
+    }*/
 
     /**
      * Reacts to taking damage

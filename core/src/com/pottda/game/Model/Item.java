@@ -10,7 +10,7 @@ import java.util.List;
 public abstract class Item {
     Point position;
     int orientation;
-    List<VectorType> shape;
-    VectorType output;
+    //List<VectorType> shape;
+    //VectorType output;
     List<Item> nextItem;
 }
