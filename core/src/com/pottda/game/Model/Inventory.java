@@ -58,7 +58,7 @@ public class Inventory {
 
     }
 
-    public int getDamage() {
+    private int getDamage() {
         int damage = 0;
         for (AttackItem attackItem : attackItems) {
             damage += attackItem.damage;
@@ -66,7 +66,7 @@ public class Inventory {
         return damage;
     }
 
-    public List<ProjectileListener> getProjectileListeners() {
+    private List<ProjectileListener> getProjectileListeners() {
         List<ProjectileListener> projectileListeners = new ArrayList<ProjectileListener>();
         for (AttackItem attackItem : attackItems) {
             if (attackItem.projectileListener != null) {
@@ -76,7 +76,7 @@ public class Inventory {
         return projectileListeners;
     }
 
-    public int getProjectileAmount(){
+    private int getProjectileAmount(){
         int projectileAmount = 1;
         for(AttackItem attackItem : attackItems){
             // Need to subtract by one so multiple Items that has one Projectile each makes the Character shoot

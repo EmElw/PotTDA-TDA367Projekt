@@ -94,6 +94,7 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile group: 'javax.vecmath', name: 'vecmath', version: '1.5.2'
+        testCompile 'junit:junit:4.12'
     }
 }
 
