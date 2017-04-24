@@ -1,30 +1,74 @@
 package com.pottda.game.Controller;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.physics.box2d.Body;
 
-import com.badlogic.gdx.math.Vector2;
-import com.pottda.game.Controller.InputController;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.vecmath.Vector2f;
 
 /**
- * Created by Magnus on 2017-04-05.
+ * Created by Rikard on 2017-04-05.
  */
+
 public class KeyboardMouseController extends InputController {
+    private final Body body;
 
-    private Vector2 input;
+    public KeyboardMouseController(List<AttackListener> attackListeners, List<MovementListener> movementListeners, boolean isAI, Body body) {
+        this.attackListeners = attackListeners;
+        this.movementListeners = movementListeners;
+        this.isAI = isAI;
+        this.body = body;
 
-    /*@Override
-    public void control(Controllable c) {
+        movementVector = new Vector2f(0, 0);
+        attackVector = new Vector2f(0, 0);
+    }
 
-        // Poll keyboard inputs to alter the hinput and vinput
-        input.add(Gdx.input.isKeyPressed(Input.Keys.RIGHT) ? 1 : 0 -
-                        (Gdx.input.isKeyPressed(Input.Keys.LEFT) ? 1 : 0),
-                Gdx.input.isKeyPressed(Input.Keys.UP) ? 1 : 0 -
-                        (Gdx.input.isKeyPressed(Input.Keys.DOWN) ? 1 : 0));
+    @Override
+    public void control() {
+        movementVector.set(Gdx.input.isKeyPressed(Input.Keys.D) ? 1 : 0 - (Gdx.input.isKeyPressed(Input.Keys.A) ? 1 : 0),
+                Gdx.input.isKeyPressed(Input.Keys.W) ? 1 : 0 - (Gdx.input.isKeyPressed(Input.Keys.S) ? 1 : 0));
 
-        c.move(input);
+        float mousePosX = Gdx.input.getX();
+        float mousePosY = Gdx.input.getY();
 
-        if (Gdx.input.isTouched()) {
-            Vector2 deltaVector = c.getPosition().sub(new Vector2(Gdx.input.getX(), Gdx.input.getY()));  // TODO might be wrong y-axis
-            c.attack(deltaVector.angleRad());
-        }
-    }*/
+        final float xDiff = mousePosX - body.getPosition().x;
+        final float yDiff = mousePosY - body.getPosition().y;
+
+        // y-axis is inverted in Box2D
+        attackVector.set(xDiff, -yDiff);
+    }
+
+    @Override
+    public List<AttackListener> getAttackListeners() {
+        return attackListeners;
+    }
+
+    @Override
+    public List<MovementListener> getMovementListeners() {
+        return movementListeners;
+    }
+
+    @Override
+    public void addAttackListener(AttackListener attackListener) {
+        attackListeners.add(attackListener);
+    }
+
+    @Override
+    public void addMovementListener(MovementListener movementListener) {
+        movementListeners.add(movementListener);
+    }
+
+    @Override
+    public Vector2f getMovementVector() {
+        return this.movementVector;
+    }
+
+    @Override
+    public Vector2f getAttackVector() {
+        return this.attackVector;
+    }
+
 }
