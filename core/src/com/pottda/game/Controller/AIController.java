@@ -1,8 +1,11 @@
 package com.pottda.game.Controller;
 
 /**
- * Created by rikar on 2017-04-07.
+ * Created by Rikard Teodorsson on 2017-04-07.
  */
 
-public abstract class AIController extends AbstractController {
+abstract class AIController extends AbstractController {
+
+    // https://github.com/libgdx/gdx-ai/wiki
+
 }
