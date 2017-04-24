@@ -2,6 +2,7 @@ package com.pottda.game.Model;
 
 
 import com.pottda.game.Controller.AbstractController;
+import com.pottda.game.Controller.AttackListener;
 
 import javax.vecmath.Vector2f;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
  * Created by Gustav Lahti on 2017-04-07.
  */
 
-public abstract class Actor implements PhysicsListener {
+public abstract class Actor implements PhysicsListener, AttackListener {
     public boolean isProjectile;
     public int team;
     public AbstractController controller;
@@ -18,7 +19,10 @@ public abstract class Actor implements PhysicsListener {
     private List<SpriteListener> spriteListeners;
     private List<ModelActorListener> modelActorListeners;
 
-    public abstract void collide(Actor other);
+    @Override
+    public void onCollision(Object other){
+
+    }
 
     @Override
     public void onNewPosition(final Vector2f position) {
@@ -30,6 +34,7 @@ public abstract class Actor implements PhysicsListener {
     }
 
     @Override
-    public void onCollision(Actor other) {
+    public void onAttack(float direction){
+
     }
 }
