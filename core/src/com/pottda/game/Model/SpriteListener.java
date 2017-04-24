@@ -5,6 +5,6 @@ package com.pottda.game.Model;
  */
 public interface SpriteListener {
 
-    void onSpriteUpdate(int x, int y);  // TODO how to handle the image
+    void onSpriteUpdate(float x, float y);  // TODO how to handle the image
 
 }
