@@ -1,5 +1,6 @@
 package com.pottda.game.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,15 +12,16 @@ public class Projectile extends Actor {
     List<ProjectileListener> projectileListeners;
     List<Character> hasDamaged;
 
-    public Projectile(int damage, List<ProjectileListener> projectileListeners, List<Character> hasDamaged){
+    public Projectile(int damage, List<ProjectileListener> projectileListeners, List<Character> hasDamaged) {
         this.damage = damage;
         this.projectileListeners = projectileListeners;
         this.hasDamaged = hasDamaged;
     }
 
-    @Override
-    public void collide(Actor other) {
-
+    public Projectile() {
+        damage = 0;
+        projectileListeners = new ArrayList<ProjectileListener>();
+        hasDamaged = new ArrayList<Character>();
     }
 
     /*@Override

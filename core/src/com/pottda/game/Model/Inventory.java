@@ -18,6 +18,12 @@ public class Inventory {
         this.inactiveItems = inactiveItems;
     }
 
+    public Inventory() {
+        attackItems = new ArrayList<AttackItem>();
+        supportItems = new ArrayList<SupportItem>();
+        inactiveItems = new ArrayList<Item>();
+    }
+
     public int getCooldown() {
         int cooldown = 0;
         for (AttackItem attackItem : attackItems) {
@@ -47,7 +53,7 @@ public class Inventory {
         int damage = getDamage();
         List<ProjectileListener> projectileListeners = getProjectileListeners();
 
-        for(int i = 0, n = getProjectileAmount(); i < n; i++){
+        for (int i = 0, n = getProjectileAmount(); i < n; i++) {
             projectiles.add(new Projectile(damage, projectileListeners, null));
         }
 
@@ -76,9 +82,9 @@ public class Inventory {
         return projectileListeners;
     }
 
-    private int getProjectileAmount(){
+    private int getProjectileAmount() {
         int projectileAmount = 1;
-        for(AttackItem attackItem : attackItems){
+        for (AttackItem attackItem : attackItems) {
             // Need to subtract by one so multiple Items that has one Projectile each makes the Character shoot
             // multiple Projectiles.
             projectileAmount += attackItem.projectileAmount - 1;

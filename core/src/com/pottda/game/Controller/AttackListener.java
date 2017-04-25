@@ -6,6 +6,6 @@ package com.pottda.game.Controller;
 
 public interface AttackListener {
 
-    void onAttack();
+    void onAttack(float direction);
 
 }

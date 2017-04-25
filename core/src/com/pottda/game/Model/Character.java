@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by Gustav Lahti on 2017-04-07.
  */
-public abstract class Character extends Actor {
+public class Character extends Actor {
     public Inventory inventory;
 
     private static final int baseHealth = 100;
@@ -21,10 +21,13 @@ public abstract class Character extends Actor {
     public float accel;
 
 
-
     // -- Constructors --
 
-    public Character(Inventory inventory, int team){
+    public Character() {
+        this(new Inventory(), 0);
+    }
+
+    public Character(Inventory inventory, int team) {
         this.inventory = inventory;
         isProjectile = false;
         this.team = team;
@@ -44,10 +47,11 @@ public abstract class Character extends Actor {
 
     /**
      * The character's attack
+     *
      * @param direction The direction in which the character should attack
      */
-    public void attack(float direction){
-        if(System.currentTimeMillis() >= lastAttackTime + cooldown){
+    public void attack(float direction) {
+        if (System.currentTimeMillis() >= lastAttackTime + cooldown) {
             // TODO Attack
             // TODO Trigger animations and sound effects
             lastAttackTime = System.currentTimeMillis();
@@ -63,11 +67,12 @@ public abstract class Character extends Actor {
 
     /**
      * Reacts to taking damage
+     *
      * @param incomingDamage Damage dealt to this character
      */
-    public void takeDamage(int incomingDamage){
+    public void takeDamage(int incomingDamage) {
         currentHealth -= incomingDamage;
-        if(currentHealth <= 0){
+        if (currentHealth <= 0) {
             // TODO Die
         }
     }

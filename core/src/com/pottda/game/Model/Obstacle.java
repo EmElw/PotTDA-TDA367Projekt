@@ -6,10 +6,10 @@ package com.pottda.game.Model;
 
 public class Obstacle extends Actor {
 
-    @Override
-    public void collide(Actor other) {
-
-    }
+//    @Override
+//    public void collide(Actor other) {
+//
+//    }
 
     /*@Override
     public VectorType getMove() {
