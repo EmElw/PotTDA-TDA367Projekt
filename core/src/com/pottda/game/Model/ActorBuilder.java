@@ -2,6 +2,7 @@ package com.pottda.game.Model;
 
 import com.pottda.game.Controller.AbstractController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -14,30 +15,28 @@ import java.util.Stack;
  * where the garbage handling can produce significant slow down
  * <p>
  * <p>
- * When ant actor is removed, it should:
+ * When an actor is removed, it should:
  * - remove itself from its associated controller, if any
  * - set its associated physics body to sleep
  * - call ActorBuilder.deactivateActor(this)
+ * <p>
+ * To get a new actor, call appropriate getX function and then apply listeners to controller as necessary
  */
 public class ActorBuilder {
 
-    private static Stack<Character> inactiveCharacters;
-    private static Stack<Projectile> inactiveProjectiles;
-    private static Stack<Obstacle> inactiveObstacles;
+    private static Stack<Character> inactiveCharacters = new Stack<Character>();
+    private static Stack<Projectile> inactiveProjectiles = new Stack<Projectile>();
+    private static Stack<Obstacle> inactiveObstacles = new Stack<Obstacle>();
 
-
-    public static void deactivateActor(Character c) {
-        inactiveCharacters.push(c);
+    public static Actor deactivateActor(Actor a) {
+        if (a instanceof Character) {
+            return inactiveCharacters.push((Character) a);
+        } else if (a instanceof Projectile) {
+            return inactiveProjectiles.push((Projectile) a);
+        } else if (a instanceof Obstacle) {
+            return inactiveObstacles.push((Obstacle) a);
+        } else throw new IllegalArgumentException("Dynamic type of given actor was dud");
     }
-
-    public static void deactivateActor(Projectile p) {
-        inactiveProjectiles.push(p);
-    }
-
-    public static void deactivateActor(Obstacle o) {
-        inactiveObstacles.push(o);
-    }
-
 
     public static Character getCharacter() {
 
