@@ -1,32 +1,49 @@
 package com.pottda.game.Controller;
 
+import com.pottda.game.Model.ModelActor;
+import com.pottda.game.View.ViewActor;
+
 import java.util.List;
 
 import javax.vecmath.Vector2f;
 
 /**
- * Created by Rikard Teodorsson on 2017-04-07.
+ * Usage:
+ * Classes implementing should in onNewFrame() update
+ * their move- and attackVector before calling super.onNewFrame()
  */
 
 public abstract class AbstractController {
     Vector2f movementVector;
     Vector2f attackVector;
-    List<AttackListener> attackListeners;
-    List<MovementListener> movementListeners;
-    boolean isAI;
+//    final boolean isAI;
 
-    public abstract void control();
+    final ModelActor modelActor;
+    final ViewActor viewActor;
 
-    public abstract List<AttackListener> getAttackListeners();
+    public AbstractController(ModelActor modelActor, ViewActor viewActor) {
+        this.modelActor = modelActor;
+        this.viewActor = viewActor;
+    }
 
-    public abstract List<MovementListener> getMovementListeners();
+    /**
+     * Called by MyGame every frame
+     */
+    public void onNewFrame() {
+        updateModel();
+        updateView();
+    }
 
-    public abstract void addAttackListener(AttackListener attackListener);
+    private void updateModel() {
+        modelActor.giveInput(movementVector, attackVector);
+        modelActor.handleCollisions();
+    }
 
-    public abstract void addMovementListener(MovementListener movementListener);
+    private void updateView() {
+        // TODO extend with other modifications such as rotation, scale etc.
+        Vector2f position = modelActor.getPosition();
+        viewActor.setPosition(position.x, position.y);
+    }
 
-    public abstract Vector2f getMovementVector();
-
-    public abstract Vector2f getAttackVector();
 
 }
