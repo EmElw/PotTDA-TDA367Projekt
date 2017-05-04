@@ -1,4 +1,4 @@
-package com.pottda.game.Model;
+package com.pottda.game.model;
 
 import org.junit.After;
 import org.junit.Test;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Gustav Lahti on 2017-04-20.

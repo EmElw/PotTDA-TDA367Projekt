@@ -1,6 +1,5 @@
 package com.pottda.game;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -12,28 +11,22 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.pottda.game.Controller.AbstractController;
-import com.pottda.game.Controller.AttackListener;
-import com.pottda.game.Controller.KeyboardMouseController;
-import com.pottda.game.Controller.KeyboardOnlyController;
-import com.pottda.game.Controller.MovementListener;
-import com.pottda.game.Controller.TouchJoystickController;
+import com.pottda.game.controller.AbstractController;
 
-import java.util.ArrayList;
-
-import sun.security.pkcs11.wrapper.Constants;
+import java.util.List;
 
 public class MyGame extends ApplicationAdapter {
     private SpriteBatch batch;
     private Texture img;
     private Vector2 v = new Vector2(0, 0);
-    private World world;
     private Box2DDebugRenderer box2DDebugRenderer;
     private float accumulator;
     private OrthographicCamera camera;
     private Stage stage;
+
+    private List<AbstractController> controllers;
+    private World world;
 
     // PLaying around
     private BodyDef bodyDef;
@@ -87,15 +80,15 @@ public class MyGame extends ApplicationAdapter {
         sprite = new Sprite(img);
 
         shapeRenderer = new ShapeRenderer();
-
-        if (Gdx.app.getType() == Application.ApplicationType.Android){ // if on android
-            abstractController = new TouchJoystickController(new ArrayList<AttackListener>(), new ArrayList<MovementListener>(), false, stage);
-        } else if (Gdx.app.getType() == Application.ApplicationType.Desktop) { // if on desktop
-            // Check if using mouse?
-            //abstractController = new KeyboardOnlyController(new ArrayList<AttackListener>(), new ArrayList<MovementListener>(), false);
-
-            abstractController = new KeyboardMouseController(new ArrayList<AttackListener>(), new ArrayList<MovementListener>(), false, body);
-        }
+//
+//        if (Gdx.app.getType() == Application.ApplicationType.Android){ // if on android
+//            abstractController = new TouchJoystickController(new ArrayList<AttackListener>(), new ArrayList<MovementListener>(), false, stage);
+//        } else if (Gdx.app.getType() == Application.ApplicationType.Desktop) { // if on desktop
+//            // Check if using mouse?
+//            //abstractController = new KeyboardOnlyController(new ArrayList<AttackListener>(), new ArrayList<MovementListener>(), false);
+//
+//            abstractController = new KeyboardMouseController(new ArrayList<AttackListener>(), new ArrayList<MovementListener>(), false, body);
+//        }
     }
 
     @Override
@@ -104,30 +97,15 @@ public class MyGame extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
 
-        //box2DDebugRenderer.render(world, camera.combined);
-        /*if (Gdx.input.isTouched()) {
-            v.x = (Gdx.input.getX() - body.getPosition().x);
-            v.y = (Gdx.graphics.getHeight() - Gdx.input.getY() - body.getPosition().y);
-        } else {
-            v.x = 0;
-            v.y = 0;
-        }*/
+        // Update all controllers, causing the model to update
+        for (AbstractController c : controllers) {
+            c.onNewFrame();
+        }
 
-        abstractController.control();
-        stage.draw();
-
-        // Get vectors
-        v.x = abstractController.getMovementVector().getX() * 400;
-        v.y = abstractController.getMovementVector().getY() * 400;
-        // Get rotation vector and convert to angle in degrees
-        sprite.setRotation((float)Math.toDegrees(Math.atan2(abstractController.getAttackVector().getY(), abstractController.getAttackVector().getX())));
-
-        body.applyForceToCenter(v, true);
-
+        // Update the world
         doPhysicsStep(Gdx.graphics.getDeltaTime());
 
-        sprite.setPosition(body.getPosition().x, body.getPosition().y);
-
+        // Draw stuff
         batch.begin();
         sprite.draw(batch);
         batch.end();

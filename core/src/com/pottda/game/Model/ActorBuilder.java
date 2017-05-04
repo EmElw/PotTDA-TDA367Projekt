@@ -1,16 +1,11 @@
-package com.pottda.game.Model;
+package com.pottda.game.model;
 
-import com.pottda.game.Controller.AbstractController;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 /**
  * Builder class for creating and reusing actors.
  * All creation of Actors should be done through this class, using the appropiate build function
  * <p>
- * // TODO do we need active?
  * The class stores active and inactive actors, reusing them for performance on mobile systems
  * where the garbage handling can produce significant slow down
  * <p>
@@ -28,7 +23,7 @@ public class ActorBuilder {
     private static Stack<Projectile> inactiveProjectiles = new Stack<Projectile>();
     private static Stack<Obstacle> inactiveObstacles = new Stack<Obstacle>();
 
-    public static Actor deactivateActor(Actor a) {
+    public static ModelActor deactivateActor(ModelActor a) {
         if (a instanceof Character) {
             return inactiveCharacters.push((Character) a);
         } else if (a instanceof Projectile) {

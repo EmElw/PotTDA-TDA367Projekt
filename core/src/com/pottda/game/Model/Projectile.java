@@ -1,4 +1,4 @@
-package com.pottda.game.Model;
+package com.pottda.game.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.List;
  * Created by rikar on 2017-04-07.
  */
 
-public class Projectile extends Actor {
+public class Projectile extends ModelActor {
     int damage;
     List<ProjectileListener> projectileListeners;
     List<Character> hasDamaged;

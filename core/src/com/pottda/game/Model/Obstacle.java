@@ -1,13 +1,12 @@
-package com.pottda.game.Model;
-
+package com.pottda.game.model;
 /**
  * Created by rikar on 2017-04-07.
  */
 
-public class Obstacle extends Actor {
+public class Obstacle extends ModelActor {
 
 //    @Override
-//    public void collide(Actor other) {
+//    public void collide(ModelActor other) {
 //
 //    }
 
