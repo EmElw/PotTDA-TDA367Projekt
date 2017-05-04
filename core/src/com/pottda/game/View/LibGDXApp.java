@@ -1,4 +1,4 @@
-package com.pottda.game.View;
+package com.pottda.game.view;
 
 /**
  * Created by rikar on 2017-04-07.

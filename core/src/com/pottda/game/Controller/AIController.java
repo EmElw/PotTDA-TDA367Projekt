@@ -1,7 +1,7 @@
-package com.pottda.game.Controller;
+package com.pottda.game.controller;
 
-import com.pottda.game.Model.ModelActor;
-import com.pottda.game.View.ViewActor;
+import com.pottda.game.model.ModelActor;
+import com.pottda.game.view.ViewActor;
 
 /**
  * Created by Rikard Teodorsson on 2017-04-07.

@@ -1,4 +1,4 @@
-package com.pottda.game.Controller;
+package com.pottda.game.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -6,13 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.pottda.game.Model.ModelActor;
-import com.pottda.game.View.ViewActor;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.vecmath.Vector2f;
+import com.pottda.game.model.ModelActor;
+import com.pottda.game.view.ViewActor;
 
 /**
  * Created by Rikard Teodorsson on 2017-04-07.

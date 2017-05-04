@@ -1,15 +1,9 @@
-package com.pottda.game.Controller;
+package com.pottda.game.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.pottda.game.Model.ModelActor;
-import com.pottda.game.View.ViewActor;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.vecmath.Vector2f;
+import com.pottda.game.model.ModelActor;
+import com.pottda.game.view.ViewActor;
 
 /**
  * Created by Rikard on 2017-04-05.

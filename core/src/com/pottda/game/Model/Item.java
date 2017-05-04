@@ -1,6 +1,6 @@
-package com.pottda.game.Model;
+package com.pottda.game.model;
 
-import java.awt.Point;
+import java.awt.*;
 import java.util.List;
 
 /**

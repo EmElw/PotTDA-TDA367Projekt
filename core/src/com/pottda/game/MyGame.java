@@ -1,6 +1,5 @@
 package com.pottda.game;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -12,19 +11,10 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.pottda.game.Controller.AbstractController;
-import com.pottda.game.Controller.AttackListener;
-import com.pottda.game.Controller.KeyboardMouseController;
-import com.pottda.game.Controller.KeyboardOnlyController;
-import com.pottda.game.Controller.MovementListener;
-import com.pottda.game.Controller.TouchJoystickController;
+import com.pottda.game.controller.AbstractController;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import sun.security.pkcs11.wrapper.Constants;
 
 public class MyGame extends ApplicationAdapter {
     private SpriteBatch batch;

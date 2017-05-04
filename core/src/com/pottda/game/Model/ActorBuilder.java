@@ -1,4 +1,4 @@
-package com.pottda.game.Model;
+package com.pottda.game.model;
 
 import java.util.Stack;
 

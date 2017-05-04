@@ -1,4 +1,4 @@
-package com.pottda.game.Model;
+package com.pottda.game.model;
 
 /**
  * Created by rikar on 2017-04-07.

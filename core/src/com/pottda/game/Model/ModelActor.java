@@ -1,11 +1,8 @@
-package com.pottda.game.Model;
+package com.pottda.game.model;
 
-
-import com.pottda.game.Controller.AbstractController;
-import com.pottda.game.Controller.AttackListener;
+import com.pottda.game.controller.AbstractController;
 
 import javax.vecmath.Vector2f;
-import java.util.List;
 
 /**
  * Created by Gustav Lahti on 2017-04-07.
