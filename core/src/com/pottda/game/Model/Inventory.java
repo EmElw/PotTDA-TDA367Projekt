@@ -58,7 +58,7 @@ public class Inventory {
                 public Vector2f getPosition() {
                     return null;
                 }
-            }));
+            }, damage, projectileListeners));
         }
 
         return projectiles;

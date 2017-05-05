@@ -24,14 +24,17 @@ public class InventoryFactoryTest {
      * Uses testInv.xml, which should create two items of type DemoItemA and DemoItemB
      * placing them at specific coordinates
      */
-    @Before
-    public void setUp() {
-
-    }
+//    @Before
+//    public void setUp() {
+//
+//    }
 
     @Test
     public void inventoryFromXML() {
-        f = new File("C:\\Users\\Magnus\\IdeaProjects\\TDA367Proj\\PotTDA-TDA367Projekt\\android\\assets\\inventoryblueprint\\testInv.xml");
+        String basePath = new File("").getAbsolutePath();
+        String filePath = basePath.concat("\\android\\assets\\inventoryblueprint\\testInv.xml");
+        f = new File(filePath);
+        //f = new File("C:\\Users\\Magnus\\IdeaProjects\\TDA367Proj\\PotTDA-TDA367Projekt\\android\\assets\\inventoryblueprint\\testInv.xml");
 
         try {
             Inventory i = InventoryFactory.createFromXML(f);
