@@ -42,7 +42,7 @@ public abstract class Item {
         List<Integer> list = new ArrayList<Integer>();
 
         for (int[] p : unrotatedRelativePositions) {
-            int[] rotatedPoint = rotate(new int[]{p[0], p[1]}, orientation);
+            int[] rotatedPoint = Util.rotate(new int[]{p[0], p[1]}, orientation);
             int v = (rotatedPoint[0] + x) +    // Add x to convert to absolute coordinate in Inventory
                     (rotatedPoint[1] + y) * w;     // Multiply to add the whole number of rows
             list.add(v);
