@@ -12,6 +12,11 @@ public abstract class PhysicsActor {
      */
     public abstract Vector2f getPosition();
 
+    /**
+     * Moves the actor in the physics world
+     *
+     * @param movementVector
+     */
     public abstract void giveMovementVector(Vector2f movementVector);
 
 }
