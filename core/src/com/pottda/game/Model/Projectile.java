@@ -12,13 +12,8 @@ public class Projectile extends ModelActor {
     List<ProjectileListener> projectileListeners;
     List<Character> hasDamaged;
 
-    public Projectile(int damage, List<ProjectileListener> projectileListeners, List<Character> hasDamaged) {
-        this.damage = damage;
-        this.projectileListeners = projectileListeners;
-        this.hasDamaged = hasDamaged;
-    }
-
-    public Projectile() {
+    public Projectile(PhysicsActor physicsActor) {
+        super(physicsActor);
         damage = 0;
         projectileListeners = new ArrayList<ProjectileListener>();
         hasDamaged = new ArrayList<Character>();

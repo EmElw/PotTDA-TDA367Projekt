@@ -22,14 +22,11 @@ public class Character extends ModelActor {
 
     // -- Constructors --
 
-    public Character() {
-        this(new Inventory(), 0);
-    }
-
-    public Character(Inventory inventory, int team) {
-        this.inventory = inventory;
-        isProjectile = false;
-        this.team = team;
+    public Character(PhysicsActor physicsActor) {
+        super(physicsActor);
+        this.inventory = new Inventory();
+        this.isProjectile = false;
+        this.team = 0;
 
         // Init health
         health = baseHealth + inventory.getHealth();

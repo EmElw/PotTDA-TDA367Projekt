@@ -1,5 +1,6 @@
 package com.pottda.game.model;
 
+import javax.vecmath.Vector2f;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,20 +9,18 @@ import java.util.List;
  */
 
 public class Inventory {
-    public List<AttackItem> attackItems;
-    public List<SupportItem> supportItems;
-    public List<Item> inactiveItems;
-
-    public Inventory(List<AttackItem> attackItems, List<SupportItem> supportItems, List<Item> inactiveItems) {
-        this.attackItems = attackItems;
-        this.supportItems = supportItems;
-        this.inactiveItems = inactiveItems;
-    }
+    public final List<AttackItem> attackItems;
+    public final List<SupportItem> supportItems;
+    public final List<Item> inactiveItems;
+    public final List<Item> items;
+    private int height;
+    private int width;
 
     public Inventory() {
         attackItems = new ArrayList<AttackItem>();
         supportItems = new ArrayList<SupportItem>();
         inactiveItems = new ArrayList<Item>();
+        items = new ArrayList<Item>();
     }
 
     public int getCooldown() {
@@ -54,14 +53,19 @@ public class Inventory {
         List<ProjectileListener> projectileListeners = getProjectileListeners();
 
         for (int i = 0, n = getProjectileAmount(); i < n; i++) {
-            projectiles.add(new Projectile(damage, projectileListeners, null));
+            projectiles.add(new Projectile(new PhysicsActor() {
+                @Override
+                public Vector2f getPosition() {
+                    return null;
+                }
+            }));
         }
 
         return projectiles;
     }
 
     public void addItem(Item item) {
-
+        items.add(item);
     }
 
     private int getDamage() {
@@ -90,5 +94,10 @@ public class Inventory {
             projectileAmount += attackItem.projectileAmount - 1;
         }
         return projectileAmount;
+    }
+
+    public void setDimensions(int w, int h) {
+        this.width = w;
+        this.height = h;
     }
 }
