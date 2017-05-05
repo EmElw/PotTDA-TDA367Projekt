@@ -3,7 +3,7 @@ package com.pottda.game.model;
  * Created by rikar on 2017-04-07.
  */
 
-public class SupportItem extends Item {
+public abstract class SupportItem extends Item {
     int health;
     float acceleration;
 
