@@ -14,7 +14,7 @@ public abstract class ModelActor {
     public int team;
     public AbstractController controller;
 
-    private final PhysicsActor physicsActor;
+    protected final PhysicsActor physicsActor;
 
     public ModelActor(PhysicsActor physicsActor) {
         this.physicsActor = physicsActor;
