@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<inventory w="10" h="10">
+    <item name="DemoItemA" x="8" y="5" orientation="0">
+    </item>
+    <item name="DemoItemB" x="3" y="2" orientation="3">
+    </item>
+</inventory>

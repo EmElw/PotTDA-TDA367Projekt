@@ -1,12 +1,11 @@
-package com.pottda.game.Model;
+package com.pottda.game.model;
 
-import java.sql.Timestamp;
-import java.util.List;
+import javax.vecmath.Vector2f;
 
 /**
  * Created by Gustav Lahti on 2017-04-07.
  */
-public class Character extends Actor {
+public class Character extends ModelActor {
     public Inventory inventory;
 
     private static final int baseHealth = 100;
@@ -23,14 +22,11 @@ public class Character extends Actor {
 
     // -- Constructors --
 
-    public Character() {
-        this(new Inventory(), 0);
-    }
-
-    public Character(Inventory inventory, int team) {
-        this.inventory = inventory;
-        isProjectile = false;
-        this.team = team;
+    public Character(PhysicsActor physicsActor) {
+        super(physicsActor);
+        this.inventory = new Inventory();
+        this.isProjectile = false;
+        this.team = 0;
 
         // Init health
         health = baseHealth + inventory.getHealth();
@@ -52,18 +48,10 @@ public class Character extends Actor {
      */
     public void attack(float direction) {
         if (System.currentTimeMillis() >= lastAttackTime + cooldown) {
-            // TODO Attack
-            // TODO Trigger animations and sound effects
+            // TODO Attack, Trigger animations and sound effects
             lastAttackTime = System.currentTimeMillis();
         }
     }
-
-    /*public VectorType getMove(){
-        VectorType v = controller.getMove();
-        v.x *= accel;
-        v.y *= accel;
-        return v;
-    }*/
 
     /**
      * Reacts to taking damage
@@ -75,5 +63,10 @@ public class Character extends Actor {
         if (currentHealth <= 0) {
             // TODO Die
         }
+    }
+
+    @Override
+    public void giveInput(Vector2f move, Vector2f attack) {
+        // TODO implement
     }
 }
