@@ -4,11 +4,14 @@ package com.pottda.game.model;
  * Created by rikar on 2017-04-07.
  */
 
-public class AttackItem extends Item {
+public abstract class AttackItem extends Item {
     int damage;
     int cooldown;
     int projectileAmount;
     ProjectileListener projectileListener;
+
+    public AttackItem() {
+    }
 
     public AttackItem(int damage, int cooldown, int projectileAmount, ProjectileListener projectileListener) {
         this.damage = damage;

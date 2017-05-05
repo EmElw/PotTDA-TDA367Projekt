@@ -4,8 +4,9 @@ import com.pottda.game.controller.AbstractController;
 
 import javax.vecmath.Vector2f;
 
+
 /**
- * Created by Gustav Lahti on 2017-04-07.
+ * Logical representation of an actor in the game
  */
 
 public abstract class ModelActor {
@@ -13,7 +14,11 @@ public abstract class ModelActor {
     public int team;
     public AbstractController controller;
 
-    private PhysicsActor physicsActor;
+    private final PhysicsActor physicsActor;
+
+    public ModelActor(PhysicsActor physicsActor) {
+        this.physicsActor = physicsActor;
+    }
 
     /**
      * Called by the controller once per frame, should be overridden
