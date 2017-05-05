@@ -12,4 +12,6 @@ public abstract class PhysicsActor {
      */
     public abstract Vector2f getPosition();
 
+    public abstract void giveMovementVector(Vector2f movementVector);
+
 }
