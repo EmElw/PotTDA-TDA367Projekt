@@ -19,48 +19,49 @@ public class InventoryFactoryTest {
 
     File f;
 
-    /**
-     * Tests the functionality of the basic build from xml function
-     * Uses testInv.xml, which should create two items of type DemoItemA and DemoItemB
-     * placing them at specific coordinates
-     */
 //    @Before
 //    public void setUp() {
 //
 //    }
 
+    /**
+     * Tests the functionality of the basic build from xml function
+     * Uses testInv.xml, which should create two items of type DemoItemA and DemoItemB
+     * placing them at specific coordinates
+     */
     @Test
     public void inventoryFromXML() {
         String basePath = new File("").getAbsolutePath();
-        String filePath = basePath.concat("\\android\\assets\\inventoryblueprint\\testInv.xml");
+
+        String filePath = basePath.
+                replace("\\core", "").  // No one must know of this blasphemy
+                concat("\\android\\assets\\inventoryblueprint\\testInv.xml");
         f = new File(filePath);
-        //f = new File("C:\\Users\\Magnus\\IdeaProjects\\TDA367Proj\\PotTDA-TDA367Projekt\\android\\assets\\inventoryblueprint\\testInv.xml");
 
         try {
+            // Create the inventory
             Inventory i = InventoryFactory.createFromXML(f);
             Assert.assertTrue(i.items.size() == 2);
 
+            // Attempt to retrieve an DemoItemA and DemoItemB from the Inventory
             Item a = findItemA(i);
             Item b = findItemB(i);
 
-            if (a != null) {
-                Assert.assertEquals(a.x, 8);
-                Assert.assertEquals(a.y, 5);
-                Assert.assertEquals(a.orientation, 0);
-            }
-            if (b != null) {
-                Assert.assertEquals(b.x, 3);
-                Assert.assertEquals(b.y, 2);
-                Assert.assertEquals(b.orientation, 3);
-            }
-
+            // Test DemoItemA
             Assert.assertFalse(a == null);
+            Assert.assertEquals(a.x, 8);
+            Assert.assertEquals(a.y, 5);
+            Assert.assertEquals(a.orientation, 0);
+
+            // Test DemoItemB
             Assert.assertFalse(b == null);
+            Assert.assertEquals(b.x, 3);
+            Assert.assertEquals(b.y, 2);
+            Assert.assertEquals(b.orientation, 3);
 
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception e) { // Any exception is probably a fail
             Assert.fail();
+            e.printStackTrace();
         }
     }
 

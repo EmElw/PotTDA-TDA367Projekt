@@ -90,9 +90,9 @@ public class InventoryFactory {
     }
 
     /**
-     * Retrieve the @{code Class} corresponding to the given {@Code string} from the map
+     * Retrieve the @{code Class} corresponding to the given {@code string} from the map
      *
-     * @param className the name of the {@class Class} to load
+     * @param className the name of the {@code Class} to load
      * @return a Class
      * @throws ClassNotFoundException if the name-tag doesn't correspond to a class
      * @throws IOException            if the name-tag doesn't correspond to a class that is a subclass of Item
