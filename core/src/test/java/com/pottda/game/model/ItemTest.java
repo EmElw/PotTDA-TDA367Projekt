@@ -39,8 +39,10 @@ public class ItemTest {
     @Test
     public void rotateTest() {
 
-        List<Integer> outputA = a.getPositionsAsIntegers(10);
-        List<Integer> outputB = b.getPositionsAsIntegers(10);
+        List<Integer> positionsA = a.getPositionsAsIntegers(10);
+        Integer outputA = a.getOutputAsIntger(10);
+        List<Integer> posoitionsB = b.getPositionsAsIntegers(10);
+        Integer outputB = b.getOutputAsIntger(10);
 
         // Create the expected values
         List<Integer> rotatedA = new ArrayList<Integer>();
@@ -51,7 +53,9 @@ public class ItemTest {
         rotatedB.addAll(Arrays.asList(48, 38, 39, 29));
         Util.sortIntegerList(rotatedB, true);
 
-        Assert.assertEquals(rotatedA, outputA);
-        Assert.assertEquals(rotatedB, outputB);
+        Assert.assertEquals(rotatedA, positionsA);
+        Assert.assertEquals(rotatedB, posoitionsB);
+        Assert.assertEquals(outputA, Integer.valueOf(40));
+        Assert.assertEquals(outputB, Integer.valueOf(19));
     }
 }

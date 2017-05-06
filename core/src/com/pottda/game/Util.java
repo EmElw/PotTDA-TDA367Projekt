@@ -42,14 +42,15 @@ public class Util {
      * <p>
      * Home-brew rotation function (because vecmath doesn't support 2D matrices?)
      *
-     * @param p an {@code int[]} of size 2, where int[0] = x, int[1] = y
+     * @param x the x-coordinate of the point
+     * @param y the y-coordinate of the point
      * @param n the rotation, expressed as n multiples of pi/2 rad
      * @return {@code int[]} of size 2
      */
-    public static int[] rotate(int[] p, int n) {
+    public static int[] rotate(int x, int y, int n) {
         int[] returnValue = new int[2];
-        returnValue[0] = a[n] * p[0] + b[n] * p[1];
-        returnValue[1] = c[n] * p[0] + a[n] * p[1];
+        returnValue[0] = a[n] * x + b[n] * y;
+        returnValue[1] = c[n] * x + a[n] * y;
         return returnValue;
     }
 

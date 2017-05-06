@@ -18,6 +18,8 @@ public class DemoItemA extends AttackItem {
         unrotatedRelativePositions.add(new int[]{1, 0});
         unrotatedRelativePositions.add(new int[]{0, 1});
         unrotatedRelativePositions.add(new int[]{1, 1});
+
+        unrotatedOutputPosition = new int[]{2, 1};
     }
 
 }

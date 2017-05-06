@@ -24,5 +24,7 @@ public class DemoItemB extends AttackItem {
         unrotatedRelativePositions.add(new int[]{1, 0});
         unrotatedRelativePositions.add(new int[]{1, 1});
         unrotatedRelativePositions.add(new int[]{2, 1});
+
+        unrotatedOutputPosition = new int[]{3, 1};
     }
 }
