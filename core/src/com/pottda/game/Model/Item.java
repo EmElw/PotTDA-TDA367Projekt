@@ -9,8 +9,9 @@ import java.util.List;
  * Created by rikar on 2017-04-07.
  */
 
-public abstract class Item {
-    protected boolean isAttackItem;
+public abstract class Item extends ProjectileListenerAdapter {
+    public boolean isAttackItem;
+    public boolean isProjectileModifier;
 
     protected List<int[]> unrotatedRelativePositions; // A list of offsets for physical positions
     protected int[] unrotatedOutputPosition;          // A point where the item will look for its followup
@@ -22,11 +23,19 @@ public abstract class Item {
 
     public void init() {
         unrotatedRelativePositions = new ArrayList<int[]>();
-        initPositions();
+        // Set default properties
+        isAttackItem = false;
+        isProjectileModifier = false;
+
+        // Set properties based on dynamic type
+        initDynamic();
     }
 
-
-    protected abstract void initPositions();
+    /**
+     * Is called at the end of init(), meaning it overrides the
+     * default properties if wanted
+     */
+    protected abstract void initDynamic();
 
     /**
      * Returns a list of {@code Integer}, where each corresponds to a space where this item is.

@@ -8,7 +8,7 @@ import javax.vecmath.Point2i;
 /**
  * Created by Magnus on 2017-05-05.
  */
-public class DemoItemB extends AttackItem {
+public class DemoItemB extends AttackItem implements ProjectileListener {
 
     /*
     Shaped like
@@ -18,8 +18,8 @@ public class DemoItemB extends AttackItem {
 
      */
     @Override
-    public void initPositions() {
-        isAttackItem = false;
+    public void initDynamic() {
+
         unrotatedRelativePositions.add(new int[]{0, 0});
         unrotatedRelativePositions.add(new int[]{1, 0});
         unrotatedRelativePositions.add(new int[]{1, 1});

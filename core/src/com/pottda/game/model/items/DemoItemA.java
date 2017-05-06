@@ -12,7 +12,7 @@ public class DemoItemA extends AttackItem {
 
     // Shaped like a square
     @Override
-    public void initPositions() {
+    public void initDynamic() {
         isAttackItem = true;
         unrotatedRelativePositions.add(new int[]{0, 0});
         unrotatedRelativePositions.add(new int[]{1, 0});

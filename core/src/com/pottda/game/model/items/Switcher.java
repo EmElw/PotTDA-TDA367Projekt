@@ -3,7 +3,9 @@ package com.pottda.game.model.items;
 import com.pottda.game.model.Item;
 
 /**
- * Created by Magnus on 2017-05-06.
+ * A "Switcher" item which toggles between output, meaning
+ * that the item compilation takes a different path every
+ * time
  */
 public class Switcher extends Item {
 
@@ -15,7 +17,7 @@ public class Switcher extends Item {
      -1    x o
      */
     @Override
-    protected void initPositions() {
+    protected void initDynamic() {
         unrotatedRelativePositions.add(new int[]{0, 0});
         unrotatedRelativePositions.add(new int[]{1, 1});
         unrotatedRelativePositions.add(new int[]{1, 0});
