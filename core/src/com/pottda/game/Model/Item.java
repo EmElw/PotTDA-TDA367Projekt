@@ -10,9 +10,10 @@ import java.util.List;
  */
 
 public abstract class Item {
+    protected boolean isAttackItem;
 
     protected List<int[]> unrotatedRelativePositions; // A list of offsets for physical positions
-    protected int[] unrotatedOutputPosition;                   // A point where the item will look for its followup
+    protected int[] unrotatedOutputPosition;          // A point where the item will look for its followup
 
     public int orientation;
 
@@ -21,7 +22,11 @@ public abstract class Item {
 
     public void init() {
         unrotatedRelativePositions = new ArrayList<int[]>();
+        initPositions();
     }
+
+
+    protected abstract void initPositions();
 
     /**
      * Returns a list of {@code Integer}, where each corresponds to a space where this item is.
@@ -58,7 +63,7 @@ public abstract class Item {
      * @param w
      * @return
      */
-    public Integer getOutputAsIntger(int w) {
+    public Integer getOutputAsInteger(int w) {
         int[] rotatedPoint = Util.rotate(
                 unrotatedOutputPosition[0],
                 unrotatedOutputPosition[1],

@@ -12,8 +12,8 @@ public class DemoItemA extends AttackItem {
 
     // Shaped like a square
     @Override
-    public void init() {
-        super.init();
+    public void initPositions() {
+        isAttackItem = true;
         unrotatedRelativePositions.add(new int[]{0, 0});
         unrotatedRelativePositions.add(new int[]{1, 0});
         unrotatedRelativePositions.add(new int[]{0, 1});

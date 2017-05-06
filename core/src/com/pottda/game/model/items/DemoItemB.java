@@ -18,8 +18,8 @@ public class DemoItemB extends AttackItem {
 
      */
     @Override
-    public void init() {
-        super.init();
+    public void initPositions() {
+        isAttackItem = false;
         unrotatedRelativePositions.add(new int[]{0, 0});
         unrotatedRelativePositions.add(new int[]{1, 0});
         unrotatedRelativePositions.add(new int[]{1, 1});

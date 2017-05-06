@@ -40,9 +40,9 @@ public class ItemTest {
     public void rotateTest() {
 
         List<Integer> positionsA = a.getPositionsAsIntegers(10);
-        Integer outputA = a.getOutputAsIntger(10);
+        Integer outputA = a.getOutputAsInteger(10);
         List<Integer> posoitionsB = b.getPositionsAsIntegers(10);
-        Integer outputB = b.getOutputAsIntger(10);
+        Integer outputB = b.getOutputAsInteger(10);
 
         // Create the expected values
         List<Integer> rotatedA = new ArrayList<Integer>();
