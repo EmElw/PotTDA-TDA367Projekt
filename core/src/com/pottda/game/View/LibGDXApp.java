@@ -1,8 +1,7 @@
 package com.pottda.game.view;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
+/*import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -24,14 +23,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.pottda.game.controller.AbstractController;
-import com.pottda.game.controller.KeyboardMouseController;
-import com.pottda.game.controller.TouchJoystickController;
-import com.pottda.game.MyGame;
+import com.pottda.game.controller.AbstractController;*/
 
 import java.util.List;
 
-import java.util.ArrayList;
 
 /**
  * Created by Rikard Teodorsson on 2017-04-07.
@@ -39,7 +34,7 @@ import java.util.ArrayList;
 
 // https://github.com/libgdx/libgdx/wiki/Viewports
 public class LibGDXApp extends ApplicationAdapter {
-    private final Stage stage;
+    /*private final Stage stage;
     private final OrthographicCamera camera;
     private final Viewport viewport;
     private final int WIDTH;
@@ -69,9 +64,9 @@ public class LibGDXApp extends ApplicationAdapter {
     private static final int RUNNING = 1;
     private static final int PAUSED = 2;
     private static final int OPTIONS = 3;
-    private static int GAME_STATE = 0;
+    private static int GAME_STATE = 0;*/
 
-    public LibGDXApp(final int width, final int height) {
+    /*public LibGDXApp(final int width, final int height) {
         WIDTH = width;
         HEIGHT = height;
         camera = new OrthographicCamera(WIDTH, HEIGHT);
@@ -120,7 +115,7 @@ public class LibGDXApp extends ApplicationAdapter {
             // Check if using mouse?
             //abstractController = new KeyboardOnlyController(new ArrayList<AttackListener>(), new ArrayList<MovementListener>(), false);
             abstractController = new KeyboardMouseController(new ArrayList<AttackListener>(), new ArrayList<MovementListener>(), false, body);
-        }*/
+        }
 
         startMusic();
     }
@@ -169,12 +164,12 @@ public class LibGDXApp extends ApplicationAdapter {
 
     public static int getGameState() {
         return GAME_STATE;
-    }
+    }*/
 
     /**
      * Checks if the player touches any HUD elements
      */
-    private void checkTouch() {
+    /*private void checkTouch() {
         if (Gdx.input.justTouched()) { // Only check first touch
             // Get stage camera and unproject to get correct coordinates!
             Vector3 vector3 = stage.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
@@ -235,5 +230,5 @@ public class LibGDXApp extends ApplicationAdapter {
         stage.dispose();
         world.dispose();
         soundsAndMusic.dispose();
-    }
+    }*/
 }

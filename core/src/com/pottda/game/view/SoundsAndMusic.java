@@ -8,18 +8,18 @@ import com.badlogic.gdx.audio.Sound;
  * Created by Rikard Teodorsson on 2017-05-03.
  */
 
-class SoundsAndMusic {
+public class SoundsAndMusic {
     private static Music music;
     //private static Sound sound;
 
-    SoundsAndMusic() {
+    public SoundsAndMusic() {
         music = Gdx.audio.newMusic(Gdx.files.internal("music/DragonSlayer.mp3"));
     }
 
     /**
      *  Plays the current music track
      */
-    void play() {
+    public void play() {
         if (!music.isPlaying()) {
             music.setVolume(0.5f); // sets the volume to half the maximum volume
             music.setLooping(true);
@@ -30,7 +30,7 @@ class SoundsAndMusic {
     /**
      *  Pauses the music if playing
      */
-    void pauseMusic() {
+    public void pauseMusic() {
         if (music.isPlaying()) {
             music.pause();
         }
@@ -41,8 +41,7 @@ class SoundsAndMusic {
      *
      * @param volume new music volume. A float value between 0 and 1
      */
-    void setMusicVolume(float volume) {
-        System.out.println(volume);
+    public void setMusicVolume(float volume) {
         music.setVolume(volume);
     }
 
@@ -51,7 +50,7 @@ class SoundsAndMusic {
      *
      * @param volume new SFX volume. A float value between 0 and 1
      */
-    void setSFXVolume(float volume) {
+    public void setSFXVolume(float volume) {
         //sound.setVolume(0, volume); //id?
     }
 
@@ -60,11 +59,11 @@ class SoundsAndMusic {
      *
      * @return true if any music is playing
      */
-    static boolean isMusicPlaying() {
+    public static boolean isMusicPlaying() {
         return music != null && music.isPlaying();
     }
 
-    void dispose() {
+    public void dispose() {
         music.dispose();
         //sound.dispose();
     }

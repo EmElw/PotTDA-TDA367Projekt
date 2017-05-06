@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
  * Created by Rikard Teodorsson on 2017-05-03.
  */
 
-class HUDView extends ApplicationAdapter {
+public class HUDView extends ApplicationAdapter {
     private static final String healthbarString = "HUD/healthbar.png";
     private static final String healthbarRedString = "HUD/health.png";
     private static final String pauseButtonString = "HUD/pauseButton.png";
@@ -48,7 +48,7 @@ class HUDView extends ApplicationAdapter {
     private Image optionsSFXText;
     private Image optionsMusicText;
 
-    HUDView(final Stage stage) {
+    public HUDView(final Stage stage) {
         this.stage = stage;
         create();
     }
@@ -181,7 +181,7 @@ class HUDView extends ApplicationAdapter {
      * @param vector3 Vector with touch coordinates to check
      * @return true if touching button
      */
-    boolean checkIfTouchingPauseButton(Vector3 vector3) {
+    public boolean checkIfTouchingPauseButton(Vector3 vector3) {
         Rectangle tr = new Rectangle(pauseButton.getX(), pauseButton.getY(), pauseButton.getWidth(), pauseButton.getHeight());
         return tr.contains(vector3.x, vector3.y);
 
@@ -193,7 +193,7 @@ class HUDView extends ApplicationAdapter {
      * @param vector3 Vector with touch coordinates to check
      * @return true if touching button
      */
-    boolean checkIfTouchingPauseResume(Vector3 vector3) {
+    public boolean checkIfTouchingPauseResume(Vector3 vector3) {
         Rectangle tr = new Rectangle(pauseResume.getX(), pauseResume.getY(), pauseResume.getWidth(), pauseResume.getHeight());
         return tr.contains(vector3.x, vector3.y);
     }
@@ -204,7 +204,7 @@ class HUDView extends ApplicationAdapter {
      * @param vector3 Vector with touch coordinates to check
      * @return true if touching button
      */
-    boolean checkIfTouchingPauseOptions(Vector3 vector3) {
+    public boolean checkIfTouchingPauseOptions(Vector3 vector3) {
         Rectangle tr = new Rectangle(pauseOptions.getX(), pauseOptions.getY(), pauseOptions.getWidth(), pauseOptions.getHeight());
         return tr.contains(vector3.x, vector3.y);
     }
@@ -215,7 +215,7 @@ class HUDView extends ApplicationAdapter {
      * @param vector3 Vector with touch coordinates to check
      * @return true if touching button
      */
-    boolean checkIfTouchingPauseQuit(Vector3 vector3) {
+    public boolean checkIfTouchingPauseQuit(Vector3 vector3) {
         Rectangle tr = new Rectangle(pauseQuit.getX(), pauseQuit.getY(), pauseQuit.getWidth(), pauseQuit.getHeight());
         return tr.contains(vector3.x, vector3.y);
     }
@@ -226,7 +226,7 @@ class HUDView extends ApplicationAdapter {
      * @param vector3 Vector with touch coordinates to check
      * @return true if touching button
      */
-    boolean checkIfTouchingOptionsReturn(Vector3 vector3) {
+    public boolean checkIfTouchingOptionsReturn(Vector3 vector3) {
         Rectangle tr = new Rectangle(optionReturn.getX(), optionReturn.getY(), optionReturn.getWidth(), optionReturn.getHeight());
         return tr.contains(vector3.x, vector3.y);
     }
@@ -237,7 +237,7 @@ class HUDView extends ApplicationAdapter {
      * @param vector3 Vector with touch coordinates to check
      * @return true if touching button
      */
-    boolean checkIfTouchingOptionsMusic(Vector3 vector3) {
+    public boolean checkIfTouchingOptionsMusic(Vector3 vector3) {
         Rectangle tr = new Rectangle(optionsMusicBar.getX(), optionsMusicBar.getY(), optionsMusicBar.getWidth(), optionsMusicBar.getHeight());
         return tr.contains(vector3.x, vector3.y);
     }
@@ -248,7 +248,7 @@ class HUDView extends ApplicationAdapter {
      * @param vector3 Vector with touch coordinates to check
      * @return true if touching button
      */
-    boolean checkIfTouchingOptionsSFX(Vector3 vector3) {
+    public boolean checkIfTouchingOptionsSFX(Vector3 vector3) {
         Rectangle tr = new Rectangle(optionsSFXBar.getX(), optionsSFXBar.getY(), optionsSFXBar.getWidth(), optionsSFXBar.getHeight());
         return tr.contains(vector3.x, vector3.y);
     }
@@ -259,7 +259,7 @@ class HUDView extends ApplicationAdapter {
      * @param vector3 Vector with touch coordinates to check
      * @return a float value between 0 and 1 with the new music volume
      */
-    float getNewMusicVolume(Vector3 vector3) {
+    public float getNewMusicVolume(Vector3 vector3) {
         final float width = vector3.x - optionsMusicBar.getX();
         setOptionsMusicWidth(width);
         return ((vector3.x - optionsMusicBar.getX()) / optionsMusicBar.getWidth());
@@ -271,7 +271,7 @@ class HUDView extends ApplicationAdapter {
      * @param vector3 Vector with touch coordinates to check
      * @return a float value between 0 and 1 with the new SFX volume
      */
-    float getNewSFXVolume(Vector3 vector3) {
+    public float getNewSFXVolume(Vector3 vector3) {
         final float width = vector3.x - optionsSFXBar.getX();
         setOptionsSFXWidth(width);
         return ((vector3.x - optionsSFXBar.getX()) / optionsSFXBar.getWidth());
@@ -298,7 +298,7 @@ class HUDView extends ApplicationAdapter {
     /**
      *  Renders pause menu when paused
      */
-    void renderPaused() {
+    public void renderPaused() {
         pauseBackground.setVisible(true);
         pauseResume.setVisible(true);
         pauseOptions.setVisible(true);
@@ -315,7 +315,7 @@ class HUDView extends ApplicationAdapter {
     /**
      *  Renders options menu when in options
      */
-    void renderOptions() {
+    public void renderOptions() {
         pauseBackground.setVisible(true);
         pauseResume.setVisible(false);
         pauseOptions.setVisible(false);
@@ -332,7 +332,7 @@ class HUDView extends ApplicationAdapter {
     /**
      *  Renders the HUD when not paused
      */
-    void renderRunning() {
+    public void renderRunning() {
         pauseBackground.setVisible(false);
         pauseResume.setVisible(false);
         pauseOptions.setVisible(false);
@@ -353,7 +353,7 @@ class HUDView extends ApplicationAdapter {
      *
      * @param health new health. A value between 0 and 100
      */
-    void setHealthbar(float health) {
+    public void setHealthbar(float health) {
         healthbarRed.setWidth(health);
     }
 
