@@ -58,6 +58,11 @@ public class Inventory {
                 public Vector2f getPosition() {
                     return null;
                 }
+
+                @Override
+                public void giveMovementVector(Vector2f movementVector) {
+
+                }
             }, damage, projectileListeners));
         }
 
