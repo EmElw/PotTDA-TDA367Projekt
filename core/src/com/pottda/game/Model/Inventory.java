@@ -4,20 +4,32 @@ import javax.vecmath.Vector2f;
 import java.util.*;
 
 /**
- * Created by Gustav Lahti on 2017-04-12.
+ * An Inventory, containing {@link Item}.
+ * <p>
+ * Responsible for interpreting the properties and connections
+ * of {@code Item}s as necessary
  */
 
 public class Inventory {
+    /*
+    Starting points, set when compule() is called
+     */
     public final Set<AttackItem> attackItems;
-    //    public final List<SupportItem> supportItems;
+
+//    public final List<SupportItem> supportItems;
 //    public final List<Item> inactiveItems;
+
+    /*
+    A list of the Items in this Inventory
+     */
     public final List<Item> items;
+    /*
+    A map kept to quickly find what Item is at a given position, if any
+     */
     public final Map<Integer, Item> positionMap;
 
     private int height;
     private int width;
-    private boolean changed;
-
 
     // Should be called after creation and when the inventory's state is changed
     public void compile() {
@@ -27,16 +39,23 @@ public class Inventory {
                 attackItems.add((AttackItem) i);
             }
         }
+        // TODO check for circular loops
+        // TODO check for unique items
     }
 
+    /**
+     * Attacks in the given direction
+     *
+     * @param direction a {@link Vector2f} in the wanted direction
+     */
     public void attack(Vector2f direction) {
 
+        // Iterate through all attack items and do stuff
         for (AttackItem a : attackItems) {
-            if (true) { // TODO can fire?
-                // Create a projectile listener list, copy for each projectile
-                List<ProjectileListener> listeners = new ArrayList<ProjectileListener>();
+            // Create a projectile listener list, copy for each projectile
+            List<ProjectileListener> listeners = new ArrayList<ProjectileListener>();
 
-                Item i = a;
+            Item i = a;
                 /*
                 Iterate through the items until there is no item
                 at the output position
@@ -44,10 +63,13 @@ public class Inventory {
                 (Map.get(Key) returns "null" if there's no key (although
                 it can also return null if the Value is "null"))
                  */
-                while ((i = positionMap.get(i.getOutputAsInteger(width))) != null) {
-                    if (i.isProjectileModifier) {
-                        listeners.add(i);
-                    }
+            while ((i = positionMap.get(i.getOutputAsInteger(width))) != null) {
+                if (i.isProjectileModifier) {   // Modifiers need to listen to projectile events
+                    listeners.add(i);
+                }
+                if (i.isAttackItem || i.isSecondaryAttackItem) {
+                    // Attack and SecondaryAttacks doesn't propagate the chain further
+                    break;
                 }
             }
         }

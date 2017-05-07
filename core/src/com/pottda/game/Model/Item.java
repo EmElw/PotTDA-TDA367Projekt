@@ -10,8 +10,22 @@ import java.util.List;
  */
 
 public abstract class Item extends ProjectileListenerAdapter {
-    public boolean isAttackItem;
-    public boolean isProjectileModifier;
+    /*
+    An AttackItem is a starting point and cannot be chained into
+     */
+    protected boolean isAttackItem;
+    /*
+    A SecondaryAttackItem "stops" the chain, as items beyond it are linked to that item instead
+     */
+    protected boolean isSecondaryAttackItem;
+    /*
+    A ProjectileModifier modifies projectiles and needs to be attached as a ProjectileListener
+     */
+    protected boolean isProjectileModifier;
+    /*
+    A OneOff is an item that can only occur once per chain for whatever reason
+     */
+    protected boolean isOneOff;
 
     protected List<int[]> unrotatedRelativePositions; // A list of offsets for physical positions
     protected int[] unrotatedOutputPosition;          // A point where the item will look for its followup
@@ -26,6 +40,7 @@ public abstract class Item extends ProjectileListenerAdapter {
         // Set default properties
         isAttackItem = false;
         isProjectileModifier = false;
+        isSecondaryAttackItem = false;
 
         // Set properties based on dynamic type
         initDynamic();
