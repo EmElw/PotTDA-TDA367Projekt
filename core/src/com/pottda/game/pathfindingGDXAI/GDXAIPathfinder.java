@@ -17,7 +17,7 @@ public class GDXAIPathfinder implements Pathfinder {
 
     @Override
     public Vector2f getPath(Vector2f location) {
-        
+
         return null;
     }
 
