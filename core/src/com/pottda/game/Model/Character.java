@@ -42,17 +42,27 @@ public class Character extends ModelActor {
         accel = baseAccel + inventory.getAcceleration();
     }
 
-    // -- Public methods --
+    @Override
+    public void giveInput(Vector2f move, Vector2f attack) {
+        // Movement
+        move.set(move.x * accel, move.y * accel);
+        physicsActor.giveMovementVector(move);
+
+        attack(attack);
+    }
 
     /**
      * The character's attack
      *
      * @param direction The direction in which the character should attack
      */
-    public void attack(float direction) {
+    public void attack(Vector2f direction) {
         if (System.currentTimeMillis() >= lastAttackTime + cooldown) {
-            // TODO Attack, Trigger animations and sound effects
             lastAttackTime = System.currentTimeMillis();
+
+            // Attack
+            List<Projectile> projectiles = inventory.getProjectile();
+            setProjectileMovement(projectiles, direction);
         }
     }
 
@@ -66,17 +76,6 @@ public class Character extends ModelActor {
         if (currentHealth <= 0) {
             // TODO Die
         }
-    }
-
-    @Override
-    public void giveInput(Vector2f move, Vector2f attack) {
-        // Movement
-        move.set(move.x * accel, move.y * accel);
-        physicsActor.giveMovementVector(move);
-
-        // Attack
-        List<Projectile> projectiles = inventory.getProjectile();
-        setProjectileMovement(projectiles, attack);
     }
 
     private void setProjectileMovement(List<Projectile> projectiles, Vector2f attack){
