@@ -1,11 +1,14 @@
 package com.pottda.game.model;
 
 import javax.vecmath.Vector2f;
+import java.util.List;
 
 /**
  * Created by Gustav Lahti on 2017-04-07.
  */
 public class Character extends ModelActor {
+    public final static float PROJECTILE_ANGLE = 0.3f;
+
     public Inventory inventory;
 
     private static final int baseHealth = 100;
@@ -68,7 +71,26 @@ public class Character extends ModelActor {
     @Override
     public void giveInput(Vector2f move, Vector2f attack) {
         // TODO implement
+        // Movement
         move.set(move.x * accel, move.y * accel);
         physicsActor.giveMovementVector(move);
+
+        // Attack
+        List<Projectile> projectiles = inventory.getProjectile();
+        setProjectileMovement(projectiles, attack);
+    }
+
+    private void setProjectileMovement(List<Projectile> projectiles, Vector2f attack){
+        Vector2f temp;
+        for (int i = 0, n = projectiles.size(); i < n; i++){
+            temp = rotateVector(attack, PROJECTILE_ANGLE * ((n / 2f) - (float)i));
+            temp.normalize();
+            projectiles.get(i).giveInput(temp,null);
+        }
+    }
+
+    private Vector2f rotateVector(Vector2f vector, float rad){
+        return new Vector2f(vector.x * (float)Math.cos((double) rad),
+                vector.y * (float)Math.sin((double) rad));
     }
 }
