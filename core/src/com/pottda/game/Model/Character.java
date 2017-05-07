@@ -70,7 +70,6 @@ public class Character extends ModelActor {
 
     @Override
     public void giveInput(Vector2f move, Vector2f attack) {
-        // TODO implement
         // Movement
         move.set(move.x * accel, move.y * accel);
         physicsActor.giveMovementVector(move);
