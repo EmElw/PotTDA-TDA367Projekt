@@ -5,32 +5,22 @@ package com.pottda.game.model;
  */
 public abstract class ProjectileListenerAdapter implements ProjectileListener {
     @Override
-    public void onAttack() {
+    public void onAttack(Projectile projectile) {
 
     }
 
     @Override
-    public void onHit() {
+    public void onHit(Projectile projectile) {
 
     }
 
     @Override
-    public void onDestruction() {
+    public void onDestruction(Projectile p) {
 
     }
 
     @Override
-    public void onTimer() {
-
-    }
-
-    @Override
-    public void setTimer(int timer, boolean bool) {
-
-    }
-
-    @Override
-    public void onDistanceTraveled(int distance, boolean bool) {
+    public void onTimer(Projectile p) {
 
     }
 }
