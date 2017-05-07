@@ -51,12 +51,7 @@ public class Character extends ModelActor {
         attack(attack);
     }
 
-    /**
-     * The character's attack
-     *
-     * @param direction The direction in which the character should attack
-     */
-    public void attack(Vector2f direction) {
+    private void attack(Vector2f direction) {
         if (System.currentTimeMillis() >= lastAttackTime + cooldown) {
             lastAttackTime = System.currentTimeMillis();
 
