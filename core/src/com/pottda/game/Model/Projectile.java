@@ -1,5 +1,6 @@
 package com.pottda.game.model;
 
+import javax.vecmath.Vector2f;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +20,8 @@ public class Projectile extends ModelActor {
         hasDamaged = new ArrayList<Character>();
     }
 
-    /*@Override
-    public VectorType getMove() {
-        return null;
-    }*/
+    @Override
+    public void giveInput(Vector2f movementVector, Vector2f attackVector) {
+        physicsActor.giveMovementVector(movementVector);
+    }
 }
