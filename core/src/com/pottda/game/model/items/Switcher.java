@@ -3,18 +3,20 @@ package com.pottda.game.model.items;
 import com.pottda.game.model.Item;
 
 /**
- * A "Switcher" item which toggles between output, meaning
- * that the item compilation takes a different path every
- * time
+ * A "Switcher" item
+ * <p>
+ * It toggles between two output locations,
+ * alternating between them whenever its
+ * output is called
  */
 public class Switcher extends Item {
 
     /*
     Shaped like
-         0 1 2
-      1    x o
-      0  X x
-     -1    x o
+
+           x x o0
+        [X]x
+           x x o1
      */
     @Override
     protected void initDynamic() {

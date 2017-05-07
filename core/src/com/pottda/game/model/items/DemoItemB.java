@@ -13,9 +13,8 @@ public class DemoItemB extends AttackItem implements ProjectileListener {
     /*
     Shaped like
 
-     xx
-    xx
-
+            x x o
+        [X] x
      */
     @Override
     public void initDynamic() {

@@ -10,7 +10,12 @@ import javax.vecmath.Point2i;
  */
 public class DemoItemA extends AttackItem {
 
-    // Shaped like a square
+    /*
+    Shaped like
+
+         x x o
+        [X]x
+     */
     @Override
     public void initDynamic() {
         isAttackItem = true;
