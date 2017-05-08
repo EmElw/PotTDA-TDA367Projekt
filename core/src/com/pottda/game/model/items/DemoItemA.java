@@ -1,9 +1,6 @@
 package com.pottda.game.model.items;
 
 import com.pottda.game.model.AttackItem;
-import com.pottda.game.model.ProjectileListener;
-
-import javax.vecmath.Point2i;
 
 /**
  * Created by Magnus on 2017-05-05.
@@ -19,12 +16,12 @@ public class DemoItemA extends AttackItem {
     @Override
     public void initDynamic() {
         isAttackItem = true;
-        unrotatedRelativePositions.add(new int[]{0, 0});
-        unrotatedRelativePositions.add(new int[]{1, 0});
-        unrotatedRelativePositions.add(new int[]{0, 1});
-        unrotatedRelativePositions.add(new int[]{1, 1});
+        basePositions.add(new int[]{0, 0});
+        basePositions.add(new int[]{1, 0});
+        basePositions.add(new int[]{0, 1});
+        basePositions.add(new int[]{1, 1});
 
-        unrotatedOutputPosition = new int[]{2, 1};
+        baseOutputs.add(new int[]{2, 1});
     }
 
 }

@@ -20,12 +20,12 @@ public class MultiShot extends Item {
     protected void initDynamic() {
         isProjectileModifier = true;
 
-        unrotatedRelativePositions.add(new int[]{0, 0});
-        unrotatedRelativePositions.add(new int[]{0, 1});
-        unrotatedRelativePositions.add(new int[]{0, -1});
-        unrotatedRelativePositions.add(new int[]{1, 0});
+        basePositions.add(new int[]{0, 0});
+        basePositions.add(new int[]{0, 1});
+        basePositions.add(new int[]{0, -1});
+        basePositions.add(new int[]{1, 0});
 
-        unrotatedOutputPosition = new int[]{2, 0};
+        baseOutputs.add(new int[]{2, 0});
     }
 
     @Override

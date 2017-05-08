@@ -15,7 +15,7 @@ public class ChainAttack extends Item {
     Shaped like
 
         x x x
-       [X]  x o
+       [X]  o
         x x x
      */
     @Override
@@ -23,7 +23,16 @@ public class ChainAttack extends Item {
         isProjectileModifier = true;
         isSecondaryAttackItem = true;
 
-        unrotatedRelativePositions.add(new int[]{0, 0});
+        basePositions.add(new int[]{0, 0});
+        basePositions.add(new int[]{0, 1});
+        basePositions.add(new int[]{0, -1});
+        basePositions.add(new int[]{1, 1});
+        basePositions.add(new int[]{1, -1});
+        basePositions.add(new int[]{2, 1});
+        basePositions.add(new int[]{2, -1});
+
+        baseOutputs.add(new int[]{2, 0});
+
     }
 
     @Override

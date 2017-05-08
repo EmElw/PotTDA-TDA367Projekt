@@ -20,21 +20,11 @@ public class Switcher extends Item {
      */
     @Override
     protected void initDynamic() {
-        unrotatedRelativePositions.add(new int[]{0, 0});
-        unrotatedRelativePositions.add(new int[]{1, 1});
-        unrotatedRelativePositions.add(new int[]{1, 0});
-        unrotatedRelativePositions.add(new int[]{1, -1});
+        basePositions.add(new int[]{0, 0});
+        basePositions.add(new int[]{1, 1});
+        basePositions.add(new int[]{1, 0});
+        basePositions.add(new int[]{1, -1});
 
-        unrotatedOutputPosition = new int[]{2, 1};
-
-    }
-
-    /*
-    Toggles between the two outputs whenever it is called
-     */
-    @Override
-    public Integer getOutputAsInteger(int w) {
-        unrotatedOutputPosition[1] *= -1;
-        return super.getOutputAsInteger(w);
+        baseOutputs.add(new int[]{2, 1});
     }
 }

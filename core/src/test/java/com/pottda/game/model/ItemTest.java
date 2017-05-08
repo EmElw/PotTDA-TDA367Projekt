@@ -40,22 +40,25 @@ public class ItemTest {
     public void rotateTest() {
 
         List<Integer> positionsA = a.getPositionsAsIntegers(10);
-        Integer outputA = a.getOutputAsInteger(10);
-        List<Integer> posoitionsB = b.getPositionsAsIntegers(10);
-        Integer outputB = b.getOutputAsInteger(10);
+        List<Integer> outputA = a.getOutputAsInteger(10);
+        Util.sortIntegerList(positionsA, true);
+
+        List<Integer> positionsB = b.getPositionsAsIntegers(10);
+        List<Integer> outputB = b.getOutputAsInteger(10);
+        Util.sortIntegerList(positionsB, true);
 
         // Create the expected values
         List<Integer> rotatedA = new ArrayList<Integer>();
         rotatedA.addAll(Arrays.asList(51, 52, 41, 42));
-        Util.sortIntegerList(rotatedA, true);   // Initially unsorted
+        Util.sortIntegerList(rotatedA, true);
 
         List<Integer> rotatedB = new ArrayList<Integer>();
         rotatedB.addAll(Arrays.asList(48, 38, 39, 29));
         Util.sortIntegerList(rotatedB, true);
 
         Assert.assertEquals(rotatedA, positionsA);
-        Assert.assertEquals(rotatedB, posoitionsB);
-        Assert.assertEquals(outputA, Integer.valueOf(40));
-        Assert.assertEquals(outputB, Integer.valueOf(19));
+        Assert.assertEquals(rotatedB, positionsB);
+        Assert.assertEquals(outputA.get(0), Integer.valueOf(40));
+        Assert.assertEquals(outputB.get(0), Integer.valueOf(19));
     }
 }

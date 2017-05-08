@@ -34,9 +34,13 @@ public class Inventory {
     // Should be called after creation and when the inventory's state is changed
     public void compile() {
         attackItems.clear();
-        for (Item i : items) {
-            if (i.isAttackItem) {
-                attackItems.add((AttackItem) i);
+        for (Item item : items) {
+            if (item.isAttackItem) {
+                attackItems.add((AttackItem) item);
+            }
+            List<Integer> outputs = item.getOutputAsInteger(width);
+            for (int i = 0; i < outputs.size(); i++) {
+                item.outputItems.set(i, positionMap.get(outputs.get(i)));
             }
         }
         // TODO check for circular loops
@@ -52,26 +56,7 @@ public class Inventory {
 
         // Iterate through all attack items and do stuff
         for (AttackItem a : attackItems) {
-            // Create a projectile listener list, copy for each projectile
-            List<ProjectileListener> listeners = new ArrayList<ProjectileListener>();
-
-            Item i = a;
-                /*
-                Iterate through the items until there is no item
-                at the output position
-
-                (Map.get(Key) returns "null" if there's no key (although
-                it can also return null if the Value is "null"))
-                 */
-            while ((i = positionMap.get(i.getOutputAsInteger(width))) != null) {
-                if (i.isProjectileModifier) {   // Modifiers need to listen to projectile events
-                    listeners.add(i);
-                }
-                if (i.isAttackItem || i.isSecondaryAttackItem) {
-                    // Attack and SecondaryAttacks doesn't propagate the chain further
-                    break;
-                }
-            }
+            a.attack(direction);
         }
     }
 
