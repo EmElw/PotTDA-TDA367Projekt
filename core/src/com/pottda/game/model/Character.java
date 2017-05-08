@@ -1,25 +1,29 @@
 package com.pottda.game.model;
 
 import javax.vecmath.Vector2f;
-import java.util.List;
 
-/**
- * Created by Gustav Lahti on 2017-04-07.
- */
+
 public class Character extends ModelActor {
-    public final static float PROJECTILE_ANGLE = 0.3f;
-
-    public Inventory inventory;
-
-    private static final int baseHealth = 100;
-    public int health;
-    public int currentHealth;
-
-    private static final int baseCooldown = 100;
-    public int cooldown;
-    public long lastAttackTime;
-
+    /**
+     * Base maxHealth of any character, further modified by its Inventory
+     */
+    private static final int BASE_HEALTH = 100;
     private static final float baseAccel = 100;
+    /**
+     * A reference to the character's inventory, should be effectively final
+     */
+    public Inventory inventory;
+    /**
+     * Maxiumum health of a character
+     */
+    public int maxHealth;
+    /**
+     * Current health of a character
+     */
+    public int currentHealth;
+    /**
+     * Acceleration from movement input. Effectively max size of vector
+     */
     public float accel;
 
 
@@ -31,13 +35,9 @@ public class Character extends ModelActor {
         this.isProjectile = false;
         this.team = 0;
 
-        // Init health
-        health = baseHealth + inventory.getHealth();
-        currentHealth = health;
-
-        // Init cooldown
-        cooldown = baseCooldown + inventory.getCooldown();
-        lastAttackTime = System.currentTimeMillis() - cooldown;
+        // Init maxHealth
+        maxHealth = BASE_HEALTH + inventory.getHealth();
+        currentHealth = maxHealth;
 
         accel = baseAccel + inventory.getAcceleration();
     }
@@ -52,13 +52,7 @@ public class Character extends ModelActor {
     }
 
     private void attack(Vector2f direction) {
-        if (System.currentTimeMillis() >= lastAttackTime + cooldown) {
-            lastAttackTime = System.currentTimeMillis();
-
-            // Attack
-            List<Projectile> projectiles = inventory.getProjectile();
-            setProjectileMovement(projectiles, direction);
-        }
+        inventory.attack(direction, getPosition());
     }
 
     /**
@@ -73,17 +67,17 @@ public class Character extends ModelActor {
         }
     }
 
-    private void setProjectileMovement(List<Projectile> projectiles, Vector2f attack){
-        Vector2f temp;
-        for (int i = 0, n = projectiles.size(); i < n; i++){
-            temp = rotateVector(attack, PROJECTILE_ANGLE * ((n / 2f) - (float)i));
-            temp.normalize();
-            projectiles.get(i).giveInput(temp,null);
-        }
-    }
-
-    private Vector2f rotateVector(Vector2f vector, float rad){
-        return new Vector2f(vector.x * (float)Math.cos((double) rad),
-                vector.y * (float)Math.sin((double) rad));
-    }
+//    private void setProjectileMovement(List<Projectile> projectiles, Vector2f attack) {
+//        Vector2f temp;
+//        for (int i = 0, n = projectiles.size(); i < n; i++) {
+//            temp = rotateVector(attack, PROJECTILE_ANGLE * ((n / 2f) - (float) i));
+//            temp.normalize();
+//            projectiles.get(i).giveInput(temp, null);
+//        }
+//    }
+//
+//    private Vector2f rotateVector(Vector2f vector, float rad) {
+//        return new Vector2f(vector.x * (float) Math.cos((double) rad),
+//                vector.y * (float) Math.sin((double) rad));
+//    }
 }
