@@ -1,11 +1,11 @@
 package com.pottda.game.actorFactory;
 
 import com.badlogic.gdx.physics.box2d.*;
-import com.pottda.game.controller.AbstractController;
-import com.pottda.game.controller.ProjectileController;
-import com.pottda.game.model.ActorFactory;
-import com.pottda.game.model.Inventory;
-import com.pottda.game.model.Projectile;
+import com.pottda.game.controller.*;
+import com.pottda.game.model.*;
+import com.pottda.game.model.Character;
+import com.pottda.game.physicsBox2D.Box2DPhysicsActor;
+import com.pottda.game.physicsBox2D.Box2DPhysicsCharacter;
 import com.pottda.game.physicsBox2D.Box2DPhysicsProjectile;
 import com.pottda.game.view.ViewActor;
 
@@ -63,13 +63,55 @@ public class Box2DActorFactory extends ActorFactory{
     }
 
     @Override
-    public AbstractController buildEnemy() {
-        return null;
+    public AIController buildEnemy() {
+        // Create body
+        Body body = world.createBody(characterBodyDef);
+
+        // Set collision filtering
+        characterFixtureDef.filter.categoryBits = CHARACTER_ENEMY_FILTER.categoryBits;
+        characterFixtureDef.filter.maskBits = CHARACTER_ENEMY_FILTER.maskBits;
+
+        // Give body a fixture and calculate mass
+        body.createFixture(characterFixtureDef);
+        body.resetMassData();
+
+        Box2DPhysicsCharacter physics = new Box2DPhysicsCharacter(body);
+
+        Character model = new Character(physics);
+        model.team = ENEMY_TEAM;
+
+        ViewActor view = new ViewActor();
+
+        DumbAIController controller = new DumbAIController(model, view);
+
+        return controller;
     }
 
     @Override
     public AbstractController buildPlayer() {
-        return null;
+        // Create body
+        Body body = world.createBody(characterBodyDef);
+
+        // Set collision filtering
+        characterFixtureDef.filter.categoryBits = CHARACTER_PLAYER_FILTER.categoryBits;
+        characterFixtureDef.filter.maskBits = CHARACTER_PLAYER_FILTER.maskBits;
+
+        // Give body a fixture and calculate mass
+        body.createFixture(characterFixtureDef);
+        body.resetMassData();
+
+        Box2DPhysicsCharacter physics = new Box2DPhysicsCharacter(body);
+
+        Character model = new Character(physics);
+        DumbAIController.goal = model;
+        model.team = PLAYER_TEAM;
+
+        ViewActor view = new ViewActor();
+
+        // TODO Add functionality to allow user to choose controls
+        TouchJoystickController controller = new TouchJoystickController(model, view);
+
+        return controller;
     }
 
     @Override
@@ -104,6 +146,7 @@ public class Box2DActorFactory extends ActorFactory{
         Box2DPhysicsProjectile physics = new Box2DPhysicsProjectile(body);
 
         Projectile model = new Projectile(physics, 0, null);
+        model.team = team;
 
         ViewActor view = new ViewActor();
 
@@ -114,7 +157,19 @@ public class Box2DActorFactory extends ActorFactory{
 
     @Override
     public AbstractController buildObstacle() {
-        return null;
+        Body body = world.createBody(obstacleBodyDef);
+
+        body.createFixture(obstacleFixtureDef);
+
+        Box2DPhysicsActor physics = new Box2DPhysicsActor(body);
+
+        Obstacle model = new Obstacle(physics);
+
+        ViewActor view = new ViewActor();
+
+        ObstacleController controller = new ObstacleController(model, view);
+
+        return controller;
     }
 
     private void filterCategoryInit(){
