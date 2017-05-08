@@ -27,7 +27,6 @@ public class Inventory {
     private int height;
     private int width;
 
-
     // Should be called after creation and when the inventory's state is changed
     public void compile() {
         attackItems.clear();
@@ -40,6 +39,7 @@ public class Inventory {
                 item.outputItems.set(i, positionMap.get(outputs.get(i)));
             }
         }
+        // TODO update stats
     }
 
     /**
@@ -57,8 +57,6 @@ public class Inventory {
 
     public Inventory() {
         attackItems = new HashSet<AttackItem>();
-//        supportItems = new ArrayList<SupportItem>();
-//        inactiveItems = new ArrayList<Item>();
         items = new ArrayList<Item>();
         positionMap = new TreeMap<Integer, Item>();
     }
@@ -68,4 +66,17 @@ public class Inventory {
         this.height = h;
     }
 
+    /**
+     * Returns the sum of +maxHealth from items in the inventory
+     */
+    public int getHealth() {
+        return 0;   // TODO implement inventory maxHealth
+    }
+
+    /**
+     * Returns the sum of acceleration modifiers from items in the inventory
+     */
+    public float getAcceleration() {
+        return 0;   // TODO implement inventory acceleration
+    }
 }
