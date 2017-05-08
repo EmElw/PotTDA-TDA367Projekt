@@ -1,11 +1,14 @@
 package com.pottda.game.model;
 
 import javax.vecmath.Vector2f;
+import java.util.List;
 
 /**
  * Created by Gustav Lahti on 2017-04-07.
  */
 public class Character extends ModelActor {
+    public final static float PROJECTILE_ANGLE = 0.3f;
+
     public Inventory inventory;
 
     private static final int baseHealth = 100;
@@ -39,17 +42,22 @@ public class Character extends ModelActor {
         accel = baseAccel + inventory.getAcceleration();
     }
 
-    // -- Public methods --
+    @Override
+    public void giveInput(Vector2f move, Vector2f attack) {
+        // Movement
+        move.set(move.x * accel, move.y * accel);
+        physicsActor.giveMovementVector(move);
 
-    /**
-     * The character's attack
-     *
-     * @param direction The direction in which the character should attack
-     */
-    public void attack(float direction) {
+        attack(attack);
+    }
+
+    private void attack(Vector2f direction) {
         if (System.currentTimeMillis() >= lastAttackTime + cooldown) {
-            // TODO Attack, Trigger animations and sound effects
             lastAttackTime = System.currentTimeMillis();
+
+            // Attack
+            List<Projectile> projectiles = inventory.getProjectile();
+            setProjectileMovement(projectiles, direction);
         }
     }
 
@@ -65,8 +73,17 @@ public class Character extends ModelActor {
         }
     }
 
-    @Override
-    public void giveInput(Vector2f move, Vector2f attack) {
-        // TODO implement
+    private void setProjectileMovement(List<Projectile> projectiles, Vector2f attack){
+        Vector2f temp;
+        for (int i = 0, n = projectiles.size(); i < n; i++){
+            temp = rotateVector(attack, PROJECTILE_ANGLE * ((n / 2f) - (float)i));
+            temp.normalize();
+            projectiles.get(i).giveInput(temp,null);
+        }
+    }
+
+    private Vector2f rotateVector(Vector2f vector, float rad){
+        return new Vector2f(vector.x * (float)Math.cos((double) rad),
+                vector.y * (float)Math.sin((double) rad));
     }
 }
