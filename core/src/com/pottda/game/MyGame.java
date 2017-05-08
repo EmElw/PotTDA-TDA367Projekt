@@ -1,7 +1,9 @@
 package com.pottda.game;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.pottda.game.view.HUDView;
+import com.pottda.game.view.LibGDXApp;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -26,8 +28,17 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pottda.game.controller.AbstractController;
+import com.pottda.game.controller.KeyboardMouseController;
+import com.pottda.game.controller.TouchJoystickController;
+import com.pottda.game.model.Character;
+import com.pottda.game.model.ModelActor;
+import com.pottda.game.physicsBox2D.Box2DPhysicsActor;
+import com.pottda.game.physicsBox2D.Box2DPhysicsCharacter;
+import com.pottda.game.view.HUDView;
 import com.pottda.game.view.SoundsAndMusic;
+import com.pottda.game.view.ViewActor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyGame extends ApplicationAdapter {
@@ -50,8 +61,6 @@ public class MyGame extends ApplicationAdapter {
     private Fixture fixture;
     private ShapeRenderer shapeRenderer;
     private Sprite sprite;
-    private AbstractController abstractController;
-    private Vector2 v;
 
     private List<AbstractController> controllers;
     private World world;
@@ -66,12 +75,13 @@ public class MyGame extends ApplicationAdapter {
 
     @Override
     public void create() {
+        controllers = new ArrayList<AbstractController>();
+
         camera = new OrthographicCamera(WIDTH, HEIGHT);
         camera.setToOrtho(true, WIDTH, HEIGHT); // Y-axis pointing down
         viewport = new FitViewport(WIDTH, HEIGHT, camera);
         stage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         spriteBatch = new SpriteBatch();
-        v = new Vector2(0, 0);
 
         GAME_STATE = RUNNING;
         Gdx.input.setInputProcessor(stage);
@@ -85,7 +95,7 @@ public class MyGame extends ApplicationAdapter {
         bodyDef.position.set(400, 240);
 
         body = world.createBody(bodyDef);
-        shape = new CircleShape();
+        /*shape = new CircleShape();
         shape.setRadius(2.5f);
 
         fixtureDef = new FixtureDef();
@@ -95,7 +105,7 @@ public class MyGame extends ApplicationAdapter {
         fixtureDef.restitution = 0.6f;
 
         fixture = body.createFixture(fixtureDef);
-        shape.dispose();
+        shape.dispose();*/
 
         img = new Texture(Gdx.files.internal("CircleTest.png"));
         sprite = new Sprite(img);
@@ -103,13 +113,13 @@ public class MyGame extends ApplicationAdapter {
 
         hudView = new HUDView(stage);
 
-        /*if (Gdx.app.getType() == Application.ApplicationType.Android) { // if on android
-            abstractController = new TouchJoystickController(new ArrayList<AttackListener>(), new ArrayList<MovementListener>(), false, stage);
+        if (Gdx.app.getType() == Application.ApplicationType.Android) { // if on android
+            controllers.add(new TouchJoystickController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))), new ViewActor(), stage));
         } else if (Gdx.app.getType() == Application.ApplicationType.Desktop) { // if on desktop
             // Check if using mouse?
-            //abstractController = new KeyboardOnlyController(new ArrayList<AttackListener>(), new ArrayList<MovementListener>(), false);
-            abstractController = new KeyboardMouseController(new ArrayList<AttackListener>(), new ArrayList<MovementListener>(), false, body);
-        }*/
+            // abstractController = new KeyboardOnlyController(new ArrayList<AttackListener>(), new ArrayList<MovementListener>(), false);
+            controllers.add(new KeyboardMouseController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))), new ViewActor()));
+        }
 
         soundsAndMusic = new SoundsAndMusic();
         startMusic();
@@ -129,18 +139,23 @@ public class MyGame extends ApplicationAdapter {
 
         checkTouch();
 
+        if (controllers != null) {
+            // Update all controllers, causing the model to update
+            for (AbstractController c : controllers) {
+                if (c instanceof TouchJoystickController && GAME_STATE != RUNNING) {
+                    // Render joysticks
+                    c.onNewFrame();
+                } else if (GAME_STATE == RUNNING) {
+                    c.onNewFrame();
+                }
+            }
+        }
+
         if (GAME_STATE == PAUSED) {
             hudView.renderPaused();
 
         } else if (GAME_STATE == RUNNING) {
             hudView.renderRunning();
-
-            if (controllers != null) {
-                // Update all controllers, causing the model to update
-                for (AbstractController c : controllers) {
-                    c.onNewFrame();
-                }
-            }
 
             // Update the world
             doPhysicsStep(Gdx.graphics.getDeltaTime());
@@ -157,6 +172,11 @@ public class MyGame extends ApplicationAdapter {
         stage.draw();
     }
 
+    /**
+     * Returns the game state
+     *
+     * @return 1=running, 2=paused, 3=options
+     */
     public static int getGameState() {
         return GAME_STATE;
     }
@@ -198,7 +218,6 @@ public class MyGame extends ApplicationAdapter {
                     }
                     break;
             }
-
         }
     }
 
