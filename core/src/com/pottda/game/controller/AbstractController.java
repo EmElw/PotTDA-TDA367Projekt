@@ -1,5 +1,6 @@
 package com.pottda.game.controller;
 
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.pottda.game.model.ModelActor;
 import com.pottda.game.view.ViewActor;
 
@@ -19,11 +20,19 @@ public abstract class AbstractController {
     final ModelActor modelActor;
     private final ViewActor viewActor;
 
-    AbstractController(ModelActor modelActor, ViewActor viewActor) {
+    /**
+     *
+     * @param modelActor
+     * @param viewActor
+     * @param stage the stage to add the actor to (hudStage or gameStage)
+     */
+    AbstractController(ModelActor modelActor, ViewActor viewActor, Stage stage) {
         this.modelActor = modelActor;
         this.viewActor = viewActor;
         movementVector = new Vector2f(0,0);
         attackVector = new Vector2f(0,0);
+
+        stage.addActor(viewActor);
     }
 
     /**

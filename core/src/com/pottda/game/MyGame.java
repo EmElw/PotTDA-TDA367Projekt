@@ -2,8 +2,8 @@ package com.pottda.game;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
+import com.pottda.game.view.GameView;
 import com.pottda.game.view.HUDView;
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -17,7 +17,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
@@ -30,10 +29,7 @@ import com.pottda.game.controller.AbstractController;
 import com.pottda.game.controller.KeyboardMouseController;
 import com.pottda.game.controller.TouchJoystickController;
 import com.pottda.game.model.Character;
-import com.pottda.game.model.ModelActor;
-import com.pottda.game.physicsBox2D.Box2DPhysicsActor;
 import com.pottda.game.physicsBox2D.Box2DPhysicsCharacter;
-import com.pottda.game.view.HUDView;
 import com.pottda.game.view.SoundsAndMusic;
 import com.pottda.game.view.ViewActor;
 
@@ -44,7 +40,8 @@ public class MyGame extends ApplicationAdapter {
 
     private static final int WIDTH = 800;
     private static final int HEIGHT = 480;
-    private Stage stage;
+    private Stage hudStage;
+    private Stage gameStage;
     private OrthographicCamera camera;
     private Viewport viewport;
     private Batch spriteBatch;
@@ -66,6 +63,7 @@ public class MyGame extends ApplicationAdapter {
 
     private HUDView hudView;
     private SoundsAndMusic soundsAndMusic;
+    private GameView gameView;
 
     private static final int RUNNING = 1;
     private static final int PAUSED = 2;
@@ -79,11 +77,12 @@ public class MyGame extends ApplicationAdapter {
         camera = new OrthographicCamera(WIDTH, HEIGHT);
         camera.setToOrtho(true, WIDTH, HEIGHT); // Y-axis pointing down
         viewport = new FitViewport(WIDTH, HEIGHT, camera);
-        stage = new Stage(new StretchViewport(WIDTH, HEIGHT));
+        hudStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
+        gameStage = new Stage(viewport);
         spriteBatch = new SpriteBatch();
 
         GAME_STATE = RUNNING;
-        Gdx.input.setInputProcessor(stage);
+        Gdx.input.setInputProcessor(hudStage);
         Box2D.init();
         //box2DDebugRenderer = new Box2DDebugRenderer();
         world = new World(new Vector2(0, 0), false);
@@ -110,15 +109,17 @@ public class MyGame extends ApplicationAdapter {
         sprite = new Sprite(img);
         shapeRenderer = new ShapeRenderer();
 
-        hudView = new HUDView(stage);
+        hudView = new HUDView(hudStage);
 
         if (Gdx.app.getType() == Application.ApplicationType.Android) { // if on android
-            controllers.add(new TouchJoystickController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))), new ViewActor(), stage));
+            controllers.add(new TouchJoystickController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))), new ViewActor(), hudStage));
         } else if (Gdx.app.getType() == Application.ApplicationType.Desktop) { // if on desktop
             // Check if using mouse?
             // abstractController = new KeyboardOnlyController(new ArrayList<AttackListener>(), new ArrayList<MovementListener>(), false);
-            controllers.add(new KeyboardMouseController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))), new ViewActor()));
+            controllers.add(new KeyboardMouseController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))), new ViewActor(), hudStage));
         }
+
+        gameView = new GameView(gameStage);
 
         soundsAndMusic = new SoundsAndMusic();
         startMusic();
@@ -127,7 +128,7 @@ public class MyGame extends ApplicationAdapter {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
-        stage.getViewport().update(width, height, false);
+        hudStage.getViewport().update(width, height, false);
     }
 
     @Override
@@ -154,6 +155,8 @@ public class MyGame extends ApplicationAdapter {
             hudView.renderPaused();
 
         } else if (GAME_STATE == RUNNING) {
+            gameView.render();
+
             hudView.renderRunning();
 
             // Update the world
@@ -168,7 +171,7 @@ public class MyGame extends ApplicationAdapter {
         sprite.draw(spriteBatch);
         spriteBatch.end();
 
-        stage.draw();
+        hudStage.draw();
     }
 
     /**
@@ -185,8 +188,8 @@ public class MyGame extends ApplicationAdapter {
      */
     private void checkTouch() {
         if (Gdx.input.justTouched()) { // Only check first touch
-            // Get stage camera and unproject to get correct coordinates!
-            Vector3 vector3 = stage.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+            // Get hudStage camera and unproject to get correct coordinates!
+            Vector3 vector3 = hudStage.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
             switch (GAME_STATE) {
                 case RUNNING:
                     if (hudView.checkIfTouchingPauseButton(vector3)) {
@@ -240,8 +243,9 @@ public class MyGame extends ApplicationAdapter {
         //shape.dispose(); // Causes EXCEPTION_ACCESS_VIOLATION in JRE
         shapeRenderer.dispose();
         hudView.dispose();
-        stage.dispose();
+        hudStage.dispose();
         world.dispose();
         soundsAndMusic.dispose();
+        gameView.dispose();
     }
 }
