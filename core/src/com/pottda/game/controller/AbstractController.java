@@ -17,9 +17,9 @@ public abstract class AbstractController {
 //    final boolean isAI;
 
     final ModelActor modelActor;
-    final ViewActor viewActor;
+    private final ViewActor viewActor;
 
-    public AbstractController(ModelActor modelActor, ViewActor viewActor) {
+    AbstractController(ModelActor modelActor, ViewActor viewActor) {
         this.modelActor = modelActor;
         this.viewActor = viewActor;
         movementVector = new Vector2f(0,0);
@@ -50,6 +50,5 @@ public abstract class AbstractController {
         viewActor.setPoint(position.x, position.y);
         viewActor.setAngle(degrees);
     }
-
 
 }
