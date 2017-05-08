@@ -92,8 +92,8 @@ public class MyGame extends ApplicationAdapter {
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(400, 240);
 
-        /*body = world.createBody(bodyDef);
-        shape = new CircleShape();
+        body = world.createBody(bodyDef);
+        /*shape = new CircleShape();
         shape.setRadius(2.5f);
 
         fixtureDef = new FixtureDef();
@@ -111,13 +111,13 @@ public class MyGame extends ApplicationAdapter {
 
         hudView = new HUDView(stage);
 
-        //if (Gdx.app.getType() == Application.ApplicationType.Android) { // if on android
-        controllers.add(new TouchJoystickController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))), new ViewActor(), stage));
-        //} else if (Gdx.app.getType() == Application.ApplicationType.Desktop) { // if on desktop
-        // Check if using mouse?
-        //abstractController = new KeyboardOnlyController(new ArrayList<AttackListener>(), new ArrayList<MovementListener>(), false);
-        //    controllers.add(new KeyboardMouseController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))), new ViewActor()));
-        //}
+        if (Gdx.app.getType() == Application.ApplicationType.Android) { // if on android
+            controllers.add(new TouchJoystickController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))), new ViewActor(), stage));
+        } else if (Gdx.app.getType() == Application.ApplicationType.Desktop) { // if on desktop
+            // Check if using mouse?
+            // abstractController = new KeyboardOnlyController(new ArrayList<AttackListener>(), new ArrayList<MovementListener>(), false);
+            controllers.add(new KeyboardMouseController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))), new ViewActor()));
+        }
 
         soundsAndMusic = new SoundsAndMusic();
         startMusic();
@@ -170,6 +170,11 @@ public class MyGame extends ApplicationAdapter {
         stage.draw();
     }
 
+    /**
+     * Returns the game state
+     *
+     * @return 1=running, 2=paused, 3=options
+     */
     public static int getGameState() {
         return GAME_STATE;
     }
@@ -211,7 +216,6 @@ public class MyGame extends ApplicationAdapter {
                     }
                     break;
             }
-
         }
     }
 
