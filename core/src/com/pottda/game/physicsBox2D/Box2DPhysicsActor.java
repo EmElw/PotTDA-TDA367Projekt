@@ -9,6 +9,10 @@ import javax.vecmath.Vector2f;
 public class Box2DPhysicsActor extends PhysicsActor {
     Body body;
 
+    public Box2DPhysicsActor(Body body){
+        this.body = body;
+    }
+
     @Override
     public Vector2f getPosition() {
         Vector2 bodyPos = body.getPosition();
