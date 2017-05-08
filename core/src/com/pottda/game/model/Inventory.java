@@ -70,7 +70,7 @@ public class Inventory {
 
         double sum = 0;
         for (Item i : items) {
-            sum += i.getStat(stat).doubleValue();
+            sum += i.getStat(stat);
         }
         return sum;
     }

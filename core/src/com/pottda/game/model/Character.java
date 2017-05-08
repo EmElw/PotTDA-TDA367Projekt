@@ -1,6 +1,8 @@
 package com.pottda.game.model;
 
 import javax.vecmath.Vector2f;
+import java.util.EnumMap;
+import java.util.Map;
 
 
 public class Character extends ModelActor {
@@ -14,17 +16,10 @@ public class Character extends ModelActor {
      */
     public Inventory inventory;
     /**
-     * Maxiumum health of a character
-     */
-    public int maxHealth;
-    /**
      * Current health of a character
      */
     public int currentHealth;
-    /**
-     * Acceleration from movement input. Effectively max size of vector
-     */
-    public float accel;
+    private static Map<Stat, Double> stats;
 
 
     // -- Constructors --
@@ -35,17 +30,20 @@ public class Character extends ModelActor {
         this.isProjectile = false;
         this.team = 0;
 
-        // Init maxHealth
-        maxHealth = BASE_HEALTH + inventory.getHealth();
-        currentHealth = maxHealth;
+        stats = new EnumMap<Stat, Double>(Stat.class);
 
-        accel = baseAccel + inventory.getAcceleration();
+        // Sum all simple stats
+        for (Stat stat : stats.keySet()) {
+            stats.put(stat, inventory.getSumStat(stat));
+        }
+
     }
 
     @Override
     public void giveInput(Vector2f move, Vector2f attack) {
         // Movement
-        move.set(move.x * accel, move.y * accel);
+        move.set(move.x * stats.get(Stat.ACCEL).floatValue(),
+                move.y * stats.get(Stat.ACCEL).floatValue());
         physicsActor.giveMovementVector(move);
 
         attack(attack);
