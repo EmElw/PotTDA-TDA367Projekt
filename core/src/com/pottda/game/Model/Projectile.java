@@ -9,8 +9,8 @@ import java.util.List;
 
 public class Projectile extends ModelActor {
     int damage;
-    List<ProjectileListener> projectileListeners;
-    List<Character> hasDamaged;
+    public List<ProjectileListener> projectileListeners;
+    public List<Character> hasDamaged;
 
     public Projectile(PhysicsActor physicsActor, int damage, List<ProjectileListener> projectileListeners) {
         super(physicsActor);
@@ -18,6 +18,8 @@ public class Projectile extends ModelActor {
         this.projectileListeners = projectileListeners;
         hasDamaged = new ArrayList<Character>();
     }
+
+
 
     /*@Override
     public VectorType getMove() {
