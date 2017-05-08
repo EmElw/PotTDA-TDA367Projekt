@@ -70,6 +70,8 @@ public class MyGame extends ApplicationAdapter {
     private static final int OPTIONS = 3;
     private static int GAME_STATE = 0;
 
+    private static final String playerImage = "badlogic.jpg"; // change later
+
     @Override
     public void create() {
         controllers = new ArrayList<AbstractController>();
@@ -112,11 +114,13 @@ public class MyGame extends ApplicationAdapter {
         hudView = new HUDView(hudStage);
 
         if (Gdx.app.getType() == Application.ApplicationType.Android) { // if on android
-            controllers.add(new TouchJoystickController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))), new ViewActor(), hudStage));
+            controllers.add(new TouchJoystickController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))),
+                    new ViewActor(new Texture(Gdx.files.internal(playerImage))), hudStage));
         } else if (Gdx.app.getType() == Application.ApplicationType.Desktop) { // if on desktop
             // Check if using mouse?
             // abstractController = new KeyboardOnlyController(new ArrayList<AttackListener>(), new ArrayList<MovementListener>(), false);
-            controllers.add(new KeyboardMouseController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))), new ViewActor(), hudStage));
+            controllers.add(new KeyboardMouseController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))),
+                    new ViewActor(new Texture(Gdx.files.internal(playerImage))), hudStage));
         }
 
         gameView = new GameView(gameStage);

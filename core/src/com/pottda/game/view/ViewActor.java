@@ -1,11 +1,22 @@
 package com.pottda.game.view;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 /**
  *
  */
-public class ViewActor extends Actor {
+public class ViewActor extends Image {
+
+    /**
+     * calls super class to set image for actor
+     * @param texture the texture to set as image
+     */
+    public ViewActor(Texture texture) {
+        super(new TextureRegionDrawable(new TextureRegion(texture)));
+    }
 
     /**
      * Sets the position of the actor
@@ -25,5 +36,7 @@ public class ViewActor extends Actor {
     public void setAngle(float degrees) {
         this.setRotation(degrees);
     }
+
+
 
 }
