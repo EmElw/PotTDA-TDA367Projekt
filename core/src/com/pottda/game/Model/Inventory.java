@@ -12,13 +12,9 @@ import java.util.*;
 
 public class Inventory {
     /*
-    Starting points, set when compule() is called
+    Starting points, set when compile() is called
      */
     public final Set<AttackItem> attackItems;
-
-//    public final List<SupportItem> supportItems;
-//    public final List<Item> inactiveItems;
-
     /*
     A list of the Items in this Inventory
      */
@@ -35,7 +31,7 @@ public class Inventory {
     public void compile() {
         attackItems.clear();
         for (Item item : items) {
-            if (item.isAttackItem) {
+            if (item.isPrimaryAttack) {
                 attackItems.add((AttackItem) item);
             }
             List<Integer> outputs = item.getOutputAsInteger(width);
@@ -52,11 +48,11 @@ public class Inventory {
      *
      * @param direction a {@link Vector2f} in the wanted direction
      */
-    public void attack(Vector2f direction) {
+    public void attack(Vector2f direction, Vector2f origin) {
 
         // Iterate through all attack items and do stuff
         for (AttackItem a : attackItems) {
-            a.attack(direction);
+            a.attack(direction, origin);
         }
     }
 
