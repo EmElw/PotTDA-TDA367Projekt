@@ -1,22 +1,46 @@
 package com.pottda.game.model;
 
-/**
- * Created by rikar on 2017-04-07.
- */
+import javax.vecmath.Vector2f;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public abstract class AttackItem extends Item {
-    int damage;
-    int cooldown;
-    int projectileAmount;
-    ProjectileListener projectileListener;
 
-    public AttackItem() {
+    /**
+     * The base damage of any {@link Projectile} created by this Item
+     */
+    int damage;
+    /**
+     * The cool down, measured in milliseconds, before this Item can fire
+     */
+    int cooldown;
+
+    @Override
+    public void init() {
+        damage = 0;
+        cooldown = 100;
+        super.init();
     }
 
-    public AttackItem(int damage, int cooldown, int projectileAmount, ProjectileListener projectileListener) {
-        this.damage = damage;
-        this.cooldown = cooldown;
-        this.projectileAmount = projectileAmount;
-        this.projectileListener = projectileListener;
+    /**
+     * Executes an attack in the given direction
+     *
+     * @param direction
+     */
+    public void attack(Vector2f direction, Vector2f origin) {
+
+        List<ProjectileListener> listeners = new ArrayList<ProjectileListener>();
+
+        Item i = this;
+
+        // Add listeners
+        while ((i = i.getNext()) != null) {
+            if (i.isProjectileModifier) {
+                listeners.add(i);
+            }
+        }
+
+        // TODO create projectiles
     }
 }

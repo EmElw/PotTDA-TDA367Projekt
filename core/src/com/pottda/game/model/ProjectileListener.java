@@ -1,19 +1,16 @@
 package com.pottda.game.model;
+
 /**
  * Created by rikar on 2017-04-07.
  */
 
 public interface ProjectileListener {
 
-    void onAttack();
+    void onAttack(Projectile projectile);
 
-    void onHit();
+    void onHit(Projectile projectile);
 
-    void onDestruction();
+    void onDestruction(Projectile p);
 
-    void onTimer();
-
-    void setTimer(int timer, boolean bool);
-
-    void onDistanceTraveled(int distance, boolean bool);
+    void onTimer(Projectile p);
 }
