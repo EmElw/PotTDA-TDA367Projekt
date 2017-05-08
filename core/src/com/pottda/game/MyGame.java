@@ -2,7 +2,6 @@ package com.pottda.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.pottda.game.view.HUDView;
-import com.pottda.game.view.LibGDXApp;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;

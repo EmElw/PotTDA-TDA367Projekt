@@ -37,10 +37,16 @@ public abstract class AbstractController {
         modelActor.handleCollisions();
     }
 
+    /**
+     * Updates the ViewActor so everything can be drawn out later
+     */
     private void updateView() {
-        // TODO extend with other modifications such as rotation, scale etc.
+        // TODO extend with other modifications such as rotation and stuff
         Vector2f position = modelActor.getPosition();
-        viewActor.setPosition(position.x, position.y);
+        float degrees = modelActor.getAngle();
+
+        viewActor.setPoint(position.x, position.y);
+        viewActor.setAngle(degrees);
     }
 
 
