@@ -10,11 +10,11 @@ public abstract class AttackItem extends Item {
     /**
      * The base damage of any {@link Projectile} created by this Item
      */
-    int damage;
+    protected int damage;
     /**
      * The cool down, measured in milliseconds, before this Item can fire
      */
-    int cooldown;
+    protected int cooldown;
 
     @Override
     public void init() {
