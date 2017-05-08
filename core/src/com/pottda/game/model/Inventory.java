@@ -66,17 +66,12 @@ public class Inventory {
         this.height = h;
     }
 
-    /**
-     * Returns the sum of +maxHealth from items in the inventory
-     */
-    public int getHealth() {
-        return 0;   // TODO implement inventory maxHealth
-    }
+    public double getSumStat(Stat stat) {
 
-    /**
-     * Returns the sum of acceleration modifiers from items in the inventory
-     */
-    public float getAcceleration() {
-        return 0;   // TODO implement inventory acceleration
+        double sum = 0;
+        for (Item i : items) {
+            sum += i.getStat(stat).doubleValue();
+        }
+        return sum;
     }
 }
