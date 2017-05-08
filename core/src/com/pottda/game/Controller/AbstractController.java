@@ -22,6 +22,8 @@ public abstract class AbstractController {
     public AbstractController(ModelActor modelActor, ViewActor viewActor) {
         this.modelActor = modelActor;
         this.viewActor = viewActor;
+        movementVector = new Vector2f(0,0);
+        attackVector = new Vector2f(0,0);
     }
 
     /**
