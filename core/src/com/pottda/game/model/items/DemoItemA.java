@@ -2,6 +2,8 @@ package com.pottda.game.model.items;
 
 import com.pottda.game.model.AttackItem;
 
+import javax.vecmath.Point2i;
+
 /**
  * Created by Magnus on 2017-05-05.
  */
@@ -15,13 +17,14 @@ public class DemoItemA extends AttackItem {
      */
     @Override
     public void initDynamic() {
-        isAttackItem = true;
-        basePositions.add(new int[]{0, 0});
-        basePositions.add(new int[]{1, 0});
-        basePositions.add(new int[]{0, 1});
-        basePositions.add(new int[]{1, 1});
+        isPrimaryAttack = true;
 
-        baseOutputs.add(new int[]{2, 1});
+        basePositions.add(new Point2i(0, 1));
+        basePositions.add(new Point2i(1, 1));
+        basePositions.add(new Point2i(1, 0));
+        basePositions.add(new Point2i(1, 1));
+
+        baseOutputs.add(new Point2i(2, 1));
     }
 
 }

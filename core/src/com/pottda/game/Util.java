@@ -1,5 +1,6 @@
 package com.pottda.game;
 
+import javax.vecmath.Point2i;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -38,7 +39,7 @@ public class Util {
 
 
     /**
-     * Rotates a 2D point by n * pi/2 rad or n * 90 degrees around (0,0)
+     * Returns a copy of a rotated 2D point by n * pi/2 rad or n * 90 degrees around (0,0)
      * <p>
      * Home-brew rotation function (because vecmath doesn't support 2D matrices?)
      *
@@ -47,10 +48,10 @@ public class Util {
      * @param n the rotation, expressed as n multiples of pi/2 rad
      * @return {@code int[]} of size 2
      */
-    public static int[] rotate(int x, int y, int n) {
-        int[] returnValue = new int[2];
-        returnValue[0] = a[n] * x + b[n] * y;
-        returnValue[1] = c[n] * x + a[n] * y;
+    public static Point2i rotate(int x, int y, int n) {
+        Point2i returnValue = new Point2i(x, y);
+        returnValue.x = a[n] * x + b[n] * y;
+        returnValue.y = c[n] * x + a[n] * y;
         return returnValue;
     }
 
