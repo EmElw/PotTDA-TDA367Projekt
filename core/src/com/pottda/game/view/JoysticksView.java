@@ -1,18 +1,18 @@
 package com.pottda.game.view;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.pottda.game.MyGame;
 
 /**
  * Created by Rikard Teodorsson on 2017-05-08.
  */
 
-public class JoysticksView extends ApplicationAdapter {
+public class JoysticksView {
     private final Stage stage;
     private Touchpad movementTouchpad;
     private Touchpad attackTouchpad;
@@ -22,9 +22,9 @@ public class JoysticksView extends ApplicationAdapter {
     private Drawable touchKnob;
 
     public JoysticksView(Stage stage) {
+        this.stage = stage;
         createMovementJoystick();
         createAttackJoystick();
-        this.stage = stage;
     }
 
     private void createAttackJoystick() {
@@ -47,7 +47,7 @@ public class JoysticksView extends ApplicationAdapter {
         //Create new TouchPad with the created style
         attackTouchpad = new Touchpad(10, touchpadStyle);
         //setBounds(x, y, width, height)
-        attackTouchpad.setBounds(Gdx.graphics.getWidth() - 105, 15, 90, 90);
+        attackTouchpad.setBounds(stage.getWidth() - 105, 15, 90, 90);
 
         //add TouchPad to stage
         stage.addActor(attackTouchpad);
@@ -78,6 +78,26 @@ public class JoysticksView extends ApplicationAdapter {
         //add TouchPad to stage
         stage.addActor(movementTouchpad);
         Gdx.input.setInputProcessor(stage);
+    }
+
+    public void onNewFrame() {
+        // Check if game paused
+        if (MyGame.getGameState() != 1) {
+            attackTouchpad.setColor(attackTouchpad.getColor().r, attackTouchpad.getColor().g, attackTouchpad.getColor().b, 0);
+            movementTouchpad.setColor(movementTouchpad.getColor().r, movementTouchpad.getColor().g, movementTouchpad.getColor().b, 0);
+        } else { //
+            // Check if user is touching joysticks
+            if (movementTouchpad.isTouched()) {
+                movementTouchpad.setColor(movementTouchpad.getColor().r, movementTouchpad.getColor().g, movementTouchpad.getColor().b, (float) 0.4);
+            } else {
+                movementTouchpad.setColor(movementTouchpad.getColor().r, movementTouchpad.getColor().g, movementTouchpad.getColor().b, 1);
+            }
+            if (attackTouchpad.isTouched()) {
+                attackTouchpad.setColor(attackTouchpad.getColor().r, attackTouchpad.getColor().g, attackTouchpad.getColor().b, (float) 0.4);
+            } else {
+                attackTouchpad.setColor(attackTouchpad.getColor().r, attackTouchpad.getColor().g, attackTouchpad.getColor().b, 1);
+            }
+        }
     }
 
     public float getMovementKnobX() {

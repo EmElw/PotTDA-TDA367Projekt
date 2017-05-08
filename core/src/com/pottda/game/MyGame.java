@@ -111,13 +111,13 @@ public class MyGame extends ApplicationAdapter {
 
         hudView = new HUDView(stage);
 
-        if (Gdx.app.getType() == Application.ApplicationType.Android) { // if on android
-            controllers.add(new TouchJoystickController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))), new ViewActor(), stage));
-        } else if (Gdx.app.getType() == Application.ApplicationType.Desktop) { // if on desktop
-            // Check if using mouse?
-            //abstractController = new KeyboardOnlyController(new ArrayList<AttackListener>(), new ArrayList<MovementListener>(), false);
-            controllers.add(new KeyboardMouseController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))), new ViewActor()));
-        }
+        //if (Gdx.app.getType() == Application.ApplicationType.Android) { // if on android
+        controllers.add(new TouchJoystickController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))), new ViewActor(), stage));
+        //} else if (Gdx.app.getType() == Application.ApplicationType.Desktop) { // if on desktop
+        // Check if using mouse?
+        //abstractController = new KeyboardOnlyController(new ArrayList<AttackListener>(), new ArrayList<MovementListener>(), false);
+        //    controllers.add(new KeyboardMouseController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))), new ViewActor()));
+        //}
 
         soundsAndMusic = new SoundsAndMusic();
         startMusic();
@@ -137,18 +137,23 @@ public class MyGame extends ApplicationAdapter {
 
         checkTouch();
 
+        if (controllers != null) {
+            // Update all controllers, causing the model to update
+            for (AbstractController c : controllers) {
+                if (c instanceof TouchJoystickController && GAME_STATE != RUNNING) {
+                    // Render joysticks
+                    c.onNewFrame();
+                } else if (GAME_STATE == RUNNING) {
+                    c.onNewFrame();
+                }
+            }
+        }
+
         if (GAME_STATE == PAUSED) {
             hudView.renderPaused();
 
         } else if (GAME_STATE == RUNNING) {
             hudView.renderRunning();
-
-            if (controllers != null) {
-                // Update all controllers, causing the model to update
-                for (AbstractController c : controllers) {
-                    c.onNewFrame();
-                }
-            }
 
             // Update the world
             doPhysicsStep(Gdx.graphics.getDeltaTime());
