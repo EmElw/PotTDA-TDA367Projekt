@@ -1,4 +1,4 @@
-package com.pottda.game.model.items;
+package com.pottda.game.model;
 
 import com.pottda.game.model.Inventory;
 import com.pottda.game.model.Item;
@@ -53,6 +53,7 @@ public class InventoryBlueprint {
                 item.x = entry.getKey().x;
                 item.y = entry.getKey().y;
                 item.orientation = entry.getKey().orientation;
+                inventory.addItem(item);
             } catch (InstantiationException e) {
                 throw new InstantiationError("Could not create instance of: " + entry.getValue().toString());
             } catch (IllegalAccessException e) {
