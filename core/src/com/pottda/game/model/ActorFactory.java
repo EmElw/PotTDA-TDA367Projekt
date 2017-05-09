@@ -1,9 +1,6 @@
 package com.pottda.game.model;
 
-import com.pottda.game.controller.*;
-import com.pottda.game.view.*;
-
-import java.util.List;
+import com.pottda.game.controller.AbstractController;
 
 public abstract class ActorFactory {
     public abstract AbstractController buildEnemy();
