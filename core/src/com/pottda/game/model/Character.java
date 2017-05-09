@@ -33,11 +33,11 @@ public class Character extends ModelActor {
         stats = new EnumMap<Stat, Double>(Stat.class);
 
         // Sum all simple stats
-        for (Stat stat : stats.keySet()) {
-            stats.put(stat, inventory.getSumStat(stat));
+        for (Stat stat : Stat.values()) {
+            stats.put(stat, 0 + inventory.getSumStat(stat));
         }
         // Add base values
-        stats.put(Stat.HEALTH, /*stats.get(Stat.HEALTH) +*/(double) BASE_HEALTH);
+        stats.put(Stat.HEALTH, stats.get(Stat.HEALTH) + (double) BASE_HEALTH);
 
         // Assign further as necessary
         this.currentHealth = stats.get(Stat.HEALTH).intValue();
@@ -47,10 +47,10 @@ public class Character extends ModelActor {
     @Override
     public void giveInput(Vector2f move, Vector2f attack) {
         // Movement
-        move.set(move.x/* * stats.get(Stat.ACCEL).floatValue()*/,
-                move.y/* * stats.get(Stat.ACCEL).floatValue()*/);
+        move.set(move.x * stats.get(Stat.ACCEL).floatValue(),
+                move.y * stats.get(Stat.ACCEL).floatValue());
         physicsActor.giveMovementVector(move);
-        this.angle = (float)Math.toDegrees(Math.atan2(-attack.getY(), attack.getX()));
+        this.angle = (float) Math.toDegrees(Math.atan2(-attack.getY(), attack.getX()));
         attack(attack);
     }
 
