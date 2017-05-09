@@ -36,7 +36,10 @@ public class Character extends ModelActor {
         for (Stat stat : stats.keySet()) {
             stats.put(stat, inventory.getSumStat(stat));
         }
+        // Add base values
+        stats.put(Stat.HEALTH, stats.get(Stat.HEALTH) + BASE_HEALTH);
 
+        // Assign further as necessary
         this.currentHealth = stats.get(Stat.HEALTH).intValue();
 
     }
@@ -66,6 +69,7 @@ public class Character extends ModelActor {
             // TODO Die
         }
     }
+
 
 //    private void setProjectileMovement(List<Projectile> projectiles, Vector2f attack) {
 //        Vector2f temp;
