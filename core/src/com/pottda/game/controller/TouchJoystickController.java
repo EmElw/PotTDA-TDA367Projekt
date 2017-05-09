@@ -13,7 +13,7 @@ public class TouchJoystickController extends AbstractController {
     private final JoysticksView joysticksView;
 
     public TouchJoystickController(ModelActor modelActor, ViewActor viewActor, Stage stage) {
-        super(modelActor, viewActor);
+        super(modelActor, viewActor, stage);
         joysticksView = new JoysticksView(stage);
     }
 

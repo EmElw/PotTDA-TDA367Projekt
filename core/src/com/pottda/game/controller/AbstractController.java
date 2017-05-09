@@ -1,5 +1,6 @@
 package com.pottda.game.controller;
 
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.pottda.game.model.ModelActor;
 import com.pottda.game.view.ViewActor;
 
@@ -14,16 +15,26 @@ import javax.vecmath.Vector2f;
 public abstract class AbstractController {
     Vector2f movementVector;
     Vector2f attackVector;
+    final Stage stage;
 //    final boolean isAI;
 
     final ModelActor modelActor;
     private final ViewActor viewActor;
 
-    AbstractController(ModelActor modelActor, ViewActor viewActor) {
+    /**
+     *
+     * @param modelActor
+     * @param viewActor
+     * @param stage the stage to add the actor to (hudStage or gameStage)
+     */
+    AbstractController(ModelActor modelActor, ViewActor viewActor, Stage stage) {
         this.modelActor = modelActor;
         this.viewActor = viewActor;
         movementVector = new Vector2f(0,0);
         attackVector = new Vector2f(0,0);
+        this.stage = stage;
+
+        stage.addActor(viewActor);
     }
 
     /**

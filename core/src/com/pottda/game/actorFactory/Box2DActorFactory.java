@@ -1,15 +1,18 @@
 package com.pottda.game.actorFactory;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.controller.*;
-import com.pottda.game.model.ActorFactory;
+import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
-import com.pottda.game.model.Obstacle;
-import com.pottda.game.model.Projectile;
 import com.pottda.game.physicsBox2D.Box2DPhysicsActor;
 import com.pottda.game.physicsBox2D.Box2DPhysicsCharacter;
 import com.pottda.game.physicsBox2D.Box2DPhysicsProjectile;
 import com.pottda.game.view.ViewActor;
+
+import javax.vecmath.Vector2f;
 
 public class Box2DActorFactory extends ActorFactory {
     // Constants
@@ -65,9 +68,10 @@ public class Box2DActorFactory extends ActorFactory {
     }
 
     @Override
-    public AIController buildEnemy() {
+    public AIController buildEnemy(Stage stage, Texture texture, Vector2f position) {
         // Create body
         Body body = world.createBody(characterBodyDef);
+        body.setTransform(position.getX(), position.getY(), 0);
 
         // Set collision filtering
         characterFixtureDef.filter.categoryBits = CHARACTER_ENEMY_FILTER.categoryBits;
@@ -82,17 +86,24 @@ public class Box2DActorFactory extends ActorFactory {
         Character model = new Character(physics);
         model.team = ENEMY_TEAM;
 
-        ViewActor view = new ViewActor();
+        ViewActor view = new ViewActor(texture);
 
-        DumbAIController controller = new DumbAIController(model, view);
-
-        return controller;
+        return new DumbAIController(model, view, stage);
     }
 
+    /**
+     * Creates a player controller
+     *
+     * @param stage    the stage to render the player on
+     * @param texture  a texture/image for the player
+     * @param position the position where the player is created
+     * @return
+     */
     @Override
-    public AbstractController buildPlayer() {
+    public AbstractController buildPlayer(Stage stage, Texture texture, Vector2f position) {
         // Create body
         Body body = world.createBody(characterBodyDef);
+        body.setTransform(position.getX(), position.getY(), 0);
 
         // Set collision filtering
         characterFixtureDef.filter.categoryBits = CHARACTER_PLAYER_FILTER.categoryBits;
@@ -108,7 +119,7 @@ public class Box2DActorFactory extends ActorFactory {
         DumbAIController.goal = model;
         model.team = PLAYER_TEAM;
 
-        ViewActor view = new ViewActor();
+        ViewActor view = new ViewActor(texture);
 
         AbstractController controller = null;
 
@@ -117,10 +128,10 @@ public class Box2DActorFactory extends ActorFactory {
                 controller = new TouchJoystickController(model, view, ControllerOptions.joystickStage);
                 break;
             case ControllerOptions.KEYBOARD_MOUSE:
-                controller = new KeyboardMouseController(model, view);
+                controller = new KeyboardMouseController(model, view, stage);
                 break;
             case ControllerOptions.KEYBOARD_ONLY:
-                controller = new KeyboardOnlyController(model, view);
+                controller = new KeyboardOnlyController(model, view, stage);
                 break;
         }
 
@@ -128,9 +139,10 @@ public class Box2DActorFactory extends ActorFactory {
     }
 
     @Override
-    public ProjectileController buildProjectile(int team, boolean bounces, boolean penetrates) {
+    public ProjectileController buildProjectile(Stage stage, Texture texture, int team, boolean bounces, boolean penetrates, Vector2f position) {
         // Create body
         Body body = world.createBody(projectileBodyDef);
+        body.setTransform(position.getX(), position.getY(), 0);
 
         // Determine bounciness
         if (bounces) {
@@ -161,16 +173,15 @@ public class Box2DActorFactory extends ActorFactory {
         Projectile model = new Projectile(physics, 0, null);
         model.team = team;
 
-        ViewActor view = new ViewActor();
+        ViewActor view = new ViewActor(texture);
 
-        ProjectileController controller = new ProjectileController(model, view);
-
-        return controller;
+        return new ProjectileController(model, view, stage);
     }
 
     @Override
-    public AbstractController buildObstacle() {
+    public AbstractController buildObstacle(Stage stage, Texture texture, Vector2f position) {
         Body body = world.createBody(obstacleBodyDef);
+        body.setTransform(position.getX(), position.getY(), 0);
 
         body.createFixture(obstacleFixtureDef);
 
@@ -178,11 +189,9 @@ public class Box2DActorFactory extends ActorFactory {
 
         Obstacle model = new Obstacle(physics);
 
-        ViewActor view = new ViewActor();
+        ViewActor view = new ViewActor(texture);
 
-        ObstacleController controller = new ObstacleController(model, view);
-
-        return controller;
+        return new ObstacleController(model, view, stage);
     }
 
     private void filterCategoryInit() {
@@ -267,9 +276,9 @@ public class Box2DActorFactory extends ActorFactory {
         // Projectile, sensor part
         tempCircle = new CircleShape();
         tempCircle.setRadius(PROJECTILE_SENSOR_RADIUS);
-        projectileSensorFixtureDef.shape = tempCircle;
-        projectileSensorFixtureDef.density = PROJECTILE_SENSOR_DENSITY;
-        projectileSensorFixtureDef.isSensor = true;
+        //projectileSensorFixtureDef.shape = tempCircle;
+        //projectileSensorFixtureDef.density = PROJECTILE_SENSOR_DENSITY;
+        //projectileSensorFixtureDef.isSensor = true;
 
         // Obstacle
         tempPolygon = new PolygonShape();
