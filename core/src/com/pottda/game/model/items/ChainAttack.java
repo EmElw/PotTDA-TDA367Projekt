@@ -24,6 +24,7 @@ public class ChainAttack extends AttackItem {
     @Override
     protected void initDynamic() {
         isProjectileModifier = true;
+        isSecondaryAttack = true;
 
         basePositions.add(new Point2i(-1, 1));
         basePositions.add(new Point2i(-1, 0));

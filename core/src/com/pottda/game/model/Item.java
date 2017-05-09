@@ -17,6 +17,13 @@ public abstract class Item extends ProjectileListenerAdapter {
      */
     protected boolean isPrimaryAttack;
     /**
+     * Secondary attacks have an attack function but are not
+     * directly called from the Inventory to attack. Rather,
+     * these are triggered attacks that handle their own
+     * attacks on certain events
+     */
+    protected boolean isSecondaryAttack;
+    /**
      * A ProjectileModifier modifies projectiles and needs to be attached as a ProjectileListener
      */
     protected boolean isProjectileModifier;
@@ -58,6 +65,7 @@ public abstract class Item extends ProjectileListenerAdapter {
         // Set default properties
         isPrimaryAttack = false;
         isProjectileModifier = false;
+        isSecondaryAttack = false;
 
         // Set properties based on dynamic type
         initDynamic();

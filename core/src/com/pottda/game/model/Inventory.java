@@ -43,7 +43,7 @@ public class Inventory {
         // Set the outputs of all items
         attackItems.clear();
         for (Item item : items) {
-            if (item.isPrimaryAttack) { // Add attack items to a special subset list
+            if (item.isPrimaryAttack || item.isSecondaryAttack) {
                 attackItems.add((AttackItem) item);
             }
             // Map each output to an Item or null
@@ -52,7 +52,50 @@ public class Inventory {
                 item.outputItems.add(i, positionMap.get(outputs.get(i)));
             }
         }
+    }
 
+    /**
+     * Checks to see if the current inventory state is legal, i.e.
+     * <p>
+     * - no infinite loops are created
+     *
+     * @return true if the above conditions are fulfilled
+     */
+    public boolean isLegal() {
+        Set<Item> checkedItems;
+
+        for (Item i : this.attackItems) {
+            checkedItems = new HashSet<Item>();
+            if (isLooping(i, checkedItems)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Recursively controls all the output items of the given item
+     * so that a single item does not appear more than once in the
+     * chain.
+     *
+     * @param item         the Item to start with
+     * @param checkedItems a {@link Set} of Items already in the chain
+     * @return true if no loops are found
+     */
+    public boolean isLooping(Item item, Set<Item> checkedItems) {
+        if (checkedItems.contains(item)) {
+            return true;   // This means the item has already been visited once => illegal Inventory
+        } else {
+            for (Item i : item.outputItems) {    // Check all of the item's outputs in the same way
+                if (i == null) {
+                    continue;
+                }
+                if (!isLooping(i, checkedItems)) { // If any of them returns illegal, so is this etc.
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     /**
@@ -64,7 +107,9 @@ public class Inventory {
 
         // Iterate through all attack items and do stuff
         for (AttackItem a : attackItems) {
-            a.tryAttack(direction, origin);
+            if (a.isPrimaryAttack) {
+                a.tryAttack(direction, origin);
+            }
         }
     }
 
