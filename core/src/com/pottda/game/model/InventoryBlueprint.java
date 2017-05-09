@@ -23,6 +23,7 @@ public class InventoryBlueprint {
      * @throws IllegalAccessException if {@link Class}.newInstance() fails.
      */
     public static Inventory getForName(String name) throws Exception {
+        gi
         return blueprints.get(name).newInventory();
     }
 
@@ -57,8 +58,9 @@ public class InventoryBlueprint {
      */
     private InventoryBlueprint(Inventory inventory) throws Exception {
         this(new HashMap<PointAndOrientation, Class<? extends Item>>());
-        if (inventory.items.isEmpty())
+        if (inventory.items.isEmpty()) {
             throw new Exception("Inventory is empty: " + inventory.toString());
+        }
         for (Item i : inventory.items) {
             addItemClass(i.getClass(), i.x, i.y, i.orientation);
         }
