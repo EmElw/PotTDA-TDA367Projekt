@@ -23,8 +23,6 @@ public class InventoryBlueprint {
      * @throws IllegalAccessException if {@link Class}.newInstance() fails.
      */
     public static Inventory getForName(String name) throws Exception {
-        if (blueprints.containsKey(name))
-            throw new Exception("Already a blueprint of that name");
         return blueprints.get(name).newInventory();
     }
 
