@@ -51,7 +51,7 @@ public abstract class AbstractController {
     /**
      * Updates the ViewActor so everything can be drawn out later
      */
-    private void updateView() {
+    protected void updateView() {
         // TODO extend with other modifications such as rotation and stuff
         Vector2f position = modelActor.getPosition();
         float degrees = modelActor.getAngle();

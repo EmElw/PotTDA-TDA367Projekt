@@ -19,8 +19,8 @@ public class DemoItemA extends AttackItem {
     public void initDynamic() {
         isPrimaryAttack = true;
 
+        basePositions.add(new Point2i(0, 0));
         basePositions.add(new Point2i(0, 1));
-        basePositions.add(new Point2i(1, 1));
         basePositions.add(new Point2i(1, 0));
         basePositions.add(new Point2i(1, 1));
 
