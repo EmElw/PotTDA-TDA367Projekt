@@ -9,7 +9,7 @@ public class Box2DPhysicsProjectile extends Box2DPhysicsActor {
     public final static float PROJECTILE_SPEED = 100;
 
     public Box2DPhysicsProjectile(Body body) {
-        this.body = body;
+        super(body);
     }
 
     @Override

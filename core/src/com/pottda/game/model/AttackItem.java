@@ -26,7 +26,7 @@ public abstract class AttackItem extends Item {
     public void init() {
         damage = 0;
         cooldown = 100;
-        lastAttackTime = cooldown;
+        lastAttackTime = 0;
         super.init();
     }
 
@@ -36,21 +36,26 @@ public abstract class AttackItem extends Item {
      * @return
      */
     public List<ProjectileListener> attack(Vector2f direction, Vector2f origin) {
-        if (lastAttackTime < cooldown) {
-            List<ProjectileListener> listeners = new ArrayList<ProjectileListener>();
+        List<ProjectileListener> listeners = new ArrayList<ProjectileListener>();
 
-            Item i = this;
+        Item i = this;
 
-            // Add listeners
-            while ((i = i.getNext()) != null) {
-                if (i.isProjectileModifier) {
-                    listeners.add(i);
-                }
+        // Add listeners
+        while ((i = i.getNext()) != null) {
+            if (i.isProjectileModifier) {
+                listeners.add(i);
             }
+        }
 
-            return listeners;
-            // TODO create projectiles
-        } else
-            return null;
+        lastAttackTime = System.currentTimeMillis();
+        return listeners;
+        // TODO create projectiles
+
+    }
+
+    public void tryAttack(Vector2f direction, Vector2f origin) {
+        if (System.currentTimeMillis() - lastAttackTime < cooldown) {
+            attack(direction, origin);
+        }
     }
 }
