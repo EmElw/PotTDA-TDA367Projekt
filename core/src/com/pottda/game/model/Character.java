@@ -1,26 +1,25 @@
 package com.pottda.game.model;
 
 import javax.vecmath.Vector2f;
-import java.util.List;
+import java.util.EnumMap;
+import java.util.Map;
 
-/**
- * Created by Gustav Lahti on 2017-04-07.
- */
+
 public class Character extends ModelActor {
-    public final static float PROJECTILE_ANGLE = 0.3f;
-
-    public Inventory inventory;
-
-    private static final int baseHealth = 100;
-    public int health;
-    public int currentHealth;
-
-    private static final int baseCooldown = 100;
-    public int cooldown;
-    public long lastAttackTime;
-
+    /**
+     * Base maxHealth of any character, further modified by its Inventory
+     */
+    private static final int BASE_HEALTH = 100;
     private static final float baseAccel = 100;
-    public float accel;
+    /**
+     * A reference to the character's inventory, should be effectively final
+     */
+    public Inventory inventory;
+    /**
+     * Current health of a character
+     */
+    public int currentHealth;
+    private static Map<Stat, Double> stats;
 
 
     // -- Constructors --
@@ -31,34 +30,32 @@ public class Character extends ModelActor {
         this.isProjectile = false;
         this.team = 0;
 
-        // Init health
-        health = baseHealth + inventory.getHealth();
-        currentHealth = health;
+        stats = new EnumMap<Stat, Double>(Stat.class);
 
-        // Init cooldown
-        cooldown = baseCooldown + inventory.getCooldown();
-        lastAttackTime = System.currentTimeMillis() - cooldown;
+        // Sum all simple stats
+        for (Stat stat : stats.keySet()) {
+            stats.put(stat, inventory.getSumStat(stat));
+        }
+        // Add base values
+        stats.put(Stat.HEALTH, stats.get(Stat.HEALTH) + BASE_HEALTH);
 
-        accel = baseAccel + inventory.getAcceleration();
+        // Assign further as necessary
+        this.currentHealth = stats.get(Stat.HEALTH).intValue();
+
     }
 
     @Override
     public void giveInput(Vector2f move, Vector2f attack) {
         // Movement
-        move.set(move.x * accel, move.y * accel);
+        move.set(move.x * stats.get(Stat.ACCEL).floatValue(),
+                move.y * stats.get(Stat.ACCEL).floatValue());
         physicsActor.giveMovementVector(move);
 
         attack(attack);
     }
 
     private void attack(Vector2f direction) {
-        if (System.currentTimeMillis() >= lastAttackTime + cooldown) {
-            lastAttackTime = System.currentTimeMillis();
-
-            // Attack
-            List<Projectile> projectiles = inventory.getProjectile();
-            setProjectileMovement(projectiles, direction);
-        }
+        inventory.attack(direction, getPosition());
     }
 
     /**
@@ -73,17 +70,18 @@ public class Character extends ModelActor {
         }
     }
 
-    private void setProjectileMovement(List<Projectile> projectiles, Vector2f attack){
-        Vector2f temp;
-        for (int i = 0, n = projectiles.size(); i < n; i++){
-            temp = rotateVector(attack, PROJECTILE_ANGLE * ((n / 2f) - (float)i));
-            temp.normalize();
-            projectiles.get(i).giveInput(temp,null);
-        }
-    }
 
-    private Vector2f rotateVector(Vector2f vector, float rad){
-        return new Vector2f(vector.x * (float)Math.cos((double) rad),
-                vector.y * (float)Math.sin((double) rad));
-    }
+//    private void setProjectileMovement(List<Projectile> projectiles, Vector2f attack) {
+//        Vector2f temp;
+//        for (int i = 0, n = projectiles.size(); i < n; i++) {
+//            temp = rotateVector(attack, PROJECTILE_ANGLE * ((n / 2f) - (float) i));
+//            temp.normalize();
+//            projectiles.get(i).giveInput(temp, null);
+//        }
+//    }
+//
+//    private Vector2f rotateVector(Vector2f vector, float rad) {
+//        return new Vector2f(vector.x * (float) Math.cos((double) rad),
+//                vector.y * (float) Math.sin((double) rad));
+//    }
 }

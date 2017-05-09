@@ -23,11 +23,13 @@ public class MultiShot extends Item {
     protected void initDynamic() {
         isProjectileModifier = true;
 
-        baseOutputs.add(new Point2i(0, 0));
-        baseOutputs.add(new Point2i(1, 0));
-        baseOutputs.add(new Point2i(0, 1));
-        baseOutputs.add(new Point2i(0, -1));
-        baseOutputs.add(new Point2i(-1, -1));
+        basePositions.add(new Point2i(0, 0));
+        basePositions.add(new Point2i(1, 0));
+        basePositions.add(new Point2i(0, 1));
+        basePositions.add(new Point2i(0, -1));
+        basePositions.add(new Point2i(-1, -1));
+
+        baseOutputs.add(new Point2i(2,0));
 
         additionalProjectiles = 2;
         isFirstMultiShot = true;

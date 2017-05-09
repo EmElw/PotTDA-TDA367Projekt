@@ -8,6 +8,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.junit.Assert;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
@@ -85,6 +86,7 @@ public class InventoryFactory {
             // Add the item to the inventory
             inventory.addItem(item);
         }
+        inventory.compile();
         return inventory;
 
     }
@@ -101,7 +103,8 @@ public class InventoryFactory {
         if (stringClassMap.containsKey(className)) {
             return stringClassMap.get(className);
         } else {
-            Class c = Class.forName("com.pottda.game.model.items." + className);
+            Class c;
+            c = Class.forName("com.pottda.game.model.items." + className);
             if (isItemSubclass(c)) {
                 stringClassMap.put(className, c);
                 return getClass(className);
@@ -116,10 +119,14 @@ public class InventoryFactory {
      * @return boolean
      */
     private static boolean isItemSubclass(Class c) {
-        Class temp = c.getSuperclass();
+        Class temp = c;
         while (!c.equals(Object.class)) {
-            if ((temp = temp.getSuperclass()) == Item.class) {
-                return true;
+            try {
+                if ((temp = temp.getSuperclass()) == Item.class) {
+                    return true;
+                }
+            } catch (NullPointerException e) {
+                throw new NullPointerException("Failed when searching: " + c.toString());
             }
         }
         return false;
