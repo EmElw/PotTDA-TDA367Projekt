@@ -2,9 +2,11 @@ package com.pottda.game.model;
 
 import com.pottda.game.model.Inventory;
 import com.pottda.game.model.Item;
+import sun.plugin2.util.ParameterNames;
 
 import javax.vecmath.Point2i;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
@@ -14,22 +16,59 @@ import java.util.function.BiConsumer;
 public class InventoryBlueprint {
 
     /**
-     * The name of the inventory type (usually the same as the file name)
+     * Returns a new instance of an {@link Inventory} that corresponds to the given name.
+     *
+     * @param name a {@link String} with the name of the Inventory
+     * @return a new {@link Inventory}
+     * @throws IllegalAccessException if {@link Class}.newInstance() fails.
      */
-    public final String name;
-    public final Map<PointAndOrientation, Class<? extends Item>> itemMap;
+    public static Inventory getForName(String name) throws Exception {
+        gi
+        return blueprints.get(name).newInventory();
+    }
 
-    public InventoryBlueprint(String name, Map<PointAndOrientation, Class<? extends Item>> itemMap) {
-        this.name = name;
+    /**
+     * Create a new blueprint and assign it to the given name
+     *
+     * @param name
+     * @param i
+     * @throws Exception
+     */
+    public static void createBlueprint(String name, Inventory i) throws Exception {
+        blueprints.put(name, new InventoryBlueprint(i));
+    }
+
+    private static Map<String, InventoryBlueprint> blueprints;
+
+    /**
+     * Data structure for saving items
+     */
+    private final Map<PointAndOrientation, Class<? extends Item>> itemMap;
+
+    private InventoryBlueprint(Map<PointAndOrientation, Class<? extends Item>> itemMap) {
         this.itemMap = itemMap;
     }
 
-    public InventoryBlueprint(String name) {
-        this(name, new HashMap<PointAndOrientation, Class<? extends Item>>());
+    /**
+     * Creates a blueprint from a given {@link Inventory}.
+     * <p>
+     * Does not actually copy items, but maps a position/orientation to a class
+     *
+     * @param inventory a {@link Inventory} with one or more {@link Item}
+     */
+    private InventoryBlueprint(Inventory inventory) throws Exception {
+        this(new HashMap<PointAndOrientation, Class<? extends Item>>());
+        if (inventory.items.isEmpty()) {
+            throw new Exception("Inventory is empty: " + inventory.toString());
+        }
+        for (Item i : inventory.items) {
+            addItemClass(i.getClass(), i.x, i.y, i.orientation);
+        }
     }
 
-    public void addItem(Class<? extends Item> type, int x, int y, int orientation) {
+    private void addItemClass(Class<? extends Item> type, int x, int y, int orientation) {
         itemMap.put(new PointAndOrientation(orientation, x, y), type);
+
     }
 
     private class PointAndOrientation {
