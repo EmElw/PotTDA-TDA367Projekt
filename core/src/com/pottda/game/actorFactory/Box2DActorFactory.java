@@ -88,7 +88,8 @@ public class Box2DActorFactory extends ActorFactory {
 
         ViewActor view = new ViewActor(texture);
 
-        return new DumbAIController(model, view, stage);
+        stage.addActor(view);
+        return new DumbAIController(model, view);
     }
 
     /**
@@ -131,9 +132,10 @@ public class Box2DActorFactory extends ActorFactory {
                 controller = new KeyboardMouseController(model, view, stage);
                 break;
             case ControllerOptions.KEYBOARD_ONLY:
-                controller = new KeyboardOnlyController(model, view, stage);
+                controller = new KeyboardOnlyController(model, view);
                 break;
         }
+        stage.addActor(view);
 
         return controller;
     }
@@ -175,7 +177,8 @@ public class Box2DActorFactory extends ActorFactory {
 
         ViewActor view = new ViewActor(texture);
 
-        return new ProjectileController(model, view, stage);
+        stage.addActor(view);
+        return new ProjectileController(model, view);
     }
 
     @Override
@@ -191,7 +194,8 @@ public class Box2DActorFactory extends ActorFactory {
 
         ViewActor view = new ViewActor(texture);
 
-        return new ObstacleController(model, view, stage);
+        stage.addActor(view);
+        return new ObstacleController(model, view);
     }
 
     private void filterCategoryInit() {

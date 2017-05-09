@@ -12,9 +12,11 @@ import com.pottda.game.view.ViewActor;
  */
 
 public class KeyboardMouseController extends AbstractController {
+    private final Stage stage;
 
     public KeyboardMouseController(ModelActor modelActor, ViewActor viewActor, Stage stage) {
-        super(modelActor, viewActor, stage);
+        super(modelActor, viewActor);
+        this.stage = stage;
     }
 
 
