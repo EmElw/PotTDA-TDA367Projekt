@@ -64,7 +64,7 @@ public class Inventory {
 
         // Iterate through all attack items and do stuff
         for (AttackItem a : attackItems) {
-            a.attack(direction, origin);
+            a.tryAttack(direction, origin);
         }
     }
 
