@@ -43,6 +43,10 @@ public class Switcher extends Item {
      */
     @Override
     protected Item getNext() {
+        if (outputItems.get(0) == null)
+            return outputItems.get(1);
+        if (outputItems.get(1) == null)
+            return outputItems.get(0);
         state = !state;
         return state ?
                 outputItems.get(0) :
