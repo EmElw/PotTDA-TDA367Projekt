@@ -1,6 +1,7 @@
 package com.pottda.game.actorFactory;
 
 import com.badlogic.gdx.physics.box2d.*;
+import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.controller.*;
 import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
@@ -9,7 +10,7 @@ import com.pottda.game.physicsBox2D.Box2DPhysicsCharacter;
 import com.pottda.game.physicsBox2D.Box2DPhysicsProjectile;
 import com.pottda.game.view.ViewActor;
 
-public class Box2DActorFactory extends ActorFactory{
+public class Box2DActorFactory extends ActorFactory {
     // Constants
     private final static float GRAVITY = 0f;
 
@@ -55,7 +56,7 @@ public class Box2DActorFactory extends ActorFactory{
     private FixtureDef projectileSensorFixtureDef;
     private FixtureDef obstacleFixtureDef;
 
-    public Box2DActorFactory(World world){
+    public Box2DActorFactory(World world) {
         this.world = world;
         filterCategoryInit();
         bodyDefInit();
@@ -108,8 +109,19 @@ public class Box2DActorFactory extends ActorFactory{
 
         ViewActor view = new ViewActor();
 
-        // TODO Add functionality to allow user to choose controls
-        TouchJoystickController controller = new TouchJoystickController(model, view);
+        AbstractController controller = null;
+
+        switch (ControllerOptions.controllerSettings) {
+            case ControllerOptions.TOUCH_JOYSTICK:
+                controller = new TouchJoystickController(model, view, ControllerOptions.joystickStage);
+                break;
+            case ControllerOptions.KEYBOARD_MOUSE:
+                controller = new KeyboardMouseController(model, view);
+                break;
+            case ControllerOptions.KEYBOARD_ONLY:
+                controller = new KeyboardOnlyController(model, view);
+                break;
+        }
 
         return controller;
     }
@@ -120,17 +132,17 @@ public class Box2DActorFactory extends ActorFactory{
         Body body = world.createBody(projectileBodyDef);
 
         // Determine bounciness
-        if(bounces){
+        if (bounces) {
             projectileFixtureDef.restitution = PROJECTILE_BOUNCINESS_BOUNCY;
         } else {
             projectileFixtureDef.restitution = PROJECTILE_BOUNCINESS_DEFAULT;
         }
 
         // Determine collision filtering
-        if(penetrates){
+        if (penetrates) {
             projectileFixtureDef.filter.categoryBits = PROJECTILE_PENETRATION_FILTER.categoryBits;
             projectileFixtureDef.filter.maskBits = PROJECTILE_PENETRATION_FILTER.maskBits;
-        } else if (team == ENEMY_TEAM){
+        } else if (team == ENEMY_TEAM) {
             projectileFixtureDef.filter.categoryBits = PROJECTILE_ENEMY_FILTER.categoryBits;
             projectileFixtureDef.filter.maskBits = PROJECTILE_ENEMY_FILTER.maskBits;
         } else {
@@ -172,7 +184,7 @@ public class Box2DActorFactory extends ActorFactory{
         return controller;
     }
 
-    private void filterCategoryInit(){
+    private void filterCategoryInit() {
         CHARACTER_PLAYER_FILTER = new Filter();
         CHARACTER_ENEMY_FILTER = new Filter();
         PROJECTILE_PLAYER_FILTER = new Filter();
@@ -186,12 +198,12 @@ public class Box2DActorFactory extends ActorFactory{
         PROJECTILE_PENETRATION_FILTER.categoryBits = 0x0010;
 
         // Player collides with Enemy Character and Projectile
-        CHARACTER_PLAYER_FILTER.maskBits = (short)((int)CHARACTER_ENEMY_FILTER.categoryBits +
-                (int)PROJECTILE_ENEMY_FILTER.categoryBits);
+        CHARACTER_PLAYER_FILTER.maskBits = (short) ((int) CHARACTER_ENEMY_FILTER.categoryBits +
+                (int) PROJECTILE_ENEMY_FILTER.categoryBits);
 
         // Enemy collides with itself, Player Character and Projectile
-        CHARACTER_ENEMY_FILTER.maskBits = (short)((int)CHARACTER_PLAYER_FILTER.categoryBits +
-                (int)CHARACTER_ENEMY_FILTER.categoryBits + (int)PROJECTILE_PLAYER_FILTER.categoryBits);
+        CHARACTER_ENEMY_FILTER.maskBits = (short) ((int) CHARACTER_PLAYER_FILTER.categoryBits +
+                (int) CHARACTER_ENEMY_FILTER.categoryBits + (int) PROJECTILE_PLAYER_FILTER.categoryBits);
 
         // Player Projectile collides with Enemy Character
         PROJECTILE_PLAYER_FILTER.maskBits = CHARACTER_ENEMY_FILTER.categoryBits;
@@ -204,7 +216,7 @@ public class Box2DActorFactory extends ActorFactory{
         PROJECTILE_PENETRATION_FILTER.maskBits = 0x0000;
     }
 
-    private void bodyDefInit(){
+    private void bodyDefInit() {
         characterBodyDef = new BodyDef();
         projectileBodyDef = new BodyDef();
         obstacleBodyDef = new BodyDef();
