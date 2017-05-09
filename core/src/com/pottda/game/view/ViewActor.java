@@ -16,6 +16,8 @@ public class ViewActor extends Image {
      */
     public ViewActor(Texture texture) {
         super(new TextureRegionDrawable(new TextureRegion(texture)));
+        // set the rotation point to middle of image
+        this.setOrigin(texture.getWidth() / 2, texture.getHeight() / 2);
     }
 
     /**

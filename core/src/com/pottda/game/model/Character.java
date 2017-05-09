@@ -50,7 +50,7 @@ public class Character extends ModelActor {
         move.set(move.x /* * stats.get(Stat.ACCEL).floatValue()*/,
                 move.y /* * stats.get(Stat.ACCEL).floatValue()*/);
         physicsActor.giveMovementVector(move);
-
+        this.angle = (float)Math.toDegrees(Math.atan2(-attack.getY(), attack.getX()));
         attack(attack);
     }
 
@@ -69,6 +69,30 @@ public class Character extends ModelActor {
             // TODO Die
         }
     }
+
+    /*@Override
+    public float getAngle() {
+        if (ControllerOptions.controllerSettings == ControllerOptions.KEYBOARD_ONLY) {
+            if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                return 180;
+            } else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                return 90;
+            } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                return 270;
+            } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                return (180 + 90) / 2;
+            } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                return (180 + 270) / 2;
+            } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                return 90 / 2;
+            } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                return (270 + 360) / 2;
+            }
+        } else {
+            return (float) Math.toDegrees(Math.atan2(physicsActor.getPosition().getY() - Gdx.input.getY(), physicsActor.getPosition().getX() - Gdx.input.getX()));
+        }
+        return 0;
+    }*/
 
 
 //    private void setProjectileMovement(List<Projectile> projectiles, Vector2f attack) {

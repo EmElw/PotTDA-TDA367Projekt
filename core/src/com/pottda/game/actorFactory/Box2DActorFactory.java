@@ -12,6 +12,8 @@ import com.pottda.game.physicsBox2D.Box2DPhysicsCharacter;
 import com.pottda.game.physicsBox2D.Box2DPhysicsProjectile;
 import com.pottda.game.view.ViewActor;
 
+import javax.vecmath.Vector2f;
+
 public class Box2DActorFactory extends ActorFactory {
     // Constants
     private final static float GRAVITY = 0f;
@@ -66,9 +68,10 @@ public class Box2DActorFactory extends ActorFactory {
     }
 
     @Override
-    public AIController buildEnemy(Stage stage, Texture texture) {
+    public AIController buildEnemy(Stage stage, Texture texture, Vector2f position) {
         // Create body
         Body body = world.createBody(characterBodyDef);
+        body.setTransform(position.getX(), position.getY(), 0);
 
         // Set collision filtering
         characterFixtureDef.filter.categoryBits = CHARACTER_ENEMY_FILTER.categoryBits;
@@ -90,10 +93,19 @@ public class Box2DActorFactory extends ActorFactory {
         return controller;
     }
 
+    /**
+     * Creates a player controller
+     *
+     * @param stage    the stage to render the player on
+     * @param texture  a texture/image for the player
+     * @param position the position where the player is created
+     * @return
+     */
     @Override
-    public AbstractController buildPlayer(Stage stage, Texture texture) {
+    public AbstractController buildPlayer(Stage stage, Texture texture, Vector2f position) {
         // Create body
         Body body = world.createBody(characterBodyDef);
+        body.setTransform(position.getX(), position.getY(), 0);
 
         // Set collision filtering
         characterFixtureDef.filter.categoryBits = CHARACTER_PLAYER_FILTER.categoryBits;
@@ -129,9 +141,10 @@ public class Box2DActorFactory extends ActorFactory {
     }
 
     @Override
-    public ProjectileController buildProjectile(Stage stage, Texture texture, int team, boolean bounces, boolean penetrates) {
+    public ProjectileController buildProjectile(Stage stage, Texture texture, int team, boolean bounces, boolean penetrates, Vector2f position) {
         // Create body
         Body body = world.createBody(projectileBodyDef);
+        body.setTransform(position.getX(), position.getY(), 0);
 
         // Determine bounciness
         if (bounces) {
@@ -170,8 +183,9 @@ public class Box2DActorFactory extends ActorFactory {
     }
 
     @Override
-    public AbstractController buildObstacle(Stage stage, Texture texture) {
+    public AbstractController buildObstacle(Stage stage, Texture texture, Vector2f position) {
         Body body = world.createBody(obstacleBodyDef);
+        body.setTransform(position.getX(), position.getY(), 0);
 
         body.createFixture(obstacleFixtureDef);
 

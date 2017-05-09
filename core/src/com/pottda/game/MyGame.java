@@ -27,6 +27,8 @@ import com.pottda.game.view.SoundsAndMusic;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.vecmath.Vector2f;
+
 public class MyGame extends ApplicationAdapter {
 
     private static final int WIDTH = 800;
@@ -90,7 +92,7 @@ public class MyGame extends ApplicationAdapter {
         }
 
         // Add player to controller list
-        controllers.add(box2DActorFactory.buildPlayer(gameStage, new Texture(Gdx.files.internal(playerImage))));
+        controllers.add(box2DActorFactory.buildPlayer(gameStage, new Texture(Gdx.files.internal(playerImage)), new Vector2f(gameStage.getWidth() / 2, gameStage.getHeight() / 2)));
 
     }
 
