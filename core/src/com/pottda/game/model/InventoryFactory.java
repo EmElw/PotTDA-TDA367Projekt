@@ -42,8 +42,21 @@ public class InventoryFactory {
      */
     public static Inventory createFromXML(File file) throws ParserConfigurationException, IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
 
+        Inventory inventory = null;
+        try {
+            inventory = InventoryBlueprint.getForName(file.getName());
+            if (inventory != null) {
+                return inventory;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Will only reach here and beyond if there's not a blueprint for it
+
         // Create the inventory to return
-        Inventory inventory = new Inventory();
+        inventory = new Inventory();
+
 
         // Magic loading, based on https://www.tutorialspoint.com/java_xml/java_dom_parse_document.htm
         DocumentBuilderFactory documentBuilderFactory =
@@ -85,6 +98,11 @@ public class InventoryFactory {
 
             // Add the item to the inventory
             inventory.addItem(item);
+        }
+        try {
+            InventoryBlueprint.createBlueprint(file.getName(), inventory);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         inventory.compile();
         return inventory;

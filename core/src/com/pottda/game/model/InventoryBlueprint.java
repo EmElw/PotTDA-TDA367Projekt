@@ -8,7 +8,6 @@ import javax.vecmath.Point2i;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 /**
  * Class used to cache inventories to speed up instantiating
@@ -23,7 +22,6 @@ public class InventoryBlueprint {
      * @throws IllegalAccessException if {@link Class}.newInstance() fails.
      */
     public static Inventory getForName(String name) throws Exception {
-        gi
         return blueprints.get(name).newInventory();
     }
 
