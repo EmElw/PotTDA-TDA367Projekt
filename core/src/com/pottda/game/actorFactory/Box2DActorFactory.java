@@ -1,6 +1,8 @@
 package com.pottda.game.actorFactory;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.controller.*;
 import com.pottda.game.model.*;
@@ -64,7 +66,7 @@ public class Box2DActorFactory extends ActorFactory {
     }
 
     @Override
-    public AIController buildEnemy() {
+    public AIController buildEnemy(Stage stage, Texture texture) {
         // Create body
         Body body = world.createBody(characterBodyDef);
 
@@ -81,15 +83,15 @@ public class Box2DActorFactory extends ActorFactory {
         Character model = new Character(physics);
         model.team = ENEMY_TEAM;
 
-        ViewActor view = new ViewActor();
+        ViewActor view = new ViewActor(texture);
 
-        DumbAIController controller = new DumbAIController(model, view);
+        DumbAIController controller = new DumbAIController(model, view, stage);
 
         return controller;
     }
 
     @Override
-    public AbstractController buildPlayer() {
+    public AbstractController buildPlayer(Stage stage, Texture texture) {
         // Create body
         Body body = world.createBody(characterBodyDef);
 
@@ -107,7 +109,7 @@ public class Box2DActorFactory extends ActorFactory {
         DumbAIController.goal = model;
         model.team = PLAYER_TEAM;
 
-        ViewActor view = new ViewActor();
+        ViewActor view = new ViewActor(texture);
 
         AbstractController controller = null;
 
@@ -116,10 +118,10 @@ public class Box2DActorFactory extends ActorFactory {
                 controller = new TouchJoystickController(model, view, ControllerOptions.joystickStage);
                 break;
             case ControllerOptions.KEYBOARD_MOUSE:
-                controller = new KeyboardMouseController(model, view);
+                controller = new KeyboardMouseController(model, view, stage);
                 break;
             case ControllerOptions.KEYBOARD_ONLY:
-                controller = new KeyboardOnlyController(model, view);
+                controller = new KeyboardOnlyController(model, view, stage);
                 break;
         }
 
@@ -127,7 +129,7 @@ public class Box2DActorFactory extends ActorFactory {
     }
 
     @Override
-    public ProjectileController buildProjectile(int team, boolean bounces, boolean penetrates) {
+    public ProjectileController buildProjectile(Stage stage, Texture texture, int team, boolean bounces, boolean penetrates) {
         // Create body
         Body body = world.createBody(projectileBodyDef);
 
@@ -160,15 +162,15 @@ public class Box2DActorFactory extends ActorFactory {
         Projectile model = new Projectile(physics, 0, null);
         model.team = team;
 
-        ViewActor view = new ViewActor();
+        ViewActor view = new ViewActor(texture);
 
-        ProjectileController controller = new ProjectileController(model, view);
+        ProjectileController controller = new ProjectileController(model, view, stage);
 
         return controller;
     }
 
     @Override
-    public AbstractController buildObstacle() {
+    public AbstractController buildObstacle(Stage stage, Texture texture) {
         Body body = world.createBody(obstacleBodyDef);
 
         body.createFixture(obstacleFixtureDef);
@@ -177,9 +179,9 @@ public class Box2DActorFactory extends ActorFactory {
 
         Obstacle model = new Obstacle(physics);
 
-        ViewActor view = new ViewActor();
+        ViewActor view = new ViewActor(texture);
 
-        ObstacleController controller = new ObstacleController(model, view);
+        ObstacleController controller = new ObstacleController(model, view, stage);
 
         return controller;
     }
@@ -266,9 +268,9 @@ public class Box2DActorFactory extends ActorFactory {
         // Projectile, sensor part
         tempCircle = new CircleShape();
         tempCircle.setRadius(PROJECTILE_SENSOR_RADIUS);
-        projectileSensorFixtureDef.shape = tempCircle;
-        projectileSensorFixtureDef.density = PROJECTILE_SENSOR_DENSITY;
-        projectileSensorFixtureDef.isSensor = true;
+        //projectileSensorFixtureDef.shape = tempCircle;
+        //projectileSensorFixtureDef.density = PROJECTILE_SENSOR_DENSITY;
+        //projectileSensorFixtureDef.isSensor = true;
 
         // Obstacle
         tempPolygon = new PolygonShape();

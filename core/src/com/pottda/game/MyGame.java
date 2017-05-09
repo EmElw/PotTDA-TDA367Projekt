@@ -2,6 +2,8 @@ package com.pottda.game;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
+import com.pottda.game.actorFactory.Box2DActorFactory;
+import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.view.GameView;
 import com.pottda.game.view.HUDView;
 import com.badlogic.gdx.Gdx;
@@ -9,29 +11,18 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2D;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pottda.game.controller.AbstractController;
-import com.pottda.game.controller.KeyboardMouseController;
 import com.pottda.game.controller.TouchJoystickController;
-import com.pottda.game.model.Character;
-import com.pottda.game.physicsBox2D.Box2DPhysicsCharacter;
 import com.pottda.game.view.SoundsAndMusic;
-import com.pottda.game.view.ViewActor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,22 +32,13 @@ public class MyGame extends ApplicationAdapter {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 480;
     private Stage hudStage;
+    private Stage joystickStage;
     private Stage gameStage;
     private OrthographicCamera camera;
     private Viewport viewport;
     private Batch spriteBatch;
 
-    private Texture img;
-    //private Box2DDebugRenderer box2DDebugRenderer;
     private float accumulator;
-
-    private BodyDef bodyDef;
-    private Body body;
-    private Shape shape;
-    private FixtureDef fixtureDef;
-    private Fixture fixture;
-    private ShapeRenderer shapeRenderer;
-    private Sprite sprite;
 
     private List<AbstractController> controllers;
     private World world;
@@ -64,13 +46,14 @@ public class MyGame extends ApplicationAdapter {
     private HUDView hudView;
     private SoundsAndMusic soundsAndMusic;
     private GameView gameView;
+    private Box2DActorFactory box2DActorFactory;
 
     private static final int RUNNING = 1;
     private static final int PAUSED = 2;
     private static final int OPTIONS = 3;
     private static int GAME_STATE = 0;
 
-    private static final String playerImage = "badlogic.jpg"; // change later
+    private static final String playerImage = "CircleTest.png"; // change later
 
     @Override
     public void create() {
@@ -80,53 +63,35 @@ public class MyGame extends ApplicationAdapter {
         camera.setToOrtho(true, WIDTH, HEIGHT); // Y-axis pointing down
         viewport = new FitViewport(WIDTH, HEIGHT, camera);
         hudStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
-        gameStage = new Stage(viewport);
+        joystickStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
+        gameStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         spriteBatch = new SpriteBatch();
 
         GAME_STATE = RUNNING;
         Gdx.input.setInputProcessor(hudStage);
         Box2D.init();
-        //box2DDebugRenderer = new Box2DDebugRenderer();
         world = new World(new Vector2(0, 0), false);
         accumulator = 0;
 
-        bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(400, 240);
-
-        body = world.createBody(bodyDef);
-        /*shape = new CircleShape();
-        shape.setRadius(2.5f);
-
-        fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape;
-        fixtureDef.density = 0.5f;
-        fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 0.6f;
-
-        fixture = body.createFixture(fixtureDef);
-        shape.dispose();*/
-
-        img = new Texture(Gdx.files.internal("CircleTest.png"));
-        sprite = new Sprite(img);
-        shapeRenderer = new ShapeRenderer();
-
         hudView = new HUDView(hudStage);
-
-        if (Gdx.app.getType() == Application.ApplicationType.Android) { // if on android
-            controllers.add(new TouchJoystickController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))),
-                    new ViewActor(new Texture(Gdx.files.internal(playerImage))), hudStage));
-        } else if (Gdx.app.getType() == Application.ApplicationType.Desktop) { // if on desktop
-            // Check if using mouse?
-            // abstractController = new KeyboardOnlyController(new ArrayList<AttackListener>(), new ArrayList<MovementListener>(), false);
-            controllers.add(new KeyboardMouseController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))),
-                    new ViewActor(new Texture(Gdx.files.internal(playerImage))), hudStage));
-        }
-
-        gameView = new GameView(gameStage);
-
+        gameView = new GameView(gameStage, joystickStage);
         soundsAndMusic = new SoundsAndMusic();
         startMusic();
+
+        // Create Actor Factory
+        box2DActorFactory = new Box2DActorFactory(world);
+
+        ControllerOptions.joystickStage = joystickStage;
+
+        if (Gdx.app.getType() == Application.ApplicationType.Android) { // if on android
+            ControllerOptions.controllerSettings = ControllerOptions.TOUCH_JOYSTICK;
+        } else if (Gdx.app.getType() == Application.ApplicationType.Desktop) { // if on desktop
+            ControllerOptions.controllerSettings = ControllerOptions.KEYBOARD_MOUSE;
+        }
+
+        // Add player to controller list
+        controllers.add(box2DActorFactory.buildPlayer(gameStage, new Texture(Gdx.files.internal(playerImage))));
+
     }
 
     @Override
@@ -169,11 +134,6 @@ public class MyGame extends ApplicationAdapter {
         } else if (GAME_STATE == OPTIONS) {
             hudView.renderOptions();
         }
-
-        // Draw stuff
-        spriteBatch.begin();
-        sprite.draw(spriteBatch);
-        spriteBatch.end();
 
         hudStage.draw();
     }
@@ -243,9 +203,6 @@ public class MyGame extends ApplicationAdapter {
     @Override
     public void dispose() {
         spriteBatch.dispose();
-        img.dispose();
-        //shape.dispose(); // Causes EXCEPTION_ACCESS_VIOLATION in JRE
-        shapeRenderer.dispose();
         hudView.dispose();
         hudStage.dispose();
         world.dispose();

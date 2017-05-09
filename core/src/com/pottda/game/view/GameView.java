@@ -7,18 +7,22 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
  */
 
 public class GameView {
-    private final Stage stage;
+    private final Stage joystickStage;
+    private final Stage gameStage;
 
-    public GameView(Stage stage) {
-        this.stage = stage;
+    public GameView(Stage gameStage, Stage joystickStage) {
+        this.joystickStage = joystickStage;
+        this.gameStage = gameStage;
     }
 
     public void render() {
-        stage.draw();
+        joystickStage.draw();
+        gameStage.draw();
     }
 
     public void dispose() {
-        stage.dispose();
+        joystickStage.dispose();
+        gameStage.draw();
     }
 
 }
