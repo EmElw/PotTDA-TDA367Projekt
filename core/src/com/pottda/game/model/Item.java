@@ -52,8 +52,9 @@ public abstract class Item extends ProjectileListenerAdapter {
      */
     public void init() {
         basePositions = new ArrayList<Point2i>();
+        baseOutputs = new ArrayList<Point2i>();
         statMap = new EnumMap<Stat, Double>(Stat.class);
-
+        outputItems = new ArrayList<Item>();
         // Set default properties
         isPrimaryAttack = false;
         isProjectileModifier = false;
@@ -126,6 +127,11 @@ public abstract class Item extends ProjectileListenerAdapter {
      */
     protected Item getNext() {
         return outputItems.get(0);
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().toString();
     }
 
 }

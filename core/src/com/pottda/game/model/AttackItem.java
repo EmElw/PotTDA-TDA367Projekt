@@ -24,11 +24,11 @@ public abstract class AttackItem extends Item {
     }
 
     /**
-     * Executes an attack in the given direction
-     *
      * @param direction
+     * @param origin
+     * @return
      */
-    public void attack(Vector2f direction, Vector2f origin) {
+    public List<ProjectileListener> attack(Vector2f direction, Vector2f origin) {
 
         List<ProjectileListener> listeners = new ArrayList<ProjectileListener>();
 
@@ -41,6 +41,7 @@ public abstract class AttackItem extends Item {
             }
         }
 
+        return listeners;
         // TODO create projectiles
     }
 }

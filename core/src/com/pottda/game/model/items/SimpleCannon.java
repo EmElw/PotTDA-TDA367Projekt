@@ -18,6 +18,7 @@ public class SimpleCannon extends AttackItem {
             [X]o
          */
         basePositions.add(new Point2i(0, 0));
+
         baseOutputs.add(new Point2i(1, 0));
 
         cooldown = 200;

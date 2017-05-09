@@ -18,7 +18,7 @@ public class Inventory {
     /*
     A list of the Items in this Inventory
      */
-    public final List<Item> items;
+    public final Set<Item> items;
     /*
     A map kept to quickly find what Item is at a given position, if any
      */
@@ -27,19 +27,31 @@ public class Inventory {
     private int height;
     private int width;
 
-    // Should be called after creation and when the inventory's state is changed
+    /**
+     * Called on creation and should be called whenever the
+     * Inventory's state is changed (moved/changed items etc.)
+     */
     public void compile() {
-        attackItems.clear();
+        // Map out all the positions of the items
+        positionMap.clear();
         for (Item item : items) {
-            if (item.isPrimaryAttack) {
-                attackItems.add((AttackItem) item);
-            }
-            List<Integer> outputs = item.getOutputAsInteger(width);
-            for (int i = 0; i < outputs.size(); i++) {
-                item.outputItems.set(i, positionMap.get(outputs.get(i)));
+            for (Integer n : item.getPositionsAsIntegers(width)) {
+                positionMap.put(n, item);
             }
         }
-        // TODO update stats
+
+        // Set the outputs of all items
+        attackItems.clear();
+        for (Item item : items) {
+            if (item.isPrimaryAttack) { // Add attack items to a special subset list
+                attackItems.add((AttackItem) item);
+            }
+            // Map each output to an Item or null
+            List<Integer> outputs = item.getOutputAsInteger(width);
+            for (int i = 0; i < outputs.size(); i++) {
+                item.outputItems.add(i, positionMap.get(outputs.get(i)));
+            }
+        }
     }
 
     /**
@@ -55,17 +67,31 @@ public class Inventory {
         }
     }
 
+
     public Inventory() {
         attackItems = new HashSet<AttackItem>();
-        items = new ArrayList<Item>();
+        items = new HashSet<Item>();
         positionMap = new TreeMap<Integer, Item>();
     }
 
+    /**
+     * Sets the dimensions of this {@code Inventory}
+     *
+     * @param w an integer width
+     * @param h an integer height
+     */
     public void setDimensions(int w, int h) {
         this.width = w;
         this.height = h;
     }
 
+    /**
+     * Returns the summed stat-value for the given stat
+     * (not guaranteed to be positive)
+     *
+     * @param stat a {@link Stat}
+     * @return a double
+     */
     public double getSumStat(Stat stat) {
 
         double sum = 0;
@@ -73,5 +99,15 @@ public class Inventory {
             sum += i.getStat(stat);
         }
         return sum;
+    }
+
+    /**
+     * Adds any numbr of Items to the Inventory
+     * NOTE that the item's position within the inventory is for the Item to handle
+     *
+     * @param items
+     */
+    public void addItem(Item... items) {
+        this.items.addAll(Arrays.asList(items));
     }
 }
