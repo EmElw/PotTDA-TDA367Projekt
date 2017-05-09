@@ -1,10 +1,11 @@
 package com.pottda.game.actorFactory;
 
 import com.badlogic.gdx.physics.box2d.*;
-import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.controller.*;
-import com.pottda.game.model.*;
+import com.pottda.game.model.ActorFactory;
 import com.pottda.game.model.Character;
+import com.pottda.game.model.Obstacle;
+import com.pottda.game.model.Projectile;
 import com.pottda.game.physicsBox2D.Box2DPhysicsActor;
 import com.pottda.game.physicsBox2D.Box2DPhysicsCharacter;
 import com.pottda.game.physicsBox2D.Box2DPhysicsProjectile;

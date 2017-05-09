@@ -2,12 +2,9 @@ package com.pottda.game.model;
 
 import com.pottda.game.model.Inventory;
 import com.pottda.game.model.Item;
-
 import javax.vecmath.Point2i;
 import java.util.HashMap;
-import java.util.InputMismatchException;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 /**
  * Class used to cache inventories to speed up instantiating
