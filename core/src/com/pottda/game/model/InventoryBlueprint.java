@@ -15,18 +15,38 @@ import java.util.function.BiConsumer;
  */
 public class InventoryBlueprint {
 
+    /**
+     * Returns a new instance of an {@link Inventory} that corresponds to the given name.
+     *
+     * @param name a {@link String} with the name of the Inventory
+     * @return a new {@link Inventory}
+     * @throws IllegalAccessException if {@link Class}.newInstance() fails.
+     */
+    public static Inventory getForName(String name) throws Exception {
+        if (blueprints.containsKey(name))
+            throw new Exception("Already a blueprint of that name");
+        return blueprints.get(name).newInventory();
+    }
 
     /**
-     * The name of the inventory type (usually the same as the file name)
+     * Create a new blueprint and assign it to the given name
+     *
+     * @param name
+     * @param i
+     * @throws Exception
      */
-    private final String name;
+    public static void createBlueprint(String name, Inventory i) throws Exception {
+        blueprints.put(name, new InventoryBlueprint(i));
+    }
+
+    private static Map<String, InventoryBlueprint> blueprints;
+
     /**
      * Data structure for saving items
      */
     private final Map<PointAndOrientation, Class<? extends Item>> itemMap;
 
-    private InventoryBlueprint(String name, Map<PointAndOrientation, Class<? extends Item>> itemMap) {
-        this.name = name;
+    private InventoryBlueprint(Map<PointAndOrientation, Class<? extends Item>> itemMap) {
         this.itemMap = itemMap;
     }
 
@@ -35,11 +55,10 @@ public class InventoryBlueprint {
      * <p>
      * Does not actually copy items, but maps a position/orientation to a class
      *
-     * @param name      a {@link String}
      * @param inventory a {@link Inventory} with one or more {@link Item}
      */
-    public InventoryBlueprint(String name, Inventory inventory) throws Exception {
-        this(name, new HashMap<PointAndOrientation, Class<? extends Item>>());
+    private InventoryBlueprint(Inventory inventory) throws Exception {
+        this(new HashMap<PointAndOrientation, Class<? extends Item>>());
         if (inventory.items.isEmpty())
             throw new Exception("Inventory is empty: " + inventory.toString());
         for (Item i : inventory.items) {
