@@ -108,6 +108,8 @@ public class MyGame extends ApplicationAdapter {
     public void resize(int width, int height) {
         viewport.update(width, height);
         hudStage.getViewport().update(width, height, false);
+        gameStage.getViewport().update(width, height, false);
+        joystickStage.getViewport().update(width, height, false);
     }
 
     @Override
