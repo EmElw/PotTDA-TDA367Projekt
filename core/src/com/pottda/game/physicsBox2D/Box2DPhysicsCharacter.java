@@ -8,7 +8,7 @@ import javax.vecmath.Vector2f;
 public class Box2DPhysicsCharacter extends Box2DPhysicsActor {
 
     public Box2DPhysicsCharacter(Body body) {
-        this.body = body;
+        super(body);
     }
 
     @Override
