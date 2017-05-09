@@ -1,8 +1,18 @@
 package com.pottda.game.model;
 
+import com.pottda.game.model.items.ChainAttack;
+import com.pottda.game.model.items.MultiShot;
+import com.pottda.game.model.items.SimpleCannon;
+import com.pottda.game.model.items.Switcher;
 import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
+import javax.vecmath.Vector2f;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -11,84 +21,85 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by Gustav Lahti on 2017-04-20.
+ * Test some items and Inventory.compile()
  */
 public class InventoryTest {
-    private Inventory inventory = new Inventory();
-    private Random random = new Random();
+    Inventory inventory;
+    AttackItem cannon;
 
-    @Test
-    public void getCooldown() throws Exception {
-        int cooldownInput = 0;
-        int tempCooldown;
+    @Before
+    public void setUp() {
+        File xml;
+        String basePath = new File("").getAbsolutePath();
 
-        for (int i = 0; i < 10; i++) {
-            tempCooldown = random.nextInt(51) - 25;
-            cooldownInput += tempCooldown;
-            inventory.attackItems.add(new AttackItem(0, tempCooldown, 1, null) {
-
-            });
+        String filePath = basePath.
+                replace("\\core", "").  // No one must know of this blasphemy
+                concat("\\android\\assets\\inventoryblueprint\\testInv2.xml");
+        xml = new File(filePath);
+        try {
+            inventory = InventoryFactory.createFromXML(xml);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
-
-        assertEquals(inventory.getCooldown(), cooldownInput);
     }
 
     @Test
-    public void getHealth() throws Exception {
-        int healthInput = 0;
-        int tempHealth;
-
-        for (int i = 0; i < 10; i++) {
-            tempHealth = random.nextInt(51);
-            healthInput += tempHealth;
-            inventory.supportItems.add(new SupportItem(tempHealth, 0f) {
-
-            });
-        }
-
-        assertEquals(inventory.getHealth(), healthInput);
+    public void testCompile() {
+        Assert.assertEquals(1, inventory.attackItems.size());
+        Assert.assertEquals(6, inventory.items.size());
     }
 
     @Test
-    public void getAcceleration() throws Exception {
-        float accelerationInput = 0f;
-        float tempAcceleration;
-
-        for (int i = 0; i < 10; i++) {
-            tempAcceleration = random.nextFloat();
-            accelerationInput += tempAcceleration;
-            inventory.supportItems.add(new SupportItem(0, tempAcceleration) {
-            });
+    public void testCannon() {
+        boolean foundSimpleCannon = false;
+        for (Item i : inventory.attackItems) {
+            if (i instanceof SimpleCannon) {
+                cannon = (AttackItem) i;
+                foundSimpleCannon = true;
+                Assert.assertTrue(i.getNext() instanceof Switcher);
+            }
         }
-
-        assertTrue(Math.abs(inventory.getAcceleration() - accelerationInput) <= 0.01f);
+        Assert.assertTrue(foundSimpleCannon);
     }
 
     @Test
-    public void getProjectile() throws Exception {
-        int damageInput = 0;
-        int projectileAmountInput = 1;
-
-        int tempDamage;
-        int tempProjectileAmount;
-
-        List<Projectile> projectiles;
-
-        for (int i = 0; i < 10; i++) {
-            tempDamage = random.nextInt(50);
-            tempProjectileAmount = random.nextInt(3);
-
-            damageInput += tempDamage;
-            projectileAmountInput += tempProjectileAmount;
-
-            inventory.attackItems.add(new AttackItem(tempDamage, 0, 1 + tempProjectileAmount, null) {
-            });
+    public void testSwitcher() {
+        boolean foundSwitcher = false;
+        for (Item i : inventory.items) {
+            if (i instanceof Switcher) {
+                foundSwitcher = true;
+                Assert.assertTrue(i.getNext() instanceof ChainAttack);
+                Assert.assertTrue(i.getNext() instanceof MultiShot);
+            }
         }
+        Assert.assertTrue(foundSwitcher);
 
-        projectiles = inventory.getProjectile();
-
-        assertEquals(projectiles.size(), projectileAmountInput);
-        assertEquals(projectiles.get(0).damage, damageInput);
     }
 
+    @Test
+    public void testAttack() {
+        for (Item i : inventory.attackItems) {
+            if (i instanceof SimpleCannon) {
+                cannon = (AttackItem) i;
+            }
+        }
+        List<ProjectileListener> list = cannon.attack(new Vector2f(), new Vector2f());
+
+        Assert.assertTrue(list.get(0) instanceof ChainAttack);
+
+        list = cannon.attack(new Vector2f(), new Vector2f());
+
+        Assert.assertTrue(list.get(0) instanceof MultiShot);
+        Assert.assertTrue(list.get(1) instanceof MultiShot);
+
+
+    }
 }

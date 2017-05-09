@@ -34,6 +34,13 @@ public class Switcher extends Item {
 
     private boolean state;
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Switches between o0 and o1 (first call returns o1)
+     *
+     * @return
+     */
     @Override
     protected Item getNext() {
         state = !state;

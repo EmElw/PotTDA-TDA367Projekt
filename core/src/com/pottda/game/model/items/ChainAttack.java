@@ -18,22 +18,22 @@ public class ChainAttack extends AttackItem {
     Shaped like
 
         x x x
-       [X]  o
+        X[ ]o
         x x x
      */
     @Override
     protected void initDynamic() {
         isProjectileModifier = true;
 
+        basePositions.add(new Point2i(-1, 1));
+        basePositions.add(new Point2i(-1, 0));
+        basePositions.add(new Point2i(-1, -1));
         basePositions.add(new Point2i(0, 1));
-        basePositions.add(new Point2i(1, 1));
-        basePositions.add(new Point2i(2, 1));
-        basePositions.add(new Point2i(0, 0));
         basePositions.add(new Point2i(0, -1));
+        basePositions.add(new Point2i(1, 1));
         basePositions.add(new Point2i(1, -1));
-        basePositions.add(new Point2i(2, -1));
 
-        baseOutputs.add(new Point2i(2, 0));
+        baseOutputs.add(new Point2i(1, 0));
 
     }
 
