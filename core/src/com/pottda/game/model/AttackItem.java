@@ -54,7 +54,7 @@ public abstract class AttackItem extends Item {
     }
 
     public void tryAttack(Vector2f direction, Vector2f origin) {
-        if (System.currentTimeMillis() - lastAttackTime < cooldown) {
+        if (System.currentTimeMillis() - lastAttackTime > cooldown) {
             attack(direction, origin);
         }
     }
