@@ -37,6 +37,8 @@ public class Character extends ModelActor {
             stats.put(stat, inventory.getSumStat(stat));
         }
 
+        this.currentHealth = stats.get(Stat.HEALTH).intValue();
+
     }
 
     @Override
