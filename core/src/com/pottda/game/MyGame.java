@@ -56,6 +56,7 @@ public class MyGame extends ApplicationAdapter {
     private static int GAME_STATE = 0;
 
     private static final String playerImage = "CircleTest.png"; // change later
+    private static final String enemyImage = "CircleTestRed.png";
 
     @Override
     public void create() {
@@ -92,7 +93,14 @@ public class MyGame extends ApplicationAdapter {
         }
 
         // Add player to controller list
-        controllers.add(box2DActorFactory.buildPlayer(gameStage, new Texture(Gdx.files.internal(playerImage)), new Vector2f(gameStage.getWidth() / 2, gameStage.getHeight() / 2)));
+        controllers.add(box2DActorFactory.buildPlayer(gameStage,
+                new Texture(Gdx.files.internal(playerImage)), new Vector2f(gameStage.getWidth() / 2, gameStage.getHeight() / 2)));
+
+        // Add some enemies
+        for(int i = 0; i < 5; i++) {
+            controllers.add(box2DActorFactory.buildEnemy(gameStage, new Texture(Gdx.files.internal(enemyImage)), //Change
+                    new Vector2f((float)Math.random() * gameStage.getWidth(), (float)Math.random() * gameStage.getHeight())));
+        }
 
     }
 

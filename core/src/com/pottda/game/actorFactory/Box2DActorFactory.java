@@ -88,9 +88,7 @@ public class Box2DActorFactory extends ActorFactory {
 
         ViewActor view = new ViewActor(texture);
 
-        DumbAIController controller = new DumbAIController(model, view, stage);
-
-        return controller;
+        return new DumbAIController(model, view, stage);
     }
 
     /**
@@ -177,9 +175,7 @@ public class Box2DActorFactory extends ActorFactory {
 
         ViewActor view = new ViewActor(texture);
 
-        ProjectileController controller = new ProjectileController(model, view, stage);
-
-        return controller;
+        return new ProjectileController(model, view, stage);
     }
 
     @Override
@@ -195,9 +191,7 @@ public class Box2DActorFactory extends ActorFactory {
 
         ViewActor view = new ViewActor(texture);
 
-        ObstacleController controller = new ObstacleController(model, view, stage);
-
-        return controller;
+        return new ObstacleController(model, view, stage);
     }
 
     private void filterCategoryInit() {

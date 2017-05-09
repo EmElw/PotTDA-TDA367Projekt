@@ -47,8 +47,8 @@ public class Character extends ModelActor {
     @Override
     public void giveInput(Vector2f move, Vector2f attack) {
         // Movement
-        move.set(move.x /* * stats.get(Stat.ACCEL).floatValue()*/,
-                move.y /* * stats.get(Stat.ACCEL).floatValue()*/);
+        move.set(move.x/* * stats.get(Stat.ACCEL).floatValue()*/,
+                move.y/* * stats.get(Stat.ACCEL).floatValue()*/);
         physicsActor.giveMovementVector(move);
         this.angle = (float)Math.toDegrees(Math.atan2(-attack.getY(), attack.getX()));
         attack(attack);
