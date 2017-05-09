@@ -1,18 +1,11 @@
 package com.pottda.game.model;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.headless.HeadlessApplication;
-import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
-import com.pottda.game.MyGame;
 import com.pottda.game.model.items.DemoItemA;
 import com.pottda.game.model.items.DemoItemB;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
-import java.io.IOException;
 
 
 public class InventoryFactoryTest {

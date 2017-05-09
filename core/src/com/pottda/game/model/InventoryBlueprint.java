@@ -1,12 +1,6 @@
 package com.pottda.game.model;
 
-import com.pottda.game.model.Inventory;
-import com.pottda.game.model.Item;
-import sun.plugin2.util.ParameterNames;
-
-import javax.vecmath.Point2i;
 import java.util.HashMap;
-import java.util.InputMismatchException;
 import java.util.Map;
 
 /**

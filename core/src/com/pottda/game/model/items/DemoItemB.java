@@ -1,7 +1,6 @@
 package com.pottda.game.model.items;
 
 import com.pottda.game.model.AttackItem;
-import com.pottda.game.model.ProjectileListener;
 
 import javax.vecmath.Point2i;
 

@@ -52,6 +52,7 @@ public class Inventory {
                 item.outputItems.add(i, positionMap.get(outputs.get(i)));
             }
         }
+
     }
 
     /**

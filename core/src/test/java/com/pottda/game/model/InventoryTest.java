@@ -4,7 +4,6 @@ import com.pottda.game.model.items.ChainAttack;
 import com.pottda.game.model.items.MultiShot;
 import com.pottda.game.model.items.SimpleCannon;
 import com.pottda.game.model.items.Switcher;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,12 +12,7 @@ import javax.vecmath.Vector2f;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Test some items and Inventory.compile()
