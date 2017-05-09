@@ -7,5 +7,6 @@ import com.pottda.game.view.ViewActor;
 public class ProjectileController extends AbstractController {
     public ProjectileController(ModelActor modelActor, ViewActor viewActor, Stage stage) {
         super(modelActor, viewActor, stage);
+        // movementVector.set(0, 0);
     }
 }
