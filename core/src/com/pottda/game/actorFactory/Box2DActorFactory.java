@@ -256,6 +256,7 @@ public class Box2DActorFactory extends ActorFactory {
     private void fixtureDefInit() {
         characterFixtureDef = new FixtureDef();
         projectileFixtureDef = new FixtureDef();
+        projectileSensorFixtureDef = new FixtureDef();
         obstacleFixtureDef = new FixtureDef();
 
         PolygonShape tempPolygon;
@@ -280,9 +281,9 @@ public class Box2DActorFactory extends ActorFactory {
         // Projectile, sensor part
         tempCircle = new CircleShape();
         tempCircle.setRadius(PROJECTILE_SENSOR_RADIUS);
-        //projectileSensorFixtureDef.shape = tempCircle;
-        //projectileSensorFixtureDef.density = PROJECTILE_SENSOR_DENSITY;
-        //projectileSensorFixtureDef.isSensor = true;
+        projectileSensorFixtureDef.shape = tempCircle;
+        projectileSensorFixtureDef.density = PROJECTILE_SENSOR_DENSITY;
+        projectileSensorFixtureDef.isSensor = true;
 
         // Obstacle
         tempPolygon = new PolygonShape();
