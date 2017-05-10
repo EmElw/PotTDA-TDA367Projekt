@@ -81,22 +81,16 @@ public class JoysticksView {
     }
 
     public void onNewFrame() {
-        // Check if game paused
-        if (MyGame.getGameState() != 1) {
-            attackTouchpad.setColor(attackTouchpad.getColor().r, attackTouchpad.getColor().g, attackTouchpad.getColor().b, 0);
-            movementTouchpad.setColor(movementTouchpad.getColor().r, movementTouchpad.getColor().g, movementTouchpad.getColor().b, 0);
-        } else { //
-            // Check if user is touching joysticks
-            if (movementTouchpad.isTouched()) {
-                movementTouchpad.setColor(movementTouchpad.getColor().r, movementTouchpad.getColor().g, movementTouchpad.getColor().b, (float) 0.4);
-            } else {
-                movementTouchpad.setColor(movementTouchpad.getColor().r, movementTouchpad.getColor().g, movementTouchpad.getColor().b, 1);
-            }
-            if (attackTouchpad.isTouched()) {
-                attackTouchpad.setColor(attackTouchpad.getColor().r, attackTouchpad.getColor().g, attackTouchpad.getColor().b, (float) 0.4);
-            } else {
-                attackTouchpad.setColor(attackTouchpad.getColor().r, attackTouchpad.getColor().g, attackTouchpad.getColor().b, 1);
-            }
+        // Check if user is touching joysticks
+        if (movementTouchpad.isTouched()) {
+            movementTouchpad.setColor(movementTouchpad.getColor().r, movementTouchpad.getColor().g, movementTouchpad.getColor().b, (float) 0.4);
+        } else {
+            movementTouchpad.setColor(movementTouchpad.getColor().r, movementTouchpad.getColor().g, movementTouchpad.getColor().b, 1);
+        }
+        if (attackTouchpad.isTouched()) {
+            attackTouchpad.setColor(attackTouchpad.getColor().r, attackTouchpad.getColor().g, attackTouchpad.getColor().b, (float) 0.4);
+        } else {
+            attackTouchpad.setColor(attackTouchpad.getColor().r, attackTouchpad.getColor().g, attackTouchpad.getColor().b, 1);
         }
     }
 
