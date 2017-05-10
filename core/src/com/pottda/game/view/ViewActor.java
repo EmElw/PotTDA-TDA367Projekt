@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.pottda.game.MyGame;
 
 /**
  *
@@ -17,7 +18,8 @@ public class ViewActor extends Image {
     public ViewActor(Texture texture) {
         super(new TextureRegionDrawable(new TextureRegion(texture)));
         // set the rotation point to middle of image
-        this.setOrigin(texture.getWidth() / 2, texture.getHeight() / 2);
+        this.setOrigin((texture.getWidth() * MyGame.WIDTH_RATIO) / 2, (texture.getHeight() * MyGame.HEIGHT_RATIO) / 2);
+        this.setSize(this.getWidth() * MyGame.WIDTH_RATIO, this.getHeight() * MyGame.HEIGHT_RATIO); // Resize to make in meters instead of pixels
     }
 
     /**
