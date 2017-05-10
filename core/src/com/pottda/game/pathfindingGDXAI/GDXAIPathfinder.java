@@ -3,6 +3,7 @@ package com.pottda.game.pathfindingGDXAI;
 import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.ai.pfa.*;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.SortedIntList;
 import com.pottda.game.model.ModelActor;
 import com.pottda.game.model.Pathfinder;
@@ -10,17 +11,20 @@ import com.pottda.game.view.LibGDXApp;
 
 import javax.vecmath.Vector2f;
 import java.util.Iterator;
+import java.util.List;
 
 public class GDXAIPathfinder implements Pathfinder {
     private final GDXAIGraph graph;
     private ModelActor goal;
     private IndexedAStarPathFinder indexedAStarPathFinder;
+    private PathSmoother<SortedIntList.Node, Vector2> pathSmoother;
 
     public GDXAIPathfinder(ModelActor goal, int worldWidth, int worldHeight) {
         this.goal = goal;
         graph = new GDXAIGraph(worldWidth, worldHeight);
         try {
             indexedAStarPathFinder = new IndexedAStarPathFinder(graph);
+            pathSmoother = new PathSmoother<SortedIntList.Node, Vector2>(new CollisionDetector(world));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -66,6 +70,12 @@ public class GDXAIPathfinder implements Pathfinder {
         }
         if (!alignedY) {
             graph.setObstacle(x, y + 1);
+        }
+    }
+
+    public void setObstacles(List<Vector2f> obstacles){
+        for(Vector2f obstacle : obstacles){
+            setObstacle(obstacle);
         }
     }
 
