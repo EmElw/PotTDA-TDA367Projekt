@@ -10,7 +10,7 @@ public class Character extends ModelActor {
      * Base maxHealth of any character, further modified by its Inventory
      */
     private static final int BASE_HEALTH = 100;
-    private static final float baseAccel = 100;
+    private static final float BASE_ACCEL = 100;
     /**
      * A reference to the character's inventory, should be effectively final
      */
@@ -38,9 +38,11 @@ public class Character extends ModelActor {
         }
         // Add base values
         stats.put(Stat.HEALTH, stats.get(Stat.HEALTH) + (double) BASE_HEALTH);
+        stats.put(Stat.ACCEL, stats.get(Stat.ACCEL)+ (double) BASE_ACCEL);
 
         // Assign further as necessary
         this.currentHealth = stats.get(Stat.HEALTH).intValue();
+
 
     }
 
