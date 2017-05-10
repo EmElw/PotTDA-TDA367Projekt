@@ -104,7 +104,8 @@ public class MyGame extends ApplicationAdapter {
             try {
                 controllers.add(box2DActorFactory.buildEnemy(gameStage, new Texture(Gdx.files.internal(enemyImage)), //Change
                         new Vector2f((float)Math.random() * gameStage.getWidth(), (float)Math.random() * gameStage.getHeight()),
-                        InventoryFactory.createFromXML(Gdx.files.internal("inventoryblueprint/testInv.xml").file())));
+                        InventoryFactory.createFromXML(Gdx.files.internal(
+                                "inventoryblueprint/playerStartInventory.xml").file())));
             } catch (Exception e) {
                 e.printStackTrace();
             }
