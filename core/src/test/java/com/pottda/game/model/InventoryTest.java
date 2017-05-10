@@ -9,16 +9,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.vecmath.Vector2f;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 /**
  * Test some items and Inventory.compile()
  */
 public class InventoryTest {
-    Inventory inventory;
+    Inventory testInv2;
     AttackItem cannon;
 
     @Before
@@ -30,31 +28,27 @@ public class InventoryTest {
                 replace("\\core", "").  // No one must know of this blasphemy
                 concat("\\android\\assets\\inventoryblueprint\\testInv2.xml");
         xml = new File(filePath);
+
         try {
-            inventory = InventoryFactory.createFromXML(xml);
-        } catch (IOException e) {
+            testInv2 = InventoryFactory.createFromXML(xml);
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            Assert.fail();
         }
+        testInv2.compile();
+
     }
 
     @Test
     public void testCompile() {
-        Assert.assertEquals(1, inventory.attackItems.size());
-        Assert.assertEquals(6, inventory.items.size());
+        Assert.assertEquals(2, testInv2.attackItems.size());
+        Assert.assertEquals(6, testInv2.items.size());
     }
 
     @Test
     public void testCannon() {
         boolean foundSimpleCannon = false;
-        for (Item i : inventory.attackItems) {
+        for (Item i : testInv2.attackItems) {
             if (i instanceof SimpleCannon) {
                 cannon = (AttackItem) i;
                 foundSimpleCannon = true;
@@ -67,7 +61,7 @@ public class InventoryTest {
     @Test
     public void testSwitcher() {
         boolean foundSwitcher = false;
-        for (Item i : inventory.items) {
+        for (Item i : testInv2.items) {
             if (i instanceof Switcher) {
                 foundSwitcher = true;
                 Assert.assertTrue(i.getNext() instanceof ChainAttack);
@@ -80,7 +74,7 @@ public class InventoryTest {
 
     @Test
     public void testAttack() {
-        for (Item i : inventory.attackItems) {
+        for (Item i : testInv2.attackItems) {
             if (i instanceof SimpleCannon) {
                 cannon = (AttackItem) i;
             }
@@ -95,5 +89,29 @@ public class InventoryTest {
         Assert.assertTrue(list.get(1) instanceof MultiShot);
 
 
+    }
+
+    @Test
+    public void testLegality() {
+        Assert.assertTrue(testInv2.isLegal());
+        {
+            File xml;
+            Inventory i;
+            String basePath = new File("").getAbsolutePath();
+
+            String filePath = basePath.
+                    replace("\\core", "").  // No one must know of this blasphemy
+                    concat("\\android\\assets\\inventoryblueprint\\illegalTestInv.xml");
+
+            xml = new File(filePath);
+            try {
+                i = InventoryFactory.createFromXML(xml);
+                i.compile();
+                Assert.assertFalse(i.isLegal());
+            } catch (Exception e) {
+                e.printStackTrace();
+                Assert.fail();
+            }
+        }
     }
 }

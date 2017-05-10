@@ -131,6 +131,14 @@ public class Inventory {
         this.height = h;
     }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
     /**
      * Returns the summed stat-value for the given stat
      * (not guaranteed to be positive)
