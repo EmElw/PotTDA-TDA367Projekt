@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<inventory w="5" h="5">
+    <item name="SimpleCannon" x="0" y="4" orientation="0">
+    </item>
+</inventory>

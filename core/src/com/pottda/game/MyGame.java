@@ -4,6 +4,7 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.pottda.game.actorFactory.Box2DActorFactory;
 import com.pottda.game.controller.ControllerOptions;
+import com.pottda.game.model.InventoryFactory;
 import com.pottda.game.view.GameView;
 import com.pottda.game.view.HUDView;
 import com.badlogic.gdx.Gdx;
@@ -24,10 +25,12 @@ import com.pottda.game.controller.AbstractController;
 import com.pottda.game.controller.TouchJoystickController;
 import com.pottda.game.view.SoundsAndMusic;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.vecmath.Vector2f;
+import javax.xml.parsers.ParserConfigurationException;
 
 public class MyGame extends ApplicationAdapter {
 
@@ -98,8 +101,14 @@ public class MyGame extends ApplicationAdapter {
 
         // Add some enemies
         for(int i = 0; i < 5; i++) {
-            controllers.add(box2DActorFactory.buildEnemy(gameStage, new Texture(Gdx.files.internal(enemyImage)), //Change
-                    new Vector2f((float)Math.random() * gameStage.getWidth(), (float)Math.random() * gameStage.getHeight())));
+            try {
+                controllers.add(box2DActorFactory.buildEnemy(gameStage, new Texture(Gdx.files.internal(enemyImage)), //Change
+                        new Vector2f((float)Math.random() * gameStage.getWidth(), (float)Math.random() * gameStage.getHeight()),
+                        InventoryFactory.createFromXML(Gdx.files.internal(
+                                "inventoryblueprint/playerStartInventory.xml").file())));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
     }
