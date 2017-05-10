@@ -120,9 +120,9 @@ public class MyGame extends ApplicationAdapter {
     public void resize(int width, int height) {
         camera.setToOrtho(false, HEIGHT * width / (float) height, HEIGHT);
 
-        hudStage.getViewport().update((int)(HEIGHT * width /  height), (int)HEIGHT, false);
-        gameStage.getViewport().update((int)(HEIGHT * width / height), (int)HEIGHT, false);
-        joystickStage.getViewport().update((int)(HEIGHT * width / height), (int)HEIGHT, false);
+        hudStage.getViewport().update((width), height, false);
+        gameStage.getViewport().update((width), height, false);
+        joystickStage.getViewport().update((width), height, false);
     }
 
     @Override
