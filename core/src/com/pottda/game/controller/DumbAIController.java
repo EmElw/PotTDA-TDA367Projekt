@@ -29,6 +29,8 @@ public class DumbAIController extends AIController{
 
         if (movementVector.length() != 0) { // keep rotation when standing still
             attackVector = movementVector;
+        } else {
+            attackVector = new Vector2f(goalPos.getX() - currentPos.getX(), goalPos.getY() - currentPos.getY());
         }
         attackVector.set(attackVector.x, attackVector.y);
         movementVector.set(movementVector.x * SPEED_MULTIPLIER, movementVector.y * SPEED_MULTIPLIER);
