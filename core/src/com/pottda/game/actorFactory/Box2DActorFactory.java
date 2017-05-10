@@ -1,5 +1,6 @@
 package com.pottda.game.actorFactory;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,6 +14,8 @@ import com.pottda.game.physicsBox2D.Box2DPhysicsProjectile;
 import com.pottda.game.view.ViewActor;
 
 import javax.vecmath.Vector2f;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 
 public class Box2DActorFactory extends ActorFactory {
     // Constants
@@ -68,7 +71,7 @@ public class Box2DActorFactory extends ActorFactory {
     }
 
     @Override
-    public AIController buildEnemy(Stage stage, Texture texture, Vector2f position) {
+    public AIController buildEnemy(Stage stage, Texture texture, Vector2f position, Inventory inventory) {
         // Create body
         Body body = world.createBody(characterBodyDef);
         body.setTransform(position.getX(), position.getY(), 0);
@@ -85,6 +88,9 @@ public class Box2DActorFactory extends ActorFactory {
 
         Character model = new Character(physics);
         model.team = ENEMY_TEAM;
+
+        // Add inventory
+        model.inventory = inventory;
 
         ViewActor view = new ViewActor(texture);
 
@@ -120,6 +126,13 @@ public class Box2DActorFactory extends ActorFactory {
         DumbAIController.goal = model;
         model.team = PLAYER_TEAM;
 
+        // Add inventory
+        try {
+            model.inventory = InventoryFactory.createFromXML(Gdx.files.internal(
+                    "inventoryblueprint/playerStartInventory.xml").file());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ViewActor view = new ViewActor(texture);
 
         AbstractController controller = null;
