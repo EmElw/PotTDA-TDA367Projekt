@@ -59,6 +59,8 @@ public class MyGame extends ApplicationAdapter {
     private static final String enemyImage = "circletestred.png";
     private static final String borderImage = "game/border.png";
 
+    private static final String playerStartInventory = "inventoryblueprint/playerStartInventory.xml";
+
     public static final float WIDTH = 800;
     public static final float HEIGHT = 480;
     public static final float WIDTH_METERS = 30;
@@ -111,8 +113,7 @@ public class MyGame extends ApplicationAdapter {
             try {
                 controllers.add(ActorFactory.get().buildEnemy(gameStage, new Texture(Gdx.files.internal(enemyImage)), //Change
                         new Vector2f((float) (Math.random() * (WIDTH_METERS )), (float) (Math.random() * (HEIGHT_METERS))),
-                        InventoryFactory.createFromXML(Gdx.files.internal(
-                                "inventoryblueprint/playerStartInventory.xml").file())));
+                        InventoryFactory.createFromXML(Gdx.files.internal(playerStartInventory).file())));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -121,8 +122,12 @@ public class MyGame extends ApplicationAdapter {
         createWorldBorders();
     }
 
+    /**
+     * Creates four obstacles around the playing area
+     */
     private void createWorldBorders() {
         final float border_thickness = 0.5f;
+        // Scale the area bigger or smaller
         final float area_scaling = 1.2f;
         // Bottom
         controllers.add(ActorFactory.get().buildObstacle(gameStage, new Texture(Gdx.files.internal(borderImage)),
