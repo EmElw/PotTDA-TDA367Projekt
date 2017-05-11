@@ -13,6 +13,7 @@ public abstract class ModelActor {
     public boolean isProjectile;
     public int team;
     public AbstractController controller;
+    float angle = 0;
 
     protected final PhysicsActor physicsActor;
 
@@ -45,7 +46,7 @@ public abstract class ModelActor {
      * @return degrees    a float containing the angle the actor is looking
      */
     public float getAngle() {
-        return 0;
+        return angle;
     }
 
     /**

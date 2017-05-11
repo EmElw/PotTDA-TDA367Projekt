@@ -2,64 +2,64 @@ package com.pottda.game;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
+import com.pottda.game.actorFactory.Box2DActorFactory;
+import com.pottda.game.controller.ControllerOptions;
+import com.pottda.game.model.InventoryFactory;
+import com.pottda.game.view.GameView;
+import com.pottda.game.view.HUDView;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Box2D;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pottda.game.controller.AbstractController;
-import com.pottda.game.controller.KeyboardMouseController;
 import com.pottda.game.controller.TouchJoystickController;
-import com.pottda.game.model.Character;
-import com.pottda.game.physicsBox2D.Box2DPhysicsCharacter;
-import com.pottda.game.view.HUDView;
 import com.pottda.game.view.SoundsAndMusic;
-import com.pottda.game.view.ViewActor;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.vecmath.Vector2f;
+import javax.xml.parsers.ParserConfigurationException;
 
 public class MyGame extends ApplicationAdapter {
 
     private static final int WIDTH = 800;
     private static final int HEIGHT = 480;
-    private Stage stage;
+    private Stage hudStage;
+    private Stage joystickStage;
+    private Stage gameStage;
     private OrthographicCamera camera;
     private Viewport viewport;
     private Batch spriteBatch;
 
-    private Texture img;
-    //private Box2DDebugRenderer box2DDebugRenderer;
     private float accumulator;
-
-    private BodyDef bodyDef;
-    private Body body;
-    private Shape shape;
-    private FixtureDef fixtureDef;
-    private Fixture fixture;
-    private ShapeRenderer shapeRenderer;
-    private Sprite sprite;
 
     private List<AbstractController> controllers;
     private World world;
 
     private HUDView hudView;
     private SoundsAndMusic soundsAndMusic;
+    private GameView gameView;
+    private Box2DActorFactory box2DActorFactory;
 
     private static final int RUNNING = 1;
     private static final int PAUSED = 2;
     private static final int OPTIONS = 3;
     private static int GAME_STATE = 0;
+
+    private static final String playerImage = "CircleTest.png"; // change later
+    private static final String enemyImage = "CircleTestRed.png";
 
     @Override
     public void create() {
@@ -68,55 +68,57 @@ public class MyGame extends ApplicationAdapter {
         camera = new OrthographicCamera(WIDTH, HEIGHT);
         camera.setToOrtho(true, WIDTH, HEIGHT); // Y-axis pointing down
         viewport = new FitViewport(WIDTH, HEIGHT, camera);
-        stage = new Stage(new StretchViewport(WIDTH, HEIGHT));
+        hudStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
+        joystickStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
+        gameStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         spriteBatch = new SpriteBatch();
 
         GAME_STATE = RUNNING;
-        Gdx.input.setInputProcessor(stage);
+        Gdx.input.setInputProcessor(hudStage);
         Box2D.init();
-        //box2DDebugRenderer = new Box2DDebugRenderer();
         world = new World(new Vector2(0, 0), false);
         accumulator = 0;
 
-        bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(400, 240);
-
-        body = world.createBody(bodyDef);
-        /*shape = new CircleShape();
-        shape.setRadius(2.5f);
-
-        fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape;
-        fixtureDef.density = 0.5f;
-        fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 0.6f;
-
-        fixture = body.createFixture(fixtureDef);
-        shape.dispose();*/
-
-        img = new Texture(Gdx.files.internal("CircleTest.png"));
-        sprite = new Sprite(img);
-        shapeRenderer = new ShapeRenderer();
-
-        hudView = new HUDView(stage);
-
-        if (Gdx.app.getType() == Application.ApplicationType.Android) { // if on android
-            controllers.add(new TouchJoystickController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))), new ViewActor(), stage));
-        } else if (Gdx.app.getType() == Application.ApplicationType.Desktop) { // if on desktop
-            // Check if using mouse?
-            // abstractController = new KeyboardOnlyController(new ArrayList<AttackListener>(), new ArrayList<MovementListener>(), false);
-            controllers.add(new KeyboardMouseController(new Character(new Box2DPhysicsCharacter(world.createBody(bodyDef))), new ViewActor()));
-        }
-
+        hudView = new HUDView(hudStage);
+        gameView = new GameView(gameStage, joystickStage);
         soundsAndMusic = new SoundsAndMusic();
         startMusic();
+
+        // Create Actor Factory
+        box2DActorFactory = new Box2DActorFactory(world);
+
+        ControllerOptions.joystickStage = joystickStage;
+
+        if (Gdx.app.getType() == Application.ApplicationType.Android) { // if on android
+            ControllerOptions.controllerSettings = ControllerOptions.TOUCH_JOYSTICK;
+        } else if (Gdx.app.getType() == Application.ApplicationType.Desktop) { // if on desktop
+            ControllerOptions.controllerSettings = ControllerOptions.KEYBOARD_MOUSE;
+        }
+
+        // Add player to controller list
+        controllers.add(box2DActorFactory.buildPlayer(gameStage,
+                new Texture(Gdx.files.internal(playerImage)), new Vector2f(gameStage.getWidth() / 2, gameStage.getHeight() / 2)));
+
+        // Add some enemies
+        for(int i = 0; i < 5; i++) {
+            try {
+                controllers.add(box2DActorFactory.buildEnemy(gameStage, new Texture(Gdx.files.internal(enemyImage)), //Change
+                        new Vector2f((float)Math.random() * gameStage.getWidth(), (float)Math.random() * gameStage.getHeight()),
+                        InventoryFactory.createFromXML(Gdx.files.internal(
+                                "inventoryblueprint/playerStartInventory.xml").file())));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
-        stage.getViewport().update(width, height, false);
+        hudStage.getViewport().update(width, height, false);
+        gameStage.getViewport().update(width, height, false);
+        joystickStage.getViewport().update(width, height, false);
     }
 
     @Override
@@ -143,6 +145,8 @@ public class MyGame extends ApplicationAdapter {
             hudView.renderPaused();
 
         } else if (GAME_STATE == RUNNING) {
+            gameView.render();
+
             hudView.renderRunning();
 
             // Update the world
@@ -152,12 +156,7 @@ public class MyGame extends ApplicationAdapter {
             hudView.renderOptions();
         }
 
-        // Draw stuff
-        spriteBatch.begin();
-        sprite.draw(spriteBatch);
-        spriteBatch.end();
-
-        stage.draw();
+        hudStage.draw();
     }
 
     /**
@@ -174,8 +173,8 @@ public class MyGame extends ApplicationAdapter {
      */
     private void checkTouch() {
         if (Gdx.input.justTouched()) { // Only check first touch
-            // Get stage camera and unproject to get correct coordinates!
-            Vector3 vector3 = stage.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+            // Get hudStage camera and unproject to get correct coordinates!
+            Vector3 vector3 = hudStage.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
             switch (GAME_STATE) {
                 case RUNNING:
                     if (hudView.checkIfTouchingPauseButton(vector3)) {
@@ -225,12 +224,10 @@ public class MyGame extends ApplicationAdapter {
     @Override
     public void dispose() {
         spriteBatch.dispose();
-        img.dispose();
-        //shape.dispose(); // Causes EXCEPTION_ACCESS_VIOLATION in JRE
-        shapeRenderer.dispose();
         hudView.dispose();
-        stage.dispose();
+        hudStage.dispose();
         world.dispose();
         soundsAndMusic.dispose();
+        gameView.dispose();
     }
 }

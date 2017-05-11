@@ -2,7 +2,6 @@ package com.pottda.game.model;
 
 import com.pottda.game.model.Inventory;
 import com.pottda.game.model.Item;
-
 import javax.vecmath.Point2i;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +18,7 @@ public class InventoryBlueprint {
      * @return a new {@link Inventory}
      * @throws IllegalAccessException if {@link Class}.newInstance() fails.
      */
-    public static Inventory getInventory(String name) {
+    public static Inventory getForName(String name) throws Exception {
         return blueprints.get(name).newInventory();
     }
 

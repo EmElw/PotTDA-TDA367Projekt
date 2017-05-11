@@ -27,5 +27,6 @@ public class Projectile extends ModelActor {
     @Override
     public void giveInput(Vector2f movementVector, Vector2f attackVector) {
         physicsActor.giveMovementVector(movementVector);
+        this.angle = (float)Math.toDegrees(Math.atan2(attackVector.getY(), attackVector.getX()));
     }
 }

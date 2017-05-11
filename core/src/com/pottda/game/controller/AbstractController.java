@@ -19,6 +19,11 @@ public abstract class AbstractController {
     final ModelActor modelActor;
     private final ViewActor viewActor;
 
+    /**
+     *
+     * @param modelActor
+     * @param viewActor
+     */
     AbstractController(ModelActor modelActor, ViewActor viewActor) {
         this.modelActor = modelActor;
         this.viewActor = viewActor;
