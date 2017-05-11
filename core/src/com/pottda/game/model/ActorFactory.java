@@ -9,6 +9,17 @@ import java.util.List;
 import javax.vecmath.Vector2f;
 
 public abstract class ActorFactory {
+
+    private static ActorFactory instance;
+
+    public static void setFactory(ActorFactory factory) {
+        instance = factory;
+    }
+
+    public static ActorFactory get() {
+        return instance;
+    }
+
     public abstract AbstractController buildEnemy(Stage stage, Texture texture, Vector2f position, Inventory inventory);
 
     public abstract AbstractController buildPlayer(Stage stage, Texture texture, Vector2f position);
