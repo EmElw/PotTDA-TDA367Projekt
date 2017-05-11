@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.SortedIntList;
 import com.pottda.game.model.ModelActor;
 import com.pottda.game.model.Pathfinder;
-import com.pottda.game.view.LibGDXApp;
 
 import javax.vecmath.Vector2f;
 import java.util.Iterator;
@@ -24,7 +23,7 @@ public class GDXAIPathfinder implements Pathfinder {
         graph = new GDXAIGraph(worldWidth, worldHeight);
         try {
             indexedAStarPathFinder = new IndexedAStarPathFinder(graph);
-            pathSmoother = new PathSmoother<SortedIntList.Node, Vector2>(new CollisionDetector(world));
+            pathSmoother = new PathSmoother<SortedIntList.Node, Vector2>(new CollisionDetector(graph));
         } catch (Exception e) {
             e.printStackTrace();
         }
