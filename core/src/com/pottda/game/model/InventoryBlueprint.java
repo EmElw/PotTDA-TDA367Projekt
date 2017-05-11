@@ -1,5 +1,8 @@
 package com.pottda.game.model;
 
+import com.pottda.game.model.Inventory;
+import com.pottda.game.model.Item;
+import javax.vecmath.Point2i;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,10 +16,13 @@ public class InventoryBlueprint {
      *
      * @param name a {@link String} with the name of the Inventory
      * @return a new {@link Inventory}
-     * @throws IllegalAccessException if {@link Class}.newInstance() fails.
      */
-    public static Inventory getForName(String name) throws Exception {
+    public static Inventory getInventory(String name)  {
         return blueprints.get(name).newInventory();
+    }
+
+    public static boolean hasInventory(String name) {
+        return blueprints.containsKey(name);
     }
 
     /**
@@ -26,33 +32,35 @@ public class InventoryBlueprint {
      * @param i
      * @throws Exception
      */
-    public static void createBlueprint(String name, Inventory i) throws Exception {
+    public static void createBlueprint(String name, Inventory i) {
         blueprints.put(name, new InventoryBlueprint(i));
     }
 
-    private static Map<String, InventoryBlueprint> blueprints;
+    private static Map<String, InventoryBlueprint> blueprints = new HashMap<String, InventoryBlueprint>();
+
+    // ----------------------------------------------
+
+    private final int width;
+    private final int height;
 
     /**
      * Data structure for saving items
      */
     private final Map<PointAndOrientation, Class<? extends Item>> itemMap;
 
-    private InventoryBlueprint(Map<PointAndOrientation, Class<? extends Item>> itemMap) {
-        this.itemMap = itemMap;
-    }
 
     /**
      * Creates a blueprint from a given {@link Inventory}.
      * <p>
      * Does not actually copy items, but maps a position/orientation to a class
      *
-     * @param inventory a {@link Inventory} with one or more {@link Item}
+     * @param inventory a {@link Inventory}
      */
-    private InventoryBlueprint(Inventory inventory) throws Exception {
-        this(new HashMap<PointAndOrientation, Class<? extends Item>>());
-        if (inventory.items.isEmpty()) {
-            throw new Exception("Inventory is empty: " + inventory.toString());
-        }
+    private InventoryBlueprint(Inventory inventory) {
+        itemMap = new HashMap<PointAndOrientation, Class<? extends Item>>();
+        width = inventory.getWidth();
+        height = inventory.getHeight();
+
         for (Item i : inventory.items) {
             addItemClass(i.getClass(), i.x, i.y, i.orientation);
         }
@@ -75,12 +83,14 @@ public class InventoryBlueprint {
         }
     }
 
-    public Inventory newInventory() throws IllegalAccessException {
+    private Inventory newInventory() {
         Inventory inventory = new Inventory();
+        inventory.setDimensions(width, height);
         Item item;
         for (Map.Entry<PointAndOrientation, Class<? extends Item>> entry : itemMap.entrySet()) {
             try {
                 item = entry.getValue().newInstance();
+                item.init();
                 item.x = entry.getKey().x;
                 item.y = entry.getKey().y;
                 item.orientation = entry.getKey().orientation;
@@ -88,7 +98,7 @@ public class InventoryBlueprint {
             } catch (InstantiationException e) {
                 throw new InstantiationError("Could not create instance of: " + entry.getValue().toString());
             } catch (IllegalAccessException e) {
-                throw new IllegalAccessException("Could not access: " + entry.getValue().toString());
+                throw new Error("Access failure in blueprint", e);
             }
         }
 

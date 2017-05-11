@@ -41,17 +41,11 @@ public class InventoryFactory {
      */
     public static Inventory createFromXML(File file) throws ParserConfigurationException, IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
 
-        Inventory inventory = null;
-        try {
-            inventory = InventoryBlueprint.getForName(file.getName());
-            if (inventory != null) {
-                return inventory;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (InventoryBlueprint.hasInventory(file.getName())) {
+            return InventoryBlueprint.getInventory(file.getName());
         }
 
-        // Will only reach here and beyond if there's not a blueprint for it
+        Inventory inventory;
 
         // Create the inventory to return
         inventory = new Inventory();
@@ -98,11 +92,9 @@ public class InventoryFactory {
             // Add the item to the inventory
             inventory.addItem(item);
         }
-        try {
-            InventoryBlueprint.createBlueprint(file.getName(), inventory);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        // Add to cached blueprints
+        InventoryBlueprint.createBlueprint(file.getName(), inventory);
         inventory.compile();
         return inventory;
 

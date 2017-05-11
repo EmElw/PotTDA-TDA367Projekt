@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -41,20 +42,20 @@ public class ItemTest {
 
         List<Integer> positionsA = a.getPositionsAsIntegers(10);
         List<Integer> outputA = a.getOutputAsInteger(10);
-        Util.sortIntegerList(positionsA, true);
+        Collections.sort(positionsA);
 
         List<Integer> positionsB = b.getPositionsAsIntegers(10);
         List<Integer> outputB = b.getOutputAsInteger(10);
-        Util.sortIntegerList(positionsB, true);
+        Collections.sort(positionsB);
 
         // Create the expected values
         List<Integer> rotatedA = new ArrayList<Integer>();
         rotatedA.addAll(Arrays.asList(51, 52, 41, 42));
-        Util.sortIntegerList(rotatedA, true);
+        Collections.sort(rotatedA);
 
         List<Integer> rotatedB = new ArrayList<Integer>();
         rotatedB.addAll(Arrays.asList(48, 38, 39, 29));
-        Util.sortIntegerList(rotatedB, true);
+        Collections.sort(rotatedB);
 
         Assert.assertEquals(rotatedA, positionsA);
         Assert.assertEquals(rotatedB, positionsB);

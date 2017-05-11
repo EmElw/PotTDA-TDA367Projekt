@@ -43,15 +43,70 @@ public class Inventory {
         // Set the outputs of all items
         attackItems.clear();
         for (Item item : items) {
-            if (item.isPrimaryAttack) { // Add attack items to a special subset list
+            if (item.isPrimaryAttack || item.isSecondaryAttack) {
                 attackItems.add((AttackItem) item);
             }
             // Map each output to an Item or null
             List<Integer> outputs = item.getOutputAsInteger(width);
-            for (int i = 0; i < outputs.size(); i++) {
-                item.outputItems.add(i, positionMap.get(outputs.get(i)));
+            item.outputItems.clear();
+            for (Integer i : outputs) {
+                item.outputItems.add(
+                        positionMap.get(i));
             }
         }
+    }
+
+    /**
+     * Checks to see if the current inventory state is legal, i.e.
+     * <p>
+     * - no infinite loops are created
+     *
+     * @return true if the above conditions are fulfilled
+     */
+    public boolean isLegal() {
+
+        for (Item i : this.attackItems) {
+            if (isLooping(i, new HashSet<Item>())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Recursively controls all the output items of the given item
+     * so that a single item does not appear more than once in the
+     * chain.
+     * <p>
+     * In the case of branches, each branch is checked separately so
+     * that an item can appear in both branches and still be legal
+     *
+     * @param item         the Item to start with
+     * @param checkedItems a {@link Set} of Items already in the chain
+     * @return true if no loops are found
+     */
+    public boolean isLooping(Item item, Set<Item> checkedItems) {
+        if (checkedItems.contains(item)) {
+            return true;        // Base fail case
+        }
+
+        checkedItems.add(item); // Add to checked items set
+
+        // Recursively check each output
+        for (int i = 0; i < item.outputItems.size(); i++) {
+            Item op = item.outputItems.get(i);
+
+            if (op == null) {
+                return false;   // Base success case
+            }
+            if (isLooping(op,
+                    i == item.outputItems.size() ?              // If it is the last output:
+                            checkedItems :                      // - reuse the input set
+                            new HashSet<Item>(checkedItems))) { // - otherwise, create a copy
+                return true;
+            }
+        }
+        return false;       // Reaches here if all outputs are not looping
 
     }
 
@@ -60,11 +115,14 @@ public class Inventory {
      *
      * @param direction a {@link Vector2f} in the wanted direction
      */
+
     public void attack(Vector2f direction, Vector2f origin) {
 
         // Iterate through all attack items and do stuff
         for (AttackItem a : attackItems) {
-            a.tryAttack(direction, origin);
+            if (a.isPrimaryAttack) {
+                a.tryAttack(direction, origin);
+            }
         }
     }
 
@@ -84,6 +142,14 @@ public class Inventory {
     public void setDimensions(int w, int h) {
         this.width = w;
         this.height = h;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     /**
