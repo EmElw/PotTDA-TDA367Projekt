@@ -24,6 +24,11 @@ public class ViewActor extends Image {
         this.setSize(this.getWidth() * MyGame.WIDTH_RATIO, this.getHeight() * MyGame.HEIGHT_RATIO); // Resize to make in meters instead of pixels
     }
 
+    /**
+     * calls super class to set image for actor
+     * @param texture the texture to set as image
+     * @param size vector with width and height of image
+     */
     public ViewActor(Texture texture, Vector2f size) {
         super(new TextureRegionDrawable(new TextureRegion(texture)));
         this.setSize(size.x, size.y);
