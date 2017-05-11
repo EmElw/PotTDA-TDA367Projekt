@@ -18,7 +18,7 @@ public class InventoryBlueprint {
      * @return a new {@link Inventory}
      * @throws IllegalAccessException if {@link Class}.newInstance() fails.
      */
-    public static Inventory getForName(String name) throws Exception {
+    public static Inventory getInventory(String name) throws Exception {
         return blueprints.get(name).newInventory();
     }
 
