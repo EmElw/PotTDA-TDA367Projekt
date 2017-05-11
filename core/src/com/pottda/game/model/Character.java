@@ -62,7 +62,7 @@ public class Character extends ModelActor {
 
     @Override
     public float getAngle() {
-        if (team == PLAYER_TEAM) { // Fix rotation for enemies so they rotate towards player
+        if (team == ENEMY_TEAM) { // Fix rotation for enemies so they rotate towards player
             return 0 - super.getAngle();
         }
         return super.getAngle();
