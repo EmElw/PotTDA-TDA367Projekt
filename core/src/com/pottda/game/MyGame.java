@@ -34,14 +34,10 @@ import javax.vecmath.Vector2f;
 import javax.xml.parsers.ParserConfigurationException;
 
 public class MyGame extends ApplicationAdapter {
-
-    private static final int WIDTH = 800;
-    private static final int HEIGHT = 480;
     private Stage hudStage;
     private Stage joystickStage;
     private Stage gameStage;
     private OrthographicCamera camera;
-    private Viewport viewport;
     private Batch spriteBatch;
 
     private float accumulator;
@@ -59,19 +55,26 @@ public class MyGame extends ApplicationAdapter {
     private static final int OPTIONS = 3;
     private static int GAME_STATE = 0;
 
-    private static final String playerImage = "CircleTest.png"; // change later
-    private static final String enemyImage = "CircleTestRed.png";
+    private static final String playerImage = "circletest.png"; // change later
+    private static final String enemyImage = "circletestred.png";
+
+    public static final float WIDTH = 800;
+    public static final float HEIGHT = 480;
+    public static final float WIDTH_METERS = 30;
+    public static final float HEIGHT_METERS = 18;
+    public static final float HEIGHT_RATIO = WIDTH_METERS / WIDTH;
+    public static final float WIDTH_RATIO = HEIGHT_METERS / HEIGHT;
 
     @Override
     public void create() {
         controllers = new ArrayList<AbstractController>();
 
-        camera = new OrthographicCamera(WIDTH, HEIGHT);
-        camera.setToOrtho(true, WIDTH, HEIGHT); // Y-axis pointing down
-        viewport = new FitViewport(WIDTH, HEIGHT, camera);
+        camera = new OrthographicCamera();
         hudStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         joystickStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
-        gameStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
+        gameStage = new Stage(new StretchViewport(WIDTH_METERS, HEIGHT_METERS));
+        gameStage.getCamera().position.x = WIDTH_METERS / 2;
+        gameStage.getCamera().position.y = HEIGHT_METERS / 2;
         spriteBatch = new SpriteBatch();
 
         GAME_STATE = RUNNING;
@@ -100,13 +103,13 @@ public class MyGame extends ApplicationAdapter {
 
         // Add player to controller list
         controllers.add(ActorFactory.get().buildPlayer(gameStage,
-                new Texture(Gdx.files.internal(playerImage)), new Vector2f(gameStage.getWidth() / 2, gameStage.getHeight() / 2)));
+                new Texture(Gdx.files.internal(playerImage)), new Vector2f(WIDTH_METERS / 2, HEIGHT_METERS / 2)));
 
         // Add some enemies
         for (int i = 0; i < 5; i++) {
             try {
                 controllers.add(ActorFactory.get().buildEnemy(gameStage, new Texture(Gdx.files.internal(enemyImage)), //Change
-                        new Vector2f((float) Math.random() * gameStage.getWidth(), (float) Math.random() * gameStage.getHeight()),
+                        new Vector2f((float) (4 + Math.random() * (WIDTH_METERS - 4)), (float) (4 + Math.random() * (HEIGHT_METERS - 4))),
                         InventoryFactory.createFromXML(Gdx.files.internal(
                                 "inventoryblueprint/playerStartInventory.xml").file())));
             } catch (Exception e) {
@@ -118,10 +121,11 @@ public class MyGame extends ApplicationAdapter {
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height);
-        hudStage.getViewport().update(width, height, false);
-        gameStage.getViewport().update(width, height, false);
-        joystickStage.getViewport().update(width, height, false);
+        camera.setToOrtho(false, HEIGHT * width / (float) height, HEIGHT);
+
+        hudStage.getViewport().update((width), height, false);
+        gameStage.getViewport().update((width), height, false);
+        joystickStage.getViewport().update((width), height, false);
     }
 
     @Override

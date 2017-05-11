@@ -15,6 +15,9 @@ public abstract class ModelActor {
     public AbstractController controller;
     float angle = 0;
 
+    public final static int PLAYER_TEAM = 0;
+    public final static int ENEMY_TEAM = 1;
+
     protected final PhysicsActor physicsActor;
 
     public ModelActor(PhysicsActor physicsActor) {
