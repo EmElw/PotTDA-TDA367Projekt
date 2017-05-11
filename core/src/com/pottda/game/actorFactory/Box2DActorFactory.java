@@ -50,6 +50,7 @@ public class Box2DActorFactory extends ActorFactory {
     private final static float OBSTACLE_HALF_HEIGHT = 0.5f;
     private final static float OBSTACLE_FRICTION = 0.25f;
     private final static float OBSTACLE_BOUNCINESS = 0f;
+    private static Filter OBSTACLE_FILTER;
 
 
     private final World world;
@@ -221,30 +222,31 @@ public class Box2DActorFactory extends ActorFactory {
         PROJECTILE_PLAYER_FILTER = new Filter();
         PROJECTILE_ENEMY_FILTER = new Filter();
         PROJECTILE_PENETRATION_FILTER = new Filter();
+        OBSTACLE_FILTER = new Filter();
 
         CHARACTER_PLAYER_FILTER.categoryBits = 0x0001;
         CHARACTER_ENEMY_FILTER.categoryBits = 0x0002;
         PROJECTILE_PLAYER_FILTER.categoryBits = 0x0004;
         PROJECTILE_ENEMY_FILTER.categoryBits = 0x0008;
         PROJECTILE_PENETRATION_FILTER.categoryBits = 0x0010;
+        OBSTACLE_FILTER.categoryBits = 0x0020;
 
-        // Player collides with Enemy Character and Projectile
+        // Player collides with Enemy Character and Projectile and obstacle
         CHARACTER_PLAYER_FILTER.maskBits = (short) ((int) CHARACTER_ENEMY_FILTER.categoryBits +
-                (int) PROJECTILE_ENEMY_FILTER.categoryBits);
+                (int) PROJECTILE_ENEMY_FILTER.categoryBits + (int) OBSTACLE_FILTER.categoryBits);
 
-        // Enemy collides with itself, Player Character and Projectile
+        // Enemy collides with itself, Player Character, Projectile and obstacle
         CHARACTER_ENEMY_FILTER.maskBits = (short) ((int) CHARACTER_PLAYER_FILTER.categoryBits +
-                (int) CHARACTER_ENEMY_FILTER.categoryBits + (int) PROJECTILE_PLAYER_FILTER.categoryBits);
+                (int) CHARACTER_ENEMY_FILTER.categoryBits + (int) PROJECTILE_PLAYER_FILTER.categoryBits + (int) OBSTACLE_FILTER.categoryBits);
 
-        // Player Projectile collides with Enemy Character
-        PROJECTILE_PLAYER_FILTER.maskBits = CHARACTER_ENEMY_FILTER.categoryBits;
+        // Player Projectile collides with Enemy Character and obstacle
+        PROJECTILE_PLAYER_FILTER.maskBits = (short) ((int) CHARACTER_ENEMY_FILTER.categoryBits + (int) OBSTACLE_FILTER.categoryBits);
 
-        // Enemy Projectile collides with Player Character
+        // Enemy Projectile collides with Player Character and obstacle
+        PROJECTILE_ENEMY_FILTER.maskBits = (short) ((int) CHARACTER_PLAYER_FILTER.categoryBits + (int) OBSTACLE_FILTER.categoryBits);
 
-        PROJECTILE_ENEMY_FILTER.maskBits = CHARACTER_PLAYER_FILTER.categoryBits;
-
-        // Projectiles with the 'penetrates' flag only collide with the terrain
-        PROJECTILE_PENETRATION_FILTER.maskBits = 0x0000;
+        // Projectiles with the 'penetrates' flag only collide with the terrain and obstacle
+        PROJECTILE_PENETRATION_FILTER.maskBits = OBSTACLE_FILTER.categoryBits;
     }
 
     private void bodyDefInit() {
@@ -308,5 +310,7 @@ public class Box2DActorFactory extends ActorFactory {
         obstacleFixtureDef.shape = tempPolygon;
         obstacleFixtureDef.friction = OBSTACLE_FRICTION;
         obstacleFixtureDef.restitution = OBSTACLE_BOUNCINESS;
+        obstacleFixtureDef.filter.categoryBits = OBSTACLE_FILTER.categoryBits;
+        obstacleFixtureDef.filter.maskBits = OBSTACLE_FILTER.maskBits;
     }
 }
