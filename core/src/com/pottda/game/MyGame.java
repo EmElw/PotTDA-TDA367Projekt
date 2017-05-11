@@ -4,6 +4,7 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.pottda.game.actorFactory.Box2DActorFactory;
 import com.pottda.game.controller.ControllerOptions;
+import com.pottda.game.model.ActorFactory;
 import com.pottda.game.model.InventoryFactory;
 import com.pottda.game.view.GameView;
 import com.pottda.game.view.HUDView;
@@ -84,8 +85,10 @@ public class MyGame extends ApplicationAdapter {
         soundsAndMusic = new SoundsAndMusic();
         startMusic();
 
-        // Create Actor Factory
+
+        // Create and set ActorFactory implementation
         box2DActorFactory = new Box2DActorFactory(world);
+        ActorFactory.setFactory(box2DActorFactory);
 
         ControllerOptions.joystickStage = joystickStage;
 
@@ -96,14 +99,14 @@ public class MyGame extends ApplicationAdapter {
         }
 
         // Add player to controller list
-        controllers.add(box2DActorFactory.buildPlayer(gameStage,
+        controllers.add(ActorFactory.get().buildPlayer(gameStage,
                 new Texture(Gdx.files.internal(playerImage)), new Vector2f(gameStage.getWidth() / 2, gameStage.getHeight() / 2)));
 
         // Add some enemies
-        for(int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
             try {
-                controllers.add(box2DActorFactory.buildEnemy(gameStage, new Texture(Gdx.files.internal(enemyImage)), //Change
-                        new Vector2f((float)Math.random() * gameStage.getWidth(), (float)Math.random() * gameStage.getHeight()),
+                controllers.add(ActorFactory.get().buildEnemy(gameStage, new Texture(Gdx.files.internal(enemyImage)), //Change
+                        new Vector2f((float) Math.random() * gameStage.getWidth(), (float) Math.random() * gameStage.getHeight()),
                         InventoryFactory.createFromXML(Gdx.files.internal(
                                 "inventoryblueprint/playerStartInventory.xml").file())));
             } catch (Exception e) {
