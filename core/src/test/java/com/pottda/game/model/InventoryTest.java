@@ -93,7 +93,8 @@ public class InventoryTest {
 
     @Test
     public void testLegality() {
-        Assert.assertTrue(testInv2.isLegal());
+        boolean isLegal = testInv2.isLegal();
+        Assert.assertTrue(isLegal);
         {
             File xml;
             Inventory i;
