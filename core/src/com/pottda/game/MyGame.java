@@ -19,26 +19,23 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pottda.game.controller.AbstractController;
 import com.pottda.game.controller.TouchJoystickController;
+import com.pottda.game.view.MainMenuView;
 import com.pottda.game.view.SoundsAndMusic;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.vecmath.Vector2f;
-import javax.xml.parsers.ParserConfigurationException;
 
 public class MyGame extends ApplicationAdapter {
     private Stage hudStage;
     private Stage joystickStage;
     private Stage gameStage;
+    private Stage mainMenuStage;
     private OrthographicCamera camera;
-    private Batch spriteBatch;
 
     private float accumulator;
 
@@ -49,10 +46,13 @@ public class MyGame extends ApplicationAdapter {
     private SoundsAndMusic soundsAndMusic;
     private GameView gameView;
     private Box2DActorFactory box2DActorFactory;
+    private MainMenuView mainMenuView;
 
     private static final int RUNNING = 1;
     private static final int PAUSED = 2;
     private static final int OPTIONS = 3;
+    private static final int MAIN_MENU = 4;
+    private static final int MAIN_CHOOSE = 5;
     private static int GAME_STATE = 0;
 
     private static final String playerImage = "circletest.png"; // change later
@@ -60,6 +60,8 @@ public class MyGame extends ApplicationAdapter {
     private static final String borderImage = "game/border.png";
 
     private static final String playerStartInventory = "inventoryblueprint/playerStartInventory.xml";
+
+    private static final String GAME_TITLE = "Panic on TDAncefloor";
 
     public static final float WIDTH = 800;
     public static final float HEIGHT = 480;
@@ -70,27 +72,34 @@ public class MyGame extends ApplicationAdapter {
 
     @Override
     public void create() {
-        controllers = new ArrayList<AbstractController>();
-
+        Gdx.graphics.setTitle(GAME_TITLE);
         camera = new OrthographicCamera();
+
         hudStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         joystickStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         gameStage = new Stage(new StretchViewport(WIDTH_METERS, HEIGHT_METERS));
         gameStage.getCamera().position.x = WIDTH_METERS / 2;
         gameStage.getCamera().position.y = HEIGHT_METERS / 2;
-        spriteBatch = new SpriteBatch();
+        mainMenuStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
 
-        GAME_STATE = RUNNING;
-        Gdx.input.setInputProcessor(hudStage);
+        GAME_STATE = MAIN_MENU;
+        Gdx.input.setInputProcessor(mainMenuStage);
         Box2D.init();
+
+        mainMenuView = new MainMenuView(mainMenuStage);
+    }
+
+    private void doOnStartGame() {
+        controllers = new ArrayList<AbstractController>();
+
+        hudView = new HUDView(hudStage);
         world = new World(new Vector2(0, 0), false);
         accumulator = 0;
 
-        hudView = new HUDView(hudStage);
         gameView = new GameView(gameStage, joystickStage);
+
         soundsAndMusic = new SoundsAndMusic();
         startMusic();
-
 
         // Create and set ActorFactory implementation
         box2DActorFactory = new Box2DActorFactory(world);
@@ -108,11 +117,13 @@ public class MyGame extends ApplicationAdapter {
         controllers.add(ActorFactory.get().buildPlayer(gameStage,
                 new Texture(Gdx.files.internal(playerImage)), new Vector2f(WIDTH_METERS / 2, HEIGHT_METERS / 2)));
 
+        final float scaling = 1.2f;
+
         // Add some enemies
         for (int i = 0; i < 5; i++) {
             try {
                 controllers.add(ActorFactory.get().buildEnemy(gameStage, new Texture(Gdx.files.internal(enemyImage)), //Change
-                        new Vector2f((float) (Math.random() * (WIDTH_METERS )), (float) (Math.random() * (HEIGHT_METERS))),
+                        new Vector2f((float) (Math.random() * (WIDTH_METERS * scaling)), (float) (Math.random() * (HEIGHT_METERS * scaling))),
                         InventoryFactory.createFromXML(Gdx.files.internal(playerStartInventory).file())));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -147,9 +158,10 @@ public class MyGame extends ApplicationAdapter {
     public void resize(int width, int height) {
         camera.setToOrtho(false, HEIGHT * width / (float) height, HEIGHT);
 
-        hudStage.getViewport().update((width), height, false);
-        gameStage.getViewport().update((width), height, false);
-        joystickStage.getViewport().update((width), height, false);
+        hudStage.getViewport().update(width, height, false);
+        gameStage.getViewport().update(width, height, false);
+        joystickStage.getViewport().update(width, height, false);
+        mainMenuStage.getViewport().update(width, height, false);
     }
 
     @Override
@@ -185,9 +197,15 @@ public class MyGame extends ApplicationAdapter {
 
         } else if (GAME_STATE == OPTIONS) {
             hudView.renderOptions();
+        } else if (GAME_STATE == MAIN_MENU) {
+            mainMenuView.renderMainMenu();
+        } else if (GAME_STATE == MAIN_CHOOSE) {
+            mainMenuView.renderChooseDiff();
         }
 
-        hudStage.draw();
+        if (GAME_STATE < MAIN_MENU) {
+            hudStage.draw();
+        }
     }
 
     /**
@@ -235,6 +253,27 @@ public class MyGame extends ApplicationAdapter {
                         soundsAndMusic.setSFXVolume(hudView.getNewSFXVolume(vector3));
                     }
                     break;
+                case MAIN_MENU:
+                    if (mainMenuView.checkIfTouchingStart(vector3)) {
+                        GAME_STATE = MAIN_CHOOSE;
+                    } else if (mainMenuView.checkIfTouchingQuit(vector3)) {
+                        // Exit game
+                        Gdx.app.exit();
+                    }
+                    break;
+                case MAIN_CHOOSE:
+                    if (mainMenuView.checkIfTouchingEasy(vector3)) {
+                        // TODO Set easy mode
+                        doOnStartGame();
+                        GAME_STATE = RUNNING;
+                        Gdx.input.setInputProcessor(hudStage);
+                    } else if (mainMenuView.checkIfTouchingHard(vector3)) {
+                        // TODO Set hard mode
+                        doOnStartGame();
+                        GAME_STATE = RUNNING;
+                        Gdx.input.setInputProcessor(hudStage);
+                    }
+                    break;
             }
         }
     }
@@ -254,11 +293,11 @@ public class MyGame extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        spriteBatch.dispose();
         hudView.dispose();
         hudStage.dispose();
         world.dispose();
         soundsAndMusic.dispose();
         gameView.dispose();
+        mainMenuView.dispose();
     }
 }
