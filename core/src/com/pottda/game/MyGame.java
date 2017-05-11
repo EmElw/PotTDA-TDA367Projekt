@@ -132,14 +132,6 @@ public class MyGame extends ApplicationAdapter {
 
         checkTouch();
 
-        /*for (AbstractController c : controllers) { // Center camera to player?
-            if (c.getModelActor().team == 0) {
-                final Vector2f playerPos = c.getModelActor().getPosition();
-            }
-        }*/
-
-        // System.out.println(gameStage.getViewport().getCamera().position.x + ", " + gameStage.getViewport().getCamera().position.y);
-
         if (controllers != null) {
             // Update all controllers, causing the model to update
             for (AbstractController c : controllers) {

@@ -14,6 +14,8 @@ import com.pottda.game.view.ViewActor;
 public class KeyboardMouseController extends AbstractController {
     private final Stage stage;
 
+    private static final float SPEED_MULT = 3;
+
     public KeyboardMouseController(ModelActor modelActor, ViewActor viewActor, Stage stage) {
         super(modelActor, viewActor);
         this.stage = stage;
@@ -22,8 +24,8 @@ public class KeyboardMouseController extends AbstractController {
 
     @Override
     public void onNewFrame() {
-        movementVector.set((Gdx.input.isKeyPressed(Input.Keys.D) ? 1 : 0 - (Gdx.input.isKeyPressed(Input.Keys.A) ? 1 : 0)) * 3,
-                (Gdx.input.isKeyPressed(Input.Keys.W) ? 1 : 0 - (Gdx.input.isKeyPressed(Input.Keys.S) ? 1 : 0)) * 3);
+        movementVector.set((Gdx.input.isKeyPressed(Input.Keys.D) ? 1 : 0 - (Gdx.input.isKeyPressed(Input.Keys.A) ? 1 : 0)) * SPEED_MULT,
+                (Gdx.input.isKeyPressed(Input.Keys.W) ? 1 : 0 - (Gdx.input.isKeyPressed(Input.Keys.S) ? 1 : 0)) * SPEED_MULT);
 
         final Vector3 vector3 = stage.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
 

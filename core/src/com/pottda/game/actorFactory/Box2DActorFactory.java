@@ -17,12 +17,12 @@ import javax.vecmath.Vector2f;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
+import static com.pottda.game.model.ModelActor.ENEMY_TEAM;
+import static com.pottda.game.model.ModelActor.PLAYER_TEAM;
+
 public class Box2DActorFactory extends ActorFactory {
     // Constants
     private final static float GRAVITY = 0f;
-
-    public final static int PLAYER_TEAM = 0;
-    public final static int ENEMY_TEAM = 1;
 
     private final static float CHARACTER_LINEAR_DAMPING = 4f;
     private final static float CHARACTER_ANGULAR_DAMPING = 4f;
