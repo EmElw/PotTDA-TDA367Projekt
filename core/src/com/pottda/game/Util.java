@@ -20,6 +20,7 @@ public class Util {
      * @param list      {@code List<Integer>}
      * @param ascending {@code boolean}
      */
+    @Deprecated
     public static void sortIntegerList(List<Integer> list, final boolean ascending) {
         Integer[] array = new Integer[list.size()];
         array = list.toArray(array);
