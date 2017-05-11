@@ -57,6 +57,7 @@ public class MyGame extends ApplicationAdapter {
 
     private static final String playerImage = "circletest.png"; // change later
     private static final String enemyImage = "circletestred.png";
+    private static final String borderImage = "game/border.png";
 
     public static final float WIDTH = 800;
     public static final float HEIGHT = 480;
@@ -117,6 +118,24 @@ public class MyGame extends ApplicationAdapter {
             }
         }
 
+        createWorldBorders();
+    }
+
+    private void createWorldBorders() {
+        final float border_thickness = 0.5f;
+        final float area_scaling = 1.2f;
+        // Bottom
+        controllers.add(ActorFactory.get().buildObstacle(gameStage, new Texture(Gdx.files.internal(borderImage)),
+                new Vector2f(0, 0), new Vector2f(WIDTH_METERS * area_scaling, border_thickness)));
+        // Left
+        controllers.add(ActorFactory.get().buildObstacle(gameStage, new Texture(Gdx.files.internal(borderImage)),
+                new Vector2f(0, 0), new Vector2f(border_thickness, HEIGHT_METERS * area_scaling)));
+        // Top
+        controllers.add(ActorFactory.get().buildObstacle(gameStage, new Texture(Gdx.files.internal(borderImage)),
+                new Vector2f(0, HEIGHT_METERS * area_scaling), new Vector2f(WIDTH_METERS * area_scaling, border_thickness)));
+        // Right
+        controllers.add(ActorFactory.get().buildObstacle(gameStage, new Texture(Gdx.files.internal(borderImage)),
+                new Vector2f(WIDTH_METERS * area_scaling, 0), new Vector2f(border_thickness, HEIGHT_METERS * area_scaling)));
     }
 
     @Override

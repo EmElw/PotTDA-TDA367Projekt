@@ -195,9 +195,13 @@ public class Box2DActorFactory extends ActorFactory {
     }
 
     @Override
-    public AbstractController buildObstacle(Stage stage, Texture texture, Vector2f position) {
+    public AbstractController buildObstacle(Stage stage, Texture texture, Vector2f position, Vector2f size) {
         Body body = world.createBody(obstacleBodyDef);
         body.setTransform(position.getX(), position.getY(), 0);
+
+        PolygonShape tempPolygon = new PolygonShape();
+        tempPolygon.setAsBox(size.x, size.y);
+        obstacleFixtureDef.shape = tempPolygon;
 
         body.createFixture(obstacleFixtureDef);
 
@@ -205,7 +209,7 @@ public class Box2DActorFactory extends ActorFactory {
 
         Obstacle model = new Obstacle(physics);
 
-        ViewActor view = new ViewActor(texture);
+        ViewActor view = new ViewActor(texture, size);
 
         stage.addActor(view);
         return new ObstacleController(model, view);
