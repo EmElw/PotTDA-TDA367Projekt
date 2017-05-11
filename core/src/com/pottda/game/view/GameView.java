@@ -16,10 +16,12 @@ public class GameView {
     }
 
     public void render() {
-        joystickStage.draw();
-        gameStage.draw();
         // center camera to player each frame
         gameStage.getCamera().position.set(gameStage.getActors().get(0).getX(), gameStage.getActors().get(0).getY(), 0);
+
+        // Update camera position before drawing stage to prevent shaking
+        joystickStage.draw();
+        gameStage.draw();
     }
 
     public void dispose() {

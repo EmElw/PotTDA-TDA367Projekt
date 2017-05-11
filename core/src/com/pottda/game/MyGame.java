@@ -109,7 +109,7 @@ public class MyGame extends ApplicationAdapter {
         for (int i = 0; i < 5; i++) {
             try {
                 controllers.add(ActorFactory.get().buildEnemy(gameStage, new Texture(Gdx.files.internal(enemyImage)), //Change
-                        new Vector2f((float) (4 + Math.random() * (WIDTH_METERS - 4)), (float) (4 + Math.random() * (HEIGHT_METERS - 4))),
+                        new Vector2f((float) (Math.random() * (WIDTH_METERS )), (float) (Math.random() * (HEIGHT_METERS))),
                         InventoryFactory.createFromXML(Gdx.files.internal(
                                 "inventoryblueprint/playerStartInventory.xml").file())));
             } catch (Exception e) {
