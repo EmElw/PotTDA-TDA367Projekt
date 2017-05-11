@@ -6,6 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.pottda.game.MyGame;
 
+import javax.vecmath.Vector2f;
+
 /**
  *
  */
@@ -20,6 +22,16 @@ public class ViewActor extends Image {
         // set the rotation point to middle of image
         this.setOrigin((texture.getWidth() * MyGame.WIDTH_RATIO) / 2, (texture.getHeight() * MyGame.HEIGHT_RATIO) / 2);
         this.setSize(this.getWidth() * MyGame.WIDTH_RATIO, this.getHeight() * MyGame.HEIGHT_RATIO); // Resize to make in meters instead of pixels
+    }
+
+    /**
+     * calls super class to set image for actor
+     * @param texture the texture to set as image
+     * @param size vector with width and height of image
+     */
+    public ViewActor(Texture texture, Vector2f size) {
+        super(new TextureRegionDrawable(new TextureRegion(texture)));
+        this.setSize(size.x, size.y);
     }
 
     /**

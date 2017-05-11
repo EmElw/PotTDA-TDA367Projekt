@@ -26,5 +26,5 @@ public abstract class ActorFactory {
 
     public abstract AbstractController buildProjectile(Stage stage, Texture texture, int team, boolean bounces, boolean penetrates, Vector2f position);
 
-    public abstract AbstractController buildObstacle(Stage stage, Texture texture, Vector2f position);
+    public abstract AbstractController buildObstacle(Stage stage, Texture texture, Vector2f position, Vector2f size);
 }
