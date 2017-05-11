@@ -13,21 +13,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
  */
 
 public class HUDView extends ApplicationAdapter {
-    private static final String healthbarString = "HUD/healthbar.png";
-    private static final String healthbarRedString = "HUD/health.png";
-    private static final String pauseButtonString = "HUD/pauseButton.png";
-    private static final String pauseBackgroundString = "HUD/pauseBackground.png";
-    private static final String pauseResumeString = "HUD/pauseResume.png";
-    private static final String pauseOptionsString = "HUD/pauseOptions.png";
-    private static final String pauseQuitString = "HUD/pauseQuit.png";
-    private static final String optionReturnString = "HUD/optionsReturn.png";
-    private static final String specialAttacksBarString = "HUD/specialAttacksBar.png";
-    private static final String optionsMusicBarString = "HUD/optionsVolumeBar.png";
-    private static final String optionsMusicString = "HUD/optionsVolume.png";
-    private static final String optionsSFXBarString = "HUD/optionsVolumeBar.png";
-    private static final String optionsSFXString = "HUD/optionsVolume.png";
-    private static final String optionsSFXTextString = "HUD/Text/SFX.png";
-    private static final String optionsMusicTextString = "HUD/Text/Music.png";
+    private static final String healthbarString = "hud/healthbar.png";
+    private static final String healthbarRedString = "hud/health.png";
+    private static final String pauseButtonString = "hud/pauseButton.png";
+    private static final String pauseBackgroundString = "hud/pauseBackground.png";
+    private static final String pauseResumeString = "hud/pauseResume.png";
+    private static final String pauseOptionsString = "hud/pauseOptions.png";
+    private static final String pauseQuitString = "hud/pauseQuit.png";
+    private static final String optionReturnString = "hud/optionsReturn.png";
+    private static final String specialAttacksBarString = "hud/specialattacksbar.png";
+    private static final String optionsMusicBarString = "hud/optionsVolumeBar.png";
+    private static final String optionsMusicString = "hud/optionsVolume.png";
+    private static final String optionsSFXBarString = "hud/optionsVolumeBar.png";
+    private static final String optionsSFXString = "hud/optionsVolume.png";
+    private static final String optionsSFXTextString = "hud/text/sfx.png";
+    private static final String optionsMusicTextString = "hud/text/music.png";
 
     private Texture texture;
     private final Stage stage;

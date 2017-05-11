@@ -10,7 +10,7 @@ public class Character extends ModelActor {
      * Base maxHealth of any character, further modified by its Inventory
      */
     private static final int BASE_HEALTH = 100;
-    private static final float BASE_ACCEL = 100;
+    private static final float BASE_ACCEL = 5f;
     /**
      * A reference to the character's inventory, should be effectively final
      */
@@ -28,7 +28,7 @@ public class Character extends ModelActor {
         super(physicsActor);
         this.inventory = new Inventory();
         this.isProjectile = false;
-        this.team = 0;
+        // this.team = 0;
 
         stats = new EnumMap<Stat, Double>(Stat.class);
 
@@ -58,6 +58,14 @@ public class Character extends ModelActor {
 
     private void attack(Vector2f direction) {
         inventory.attack(direction, getPosition());
+    }
+
+    @Override
+    public float getAngle() {
+        if (team == ENEMY_TEAM) { // Fix rotation for enemies so they rotate towards player
+            return 0 - super.getAngle();
+        }
+        return super.getAngle();
     }
 
     /**
