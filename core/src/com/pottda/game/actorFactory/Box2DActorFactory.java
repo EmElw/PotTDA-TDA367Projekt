@@ -90,7 +90,7 @@ public class Box2DActorFactory extends ActorFactory {
         model.team = ENEMY_TEAM;
 
         // Add inventory
-        model.inventory = inventory;
+        //model.inventory = inventory;
 
         ViewActor view = new ViewActor(texture);
 

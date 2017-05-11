@@ -54,8 +54,8 @@ public class MyGame extends ApplicationAdapter {
     private static final int OPTIONS = 3;
     private static int GAME_STATE = 0;
 
-    private static final String playerImage = "CircleTest.png"; // change later
-    private static final String enemyImage = "CircleTestRed.png";
+    private static final String playerImage = "circletest.png"; // change later
+    private static final String enemyImage = "circletestred.png";
 
     public static final float WIDTH = 800;
     public static final float HEIGHT = 480;
@@ -107,8 +107,7 @@ public class MyGame extends ApplicationAdapter {
             try {
                 controllers.add(box2DActorFactory.buildEnemy(gameStage, new Texture(Gdx.files.internal(enemyImage)), //Change
                         new Vector2f((float) (4 + Math.random() * (WIDTH_METERS - 4)), (float) (4 + Math.random() * (HEIGHT_METERS - 4))),
-                        InventoryFactory.createFromXML(Gdx.files.internal(
-                                "inventoryblueprint/playerStartInventory.xml").file())));
+                        null)); // replace null with InventoryFactory.createFromXML(Gdx.files.internal("inventoryblueprint/playerStartInventory.xml).file())
             } catch (Exception e) {
                 e.printStackTrace();
             }
