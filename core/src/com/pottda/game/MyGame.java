@@ -12,8 +12,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2D;
@@ -266,12 +264,12 @@ public class MyGame extends ApplicationAdapter {
                         // TODO Set easy mode
                         doOnStartGame();
                         GAME_STATE = RUNNING;
-                        Gdx.input.setInputProcessor(hudStage);
+                        Gdx.input.setInputProcessor(joystickStage);
                     } else if (mainMenuView.checkIfTouchingHard(vector3)) {
                         // TODO Set hard mode
                         doOnStartGame();
                         GAME_STATE = RUNNING;
-                        Gdx.input.setInputProcessor(hudStage);
+                        Gdx.input.setInputProcessor(joystickStage);
                     }
                     break;
             }
