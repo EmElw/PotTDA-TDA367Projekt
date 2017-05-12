@@ -20,15 +20,14 @@ public abstract class AbstractController {
     private final ViewActor viewActor;
 
     /**
-     *
      * @param modelActor
      * @param viewActor
      */
     AbstractController(ModelActor modelActor, ViewActor viewActor) {
         this.modelActor = modelActor;
         this.viewActor = viewActor;
-        movementVector = new Vector2f(0,0);
-        attackVector = new Vector2f(0,0);
+        movementVector = new Vector2f(0, 0);
+        attackVector = new Vector2f(0, 0);
     }
 
     /**
@@ -56,4 +55,7 @@ public abstract class AbstractController {
         viewActor.setAngle(degrees);
     }
 
+    public ModelActor getModel() {
+        return modelActor;
+    }
 }
