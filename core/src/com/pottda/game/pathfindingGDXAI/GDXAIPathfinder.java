@@ -13,13 +13,12 @@ import java.util.List;
 
 public class GDXAIPathfinder implements Pathfinder {
     private final GDXAIGraph graph;
-    private ModelActor goal;
+    public static ModelActor goal;
     private IndexedAStarPathFinder indexedAStarPathFinder;
     private CollisionDetector collisionDetector;
     //private PathSmoother<SortedIntList.Node, Vector2> pathSmoother;
 
-    public GDXAIPathfinder(ModelActor goal, int worldWidth, int worldHeight) {
-        this.goal = goal;
+    public GDXAIPathfinder(int worldWidth, int worldHeight) {
         graph = new GDXAIGraph(worldWidth, worldHeight);
         collisionDetector = new CollisionDetector(graph);
         try {
@@ -35,7 +34,7 @@ public class GDXAIPathfinder implements Pathfinder {
         Vector2f returnVector;
         Ray<Vector2> ray = new Ray<Vector2>(Vector2fToVector2(location), Vector2fToVector2(goal.getPosition()));
 
-        if(!collisionDetector.collides(ray)){
+        if (!collisionDetector.collides(ray)) {
             returnVector = new Vector2f(goal.getPosition().x - location.x, goal.getPosition().y - location.y);
             returnVector.normalize();
             return returnVector;
@@ -63,7 +62,7 @@ public class GDXAIPathfinder implements Pathfinder {
         return returnVector;
     }
 
-    private Vector2 Vector2fToVector2(Vector2f vector2f){
+    private Vector2 Vector2fToVector2(Vector2f vector2f) {
         return new Vector2(vector2f.x, vector2f.y);
     }
 
@@ -90,8 +89,8 @@ public class GDXAIPathfinder implements Pathfinder {
         }
     }
 
-    public void setObstacles(List<Vector2f> obstacles){
-        for(Vector2f obstacle : obstacles){
+    public void setObstacles(List<Vector2f> obstacles) {
+        for (Vector2f obstacle : obstacles) {
             setObstacle(obstacle);
         }
     }

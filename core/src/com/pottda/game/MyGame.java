@@ -6,6 +6,7 @@ import com.pottda.game.actorFactory.Box2DActorFactory;
 import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.model.ActorFactory;
 import com.pottda.game.model.InventoryFactory;
+import com.pottda.game.pathfindingGDXAI.GDXAIPathfinder;
 import com.pottda.game.physicsBox2D.CollisionListener;
 import com.pottda.game.view.GameView;
 import com.pottda.game.view.HUDView;
@@ -80,6 +81,7 @@ public class MyGame extends ApplicationAdapter {
         gameStage.getCamera().position.x = WIDTH_METERS / 2;
         gameStage.getCamera().position.y = HEIGHT_METERS / 2;
         mainMenuStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
+        ControllerOptions.pathfinder = new GDXAIPathfinder((int) WIDTH_METERS, (int) HEIGHT_METERS);
 
         GAME_STATE = MAIN_MENU;
         Gdx.input.setInputProcessor(mainMenuStage);
