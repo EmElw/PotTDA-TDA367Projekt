@@ -9,7 +9,7 @@ import java.util.List;
  */
 
 public class Projectile extends ModelActor {
-    int damage;
+    public int damage;
     public List<ProjectileListener> projectileListeners;
     public List<Character> hasDamaged;
 
