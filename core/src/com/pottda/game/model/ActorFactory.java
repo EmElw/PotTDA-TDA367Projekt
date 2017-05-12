@@ -1,10 +1,7 @@
 package com.pottda.game.model;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.pottda.game.View.Sprites;
 import com.pottda.game.controller.*;
-
-import java.util.List;
 
 import javax.vecmath.Vector2f;
 
@@ -20,11 +17,12 @@ public abstract class ActorFactory {
         return instance;
     }
 
-    public abstract AbstractController buildEnemy(Stage stage, Texture texture, Vector2f position, Inventory inventory);
 
-    public abstract AbstractController buildPlayer(Stage stage, Texture texture, Vector2f position);
+    public abstract AbstractController buildEnemy(Sprites sprite, Vector2f position, Inventory inventory);
 
-    public abstract AbstractController buildProjectile(Stage stage, Texture texture, int team, boolean bounces, boolean penetrates, Vector2f position);
+    public abstract AbstractController buildPlayer(Sprites sprite, Vector2f position);
 
-    public abstract AbstractController buildObstacle(Stage stage, Texture texture, Vector2f position, Vector2f size);
+    public abstract AbstractController buildProjectile(Sprites sprite, int team, boolean bounces, boolean penetrates, Vector2f position);
+
+    public abstract AbstractController buildObstacle(Sprites sprite, Vector2f position, Vector2f size);
 }

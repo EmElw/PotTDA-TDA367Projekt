@@ -2,6 +2,7 @@ package com.pottda.game;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
+import com.pottda.game.View.Sprites;
 import com.pottda.game.actorFactory.Box2DActorFactory;
 import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.model.ActorFactory;
@@ -102,7 +103,7 @@ public class MyGame extends ApplicationAdapter {
         startMusic();
 
         // Create and set ActorFactory implementation
-        box2DActorFactory = new Box2DActorFactory(world);
+        box2DActorFactory = new Box2DActorFactory(world, gameStage);
         ActorFactory.setFactory(box2DActorFactory);
 
         ControllerOptions.joystickStage = joystickStage;
@@ -114,15 +115,14 @@ public class MyGame extends ApplicationAdapter {
         }
 
         // Add player to controller list
-        controllers.add(ActorFactory.get().buildPlayer(gameStage,
-                new Texture(Gdx.files.internal(playerImage)), new Vector2f(WIDTH_METERS / 2, HEIGHT_METERS / 2)));
+        controllers.add(ActorFactory.get().buildPlayer(Sprites.PLAYER, new Vector2f(WIDTH_METERS / 2, HEIGHT_METERS / 2)));
 
         final float scaling = 1.2f;
 
         // Add some enemies
         for (int i = 0; i < 5; i++) {
             try {
-                controllers.add(ActorFactory.get().buildEnemy(gameStage, new Texture(Gdx.files.internal(enemyImage)), //Change
+                controllers.add(ActorFactory.get().buildEnemy(Sprites.ENEMY, //Change
                         new Vector2f((float) (Math.random() * (WIDTH_METERS * scaling)), (float) (Math.random() * (HEIGHT_METERS * scaling))),
                         InventoryFactory.createFromXML(Gdx.files.internal(playerStartInventory).file())));
             } catch (Exception e) {
@@ -141,16 +141,16 @@ public class MyGame extends ApplicationAdapter {
         // Scale the area bigger or smaller
         final float area_scaling = 1.2f;
         // Bottom
-        controllers.add(ActorFactory.get().buildObstacle(gameStage, new Texture(Gdx.files.internal(borderImage)),
+        controllers.add(ActorFactory.get().buildObstacle(Sprites.BORDER,
                 new Vector2f(0, 0), new Vector2f(WIDTH_METERS * area_scaling, border_thickness)));
         // Left
-        controllers.add(ActorFactory.get().buildObstacle(gameStage, new Texture(Gdx.files.internal(borderImage)),
+        controllers.add(ActorFactory.get().buildObstacle(Sprites.BORDER,
                 new Vector2f(0, 0), new Vector2f(border_thickness, HEIGHT_METERS * area_scaling)));
         // Top
-        controllers.add(ActorFactory.get().buildObstacle(gameStage, new Texture(Gdx.files.internal(borderImage)),
+        controllers.add(ActorFactory.get().buildObstacle(Sprites.BORDER,
                 new Vector2f(0, HEIGHT_METERS * area_scaling), new Vector2f(WIDTH_METERS * area_scaling, border_thickness)));
         // Right
-        controllers.add(ActorFactory.get().buildObstacle(gameStage, new Texture(Gdx.files.internal(borderImage)),
+        controllers.add(ActorFactory.get().buildObstacle(Sprites.BORDER,
                 new Vector2f(WIDTH_METERS * area_scaling, 0), new Vector2f(border_thickness, HEIGHT_METERS * area_scaling)));
     }
 
