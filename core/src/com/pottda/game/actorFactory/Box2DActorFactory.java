@@ -8,6 +8,7 @@ import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.controller.*;
 import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
+import com.pottda.game.pathfindingGDXAI.GDXAIPathfinder;
 import com.pottda.game.physicsBox2D.Box2DPhysicsActor;
 import com.pottda.game.physicsBox2D.Box2DPhysicsCharacter;
 import com.pottda.game.physicsBox2D.Box2DPhysicsProjectile;
@@ -93,7 +94,18 @@ public class Box2DActorFactory extends ActorFactory {
         ViewActor view = new ViewActor(texture);
 
         stage.addActor(view);
-        return new DumbAIController(model, view);
+
+        AIController controller = null;
+
+        switch (ControllerOptions.AISettings) {
+            case ControllerOptions.DUMB_AI:
+                controller = new DumbAIController(model, view);
+                break;
+            case ControllerOptions.PATHFINDING_AI:
+                controller = new PathfindingAIController(model, view, ControllerOptions.pathfinder);
+                break;
+        }
+        return controller;
     }
 
     /**
@@ -122,6 +134,7 @@ public class Box2DActorFactory extends ActorFactory {
 
         Character model = new Character(physics);
         DumbAIController.goal = model;
+        GDXAIPathfinder.goal = model;
         model.team = PLAYER_TEAM;
         body.setUserData(model);
 
