@@ -88,6 +88,7 @@ public class Box2DActorFactory extends ActorFactory {
 
         Character model = new Character(physics);
         model.team = ENEMY_TEAM;
+        body.setUserData(model);
 
         // Add inventory
         //model.inventory = inventory;
@@ -125,6 +126,7 @@ public class Box2DActorFactory extends ActorFactory {
         Character model = new Character(physics);
         DumbAIController.goal = model;
         model.team = PLAYER_TEAM;
+        body.setUserData(model);
 
         // Add inventory
         try {
@@ -187,6 +189,7 @@ public class Box2DActorFactory extends ActorFactory {
 
         Projectile model = new Projectile(physics, 0, null);
         model.team = team;
+        body.setUserData(model);
 
         ViewActor view = new ViewActor(texture);
 
@@ -204,6 +207,7 @@ public class Box2DActorFactory extends ActorFactory {
         Box2DPhysicsActor physics = new Box2DPhysicsActor(body);
 
         Obstacle model = new Obstacle(physics);
+        body.setUserData(model);
 
         ViewActor view = new ViewActor(texture);
 
