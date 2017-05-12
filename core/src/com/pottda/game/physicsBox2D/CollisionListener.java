@@ -24,18 +24,17 @@ public class CollisionListener implements ContactListener {
             targetBody = contact.getFixtureA().getBody();
         }
 
+        // Make sure projectile actually IS a Projectile
         Projectile projectile = projectileBody.getUserData() instanceof Projectile ?
                 ((Projectile) projectileBody.getUserData()) : null;
-        Character target = targetBody.getUserData() instanceof Character ?
-                ((Character) targetBody.getUserData()) : null;
-
-        // Make sure projectile actually IS a Projectile
         if(projectile == null){
             return;
         }
 
         // Make sure target is a Character, otherwise check if it's an obstacle,
         // in which case give it to the projectile and let it handle the collision
+        Character target = targetBody.getUserData() instanceof Character ?
+                ((Character) targetBody.getUserData()) : null;
         if (target == null) {
             Obstacle obstacle = targetBody.getUserData() instanceof Obstacle ?
                     ((Obstacle) targetBody.getUserData()) : null;
