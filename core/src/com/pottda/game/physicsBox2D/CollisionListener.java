@@ -29,30 +29,30 @@ public class CollisionListener implements ContactListener {
         Character target = targetBody.getUserData() instanceof Character ?
                 ((Character) targetBody.getUserData()) : null;
 
-        // If projectile exists, clear its list of things it has damaged
-        if (projectile == null){
+        // Make sure projectile actually IS a Projectile
+        if(projectile == null){
             return;
         }
-        projectile.hasDamaged.clear();
 
-        // Check if target is a Character
-        if (target == null){
+        // Make sure target is a Character, otherwise check if it's an obstacle,
+        // in which case give it to the projectile and let it handle the collision
+        if (target == null) {
+            Obstacle obstacle = targetBody.getUserData() instanceof Obstacle ?
+                    ((Obstacle) targetBody.getUserData()) : null;
+
+            if(obstacle != null){
+                projectile.onCollision();
+            }
             return;
         }
 
         // Check if friendly fire or not
-        if (target.team == projectile.team){
+        if (target.team == projectile.team) {
             return;
         }
 
-        // Check if projectile has already damaged the target
-        if(projectile.hasDamaged.contains(target)){
-            return;
-        }
-
-        // Deal damage and add target to targets projectile has damaged
-        target.takeDamage(projectile.damage);
-        projectile.hasDamaged.add(target);
+        // Give the Character to the Projectile
+        projectile.onCollision(target);
     }
 
     @Override
