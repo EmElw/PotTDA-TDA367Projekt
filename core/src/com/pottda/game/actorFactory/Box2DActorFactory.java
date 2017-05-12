@@ -14,8 +14,6 @@ import com.pottda.game.physicsBox2D.Box2DPhysicsProjectile;
 import com.pottda.game.view.ViewActor;
 
 import javax.vecmath.Vector2f;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 
 import static com.pottda.game.model.ModelActor.ENEMY_TEAM;
 import static com.pottda.game.model.ModelActor.PLAYER_TEAM;
@@ -46,8 +44,6 @@ public class Box2DActorFactory extends ActorFactory {
     private final static float PROJECTILE_SENSOR_RADIUS = 0.05f;
     private final static float PROJECTILE_SENSOR_DENSITY = 0f;
 
-    private final static float OBSTACLE_HALF_WIDTH = 0.5f;
-    private final static float OBSTACLE_HALF_HEIGHT = 0.5f;
     private final static float OBSTACLE_FRICTION = 0.25f;
     private final static float OBSTACLE_BOUNCINESS = 0f;
     private static Filter OBSTACLE_FILTER;
@@ -278,7 +274,6 @@ public class Box2DActorFactory extends ActorFactory {
         projectileSensorFixtureDef = new FixtureDef();
         obstacleFixtureDef = new FixtureDef();
 
-        PolygonShape tempPolygon;
         CircleShape tempCircle;
 
         // Character (enemy and player)
@@ -305,9 +300,6 @@ public class Box2DActorFactory extends ActorFactory {
         projectileSensorFixtureDef.isSensor = true;
 
         // Obstacle
-        tempPolygon = new PolygonShape();
-        tempPolygon.setAsBox(OBSTACLE_HALF_WIDTH, OBSTACLE_HALF_HEIGHT);
-        obstacleFixtureDef.shape = tempPolygon;
         obstacleFixtureDef.friction = OBSTACLE_FRICTION;
         obstacleFixtureDef.restitution = OBSTACLE_BOUNCINESS;
         obstacleFixtureDef.filter.categoryBits = OBSTACLE_FILTER.categoryBits;
