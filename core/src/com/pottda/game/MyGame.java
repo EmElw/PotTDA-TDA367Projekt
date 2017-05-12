@@ -266,11 +266,13 @@ public class MyGame extends ApplicationAdapter {
                 case MAIN_CHOOSE:
                     if (mainMenuView.checkIfTouchingEasy(vector3)) {
                         // TODO Set easy mode
+                        ControllerOptions.AISettings = ControllerOptions.DUMB_AI;
                         doOnStartGame();
                         GAME_STATE = RUNNING;
                         Gdx.input.setInputProcessor(joystickStage);
                     } else if (mainMenuView.checkIfTouchingHard(vector3)) {
                         // TODO Set hard mode
+                        ControllerOptions.AISettings = ControllerOptions.PATHFINDING_AI;
                         doOnStartGame();
                         GAME_STATE = RUNNING;
                         Gdx.input.setInputProcessor(joystickStage);

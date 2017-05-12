@@ -53,6 +53,7 @@ public class GDXAIGraph implements IndexedGraph<SortedIntList.Node>, Graph<Sorte
                 }
             }
         }
+        connections.shrink();
     }
 
 //    public Array<GDXAIConnection> getConnections(Object fromNode) {
@@ -68,7 +69,7 @@ public class GDXAIGraph implements IndexedGraph<SortedIntList.Node>, Graph<Sorte
 //    }
 
     public SortedIntList.Node getNode(Vector2f position) {
-        return nodes.get(Math.round(position.x) * height + Math.round(position.y));
+        return nodes.get(Math.min(Math.max(Math.round(position.x) * height + Math.round(position.y), 0), width * height));
     }
 
     public void setObstacle(int x, int y) {
