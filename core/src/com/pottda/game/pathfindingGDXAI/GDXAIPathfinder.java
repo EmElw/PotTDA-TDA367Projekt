@@ -1,6 +1,5 @@
 package com.pottda.game.pathfindingGDXAI;
 
-import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.ai.pfa.*;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.math.Vector2;
@@ -9,7 +8,6 @@ import com.pottda.game.model.ModelActor;
 import com.pottda.game.model.Pathfinder;
 
 import javax.vecmath.Vector2f;
-import java.util.Iterator;
 import java.util.List;
 
 public class GDXAIPathfinder implements Pathfinder {
@@ -34,7 +32,7 @@ public class GDXAIPathfinder implements Pathfinder {
         Heuristic<SortedIntList.Node> heuristic;
         GraphPath<SortedIntList.Node> outPath;
 
-        heuristic = new MyEuclideanDistanceApproximation(graph);
+        heuristic = new EuclideanDistanceHeuristic(graph);
         outPath = new DefaultGraphPath<SortedIntList.Node>();
 
         try {
