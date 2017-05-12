@@ -5,6 +5,7 @@ import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.ai.utils.Ray;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.SortedIntList;
+import com.pottda.game.MyGame;
 import com.pottda.game.model.ModelActor;
 import com.pottda.game.model.Pathfinder;
 
@@ -31,11 +32,14 @@ public class GDXAIPathfinder implements Pathfinder {
 
     @Override
     public Vector2f getPath(Vector2f location) {
+        location.set(location.x * MyGame.WIDTH_RATIO, location.y * MyGame.HEIGHT_RATIO);
+        Vector2f goalPos = new Vector2f(goal.getPosition().x * MyGame.WIDTH_RATIO,
+                goal.getPosition().y * MyGame.HEIGHT_RATIO);
         Vector2f returnVector;
-        Ray<Vector2> ray = new Ray<Vector2>(Vector2fToVector2(location), Vector2fToVector2(goal.getPosition()));
+        Ray<Vector2> ray = new Ray<Vector2>(Vector2fToVector2(location), Vector2fToVector2(goalPos));
 
         if (!collisionDetector.collides(ray)) {
-            returnVector = new Vector2f(goal.getPosition().x - location.x, goal.getPosition().y - location.y);
+            returnVector = new Vector2f(goalPos.x - location.x, goalPos.y - location.y);
             returnVector.normalize();
             return returnVector;
         }
@@ -48,7 +52,7 @@ public class GDXAIPathfinder implements Pathfinder {
 
         try {
             indexedAStarPathFinder.searchNodePath(graph.getNode(location),
-                    graph.getNode(goal.getPosition()), heuristic, outPath);
+                    graph.getNode(goalPos), heuristic, outPath);
         } catch (Exception e) {
             e.printStackTrace();
         }
