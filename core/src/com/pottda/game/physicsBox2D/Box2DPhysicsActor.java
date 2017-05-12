@@ -7,7 +7,11 @@ import com.pottda.game.model.PhysicsActor;
 import javax.vecmath.Vector2f;
 
 public class Box2DPhysicsActor extends PhysicsActor {
-    public Body body;
+    Body body;
+
+    public Box2DPhysicsActor(Body body){
+        this.body = body;
+    }
 
     @Override
     public Vector2f getPosition() {

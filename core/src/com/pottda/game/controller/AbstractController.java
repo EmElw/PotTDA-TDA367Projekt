@@ -17,11 +17,18 @@ public abstract class AbstractController {
 //    final boolean isAI;
 
     final ModelActor modelActor;
-    final ViewActor viewActor;
+    private final ViewActor viewActor;
 
-    public AbstractController(ModelActor modelActor, ViewActor viewActor) {
+    /**
+     *
+     * @param modelActor
+     * @param viewActor
+     */
+    AbstractController(ModelActor modelActor, ViewActor viewActor) {
         this.modelActor = modelActor;
         this.viewActor = viewActor;
+        movementVector = new Vector2f(0,0);
+        attackVector = new Vector2f(0,0);
     }
 
     /**
@@ -37,11 +44,16 @@ public abstract class AbstractController {
         modelActor.handleCollisions();
     }
 
-    private void updateView() {
-        // TODO extend with other modifications such as rotation, scale etc.
+    /**
+     * Updates the ViewActor so everything can be drawn out later
+     */
+    protected void updateView() {
+        // TODO extend with other modifications such as rotation and stuff
         Vector2f position = modelActor.getPosition();
-        viewActor.setPosition(position.x, position.y);
-    }
+        float degrees = modelActor.getAngle();
 
+        viewActor.setPoint(position.x, position.y);
+        viewActor.setAngle(degrees);
+    }
 
 }

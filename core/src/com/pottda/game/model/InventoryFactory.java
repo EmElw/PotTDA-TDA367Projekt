@@ -1,17 +1,17 @@
 package com.pottda.game.model;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 
 public class InventoryFactory {
@@ -41,8 +41,15 @@ public class InventoryFactory {
      */
     public static Inventory createFromXML(File file) throws ParserConfigurationException, IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
 
+        if (InventoryBlueprint.hasInventory(file.getName())) {
+            return InventoryBlueprint.getInventory(file.getName());
+        }
+
+        Inventory inventory;
+
         // Create the inventory to return
-        Inventory inventory = new Inventory();
+        inventory = new Inventory();
+
 
         // Magic loading, based on https://www.tutorialspoint.com/java_xml/java_dom_parse_document.htm
         DocumentBuilderFactory documentBuilderFactory =
@@ -85,6 +92,10 @@ public class InventoryFactory {
             // Add the item to the inventory
             inventory.addItem(item);
         }
+
+        // Add to cached blueprints
+        InventoryBlueprint.createBlueprint(file.getName(), inventory);
+        inventory.compile();
         return inventory;
 
     }
@@ -101,7 +112,8 @@ public class InventoryFactory {
         if (stringClassMap.containsKey(className)) {
             return stringClassMap.get(className);
         } else {
-            Class c = Class.forName("com.pottda.game.model.items." + className);
+            Class c;
+            c = Class.forName("com.pottda.game.model.items." + className);
             if (isItemSubclass(c)) {
                 stringClassMap.put(className, c);
                 return getClass(className);
@@ -116,10 +128,14 @@ public class InventoryFactory {
      * @return boolean
      */
     private static boolean isItemSubclass(Class c) {
-        Class temp = c.getSuperclass();
+        Class temp = c;
         while (!c.equals(Object.class)) {
-            if ((temp = temp.getSuperclass()) == Item.class) {
-                return true;
+            try {
+                if ((temp = temp.getSuperclass()) == Item.class) {
+                    return true;
+                }
+            } catch (NullPointerException e) {
+                throw new NullPointerException("Failed when searching: " + c.toString());
             }
         }
         return false;

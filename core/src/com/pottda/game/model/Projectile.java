@@ -10,18 +10,32 @@ import java.util.List;
 
 public class Projectile extends ModelActor {
     int damage;
-    List<ProjectileListener> projectileListeners;
-    List<Character> hasDamaged;
+    public List<ProjectileListener> projectileListeners;
+    //public List<Character> hasDamaged;
 
     public Projectile(PhysicsActor physicsActor, int damage, List<ProjectileListener> projectileListeners) {
         super(physicsActor);
         this.damage = damage;
         this.projectileListeners = projectileListeners;
-        hasDamaged = new ArrayList<Character>();
+        //hasDamaged = new ArrayList<Character>();
     }
 
+    /*@Override
+    public VectorType getMove() {
+        return null;
+    }*/
     @Override
     public void giveInput(Vector2f movementVector, Vector2f attackVector) {
         physicsActor.giveMovementVector(movementVector);
+        this.angle = (float) Math.toDegrees(Math.atan2(attackVector.getY(), attackVector.getX()));
+    }
+
+    public void onCollision(Character target) {
+        target.takeDamage(damage);
+        onCollision();
+    }
+
+    public void onCollision() {
+        // TODO Remove this projectile
     }
 }

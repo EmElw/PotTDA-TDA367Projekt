@@ -12,7 +12,11 @@ import javax.vecmath.Vector2f;
 public abstract class ModelActor {
     public boolean isProjectile;
     public int team;
-    public AbstractController controller;
+//    public AbstractController controller;
+    float angle = 0;
+
+    public final static int PLAYER_TEAM = 0;
+    public final static int ENEMY_TEAM = 1;
 
     protected final PhysicsActor physicsActor;
 
@@ -27,6 +31,7 @@ public abstract class ModelActor {
      * @param attackVector   a Vector2f containing the direction to attack in
      */
     public void giveInput(Vector2f movementVector, Vector2f attackVector) {
+
     }
 
     /**
@@ -36,6 +41,15 @@ public abstract class ModelActor {
      */
     public Vector2f getPosition() {
         return physicsActor.getPosition();
+    }
+
+    /**
+     * Returns the angle of which the Actor is looking
+     *
+     * @return degrees    a float containing the angle the actor is looking
+     */
+    public float getAngle() {
+        return angle;
     }
 
     /**

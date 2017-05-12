@@ -1,4 +1,4 @@
-package com.pottda.game.controller;
+package com.pottda.game.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -6,15 +6,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.pottda.game.model.ModelActor;
-import com.pottda.game.view.ViewActor;
+import com.pottda.game.MyGame;
 
 /**
- * Created by Rikard Teodorsson on 2017-04-07.
+ * Created by Rikard Teodorsson on 2017-05-08.
  */
 
-public class TouchJoystickController extends AbstractController {
-    private Stage stage;
+public class JoysticksView {
+    private final Stage stage;
     private Touchpad movementTouchpad;
     private Touchpad attackTouchpad;
     private Touchpad.TouchpadStyle touchpadStyle;
@@ -22,21 +21,12 @@ public class TouchJoystickController extends AbstractController {
     private Drawable touchBackground;
     private Drawable touchKnob;
 
-    public TouchJoystickController(ModelActor modelActor, ViewActor viewActor) {
-        super(modelActor, viewActor);
-
+    public JoysticksView(Stage stage) {
+        this.stage = stage;
         createMovementJoystick();
         createAttackJoystick();
     }
 
-    @Override
-    public void onNewFrame() {
-        movementVector.set(movementTouchpad.getKnobPercentX(), movementTouchpad.getKnobPercentY());
-        attackVector.set(attackTouchpad.getKnobPercentX(), attackTouchpad.getKnobPercentY());
-        super.onNewFrame();
-    }
-
-    // TODO separate into a JoystickView or some such
     private void createAttackJoystick() {
         //Create a movementTouchpad skin
         touchpadSkin = new Skin();
@@ -57,7 +47,7 @@ public class TouchJoystickController extends AbstractController {
         //Create new TouchPad with the created style
         attackTouchpad = new Touchpad(10, touchpadStyle);
         //setBounds(x, y, width, height)
-        attackTouchpad.setBounds(Gdx.graphics.getWidth() - 105, 15, 90, 90);
+        attackTouchpad.setBounds(stage.getWidth() - 105, 15, 90, 90);
 
         //add TouchPad to stage
         stage.addActor(attackTouchpad);
@@ -90,8 +80,34 @@ public class TouchJoystickController extends AbstractController {
         Gdx.input.setInputProcessor(stage);
     }
 
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
+    public void onNewFrame() {
+        // Check if user is touching joysticks
+        if (movementTouchpad.isTouched()) {
+            movementTouchpad.setColor(movementTouchpad.getColor().r, movementTouchpad.getColor().g, movementTouchpad.getColor().b, (float) 0.4);
+        } else {
+            movementTouchpad.setColor(movementTouchpad.getColor().r, movementTouchpad.getColor().g, movementTouchpad.getColor().b, 1);
+        }
+        if (attackTouchpad.isTouched()) {
+            attackTouchpad.setColor(attackTouchpad.getColor().r, attackTouchpad.getColor().g, attackTouchpad.getColor().b, (float) 0.4);
+        } else {
+            attackTouchpad.setColor(attackTouchpad.getColor().r, attackTouchpad.getColor().g, attackTouchpad.getColor().b, 1);
+        }
     }
+
+    public float getMovementKnobX() {
+        return movementTouchpad.getKnobPercentX();
+    }
+
+    public float getMovementKnobY() {
+        return movementTouchpad.getKnobPercentY();
+    }
+
+    public float getAttackKnobX() {
+        return attackTouchpad.getKnobPercentX();
+    }
+
+    public float getAttackKnobY() {
+        return attackTouchpad.getKnobPercentY();
+    }
+
 }
