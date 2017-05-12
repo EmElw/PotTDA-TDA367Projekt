@@ -15,6 +15,9 @@ import com.pottda.game.view.ViewActor;
 
 import javax.vecmath.Vector2f;
 
+import java.util.Collection;
+import java.util.List;
+
 import static com.pottda.game.model.ModelActor.ENEMY_TEAM;
 import static com.pottda.game.model.ModelActor.PLAYER_TEAM;
 
@@ -62,9 +65,13 @@ public class Box2DActorFactory extends ActorFactory {
     private FixtureDef projectileSensorFixtureDef;
     private FixtureDef obstacleFixtureDef;
 
-    public Box2DActorFactory(World world, Stage stage) {
+    private Collection<AbstractController> controllers;
+
+    public Box2DActorFactory(World world, Stage stage,
+                             Collection<AbstractController> controllerList) {
         this.world = world;
         this.stage = stage;
+        this.controllers = controllerList;
         filterCategoryInit();
         bodyDefInit();
         fixtureDefInit();
@@ -95,7 +102,10 @@ public class Box2DActorFactory extends ActorFactory {
 
         ViewActor view = new ViewActor(sprite.texture);
         stage.addActor(view);
-        return new DumbAIController(model, view);
+        AIController aiController = new DumbAIController(model, view);
+        controllers.add(aiController);
+
+        return aiController;
     }
 
     @Override
@@ -114,14 +124,14 @@ public class Box2DActorFactory extends ActorFactory {
 
         Box2DPhysicsCharacter physics = new Box2DPhysicsCharacter(body);
 
-        Character model = new Character(physics);
-        DumbAIController.goal = model;
-        model.team = PLAYER_TEAM;
-        body.setUserData(model);
+        Character player = new Character(physics);
+        DumbAIController.goal = player;
+        player.team = PLAYER_TEAM;
+        body.setUserData(player);
 
         // Add inventory
         try {
-            model.inventory = InventoryFactory.createFromXML(Gdx.files.internal(
+            player.inventory = InventoryFactory.createFromXML(Gdx.files.internal(
                     "inventoryblueprint/playerStartInventory.xml").file());
         } catch (Exception e) {
             e.printStackTrace();
@@ -132,17 +142,18 @@ public class Box2DActorFactory extends ActorFactory {
 
         switch (ControllerOptions.controllerSettings) {
             case ControllerOptions.TOUCH_JOYSTICK:
-                controller = new TouchJoystickController(model, view, ControllerOptions.joystickStage);
+                controller = new TouchJoystickController(player, view, ControllerOptions.joystickStage);
                 break;
             case ControllerOptions.KEYBOARD_MOUSE:
-                controller = new KeyboardMouseController(model, view, stage);
+                controller = new KeyboardMouseController(player, view, stage);
                 break;
             case ControllerOptions.KEYBOARD_ONLY:
-                controller = new KeyboardOnlyController(model, view);
+                controller = new KeyboardOnlyController(player, view);
                 break;
         }
         stage.addActor(view);
 
+        controllers.add(controller);
         return controller;
     }
 
@@ -185,7 +196,10 @@ public class Box2DActorFactory extends ActorFactory {
         ViewActor view = new ViewActor(sprite.texture);
 
         stage.addActor(view);
-        return new ProjectileController(model, view);
+
+        ProjectileController projectileController = new ProjectileController(model, view);
+        controllers.add(projectileController);
+        return projectileController;
     }
 
     @Override
@@ -207,7 +221,10 @@ public class Box2DActorFactory extends ActorFactory {
         ViewActor view = new ViewActor(sprite.texture, size);
 
         stage.addActor(view);
-        return new ObstacleController(model, view);
+
+        ObstacleController obstacleController = new ObstacleController(model, view);
+        controllers.add(obstacleController);
+        return obstacleController;
     }
 
     private void filterCategoryInit() {
