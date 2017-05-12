@@ -2,6 +2,7 @@ package com.pottda.game.pathfindingGDXAI;
 
 import com.badlogic.gdx.ai.pfa.*;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
+import com.badlogic.gdx.ai.utils.Ray;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.SortedIntList;
 import com.pottda.game.model.ModelActor;
@@ -14,14 +15,16 @@ public class GDXAIPathfinder implements Pathfinder {
     private final GDXAIGraph graph;
     private ModelActor goal;
     private IndexedAStarPathFinder indexedAStarPathFinder;
-    private PathSmoother<SortedIntList.Node, Vector2> pathSmoother;
+    private CollisionDetector collisionDetector;
+    //private PathSmoother<SortedIntList.Node, Vector2> pathSmoother;
 
     public GDXAIPathfinder(ModelActor goal, int worldWidth, int worldHeight) {
         this.goal = goal;
         graph = new GDXAIGraph(worldWidth, worldHeight);
+        collisionDetector = new CollisionDetector(graph);
         try {
             indexedAStarPathFinder = new IndexedAStarPathFinder(graph);
-            pathSmoother = new PathSmoother<SortedIntList.Node, Vector2>(new CollisionDetector(graph));
+            //pathSmoother = new PathSmoother<SortedIntList.Node, Vector2>(new CollisionDetector(graph));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -29,6 +32,15 @@ public class GDXAIPathfinder implements Pathfinder {
 
     @Override
     public Vector2f getPath(Vector2f location) {
+        Vector2f returnVector;
+        Ray<Vector2> ray = new Ray<Vector2>(Vector2fToVector2(location), Vector2fToVector2(goal.getPosition()));
+
+        if(!collisionDetector.collides(ray)){
+            returnVector = new Vector2f(goal.getPosition().x - location.x, goal.getPosition().y - location.y);
+            returnVector.normalize();
+            return returnVector;
+        }
+
         Heuristic<SortedIntList.Node> heuristic;
         GraphPath<SortedIntList.Node> outPath;
 
@@ -42,7 +54,17 @@ public class GDXAIPathfinder implements Pathfinder {
             e.printStackTrace();
         }
 
-        return null;
+        Vector2f current = graph.getPosition(outPath.get(0));
+        Vector2f next = graph.getPosition(outPath.get(1));
+
+        returnVector = new Vector2f(next.x - current.x, next.y - current.y);
+        returnVector.normalize();
+
+        return returnVector;
+    }
+
+    private Vector2 Vector2fToVector2(Vector2f vector2f){
+        return new Vector2(vector2f.x, vector2f.y);
     }
 
     @Override

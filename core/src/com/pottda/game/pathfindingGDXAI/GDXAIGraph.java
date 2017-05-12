@@ -37,8 +37,8 @@ public class GDXAIGraph implements IndexedGraph<SortedIntList.Node>, Graph<Sorte
                 for (int i = Math.max(0, x - 1); i < Math.min(width, x + 1); i++) {
                     if (i != x) {
                         connections.add(new GDXAIConnection());
-                        connections.get(connections.size - 1).fromNode = nodes.get(x * width + y);
-                        connections.get(connections.size - 1).toNode = nodes.get(i * width + y);
+                        connections.get(connections.size - 1).fromNode = nodes.get(x * height + y);
+                        connections.get(connections.size - 1).toNode = nodes.get(i * height + y);
                         connections.get(connections.size - 1).cost = EMPTY_COST;
                     }
                 }
@@ -46,8 +46,8 @@ public class GDXAIGraph implements IndexedGraph<SortedIntList.Node>, Graph<Sorte
                 for (int i = Math.max(0, y - 1); i < Math.min(height, y + 1); i++) {
                     if (i != y) {
                         connections.add(new GDXAIConnection());
-                        connections.get(connections.size - 1).fromNode = nodes.get(x * width + y);
-                        connections.get(connections.size - 1).toNode = nodes.get(x * width + i);
+                        connections.get(connections.size - 1).fromNode = nodes.get(x * height + y);
+                        connections.get(connections.size - 1).toNode = nodes.get(x * height + i);
                         connections.get(connections.size - 1).cost = EMPTY_COST;
                     }
                 }
@@ -68,11 +68,11 @@ public class GDXAIGraph implements IndexedGraph<SortedIntList.Node>, Graph<Sorte
 //    }
 
     public SortedIntList.Node getNode(Vector2f position) {
-        return nodes.get(Math.round(position.x) * width + Math.round(position.y));
+        return nodes.get(Math.round(position.x) * height + Math.round(position.y));
     }
 
     public void setObstacle(int x, int y) {
-        SortedIntList.Node obstacleNode = nodes.get(x * width + y);
+        SortedIntList.Node obstacleNode = nodes.get(x * height + y);
         int changedConntections = 0;
         for (int i = 0, n = connections.size; i < n && changedConntections < MAX_CONNECTIONS_PER_NODE; i++) {
             if (connections.get(i).toNode.equals(obstacleNode)) {
@@ -97,6 +97,11 @@ public class GDXAIGraph implements IndexedGraph<SortedIntList.Node>, Graph<Sorte
             }
         }
         return false;
+    }
+
+    public Vector2f getPosition(SortedIntList.Node node){
+        int index = getIndex(node);
+        return new Vector2f(index / height, index % height);
     }
 
     @Override

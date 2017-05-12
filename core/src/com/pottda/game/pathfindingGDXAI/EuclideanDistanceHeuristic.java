@@ -17,11 +17,11 @@ public class EuclideanDistanceHeuristic implements Heuristic<SortedIntList.Node>
 
     @Override
     public float estimate(SortedIntList.Node node, SortedIntList.Node endNode) {
-        int startX = graph.nodes.indexOf(node, false) / width;
-        int startY = graph.nodes.indexOf(node, false) % width;
+        int startX = graph.nodes.indexOf(node, false) / height;
+        int startY = graph.nodes.indexOf(node, false) % height;
 
-        int goalX = graph.nodes.indexOf(endNode, false) / width;
-        int goalY = graph.nodes.indexOf(endNode, false) % width;
+        int goalX = graph.nodes.indexOf(endNode, false) / height;
+        int goalY = graph.nodes.indexOf(endNode, false) % height;
 
         int dx = Math.abs(startX - goalX);
         int dy = Math.abs(startY - goalY);
