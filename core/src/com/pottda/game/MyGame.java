@@ -6,6 +6,7 @@ import com.pottda.game.actorFactory.Box2DActorFactory;
 import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.model.ActorFactory;
 import com.pottda.game.model.InventoryFactory;
+import com.pottda.game.physicsBox2D.CollisionListener;
 import com.pottda.game.view.GameView;
 import com.pottda.game.view.HUDView;
 import com.badlogic.gdx.Gdx;
@@ -92,6 +93,7 @@ public class MyGame extends ApplicationAdapter {
 
         hudView = new HUDView(hudStage);
         world = new World(new Vector2(0, 0), false);
+        world.setContactListener(new CollisionListener());
         accumulator = 0;
 
         gameView = new GameView(gameStage, joystickStage);
