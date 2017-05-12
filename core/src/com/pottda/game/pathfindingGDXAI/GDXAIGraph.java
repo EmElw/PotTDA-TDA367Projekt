@@ -82,6 +82,23 @@ public class GDXAIGraph implements IndexedGraph<SortedIntList.Node>, Graph<Sorte
         }
     }
 
+    /**
+     * Checks if the node at x y is an obstacle
+     * @param x
+     * @param y
+     * @return True if obstacle, otherwise false
+     */
+    public Boolean isObstacle(int x, int y) {
+        SortedIntList.Node node = getNode(new Vector2f(x, y));
+
+        for (int i = 0, n = connections.size; i < n; i++) {
+            if (connections.get(i).toNode.equals(node)) {
+                return Math.abs(connections.get(i).cost - OBSTACLE_COST) < 0.01f;
+            }
+        }
+        return false;
+    }
+
     @Override
     public int getIndex(SortedIntList.Node node) {
         return nodes.indexOf(node, false);

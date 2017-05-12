@@ -42,8 +42,6 @@ public class GDXAIPathfinder implements Pathfinder {
             e.printStackTrace();
         }
 
-
-
         return null;
     }
 
