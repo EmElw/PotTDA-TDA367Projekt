@@ -3,13 +3,13 @@ package com.pottda.game.pathfindingGDXAI;
 import com.badlogic.gdx.ai.pfa.Heuristic;
 import com.badlogic.gdx.utils.SortedIntList;
 
-public class EuclideanDistanceHeuristic implements Heuristic<SortedIntList.Node> {
+public class GDXAIHeuristic implements Heuristic<SortedIntList.Node> {
     private final static float NORMAL_COST = 1f;
     private int width;
     private int height;
     private GDXAIGraph graph;
 
-    public EuclideanDistanceHeuristic(GDXAIGraph graph) {
+    public GDXAIHeuristic(GDXAIGraph graph) {
         this.graph = graph;
         width = graph.width;
         height = graph.height;

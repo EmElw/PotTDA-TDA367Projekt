@@ -5,7 +5,6 @@ import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.ai.utils.Ray;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.SortedIntList;
-import com.pottda.game.MyGame;
 import com.pottda.game.model.ModelActor;
 import com.pottda.game.model.Pathfinder;
 
@@ -52,7 +51,7 @@ public class GDXAIPathfinder implements Pathfinder {
             Heuristic<SortedIntList.Node> heuristic;
             GraphPath<SortedIntList.Node> outPath;
 
-            heuristic = new EuclideanDistanceHeuristic(graph);
+            heuristic = new GDXAIHeuristic(graph);
             outPath = new DefaultGraphPath<SortedIntList.Node>();
 
             try {
