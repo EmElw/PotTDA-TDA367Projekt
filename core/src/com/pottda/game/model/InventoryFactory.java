@@ -26,11 +26,11 @@ public class InventoryFactory {
      *
      * @param file a .xml-file containing an inventory. Used tags:
      *             {@code inventory:} root element containing items
-     *             {@code item: }item root containing name, x, y, and orientation
+     *             {@code item: }item root containing name, x, y, and orientation-attribiutes
      *             {@code name:} the Class of the item to be loaded
      *             {@code x:} the x position of the item to be loaded
      *             {@code y:} the y position of the itme to be loaded
-     *             orientation: the rotation in multiples of pi/2 rad
+     *             {@code orientation:} the rotation in multiples of pi/2 rad
      * @return an Inventory built from the .xml-file
      * @throws ParserConfigurationException as per {@code DocumentBuilderFactory.newDocumentBuild}
      * @throws IOException                  if the file doesn't contain an inventory-tag or,
@@ -41,11 +41,15 @@ public class InventoryFactory {
      */
     public static Inventory createFromXML(File file) throws ParserConfigurationException, IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
 
+        Inventory inventory;
+
+        // First attempt to build via blueprint
         if (InventoryBlueprint.hasInventory(file.getName())) {
-            return InventoryBlueprint.getInventory(file.getName());
+            inventory = InventoryBlueprint.getInventory(file.getName());
+            inventory.compile();
+            return inventory;
         }
 
-        Inventory inventory;
 
         // Create the inventory to return
         inventory = new Inventory();

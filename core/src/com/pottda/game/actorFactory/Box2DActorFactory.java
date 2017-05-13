@@ -21,6 +21,12 @@ import java.util.List;
 import static com.pottda.game.model.ModelActor.ENEMY_TEAM;
 import static com.pottda.game.model.ModelActor.PLAYER_TEAM;
 
+
+/**
+ * {@inheritDoc}
+ * <p>
+ * This implementation works on Box2D and LibGDX
+ */
 public class Box2DActorFactory extends ActorFactory {
     // Constants
     private final static float GRAVITY = 0f;
@@ -67,6 +73,11 @@ public class Box2DActorFactory extends ActorFactory {
 
     private Collection<AbstractController> controllers;
 
+    /**
+     * @param world          a {@link World} to handle the Actor's {@link Body}
+     * @param stage          a {@link Stage} to draw the {@link ViewActor on}
+     * @param controllerList a {@link Collection} to add the controllers to
+     */
     public Box2DActorFactory(World world, Stage stage,
                              Collection<AbstractController> controllerList) {
         this.world = world;
