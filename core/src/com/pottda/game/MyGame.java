@@ -2,6 +2,7 @@ package com.pottda.game;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
+import com.pottda.game.View.Sprites;
 import com.pottda.game.actorFactory.Box2DActorFactory;
 import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.model.ActorFactory;
@@ -24,10 +25,13 @@ import com.pottda.game.controller.TouchJoystickController;
 import com.pottda.game.view.MainMenuView;
 import com.pottda.game.view.SoundsAndMusic;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import javax.vecmath.Vector2f;
+import javax.xml.parsers.ParserConfigurationException;
 
 public class MyGame extends ApplicationAdapter {
     private Stage hudStage;
@@ -36,10 +40,17 @@ public class MyGame extends ApplicationAdapter {
     private Stage mainMenuStage;
     private OrthographicCamera camera;
 
-    private float accumulator;
-
+    /*
+    A List of controllers to iterate through every game-update
+     */
     private List<AbstractController> controllers;
+    /*
+    A Stack to buffer new controllers created during the list-iteration
+     */
+    private Stack<AbstractController> controllerBuffer;
+
     private World world;
+    private float accumulator;
 
     private HUDView hudView;
     private SoundsAndMusic soundsAndMusic;
@@ -90,6 +101,7 @@ public class MyGame extends ApplicationAdapter {
 
     private void doOnStartGame() {
         controllers = new ArrayList<AbstractController>();
+        controllerBuffer = new Stack<AbstractController>();
 
         hudView = new HUDView(hudStage);
         world = new World(new Vector2(0, 0), false);
@@ -102,7 +114,7 @@ public class MyGame extends ApplicationAdapter {
         startMusic();
 
         // Create and set ActorFactory implementation
-        box2DActorFactory = new Box2DActorFactory(world);
+        box2DActorFactory = new Box2DActorFactory(world, gameStage, controllerBuffer);
         ActorFactory.setFactory(box2DActorFactory);
 
         ControllerOptions.joystickStage = joystickStage;
@@ -113,44 +125,47 @@ public class MyGame extends ApplicationAdapter {
             ControllerOptions.controllerSettings = ControllerOptions.KEYBOARD_MOUSE;
         }
 
-        // Add player to controller list
-        controllers.add(ActorFactory.get().buildPlayer(gameStage,
-                new Texture(Gdx.files.internal(playerImage)), new Vector2f(WIDTH_METERS / 2, HEIGHT_METERS / 2)));
-
         final float scaling = 1.2f;
+
+        // Add player
+        ActorFactory.get().buildPlayer(Sprites.PLAYER,
+                new Vector2f(WIDTH_METERS * scaling / 2, HEIGHT_METERS * scaling / 2));
 
         // Add some enemies
         for (int i = 0; i < 5; i++) {
+            float xx = (float) (Math.random() * WIDTH_METERS * scaling);
+            float yy = (float) (Math.random() * HEIGHT_METERS * scaling);
             try {
-                controllers.add(ActorFactory.get().buildEnemy(gameStage, new Texture(Gdx.files.internal(enemyImage)), //Change
-                        new Vector2f((float) (Math.random() * (WIDTH_METERS * scaling)), (float) (Math.random() * (HEIGHT_METERS * scaling))),
-                        InventoryFactory.createFromXML(Gdx.files.internal(playerStartInventory).file())));
+                ActorFactory.get().buildEnemy(Sprites.ENEMY,
+                        new Vector2f(xx, yy),
+                        InventoryFactory.createFromXML(Gdx.files.internal(playerStartInventory).file()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
         createWorldBorders();
+
     }
+
 
     /**
      * Creates four obstacles around the playing area
      */
     private void createWorldBorders() {
         final float border_thickness = 0.5f;
-        // Scale the area bigger or smaller
+// Scale the area bigger or smaller
         final float area_scaling = 1.2f;
         // Bottom
-        controllers.add(ActorFactory.get().buildObstacle(gameStage, new Texture(Gdx.files.internal(borderImage)),
+        controllers.add(ActorFactory.get().buildObstacle(Sprites.BORDER,
                 new Vector2f(0, 0), new Vector2f(WIDTH_METERS * area_scaling, border_thickness)));
         // Left
-        controllers.add(ActorFactory.get().buildObstacle(gameStage, new Texture(Gdx.files.internal(borderImage)),
+        controllers.add(ActorFactory.get().buildObstacle(Sprites.BORDER,
                 new Vector2f(0, 0), new Vector2f(border_thickness, HEIGHT_METERS * area_scaling)));
         // Top
-        controllers.add(ActorFactory.get().buildObstacle(gameStage, new Texture(Gdx.files.internal(borderImage)),
+        controllers.add(ActorFactory.get().buildObstacle(Sprites.BORDER,
                 new Vector2f(0, HEIGHT_METERS * area_scaling), new Vector2f(WIDTH_METERS * area_scaling, border_thickness)));
         // Right
-        controllers.add(ActorFactory.get().buildObstacle(gameStage, new Texture(Gdx.files.internal(borderImage)),
+        controllers.add(ActorFactory.get().buildObstacle(Sprites.BORDER,
                 new Vector2f(WIDTH_METERS * area_scaling, 0), new Vector2f(border_thickness, HEIGHT_METERS * area_scaling)));
     }
 
@@ -182,6 +197,10 @@ public class MyGame extends ApplicationAdapter {
                     c.onNewFrame();
                 }
             }
+            // Add created during the cycle to the list
+            // TODO could potentially do some juggling to also execute the onFrame for all o these
+            controllers.addAll(controllerBuffer);
+            controllerBuffer.clear();
         }
 
         if (GAME_STATE == PAUSED) {

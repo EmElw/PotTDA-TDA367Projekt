@@ -1,9 +1,9 @@
 package com.pottda.game.actorFactory;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.pottda.game.View.Sprites;
 import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.controller.*;
 import com.pottda.game.model.*;
@@ -15,9 +15,18 @@ import com.pottda.game.view.ViewActor;
 
 import javax.vecmath.Vector2f;
 
+import java.util.Collection;
+import java.util.List;
+
 import static com.pottda.game.model.ModelActor.ENEMY_TEAM;
 import static com.pottda.game.model.ModelActor.PLAYER_TEAM;
 
+
+/**
+ * {@inheritDoc}
+ * <p>
+ * This implementation works on Box2D and LibGDX
+ */
 public class Box2DActorFactory extends ActorFactory {
     // Constants
     private final static float GRAVITY = 0f;
@@ -51,6 +60,8 @@ public class Box2DActorFactory extends ActorFactory {
 
     private final World world;
 
+    private final Stage stage;
+
     private BodyDef characterBodyDef;
     private BodyDef projectileBodyDef;
     private BodyDef obstacleBodyDef;
@@ -60,15 +71,25 @@ public class Box2DActorFactory extends ActorFactory {
     private FixtureDef projectileSensorFixtureDef;
     private FixtureDef obstacleFixtureDef;
 
-    public Box2DActorFactory(World world) {
+    private Collection<AbstractController> controllers;
+
+    /**
+     * @param world          a {@link World} to handle the Actor's {@link Body}
+     * @param stage          a {@link Stage} to draw the {@link ViewActor on}
+     * @param controllerList a {@link Collection} to add the controllers to
+     */
+    public Box2DActorFactory(World world, Stage stage,
+                             Collection<AbstractController> controllerList) {
         this.world = world;
+        this.stage = stage;
+        this.controllers = controllerList;
         filterCategoryInit();
         bodyDefInit();
         fixtureDefInit();
     }
 
     @Override
-    public AIController buildEnemy(Stage stage, Texture texture, Vector2f position, Inventory inventory) {
+    public AIController buildEnemy(Sprites sprite, Vector2f position, Inventory inventory) {
         // Create body
         Body body = world.createBody(characterBodyDef);
         body.setTransform(position.getX(), position.getY(), 0);
@@ -90,22 +111,16 @@ public class Box2DActorFactory extends ActorFactory {
         // Add inventory
         //model.inventory = inventory;
 
-        ViewActor view = new ViewActor(texture);
-
+        ViewActor view = new ViewActor(sprite.texture);
         stage.addActor(view);
-        return new DumbAIController(model, view);
+        AIController aiController = new DumbAIController(model, view);
+        controllers.add(aiController);
+
+        return aiController;
     }
 
-    /**
-     * Creates a player controller
-     *
-     * @param stage    the stage to render the player on
-     * @param texture  a texture/image for the player
-     * @param position the position where the player is created
-     * @return
-     */
     @Override
-    public AbstractController buildPlayer(Stage stage, Texture texture, Vector2f position) {
+    public AbstractController buildPlayer(Sprites sprite, Vector2f position) {
         // Create body
         Body body = world.createBody(characterBodyDef);
         body.setTransform(position.getX(), position.getY(), 0);
@@ -120,40 +135,41 @@ public class Box2DActorFactory extends ActorFactory {
 
         Box2DPhysicsCharacter physics = new Box2DPhysicsCharacter(body);
 
-        Character model = new Character(physics);
-        DumbAIController.goal = model;
-        model.team = PLAYER_TEAM;
-        body.setUserData(model);
+        Character player = new Character(physics);
+        DumbAIController.goal = player;
+        player.team = PLAYER_TEAM;
+        body.setUserData(player);
 
         // Add inventory
         try {
-            model.inventory = InventoryFactory.createFromXML(Gdx.files.internal(
+            player.inventory = InventoryFactory.createFromXML(Gdx.files.internal(
                     "inventoryblueprint/playerStartInventory.xml").file());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ViewActor view = new ViewActor(texture);
+        ViewActor view = new ViewActor(sprite.texture);
 
         AbstractController controller = null;
 
         switch (ControllerOptions.controllerSettings) {
             case ControllerOptions.TOUCH_JOYSTICK:
-                controller = new TouchJoystickController(model, view, ControllerOptions.joystickStage);
+                controller = new TouchJoystickController(player, view, ControllerOptions.joystickStage);
                 break;
             case ControllerOptions.KEYBOARD_MOUSE:
-                controller = new KeyboardMouseController(model, view, stage);
+                controller = new KeyboardMouseController(player, view, stage);
                 break;
             case ControllerOptions.KEYBOARD_ONLY:
-                controller = new KeyboardOnlyController(model, view);
+                controller = new KeyboardOnlyController(player, view);
                 break;
         }
         stage.addActor(view);
 
+        controllers.add(controller);
         return controller;
     }
 
     @Override
-    public ProjectileController buildProjectile(Stage stage, Texture texture, int team, boolean bounces, boolean penetrates, Vector2f position) {
+    public ProjectileController buildProjectile(Sprites sprite, int team, boolean bounces, boolean penetrates, Vector2f position) {
         // Create body
         Body body = world.createBody(projectileBodyDef);
         body.setTransform(position.getX(), position.getY(), 0);
@@ -188,14 +204,17 @@ public class Box2DActorFactory extends ActorFactory {
         model.team = team;
         body.setUserData(model);
 
-        ViewActor view = new ViewActor(texture);
+        ViewActor view = new ViewActor(sprite.texture);
 
         stage.addActor(view);
-        return new ProjectileController(model, view);
+
+        ProjectileController projectileController = new ProjectileController(model, view);
+        controllers.add(projectileController);
+        return projectileController;
     }
 
     @Override
-    public AbstractController buildObstacle(Stage stage, Texture texture, Vector2f position, Vector2f size) {
+    public AbstractController buildObstacle(Sprites sprite, Vector2f position, Vector2f size) {
         Body body = world.createBody(obstacleBodyDef);
         body.setTransform(position.getX(), position.getY(), 0);
 
@@ -210,10 +229,13 @@ public class Box2DActorFactory extends ActorFactory {
         Obstacle model = new Obstacle(physics);
         body.setUserData(model);
 
-        ViewActor view = new ViewActor(texture, size);
+        ViewActor view = new ViewActor(sprite.texture, size);
 
         stage.addActor(view);
-        return new ObstacleController(model, view);
+
+        ObstacleController obstacleController = new ObstacleController(model, view);
+        controllers.add(obstacleController);
+        return obstacleController;
     }
 
     private void filterCategoryInit() {
