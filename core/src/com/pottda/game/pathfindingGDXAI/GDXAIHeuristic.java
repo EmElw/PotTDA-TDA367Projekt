@@ -26,6 +26,6 @@ public class GDXAIHeuristic implements Heuristic<SortedIntList.Node> {
         int dx = Math.abs(startX - goalX);
         int dy = Math.abs(startY - goalY);
 
-        return NORMAL_COST * (float) Math.sqrt(dx * dx + dy * dy);
+        return NORMAL_COST * (float) (dx + dy);
     }
 }
