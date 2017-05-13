@@ -56,4 +56,8 @@ public abstract class AbstractController {
         viewActor.setAngle(degrees);
     }
 
+    public Vector2f getPosition(){
+        return modelActor.getPosition();
+    }
+
 }

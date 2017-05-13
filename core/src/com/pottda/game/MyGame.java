@@ -132,6 +132,21 @@ public class MyGame extends ApplicationAdapter {
             }
         }
 
+        List<AbstractController> obstacleControllers = new ArrayList<AbstractController>();
+        for (int i = 0; i < 20; i++) {
+            try {
+                obstacleControllers.add(ActorFactory.get().buildObstacle(gameStage, new Texture(Gdx.files.internal(borderImage)),
+                        new Vector2f((float) (Math.random() * WIDTH_METERS), (float) (Math.random() * HEIGHT_METERS)),
+                        new Vector2f(1f, 1f)));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        for(AbstractController controller : obstacleControllers) {
+            ControllerOptions.pathfinder.setObstacle(controller.getPosition());
+        }
+
         createWorldBorders();
     }
 

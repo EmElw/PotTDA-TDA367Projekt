@@ -40,7 +40,6 @@ public class GDXAIPathfinder implements Pathfinder {
 //        Vector2f goalPos = new Vector2f(goal.getPosition().x * MyGame.WIDTH_RATIO,
 //                goal.getPosition().y * MyGame.HEIGHT_RATIO);
         Vector2f goalPos = new Vector2f(Math.round(goal.getPosition().x), Math.round(goal.getPosition().y));
-        System.out.println("to x: " + goalPos.x + " y: " + goalPos.y);
         Vector2f returnVector;
         Ray<Vector2> ray = new Ray<Vector2>(Vector2fToVector2(location), Vector2fToVector2(goalPos));
 
@@ -49,7 +48,7 @@ public class GDXAIPathfinder implements Pathfinder {
 //            returnVector.normalize();
 //            return returnVector;
         } else {
-
+            System.out.println("Can't see player");
             Heuristic<SortedIntList.Node> heuristic;
             GraphPath<SortedIntList.Node> outPath;
 
@@ -63,10 +62,14 @@ public class GDXAIPathfinder implements Pathfinder {
                 e.printStackTrace();
             }
 
-            Vector2f current = graph.getPosition(outPath.get(0));
-            Vector2f next = graph.getPosition(outPath.get(1));
+            if (outPath.getCount() < 2) {
+                returnVector = new Vector2f(0, 0);
+            } else {
+                Vector2f current = graph.getPosition(outPath.get(0));
+                Vector2f next = graph.getPosition(outPath.get(1));
 
-            returnVector = new Vector2f(next.x - current.x, next.y - current.y );
+                returnVector = new Vector2f(next.x - current.x, next.y - current.y);
+            }
         }
         // Translating from physics to graphics pixels
 //        returnVector.set(returnVector.x / MyGame.WIDTH_RATIO, returnVector.y / MyGame.HEIGHT_RATIO);
