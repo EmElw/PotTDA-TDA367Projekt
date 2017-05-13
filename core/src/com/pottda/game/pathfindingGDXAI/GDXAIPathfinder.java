@@ -33,9 +33,7 @@ public class GDXAIPathfinder implements Pathfinder {
     @Override
     public Vector2f getPath(Vector2f location) {
         location.set(Math.round(location.x), Math.round(location.y));
-        System.out.println("Looking for a path from x: " + location.x + " y: " + location.y);
         if (goal == null) {
-            System.out.println("Goal is not set");
             return new Vector2f(0, 0);
         }
 //        location.set(location.x * MyGame.WIDTH_RATIO, location.y * MyGame.HEIGHT_RATIO);
@@ -47,12 +45,10 @@ public class GDXAIPathfinder implements Pathfinder {
         Ray<Vector2> ray = new Ray<Vector2>(Vector2fToVector2(location), Vector2fToVector2(goalPos));
 
         if (!collisionDetector.collides(ray)) {
-            System.out.println("Player in sight");
             returnVector = new Vector2f(goalPos.x - location.x, goalPos.y - location.y);
 //            returnVector.normalize();
 //            return returnVector;
         } else {
-            System.out.println("Need to find player");
 
             Heuristic<SortedIntList.Node> heuristic;
             GraphPath<SortedIntList.Node> outPath;
@@ -72,7 +68,6 @@ public class GDXAIPathfinder implements Pathfinder {
 
             returnVector = new Vector2f(next.x - current.x, next.y - current.y );
         }
-        System.out.println("Returned vector, x: " + returnVector.x + " y: " + returnVector.y);
         // Translating from physics to graphics pixels
 //        returnVector.set(returnVector.x / MyGame.WIDTH_RATIO, returnVector.y / MyGame.HEIGHT_RATIO);
 //        returnVector.normalize();
