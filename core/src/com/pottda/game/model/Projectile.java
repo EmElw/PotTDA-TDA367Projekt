@@ -33,6 +33,11 @@ public class Projectile extends ModelActor {
 
     }
 
+    @Override
+    public float getAngle() {
+        return angle;
+    }
+
     public void onCollision(Character target) {
         target.takeDamage(damage);
         onCollision();

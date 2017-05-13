@@ -49,10 +49,10 @@ public abstract class AbstractController {
     protected void updateView() {
         // TODO extend with other modifications such as rotation and stuff
         Vector2f position = modelActor.getPosition();
-        float degrees = modelActor.getAngle();
+//        float degrees = modelActor.getAngle();
 
         viewActor.setPoint(position.x, position.y);
-        viewActor.setAngle(degrees);
+        viewActor.setAngle(modelActor.getAngle());
     }
 
     public ModelActor getModel() {

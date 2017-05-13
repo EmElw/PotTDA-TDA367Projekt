@@ -36,7 +36,7 @@ public class KeyboardMouseController extends AbstractController {
         final float yDiff = mousePosY - modelActor.getPosition().y;
 
         // y-axis is inverted in Box2D
-        attackVector.set(xDiff, -yDiff);
+        attackVector.set(xDiff, yDiff);
 
         super.onNewFrame();
     }

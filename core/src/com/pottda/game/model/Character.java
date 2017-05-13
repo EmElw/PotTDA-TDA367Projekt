@@ -51,7 +51,7 @@ public class Character extends ModelActor {
         move.set(move.x * stats.get(Stat.ACCEL).floatValue(),
                 move.y * stats.get(Stat.ACCEL).floatValue());
         physicsActor.giveMovementVector(move);
-        this.angle = (float) Math.toDegrees(Math.atan2(-attack.getY(), attack.getX()));
+        this.angle = (float) Math.toDegrees(Math.atan2(attack.getY(), attack.getX()));
         attack(attack);
     }
 
@@ -61,9 +61,9 @@ public class Character extends ModelActor {
 
     @Override
     public float getAngle() {
-        if (team == ENEMY_TEAM) { // Fix rotation for enemies so they rotate towards player
-            return 0 - super.getAngle();
-        }
+//        if (team == ENEMY_TEAM) { // Fix rotation for enemies so they rotate towards player
+//            return 0 - super.getAngle();
+//        }
         return super.getAngle();
     }
 
