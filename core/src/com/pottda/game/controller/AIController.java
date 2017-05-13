@@ -8,6 +8,7 @@ import com.pottda.game.view.ViewActor;
  */
 
 public abstract class AIController extends AbstractController {
+    public final static float SPEED_MULTIPLIER = 1.5f;
     public AIController(ModelActor modelActor, ViewActor viewActor) {
         super(modelActor, viewActor);
     }

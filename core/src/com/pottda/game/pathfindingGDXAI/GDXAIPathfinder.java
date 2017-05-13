@@ -32,39 +32,50 @@ public class GDXAIPathfinder implements Pathfinder {
 
     @Override
     public Vector2f getPath(Vector2f location) {
+        location.set(Math.round(location.x), Math.round(location.y));
+        System.out.println("Looking for a path from x: " + location.x + " y: " + location.y);
         if (goal == null) {
+            System.out.println("Goal is not set");
             return new Vector2f(0, 0);
         }
-        location.set(location.x * MyGame.WIDTH_RATIO, location.y * MyGame.HEIGHT_RATIO);
-        Vector2f goalPos = new Vector2f(goal.getPosition().x * MyGame.WIDTH_RATIO,
-                goal.getPosition().y * MyGame.HEIGHT_RATIO);
+//        location.set(location.x * MyGame.WIDTH_RATIO, location.y * MyGame.HEIGHT_RATIO);
+//        Vector2f goalPos = new Vector2f(goal.getPosition().x * MyGame.WIDTH_RATIO,
+//                goal.getPosition().y * MyGame.HEIGHT_RATIO);
+        Vector2f goalPos = new Vector2f(Math.round(goal.getPosition().x), Math.round(goal.getPosition().y));
+        System.out.println("to x: " + goalPos.x + " y: " + goalPos.y);
         Vector2f returnVector;
         Ray<Vector2> ray = new Ray<Vector2>(Vector2fToVector2(location), Vector2fToVector2(goalPos));
 
         if (!collisionDetector.collides(ray)) {
+            System.out.println("Player in sight");
             returnVector = new Vector2f(goalPos.x - location.x, goalPos.y - location.y);
-            returnVector.normalize();
-            return returnVector;
+//            returnVector.normalize();
+//            return returnVector;
+        } else {
+            System.out.println("Need to find player");
+
+            Heuristic<SortedIntList.Node> heuristic;
+            GraphPath<SortedIntList.Node> outPath;
+
+            heuristic = new EuclideanDistanceHeuristic(graph);
+            outPath = new DefaultGraphPath<SortedIntList.Node>();
+
+            try {
+                indexedAStarPathFinder.searchNodePath(graph.getNode(location),
+                        graph.getNode(goalPos), heuristic, outPath);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            Vector2f current = graph.getPosition(outPath.get(0));
+            Vector2f next = graph.getPosition(outPath.get(1));
+
+            returnVector = new Vector2f(next.x - current.x, next.y - current.y );
         }
-
-        Heuristic<SortedIntList.Node> heuristic;
-        GraphPath<SortedIntList.Node> outPath;
-
-        heuristic = new EuclideanDistanceHeuristic(graph);
-        outPath = new DefaultGraphPath<SortedIntList.Node>();
-
-        try {
-            indexedAStarPathFinder.searchNodePath(graph.getNode(location),
-                    graph.getNode(goalPos), heuristic, outPath);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Vector2f current = graph.getPosition(outPath.get(0));
-        Vector2f next = graph.getPosition(outPath.get(1));
-
-        returnVector = new Vector2f(next.x - current.x, next.y - current.y);
-        returnVector.normalize();
+        System.out.println("Returned vector, x: " + returnVector.x + " y: " + returnVector.y);
+        // Translating from physics to graphics pixels
+//        returnVector.set(returnVector.x / MyGame.WIDTH_RATIO, returnVector.y / MyGame.HEIGHT_RATIO);
+//        returnVector.normalize();
 
         return returnVector;
     }

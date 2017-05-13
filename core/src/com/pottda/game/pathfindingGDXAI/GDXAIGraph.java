@@ -5,6 +5,7 @@ import com.badlogic.gdx.ai.pfa.Graph;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedGraph;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.SortedIntList;
+import com.pottda.game.MyGame;
 
 import javax.vecmath.Vector2f;
 
@@ -69,7 +70,12 @@ public class GDXAIGraph implements IndexedGraph<SortedIntList.Node>, Graph<Sorte
 //    }
 
     public SortedIntList.Node getNode(Vector2f position) {
-        return nodes.get(Math.min(Math.max(Math.round(position.x) * height + Math.round(position.y), 0), width * height));
+        int x = Math.round(position.x);
+        int y = Math.round(position.y);
+
+        // Has to be here, otherwise it appends the value of y at the back of the value of x * height
+        int nodePos = x * height + y;
+        return nodes.get(nodePos);
     }
 
     public void setObstacle(int x, int y) {

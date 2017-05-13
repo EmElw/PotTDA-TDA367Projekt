@@ -7,6 +7,7 @@ import com.badlogic.gdx.ai.utils.RaycastCollisionDetector;
 import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.pottda.game.MyGame;
 
 public class CollisionDetector implements RaycastCollisionDetector {
     private GDXAIGraph graph;
@@ -24,7 +25,12 @@ public class CollisionDetector implements RaycastCollisionDetector {
         float dy = end.y - start.y;
         float length = (float) Math.sqrt((double) dx * dx + (double) dy * dy);
 
-        for (float i = 0; i < length; i++){
+        for (float i = 0; i < length &&
+                Math.round(start.x + i * dx) >= 0 &&
+                Math.round(start.x + i * dx) <= MyGame.WIDTH_METERS &&
+                Math.round(start.y + i * dy) >= 0 &&
+                Math.round(start.y + i * dy) <= MyGame.HEIGHT_METERS;
+             i++){
             if(graph.isObstacle(Math.round(start.x + i * dx), Math.round(start.y + i * dy))){
                 return true;
             }

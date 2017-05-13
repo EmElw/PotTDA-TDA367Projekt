@@ -81,7 +81,7 @@ public class MyGame extends ApplicationAdapter {
         gameStage.getCamera().position.x = WIDTH_METERS / 2;
         gameStage.getCamera().position.y = HEIGHT_METERS / 2;
         mainMenuStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
-        ControllerOptions.pathfinder = new GDXAIPathfinder((int) WIDTH_METERS, (int) HEIGHT_METERS);
+        ControllerOptions.pathfinder = new GDXAIPathfinder((int) WIDTH_METERS + 1, (int) HEIGHT_METERS + 1);
 
         GAME_STATE = MAIN_MENU;
         Gdx.input.setInputProcessor(mainMenuStage);
@@ -125,7 +125,7 @@ public class MyGame extends ApplicationAdapter {
         for (int i = 0; i < 5; i++) {
             try {
                 controllers.add(ActorFactory.get().buildEnemy(gameStage, new Texture(Gdx.files.internal(enemyImage)), //Change
-                        new Vector2f((float) (Math.random() * (WIDTH_METERS * scaling)), (float) (Math.random() * (HEIGHT_METERS * scaling))),
+                        new Vector2f((float) (Math.random() * (WIDTH_METERS /* scaling*/)), (float) (Math.random() * (HEIGHT_METERS /* scaling*/))),
                         InventoryFactory.createFromXML(Gdx.files.internal(playerStartInventory).file())));
             } catch (Exception e) {
                 e.printStackTrace();
