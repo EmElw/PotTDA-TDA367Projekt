@@ -58,6 +58,7 @@ public abstract class AttackItem extends Item {
                 false,
                 false,
                 origin).getModel();
+
         proj.projectileListeners = listeners;
         proj.giveInput(direction, null);
 
