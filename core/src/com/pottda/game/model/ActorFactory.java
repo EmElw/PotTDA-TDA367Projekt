@@ -1,6 +1,6 @@
 package com.pottda.game.model;
 
-import com.pottda.game.View.Sprites;
+import com.pottda.game.view.Sprites;
 import com.pottda.game.controller.*;
 
 import javax.vecmath.Vector2f;

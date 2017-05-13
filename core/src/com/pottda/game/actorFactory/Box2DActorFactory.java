@@ -3,7 +3,7 @@ package com.pottda.game.actorFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.pottda.game.View.Sprites;
+import com.pottda.game.view.Sprites;
 import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.controller.*;
 import com.pottda.game.model.*;

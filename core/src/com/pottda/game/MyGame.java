@@ -2,7 +2,7 @@ package com.pottda.game;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
-import com.pottda.game.View.Sprites;
+import com.pottda.game.view.Sprites;
 import com.pottda.game.actorFactory.Box2DActorFactory;
 import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.model.ActorFactory;
