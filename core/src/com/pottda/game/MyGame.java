@@ -40,11 +40,17 @@ public class MyGame extends ApplicationAdapter {
     private Stage mainMenuStage;
     private OrthographicCamera camera;
 
-    private float accumulator;
-
+    /*
+    A List of controllers to iterate through every game-update
+     */
     private List<AbstractController> controllers;
+    /*
+    A Stack to buffer new controllers created during the list-iteration
+     */
     private Stack<AbstractController> controllerBuffer;
+
     private World world;
+    private float accumulator;
 
     private HUDView hudView;
     private SoundsAndMusic soundsAndMusic;
