@@ -28,7 +28,6 @@ public class Character extends ModelActor {
         super(physicsActor);
         this.inventory = new Inventory();
         this.isProjectile = false;
-        // this.team = 0;
 
         stats = new EnumMap<Stat, Double>(Stat.class);
 
@@ -38,7 +37,7 @@ public class Character extends ModelActor {
         }
         // Add base values
         stats.put(Stat.HEALTH, stats.get(Stat.HEALTH) + (double) BASE_HEALTH);
-        stats.put(Stat.ACCEL, stats.get(Stat.ACCEL)+ (double) BASE_ACCEL);
+        stats.put(Stat.ACCEL, stats.get(Stat.ACCEL) + (double) BASE_ACCEL);
 
         // Assign further as necessary
         this.currentHealth = stats.get(Stat.HEALTH).intValue();
@@ -57,7 +56,7 @@ public class Character extends ModelActor {
     }
 
     private void attack(Vector2f direction) {
-        inventory.attack(direction, getPosition());
+        inventory.attack(direction, getPosition(), team);
     }
 
     @Override

@@ -116,12 +116,12 @@ public class Inventory {
      * @param direction a {@link Vector2f} in the wanted direction
      */
 
-    public void attack(Vector2f direction, Vector2f origin) {
+    public void attack(Vector2f direction, Vector2f origin, int team) {
 
         // Iterate through all attack items and do stuff
         for (AttackItem a : attackItems) {
             if (a.isPrimaryAttack) {
-                a.tryAttack(direction, origin);
+                a.tryAttack(direction, origin, team);
             }
         }
     }

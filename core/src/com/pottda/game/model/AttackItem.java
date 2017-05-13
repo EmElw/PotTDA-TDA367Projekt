@@ -40,7 +40,7 @@ public abstract class AttackItem extends Item {
      * @param origin
      * @return
      */
-    public List<ProjectileListener> attack(Vector2f direction, Vector2f origin) {
+    public List<ProjectileListener> attack(Vector2f direction, Vector2f origin, int team) {
         List<ProjectileListener> listeners = new ArrayList<ProjectileListener>();
 
         Item i = this;
@@ -54,7 +54,7 @@ public abstract class AttackItem extends Item {
 
 
         Projectile proj = (Projectile) ActorFactory.get().buildProjectile(Sprites.PROJECTLE1,
-                0,
+                team,
                 false,
                 false,
                 origin).getModel();
@@ -66,9 +66,9 @@ public abstract class AttackItem extends Item {
 
     }
 
-    public void tryAttack(Vector2f direction, Vector2f origin) {
+    public void tryAttack(Vector2f direction, Vector2f origin, int team) {
         if (System.currentTimeMillis() - lastAttackTime > cooldown) {
-            attack(direction, origin);
+            attack(direction, origin, team);
         }
     }
 }
