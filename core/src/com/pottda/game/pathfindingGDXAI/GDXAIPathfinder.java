@@ -14,7 +14,7 @@ import java.util.List;
 
 public class GDXAIPathfinder implements Pathfinder {
     private final GDXAIGraph graph;
-    public static ModelActor goal;
+    public static ModelActor goal = null;
     private IndexedAStarPathFinder indexedAStarPathFinder;
     private CollisionDetector collisionDetector;
     //private PathSmoother<SortedIntList.Node, Vector2> pathSmoother;
@@ -32,6 +32,9 @@ public class GDXAIPathfinder implements Pathfinder {
 
     @Override
     public Vector2f getPath(Vector2f location) {
+        if (goal == null) {
+            return new Vector2f(0, 0);
+        }
         location.set(location.x * MyGame.WIDTH_RATIO, location.y * MyGame.HEIGHT_RATIO);
         Vector2f goalPos = new Vector2f(goal.getPosition().x * MyGame.WIDTH_RATIO,
                 goal.getPosition().y * MyGame.HEIGHT_RATIO);
