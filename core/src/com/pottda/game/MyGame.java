@@ -2,7 +2,7 @@ package com.pottda.game;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
-import com.pottda.game.View.Sprites;
+import com.pottda.game.view.Sprites;
 import com.pottda.game.actorFactory.Box2DActorFactory;
 import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.model.ActorFactory;
@@ -13,7 +13,6 @@ import com.pottda.game.view.HUDView;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2D;
@@ -152,21 +151,21 @@ public class MyGame extends ApplicationAdapter {
      * Creates four obstacles around the playing area
      */
     private void createWorldBorders() {
-        final float border_thickness = 0.5f;
-// Scale the area bigger or smaller
+        final float border_thickness = 25f;
+        // Scale the area bigger or smaller
         final float area_scaling = 1.2f;
         // Bottom
         controllers.add(ActorFactory.get().buildObstacle(Sprites.BORDER,
-                new Vector2f(0, 0), new Vector2f(WIDTH_METERS * area_scaling, border_thickness)));
+                new Vector2f(0, 0), new Vector2f(WIDTH_METERS * area_scaling, border_thickness * HEIGHT_RATIO)));
         // Left
         controllers.add(ActorFactory.get().buildObstacle(Sprites.BORDER,
-                new Vector2f(0, 0), new Vector2f(border_thickness, HEIGHT_METERS * area_scaling)));
+                new Vector2f(0, 0), new Vector2f(border_thickness * WIDTH_RATIO, HEIGHT_METERS * area_scaling)));
         // Top
         controllers.add(ActorFactory.get().buildObstacle(Sprites.BORDER,
-                new Vector2f(0, HEIGHT_METERS * area_scaling), new Vector2f(WIDTH_METERS * area_scaling, border_thickness)));
+                new Vector2f(0, HEIGHT_METERS * area_scaling), new Vector2f(WIDTH_METERS * area_scaling, border_thickness * HEIGHT_RATIO)));
         // Right
         controllers.add(ActorFactory.get().buildObstacle(Sprites.BORDER,
-                new Vector2f(WIDTH_METERS * area_scaling, 0), new Vector2f(border_thickness, HEIGHT_METERS * area_scaling)));
+                new Vector2f(WIDTH_METERS * area_scaling, 0), new Vector2f(border_thickness * WIDTH_RATIO, (HEIGHT_METERS + 0.78f) * area_scaling)));
     }
 
     @Override
