@@ -65,6 +65,7 @@ public abstract class ActorFactory {
      * @param sprite   the sprite of the obstacle
      * @param position the position of the obstacle
      * @param size     the size of the obstacle
+     * @param isBorder if the obstacle is the border around the game area
      * @return a {@link AbstractController} that handles the new obstacle-actor
      */
     public abstract AbstractController buildObstacle(Sprites sprite, Vector2f position, Vector2f size, boolean isBorder);
