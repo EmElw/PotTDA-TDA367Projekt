@@ -1,4 +1,4 @@
-package com.pottda.game.View;
+package com.pottda.game.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;

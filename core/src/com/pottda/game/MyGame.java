@@ -2,7 +2,7 @@ package com.pottda.game;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
-import com.pottda.game.View.Sprites;
+import com.pottda.game.view.Sprites;
 import com.pottda.game.actorFactory.Box2DActorFactory;
 import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.model.ActorFactory;
@@ -13,7 +13,6 @@ import com.pottda.game.view.HUDView;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2D;
