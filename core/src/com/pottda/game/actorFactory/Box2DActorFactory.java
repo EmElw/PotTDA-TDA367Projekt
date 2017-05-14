@@ -219,7 +219,12 @@ public class Box2DActorFactory extends ActorFactory {
         body.setTransform(position.getX(), position.getY(), 0);
 
         PolygonShape tempPolygon = new PolygonShape();
-        tempPolygon.setAsBox(size.x, size.y);
+        if (size.x > size.y) {
+            tempPolygon.setAsBox(size.x, size.y / 2); // setAsBox uses half-width and half-height as parameters
+        } else {
+            tempPolygon.setAsBox(size.x / 2, size.y);
+        }
+
         obstacleFixtureDef.shape = tempPolygon;
 
         body.createFixture(obstacleFixtureDef);
