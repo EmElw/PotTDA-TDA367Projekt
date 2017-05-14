@@ -67,5 +67,5 @@ public abstract class ActorFactory {
      * @param size     the size of the obstacle
      * @return a {@link AbstractController} that handles the new obstacle-actor
      */
-    public abstract AbstractController buildObstacle(Sprites sprite, Vector2f position, Vector2f size);
+    public abstract AbstractController buildObstacle(Sprites sprite, Vector2f position, Vector2f size, boolean isBorder);
 }
