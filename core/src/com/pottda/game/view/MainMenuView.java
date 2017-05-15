@@ -101,7 +101,7 @@ public class MainMenuView {
         texture = new Texture(Gdx.files.internal(controlsTitle));
         controlsTitleImage = new Image(texture);
         controlsTitleImage.setX(stage.getWidth() / 2 - texture.getWidth() / 2);
-        controlsTitleImage.setY(stage.getHeight() * 3 / 4);
+        controlsTitleImage.setY(stage.getHeight() * 6.5f / 8);
         stage.addActor(controlsTitleImage);
 
         // Add touch button
