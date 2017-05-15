@@ -51,9 +51,9 @@ public class Character extends ModelActor {
         move.set(move.x * stats.get(Stat.ACCEL).floatValue(),
                 move.y * stats.get(Stat.ACCEL).floatValue());
         physicsActor.giveMovementVector(move);
-        this.angle = (float) Math.toDegrees(Math.atan2(attack.getY(), attack.getX()));
         if (attack.length() != 0) {
             attack(attack);
+            this.angle = (float) Math.toDegrees(Math.atan2(attack.getY(), attack.getX()));
         }
     }
 
