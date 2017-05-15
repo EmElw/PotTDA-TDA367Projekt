@@ -143,7 +143,7 @@ public class Box2DActorFactory extends ActorFactory {
         // Add inventory
         try {
             player.inventory = InventoryFactory.createFromXML(Gdx.files.internal(
-                    "inventoryblueprint/playerStartInventory.xml").file());
+                    "inventoryblueprint/testInv2.xml").file());
         } catch (Exception e) {
             e.printStackTrace();
         }

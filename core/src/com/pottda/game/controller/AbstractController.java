@@ -21,15 +21,14 @@ public abstract class AbstractController {
     private final ViewActor viewActor;
 
     /**
-     *
      * @param modelActor
      * @param viewActor
      */
     AbstractController(ModelActor modelActor, ViewActor viewActor) {
         this.modelActor = modelActor;
         this.viewActor = viewActor;
-        movementVector = new Vector2f(0,0);
-        attackVector = new Vector2f(0,0);
+        movementVector = new Vector2f(0, 0);
+        attackVector = new Vector2f(0, 0);
     }
 
     /**
@@ -51,10 +50,13 @@ public abstract class AbstractController {
     protected void updateView() {
         // TODO extend with other modifications such as rotation and stuff
         Vector2f position = modelActor.getPosition();
-        float degrees = modelActor.getAngle();
+//        float degrees = modelActor.getAngle();
 
         viewActor.setPoint(position.x, position.y);
-        viewActor.setAngle(degrees);
+        viewActor.setAngle(modelActor.getAngle());
     }
 
+    public ModelActor getModel() {
+        return modelActor;
+    }
 }

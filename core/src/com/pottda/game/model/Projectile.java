@@ -10,13 +10,72 @@ import java.util.List;
 
 public class Projectile extends ModelActor {
     int damage;
-    public List<ProjectileListener> projectileListeners;
+    /**
+     * Listeners that care about various game-oriented events
+     */
+    private List<ProjectileListener> listeners;
+    /**
+     * A list synced with listeners.
+     * <p>
+     * If the equivalent entry on this list is true, the equivalent listener is not notified.
+     * This is useful for things that should only occur once, such as the splitting of
+     * projectiles with {@link com.pottda.game.model.items.MultiShot}.
+     * <p>
+     * (Supposedly better performance-wise)
+     */
+    private List<Boolean> ignored;
     //public List<Character> hasDamaged;
 
-    public Projectile(PhysicsActor physicsActor, int damage, List<ProjectileListener> projectileListeners) {
+    public void addListener(ProjectileListener listener) {
+        listeners.add(listener);
+        ignored.add(false);
+    }
+
+    public void setListeners(List<ProjectileListener> listeners) {
+        this.listeners = listeners;
+        this.ignored = new ArrayList<Boolean>(listeners.size());
+        for (int i = 0; i < listeners.size(); i++) {
+            ignored.add(false);
+        }
+    }
+
+    public void setListeners(List<ProjectileListener> listeners, List<Boolean> ignored) {
+        this.listeners = listeners;
+        this.ignored = ignored;
+    }
+
+    /**
+     * Ignores the {@link ProjectileListener} so that it is not
+     * notified of this projectile's events
+     *
+     * @param listener the {@link ProjectileListener} to ignore
+     */
+    public void ignoreListener(ProjectileListener listener) {
+        ignored.set(listeners.indexOf(listener), true);
+    }
+
+    public List<Boolean> getIgnored() {
+        return ignored;
+    }
+
+    /**
+     * Ignores the {@link ProjectileListener} at the given index
+     * so that it is not notified of this projectile's events
+     *
+     * @param index the index to ignore
+     */
+    public void ignoreListener(int index) {
+        ignored.set(index, true);
+    }
+
+    public List<ProjectileListener> getListeners() {
+        return listeners;
+    }
+
+    public Projectile(PhysicsActor physicsActor, int damage, List<ProjectileListener> listeners) {
         super(physicsActor);
         this.damage = damage;
-        this.projectileListeners = projectileListeners;
+        this.listeners = listeners;
         //hasDamaged = new ArrayList<Character>();
     }
 
@@ -26,6 +85,9 @@ public class Projectile extends ModelActor {
     }*/
     @Override
     public void giveInput(Vector2f movementVector, Vector2f attackVector) {
+        if (movementVector.length() == 0) {
+            return;
+        }
         physicsActor.giveMovementVector(movementVector);
         this.angle = (float) Math.toDegrees(Math.atan2(
                 movementVector.getY(),
@@ -33,12 +95,34 @@ public class Projectile extends ModelActor {
 
     }
 
+    @Override
+    public float getAngle() {
+        return angle;
+    }
+
     public void onCollision(Character target) {
         target.takeDamage(damage);
+        for (int i = 0; i < listeners.size(); i++) {
+            if (!ignored.get(i)) {
+                listeners.get(i).onHit(this);
+            }
+        }
         onCollision();
     }
 
     public void onCollision() {
         // TODO Remove this projectile
+    }
+
+    /**
+     * Needs to be called after a projectile is a created and after
+     * it has its listeners assigned
+     */
+    public void onAttack() {
+        for (int i = 0; i < listeners.size(); i++) {
+            if (!ignored.get(i)) {
+                listeners.get(i).onAttack(this);
+            }
+        }
     }
 }
