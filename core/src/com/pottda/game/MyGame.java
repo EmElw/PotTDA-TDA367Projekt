@@ -2,6 +2,7 @@ package com.pottda.game;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Input;
 import com.pottda.game.view.Sprites;
 import com.pottda.game.actorFactory.Box2DActorFactory;
 import com.pottda.game.controller.ControllerOptions;
@@ -62,11 +63,12 @@ public class MyGame extends ApplicationAdapter {
     private static final int OPTIONS = 3;
     private static final int MAIN_MENU = 4;
     private static final int MAIN_CHOOSE = 5;
+    private static final int MAIN_CONTROLS = 6;
     private static int GAME_STATE = 0;
 
-    private static final String playerImage = "circletest.png"; // change later
-    private static final String enemyImage = "circletestred.png";
-    private static final String borderImage = "game/border.png";
+    //private static final String playerImage = "circletest.png"; // change later
+    //private static final String enemyImage = "circletestred.png";
+    //private static final String borderImage = "game/border.png";
 
     private static final String playerStartInventory = "inventoryblueprint/playerStartInventory.xml";
 
@@ -115,14 +117,6 @@ public class MyGame extends ApplicationAdapter {
         // Create and set ActorFactory implementation
         box2DActorFactory = new Box2DActorFactory(world, gameStage, controllerBuffer);
         ActorFactory.setFactory(box2DActorFactory);
-
-        ControllerOptions.joystickStage = joystickStage;
-
-        if (Gdx.app.getType() == Application.ApplicationType.Android) { // if on android
-            ControllerOptions.controllerSettings = ControllerOptions.TOUCH_JOYSTICK;
-        } else if (Gdx.app.getType() == Application.ApplicationType.Desktop) { // if on desktop
-            ControllerOptions.controllerSettings = ControllerOptions.KEYBOARD_MOUSE;
-        }
 
         final float scaling = 1.2f;
 
@@ -219,11 +213,28 @@ public class MyGame extends ApplicationAdapter {
             mainMenuView.renderMainMenu();
         } else if (GAME_STATE == MAIN_CHOOSE) {
             mainMenuView.renderChooseDiff();
+        } else if (GAME_STATE == MAIN_CONTROLS) {
+            mainMenuView.renderChooseControls();
         }
 
         if (GAME_STATE < MAIN_MENU) {
             hudStage.draw();
         }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            switch (GAME_STATE) {
+                case RUNNING:
+                    GAME_STATE = PAUSED;
+                    break;
+                case PAUSED:
+                    GAME_STATE = RUNNING;
+                    break;
+                case OPTIONS:
+                    GAME_STATE = PAUSED;
+                    break;
+            }
+        }
+
     }
 
     /**
@@ -273,7 +284,7 @@ public class MyGame extends ApplicationAdapter {
                     break;
                 case MAIN_MENU:
                     if (mainMenuView.checkIfTouchingStart(vector3)) {
-                        GAME_STATE = MAIN_CHOOSE;
+                        GAME_STATE = MAIN_CONTROLS;
                     } else if (mainMenuView.checkIfTouchingQuit(vector3)) {
                         // Exit game
                         Gdx.app.exit();
@@ -290,6 +301,19 @@ public class MyGame extends ApplicationAdapter {
                         doOnStartGame();
                         GAME_STATE = RUNNING;
                         Gdx.input.setInputProcessor(joystickStage);
+                    }
+                    break;
+                case MAIN_CONTROLS:
+                    if (mainMenuView.checkIfTouchingTouch(vector3)) {
+                        GAME_STATE = MAIN_CHOOSE;
+                        ControllerOptions.controllerSettings = ControllerOptions.TOUCH_JOYSTICK;
+                        ControllerOptions.joystickStage = joystickStage;
+                    } else if (mainMenuView.checkIfTouchingKeyboardOnly(vector3)) {
+                        GAME_STATE = MAIN_CHOOSE;
+                        ControllerOptions.controllerSettings = ControllerOptions.KEYBOARD_ONLY;
+                    } else if (mainMenuView.checkIfTouchingKeyboardMouse(vector3)) {
+                        GAME_STATE = MAIN_CHOOSE;
+                        ControllerOptions.controllerSettings = ControllerOptions.KEYBOARD_MOUSE;
                     }
                     break;
             }

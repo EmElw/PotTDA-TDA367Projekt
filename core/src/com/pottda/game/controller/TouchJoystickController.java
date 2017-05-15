@@ -20,7 +20,7 @@ public class TouchJoystickController extends AbstractController {
     @Override
     public void onNewFrame() {
         joysticksView.onNewFrame();
-        movementVector.set(joysticksView.getMovementKnobX(), joysticksView.getMovementKnobY());
+        movementVector.set(joysticksView.getMovementKnobX() * SPEED_MULT, joysticksView.getMovementKnobY() * SPEED_MULT);
         attackVector.set(joysticksView.getAttackKnobX(), -joysticksView.getAttackKnobY());
         super.onNewFrame();
     }
