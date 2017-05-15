@@ -52,7 +52,9 @@ public class Character extends ModelActor {
                 move.y * stats.get(Stat.ACCEL).floatValue());
         physicsActor.giveMovementVector(move);
         this.angle = (float) Math.toDegrees(Math.atan2(attack.getY(), attack.getX()));
-        attack(attack);
+        if (attack.length() != 0) {
+            attack(attack);
+        }
     }
 
     private void attack(Vector2f direction) {
