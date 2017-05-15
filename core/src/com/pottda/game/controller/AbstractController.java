@@ -14,6 +14,7 @@ import javax.vecmath.Vector2f;
 public abstract class AbstractController {
     Vector2f movementVector;
     Vector2f attackVector;
+    static final float SPEED_MULT = 3;
 //    final boolean isAI;
 
     final ModelActor modelActor;

@@ -14,8 +14,6 @@ import com.pottda.game.view.ViewActor;
 public class KeyboardMouseController extends AbstractController {
     private final Stage stage;
 
-    private static final float SPEED_MULT = 3;
-
     public KeyboardMouseController(ModelActor modelActor, ViewActor viewActor, Stage stage) {
         super(modelActor, viewActor);
         this.stage = stage;
