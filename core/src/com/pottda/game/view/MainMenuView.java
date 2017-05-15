@@ -23,6 +23,10 @@ public class MainMenuView {
     private static final String chooseTitle = "menu/chooseDiff.png";
     private static final String chooseEasy = "menu/easy.png";
     private static final String chooseHard = "menu/hard.png";
+    private static final String controlsTitle = "menu/chooseControls.png";
+    private static final String controlsTouch = "menu/touch.png";
+    private static final String controlsKeyboardOnly = "menu/keyOnly.png";
+    private static final String controlsKeyboardMouse = "menu/keyMouse.png";
 
     private Image titleImage;
     private Image startImage;
@@ -31,6 +35,10 @@ public class MainMenuView {
     private Image chooseDiffImage;
     private Image easyImage;
     private Image hardImage;
+    private Image controlsTitleImage;
+    private Image controlsTouchImage;
+    private Image controlsKeyOnlyImage;
+    private Image controlsKeyMouseImage;
 
     public MainMenuView(final Stage stage) {
         this.stage = stage;
@@ -88,6 +96,34 @@ public class MainMenuView {
         hardImage.setX(stage.getWidth() / 2 - texture.getWidth() / 2);
         hardImage.setY(stage.getHeight() * 1 / 4);
         stage.addActor(hardImage);
+
+        // Add choose controls title
+        texture = new Texture(Gdx.files.internal(controlsTitle));
+        controlsTitleImage = new Image(texture);
+        controlsTitleImage.setX(stage.getWidth() / 2 - texture.getWidth() / 2);
+        controlsTitleImage.setY(stage.getHeight() * 3 / 4);
+        stage.addActor(controlsTitleImage);
+
+        // Add touch button
+        texture = new Texture(Gdx.files.internal(controlsTouch));
+        controlsTouchImage = new Image(texture);
+        controlsTouchImage.setX(stage.getWidth() / 2 - texture.getWidth() / 2);
+        controlsTouchImage.setY(stage.getHeight() * 3 / 8);
+        stage.addActor(controlsTouchImage);
+
+        // Add keyboard only button
+        texture = new Texture(Gdx.files.internal(controlsKeyboardOnly));
+        controlsKeyOnlyImage = new Image(texture);
+        controlsKeyOnlyImage.setX(stage.getWidth() / 2 - texture.getWidth() / 2);
+        controlsKeyOnlyImage.setY(stage.getHeight() * 5 / 8);
+        stage.addActor(controlsKeyOnlyImage);
+
+        // Add keyboard mouse button
+        texture = new Texture(Gdx.files.internal(controlsKeyboardMouse));
+        controlsKeyMouseImage = new Image(texture);
+        controlsKeyMouseImage.setX(stage.getWidth() / 2 - texture.getWidth() / 2);
+        controlsKeyMouseImage.setY(stage.getHeight() * 1 / 8);
+        stage.addActor(controlsKeyMouseImage);
     }
 
     public void renderMainMenu() {
@@ -98,6 +134,10 @@ public class MainMenuView {
         chooseDiffImage.setVisible(false);
         easyImage.setVisible(false);
         hardImage.setVisible(false);
+        controlsTitleImage.setVisible(false);
+        controlsTouchImage.setVisible(false);
+        controlsKeyOnlyImage.setVisible(false);
+        controlsKeyMouseImage.setVisible(false);
         stage.draw();
     }
 
@@ -109,6 +149,25 @@ public class MainMenuView {
         chooseDiffImage.setVisible(true);
         easyImage.setVisible(true);
         hardImage.setVisible(true);
+        controlsTitleImage.setVisible(false);
+        controlsTouchImage.setVisible(false);
+        controlsKeyOnlyImage.setVisible(false);
+        controlsKeyMouseImage.setVisible(false);
+        stage.draw();
+    }
+
+    public void renderChooseControls() {
+        titleImage.setVisible(false);
+        bgImage.setVisible(true);
+        startImage.setVisible(false);
+        quitImage.setVisible(false);
+        chooseDiffImage.setVisible(false);
+        easyImage.setVisible(false);
+        hardImage.setVisible(false);
+        controlsTitleImage.setVisible(true);
+        controlsTouchImage.setVisible(true);
+        controlsKeyOnlyImage.setVisible(true);
+        controlsKeyMouseImage.setVisible(true);
         stage.draw();
     }
 
@@ -157,6 +216,39 @@ public class MainMenuView {
      */
     public boolean checkIfTouchingHard(Vector3 vector3) {
         Rectangle tr = new Rectangle(hardImage.getX(), hardImage.getY(), hardImage.getWidth(), hardImage.getHeight());
+        return tr.contains(vector3.x, vector3.y);
+    }
+
+    /**
+     * Checks if the user touches the touch button when choosing controls
+     *
+     * @param vector3 Vector with touch coordinates to check
+     * @return true if touching button
+     */
+    public boolean checkIfTouchingTouch(Vector3 vector3) {
+        Rectangle tr = new Rectangle(controlsTouchImage.getX(), controlsTouchImage.getY(), controlsTouchImage.getWidth(), controlsTouchImage.getHeight());
+        return tr.contains(vector3.x, vector3.y);
+    }
+
+    /**
+     * Checks if the user touches the keyboard only button when choosing controls
+     *
+     * @param vector3 Vector with touch coordinates to check
+     * @return true if touching button
+     */
+    public boolean checkIfTouchingKeyboardOnly(Vector3 vector3) {
+        Rectangle tr = new Rectangle(controlsKeyOnlyImage.getX(), controlsKeyOnlyImage.getY(), controlsKeyOnlyImage.getWidth(), controlsKeyOnlyImage.getHeight());
+        return tr.contains(vector3.x, vector3.y);
+    }
+
+    /**
+     * Checks if the user touches the keyboard mouse button when choosing controls
+     *
+     * @param vector3 Vector with touch coordinates to check
+     * @return true if touching button
+     */
+    public boolean checkIfTouchingKeyboardMouse(Vector3 vector3) {
+        Rectangle tr = new Rectangle(controlsKeyMouseImage.getX(), controlsKeyMouseImage.getY(), controlsKeyMouseImage.getWidth(), controlsKeyMouseImage.getHeight());
         return tr.contains(vector3.x, vector3.y);
     }
 
