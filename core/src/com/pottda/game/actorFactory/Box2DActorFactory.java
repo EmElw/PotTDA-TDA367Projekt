@@ -214,15 +214,19 @@ public class Box2DActorFactory extends ActorFactory {
     }
 
     @Override
-    public AbstractController buildObstacle(Sprites sprite, Vector2f position, Vector2f size) {
+    public AbstractController buildObstacle(Sprites sprite, Vector2f position, Vector2f size, boolean isBorder) {
         Body body = world.createBody(obstacleBodyDef);
         body.setTransform(position.getX(), position.getY(), 0);
 
         PolygonShape tempPolygon = new PolygonShape();
-        if (size.x > size.y) {
-            tempPolygon.setAsBox(size.x, size.y / 2); // setAsBox uses half-width and half-height as parameters
+        if (isBorder) {
+            if (size.x > size.y) {
+                tempPolygon.setAsBox(size.x, size.y / 2); // setAsBox uses half-width and half-height as parameters
+            } else {
+                tempPolygon.setAsBox(size.x / 2, size.y);
+            }
         } else {
-            tempPolygon.setAsBox(size.x / 2, size.y);
+            tempPolygon.setAsBox(size.x, size.y);
         }
 
         obstacleFixtureDef.shape = tempPolygon;
