@@ -2,6 +2,7 @@ package com.pottda.game;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Input;
 import com.pottda.game.view.Sprites;
 import com.pottda.game.actorFactory.Box2DActorFactory;
 import com.pottda.game.controller.ControllerOptions;
@@ -224,6 +225,21 @@ public class MyGame extends ApplicationAdapter {
         if (GAME_STATE < MAIN_MENU) {
             hudStage.draw();
         }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            switch (GAME_STATE) {
+                case RUNNING:
+                    GAME_STATE = PAUSED;
+                    break;
+                case PAUSED:
+                    GAME_STATE = RUNNING;
+                    break;
+                case OPTIONS:
+                    GAME_STATE = PAUSED;
+                    break;
+            }
+        }
+
     }
 
     /**
