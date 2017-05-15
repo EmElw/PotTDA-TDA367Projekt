@@ -1,9 +1,6 @@
 package com.pottda.game.model;
 
-import com.pottda.game.View.Sprites;
-
-import com.pottda.game.View.Sprites;
-import com.pottda.game.controller.AbstractController;
+import com.pottda.game.view.Sprites;
 
 import javax.vecmath.Vector2f;
 import java.util.ArrayList;
@@ -53,14 +50,17 @@ public abstract class AttackItem extends Item {
         }
 
 
-        Projectile proj = (Projectile) ActorFactory.get().buildProjectile(Sprites.PROJECTLE1,
+        Projectile proj = (Projectile) ActorFactory.get().buildProjectile(
+                Sprites.PROJECTILE1,
                 team,
                 false,
                 false,
                 origin).getModel();
 
-        proj.projectileListeners = listeners;
+        direction.normalize();
+        proj.setListeners(listeners);
         proj.giveInput(direction, null);
+        proj.onAttack();
 
         lastAttackTime = System.currentTimeMillis();
         return listeners;
