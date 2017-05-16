@@ -19,4 +19,6 @@ public abstract class PhysicsActor {
      */
     public abstract void giveMovementVector(Vector2f movementVector);
 
+    public abstract void destroyBody();
+
 }

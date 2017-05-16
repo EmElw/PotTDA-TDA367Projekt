@@ -26,4 +26,9 @@ public class Box2DPhysicsActor extends PhysicsActor {
     @Override
     public void giveMovementVector(Vector2f movementVector) {
     }
+
+    @Override
+    public void destroyBody() {
+        body.getWorld().destroyBody(body);
+    }
 }

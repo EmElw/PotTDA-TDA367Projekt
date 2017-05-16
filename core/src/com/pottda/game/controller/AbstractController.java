@@ -39,6 +39,10 @@ public abstract class AbstractController {
         updateView();
     }
 
+    public boolean shouldBeRemoved() {
+        return modelActor.shouldBeRemoved;
+    }
+
     private void updateModel() {
         modelActor.giveInput(movementVector, attackVector);
         modelActor.handleCollisions();
@@ -58,5 +62,9 @@ public abstract class AbstractController {
 
     public ModelActor getModel() {
         return modelActor;
+    }
+
+    public ViewActor getView() {
+        return viewActor;
     }
 }
