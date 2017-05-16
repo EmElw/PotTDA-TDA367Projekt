@@ -65,8 +65,15 @@ public class InventoryView {
         stage.dispose();
     }
 
+    /**
+     * Takes an item to show up in storage
+     *
+     * @param item item to show up in storage
+     */
     public void addToViewStorage(Item item) {
         Label itemName = new Label(item.name, mySkin);
         storageTable.addActor(itemName);
+
+        Table itemStorageTable = new Table(mySkin);
     }
 }

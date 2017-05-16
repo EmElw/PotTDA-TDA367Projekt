@@ -145,6 +145,10 @@ public abstract class Item extends ProjectileListenerAdapter {
         return basePositions;
     }
 
+    public List<Point2i> getBaseOutputs() {
+        return baseOutputs;
+    }
+
     @Override
     public String toString() {
         return this.getClass().toString();
