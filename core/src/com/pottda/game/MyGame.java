@@ -185,8 +185,8 @@ public class MyGame extends ApplicationAdapter {
 
         checkTouch();
 
-        for(AbstractController c : controllers){
-            if(c.shouldBeRemoved()){
+        for (AbstractController c : controllers) {
+            if (c.shouldBeRemoved()) {
                 prepareForRemoval(c);
             }
         }
@@ -357,8 +357,9 @@ public class MyGame extends ApplicationAdapter {
         mainMenuView.dispose();
     }
 
-    private void prepareForRemoval(AbstractController controller){
+    private void prepareForRemoval(AbstractController controller) {
         controller.getModel().getPhysicsActor().destroyBody();
+        controller.getView().remove();
         controllerRemovalBuffer.add(controller);
     }
 }

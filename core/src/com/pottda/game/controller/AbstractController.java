@@ -3,7 +3,6 @@ package com.pottda.game.controller;
 import com.pottda.game.model.ModelActor;
 import com.pottda.game.view.ViewActor;
 
-import javax.swing.text.View;
 import javax.vecmath.Vector2f;
 
 /**
