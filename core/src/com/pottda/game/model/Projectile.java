@@ -135,7 +135,7 @@ public class Projectile extends ModelActor {
     }
     
     private boolean isDying(){
-        if (timeOfConstructionMS - System.currentTimeMillis() > lifeTimeMS){
+        if (System.currentTimeMillis() - timeOfConstructionMS > lifeTimeMS){
             shouldBeRemoved = true;
         }
         return shouldBeRemoved;
