@@ -1,6 +1,5 @@
 package com.pottda.game;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Input;
 import com.pottda.game.view.Sprites;
@@ -25,19 +24,14 @@ import com.pottda.game.controller.TouchJoystickController;
 import com.pottda.game.view.MainMenuView;
 import com.pottda.game.view.SoundsAndMusic;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
 import javax.vecmath.Vector2f;
-import javax.xml.parsers.ParserConfigurationException;
 
-import com.pottda.game.controller.ControllerOptions.ControllerMode;
-
-import static com.pottda.game.controller.ControllerOptions.ControllerMode.KEYBOARD_MOUSE;
-import static com.pottda.game.controller.ControllerOptions.ControllerMode.KEYBOARD_ONLY;
-import static com.pottda.game.controller.ControllerOptions.ControllerMode.TOUCH_JOYSTICK;
+import static com.pottda.game.MyGame.GameState.*;
+import static com.pottda.game.controller.ControllerOptions.ControllerMode.*;
 
 public class MyGame extends ApplicationAdapter {
     private Stage hudStage;
@@ -64,13 +58,18 @@ public class MyGame extends ApplicationAdapter {
     private Box2DActorFactory box2DActorFactory;
     private MainMenuView mainMenuView;
 
-    private static final int RUNNING = 1;
-    private static final int PAUSED = 2;
-    private static final int OPTIONS = 3;
-    private static final int MAIN_MENU = 4;
-    private static final int MAIN_CHOOSE = 5;
-    private static final int MAIN_CONTROLS = 6;
-    private static int GAME_STATE = 0;
+
+    public enum GameState {
+        NONE,
+        RUNNING,
+        PAUSED,
+        OPTIONS,
+        MAIN_MENU,
+        MAIN_CHOOSE,
+        MAIN_CONTROLS
+    }
+
+    private static GameState gameState = NONE;
 
     //private static final String playerImage = "circletest.png"; // change later
     //private static final String enemyImage = "circletestred.png";
@@ -99,7 +98,7 @@ public class MyGame extends ApplicationAdapter {
         gameStage.getCamera().position.y = HEIGHT_METERS / 2;
         mainMenuStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
 
-        GAME_STATE = MAIN_MENU;
+        gameState = MAIN_MENU;
         Gdx.input.setInputProcessor(mainMenuStage);
         Box2D.init();
 
@@ -190,10 +189,10 @@ public class MyGame extends ApplicationAdapter {
         if (controllers != null) {
             // Update all controllers, causing the model to update
             for (AbstractController c : controllers) {
-                if (c instanceof TouchJoystickController && GAME_STATE != RUNNING) {
+                if (c instanceof TouchJoystickController && gameState != RUNNING) {
                     // Render joysticks
                     c.onNewFrame();
-                } else if (GAME_STATE == RUNNING) {
+                } else if (gameState == RUNNING) {
                     c.onNewFrame();
                 }
             }
@@ -202,42 +201,48 @@ public class MyGame extends ApplicationAdapter {
             controllers.addAll(controllerBuffer);
             controllerBuffer.clear();
         }
+        switch (gameState) {
 
-        if (GAME_STATE == PAUSED) {
-            hudView.renderPaused();
+            case NONE:
+                break;
+            case RUNNING:
+                gameView.render();
 
-        } else if (GAME_STATE == RUNNING) {
-            gameView.render();
+                hudView.renderRunning();
 
-            hudView.renderRunning();
-
-            // Update the world
-            doPhysicsStep(Gdx.graphics.getDeltaTime());
-
-        } else if (GAME_STATE == OPTIONS) {
-            hudView.renderOptions();
-        } else if (GAME_STATE == MAIN_MENU) {
-            mainMenuView.renderMainMenu();
-        } else if (GAME_STATE == MAIN_CHOOSE) {
-            mainMenuView.renderChooseDiff();
-        } else if (GAME_STATE == MAIN_CONTROLS) {
-            mainMenuView.renderChooseControls();
-        }
-
-        if (GAME_STATE < MAIN_MENU) {
-            hudStage.draw();
+                // Update the world
+                doPhysicsStep(Gdx.graphics.getDeltaTime());
+                hudStage.draw();
+                break;
+            case PAUSED:
+                hudView.renderPaused();
+                hudStage.draw();
+                break;
+            case OPTIONS:
+                hudView.renderOptions();
+                hudStage.draw();
+                break;
+            case MAIN_MENU:
+                mainMenuView.renderMainMenu();
+                break;
+            case MAIN_CHOOSE:
+                mainMenuView.renderChooseDiff();
+                break;
+            case MAIN_CONTROLS:
+                mainMenuView.renderChooseControls();
+                break;
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            switch (GAME_STATE) {
+            switch (gameState) {
                 case RUNNING:
-                    GAME_STATE = PAUSED;
+                    gameState = PAUSED;
                     break;
                 case PAUSED:
-                    GAME_STATE = RUNNING;
+                    gameState = RUNNING;
                     break;
                 case OPTIONS:
-                    GAME_STATE = PAUSED;
+                    gameState = PAUSED;
                     break;
             }
         }
@@ -249,8 +254,8 @@ public class MyGame extends ApplicationAdapter {
      *
      * @return 1=running, 2=paused, 3=options
      */
-    public static int getGameState() {
-        return GAME_STATE;
+    public static GameState getGameState() {
+        return gameState;
     }
 
     /**
@@ -260,20 +265,20 @@ public class MyGame extends ApplicationAdapter {
         if (Gdx.input.justTouched()) { // Only check first touch
             // Get hudStage camera and unproject to get correct coordinates!
             Vector3 vector3 = hudStage.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-            switch (GAME_STATE) {
+            switch (gameState) {
                 case RUNNING:
                     if (hudView.checkIfTouchingPauseButton(vector3)) {
                         // Touching pause button
-                        GAME_STATE = PAUSED;
+                        gameState = PAUSED;
                     }
                     break;
                 case PAUSED:
                     if (hudView.checkIfTouchingPauseResume(vector3)) {
                         // Touching pause resume
-                        GAME_STATE = RUNNING;
+                        gameState = RUNNING;
                     } else if (hudView.checkIfTouchingPauseOptions(vector3)) {
                         // Touching pause options
-                        GAME_STATE = OPTIONS;
+                        gameState = OPTIONS;
                     } else if (hudView.checkIfTouchingPauseQuit(vector3)) {
                         // Touching pause quit
                         Gdx.app.exit();
@@ -282,7 +287,7 @@ public class MyGame extends ApplicationAdapter {
                 case OPTIONS:
                     if (hudView.checkIfTouchingOptionsReturn(vector3)) {
                         // Touched
-                        GAME_STATE = PAUSED;
+                        gameState = PAUSED;
                     } else if (hudView.checkIfTouchingOptionsMusic(vector3)) {
                         soundsAndMusic.setMusicVolume(hudView.getNewMusicVolume(vector3));
                     } else if (hudView.checkIfTouchingOptionsSFX(vector3)) {
@@ -291,7 +296,7 @@ public class MyGame extends ApplicationAdapter {
                     break;
                 case MAIN_MENU:
                     if (mainMenuView.checkIfTouchingStart(vector3)) {
-                        GAME_STATE = MAIN_CONTROLS;
+                        gameState = MAIN_CONTROLS;
                     } else if (mainMenuView.checkIfTouchingQuit(vector3)) {
                         // Exit game
                         Gdx.app.exit();
@@ -301,25 +306,25 @@ public class MyGame extends ApplicationAdapter {
                     if (mainMenuView.checkIfTouchingEasy(vector3)) {
                         // TODO Set easy mode
                         doOnStartGame();
-                        GAME_STATE = RUNNING;
+                        gameState = RUNNING;
                         Gdx.input.setInputProcessor(joystickStage);
                     } else if (mainMenuView.checkIfTouchingHard(vector3)) {
                         // TODO Set hard mode
                         doOnStartGame();
-                        GAME_STATE = RUNNING;
+                        gameState = RUNNING;
                         Gdx.input.setInputProcessor(joystickStage);
                     }
                     break;
                 case MAIN_CONTROLS:
                     if (mainMenuView.checkIfTouchingTouch(vector3)) {
-                        GAME_STATE = MAIN_CHOOSE;
+                        gameState = MAIN_CHOOSE;
                         ControllerOptions.controllerSettings = TOUCH_JOYSTICK;
                         ControllerOptions.joystickStage = joystickStage;
                     } else if (mainMenuView.checkIfTouchingKeyboardOnly(vector3)) {
-                        GAME_STATE = MAIN_CHOOSE;
+                        gameState = MAIN_CHOOSE;
                         ControllerOptions.controllerSettings = KEYBOARD_ONLY;
                     } else if (mainMenuView.checkIfTouchingKeyboardMouse(vector3)) {
-                        GAME_STATE = MAIN_CHOOSE;
+                        gameState = MAIN_CHOOSE;
                         ControllerOptions.controllerSettings = KEYBOARD_MOUSE;
                     }
                     break;
