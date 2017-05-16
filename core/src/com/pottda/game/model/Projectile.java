@@ -8,6 +8,7 @@ import java.util.List;
 public class Projectile extends ModelActor {
     int damage;
     public boolean isBouncy = false;
+    public boolean isPiercing = false;
     public final long timeOfConstructionMS;
     public final long lifeTimeMS;
     static final int DEFAULT_PROJECTILE_LIFETIME_MS = 10000;
@@ -123,14 +124,14 @@ public class Projectile extends ModelActor {
                 listeners.get(i).onHit(this);
             }
         }
-        onCollision();
+        if(!isPiercing){
+            onCollision();
+        }
     }
 
     public void onCollision() {
         if(!isBouncy) {
             shouldBeRemoved = true;
-        } else {
-            isDying();
         }
     }
     
