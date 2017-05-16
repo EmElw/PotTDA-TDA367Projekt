@@ -35,9 +35,12 @@ public abstract class AbstractController {
      * Called by MyGame every frame
      */
     public void onNewFrame() {
-        setInputVectors();
         updateModel();
         updateView();
+    }
+
+    public boolean shouldBeRemoved() {
+        return modelActor.shouldBeRemoved;
     }
 
     protected abstract void setInputVectors();
@@ -61,5 +64,9 @@ public abstract class AbstractController {
 
     public ModelActor getModel() {
         return modelActor;
+    }
+
+    public ViewActor getView() {
+        return viewActor;
     }
 }

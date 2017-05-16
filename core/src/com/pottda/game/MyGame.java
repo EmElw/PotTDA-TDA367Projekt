@@ -4,12 +4,15 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Input;
 import com.pottda.game.view.Sprites;
 import com.pottda.game.controller.Box2DActorFactory;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.pottda.game.model.ModelActor;
+import com.pottda.game.model.PhysicsActor;
+import com.pottda.game.view.*;
+import com.pottda.game.actorFactory.Box2DActorFactory;
 import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.model.ActorFactory;
 import com.pottda.game.model.InventoryFactory;
 import com.pottda.game.physicsBox2D.CollisionListener;
-import com.pottda.game.view.GameView;
-import com.pottda.game.view.HUDView;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -21,8 +24,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.AbstractController;
 import com.pottda.game.controller.TouchJoystickController;
-import com.pottda.game.view.MainMenuView;
-import com.pottda.game.view.SoundsAndMusic;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,10 @@ public class MyGame extends ApplicationAdapter {
     A Stack to buffer new controllers created during the list-iteration
      */
     private Stack<AbstractController> controllerBuffer;
+    /*
+    A Stack to buffer controllers that should be removed during rendering
+     */
+    private Stack<AbstractController> controllerRemovalBuffer;
 
     private World world;
     private float accumulator;
@@ -108,6 +113,7 @@ public class MyGame extends ApplicationAdapter {
     private void doOnStartGame() {
         controllers = new ArrayList<AbstractController>();
         controllerBuffer = new Stack<AbstractController>();
+        controllerRemovalBuffer = new Stack<AbstractController>();
 
         hudView = new HUDView(hudStage);
         world = new World(new Vector2(0, 0), false);
@@ -187,6 +193,19 @@ public class MyGame extends ApplicationAdapter {
         checkTouch();
 
         if (controllers != null) {
+            // Prepare removal of "dead" actors
+            for (AbstractController c : controllers) {
+                if (c.shouldBeRemoved()) {
+                    prepareForRemoval(c);
+                }
+            }
+
+            // Remove "dead" actors
+            if(controllerRemovalBuffer.size() > 0) {
+                controllers.removeAll(controllerRemovalBuffer);
+                controllerRemovalBuffer.clear();
+            }
+
             // Update all controllers, causing the model to update
             for (AbstractController c : controllers) {
                 if (c instanceof TouchJoystickController && gameState != RUNNING) {
@@ -353,5 +372,11 @@ public class MyGame extends ApplicationAdapter {
         soundsAndMusic.dispose();
         gameView.dispose();
         mainMenuView.dispose();
+    }
+
+    private void prepareForRemoval(AbstractController controller) {
+        controller.getModel().getPhysicsActor().destroyBody();
+        controller.getView().remove();
+        controllerRemovalBuffer.add(controller);
     }
 }
