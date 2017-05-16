@@ -1,4 +1,4 @@
-package com.pottda.game.actorFactory;
+package com.pottda.game.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
