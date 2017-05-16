@@ -17,14 +17,14 @@ public class DumbAIController extends AIController {
             movementVector.set(goal.getPosition());
             movementVector.sub(modelActor.getPosition());
 
+            attackVector.set(movementVector);
+            attackVector.normalize();
+
             if (movementVector.length() < SAFE_DISTANCE) {
                 movementVector.set(0, 0);
             } else {
-                if (movementVector.length() > 1) {
-                    movementVector.normalize();
-                }
+                movementVector.normalize();
             }
-            attackVector.set(movementVector);
         } else {
             movementVector.set(0, 0);
             attackVector.set(0, 0);
