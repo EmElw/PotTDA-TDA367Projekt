@@ -105,7 +105,7 @@ public class Box2DActorFactory extends ActorFactory {
         body.setUserData(model);
 
         // Add inventory
-        //model.inventory = inventory;
+        model.inventory = inventory;
 
         ViewActor view = new ViewActor(sprite.texture);
         stage.addActor(view);
