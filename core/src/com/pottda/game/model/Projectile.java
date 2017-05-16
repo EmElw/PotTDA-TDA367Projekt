@@ -132,12 +132,14 @@ public class Projectile extends ModelActor {
     public void onCollision() {
         if(!isBouncy) {
             shouldBeRemoved = true;
+            onDestruction();
         }
     }
     
     private boolean isDying(){
         if (System.currentTimeMillis() - timeOfConstructionMS > lifeTimeMS){
             shouldBeRemoved = true;
+            onDestruction();
         }
         return shouldBeRemoved;
     }
@@ -150,6 +152,14 @@ public class Projectile extends ModelActor {
         for (int i = 0; i < listeners.size(); i++) {
             if (!ignored.get(i)) {
                 listeners.get(i).onAttack(this);
+            }
+        }
+    }
+
+    private void onDestruction() {
+        for (int i = 0; i < listeners.size(); i++) {
+            if (!ignored.get(i)) {
+                listeners.get(i).onDestruction(this);
             }
         }
     }
