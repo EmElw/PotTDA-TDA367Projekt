@@ -4,12 +4,13 @@ import javax.vecmath.Vector2f;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by rikar on 2017-04-07.
- */
 
 public class Projectile extends ModelActor {
     int damage;
+    public boolean isBouncy = false;
+    public final long timeOfConstructionMS;
+    public final long lifeTimeMS;
+    static final int DEFAULT_PROJECTILE_LIFETIME_MS = 10000;
     /**
      * Listeners that care about various game-oriented events
      */
@@ -72,10 +73,22 @@ public class Projectile extends ModelActor {
         return listeners;
     }
 
+
+    public Projectile(PhysicsActor physicsActor, int damage, List<ProjectileListener> listeners, Long lifeTimeMS) {
+        super(physicsActor);
+        this.damage = damage;
+        this.listeners = listeners;
+        timeOfConstructionMS = System.currentTimeMillis();
+        this.lifeTimeMS = lifeTimeMS;
+        //hasDamaged = new ArrayList<Character>();
+    }
+    
     public Projectile(PhysicsActor physicsActor, int damage, List<ProjectileListener> listeners) {
         super(physicsActor);
         this.damage = damage;
         this.listeners = listeners;
+        timeOfConstructionMS = System.currentTimeMillis();
+        lifeTimeMS = DEFAULT_PROJECTILE_LIFETIME_MS;
         //hasDamaged = new ArrayList<Character>();
     }
 
@@ -85,6 +98,9 @@ public class Projectile extends ModelActor {
     }*/
     @Override
     public void giveInput(Vector2f movementVector, Vector2f attackVector) {
+        if(isDying()){
+            return;
+        }
         if (movementVector.length() == 0) {
             return;
         }
@@ -111,7 +127,18 @@ public class Projectile extends ModelActor {
     }
 
     public void onCollision() {
-        // TODO Remove this projectile
+        if(!isBouncy) {
+            shouldBeRemoved = true;
+        } else {
+            isDying();
+        }
+    }
+    
+    private boolean isDying(){
+        if (timeOfConstructionMS - System.currentTimeMillis() > lifeTimeMS){
+            shouldBeRemoved = true;
+        }
+        return shouldBeRemoved;
     }
 
     /**
