@@ -172,7 +172,8 @@ public class Box2DActorFactory extends ActorFactory {
     public ProjectileController buildProjectile(Sprites sprite, int team, boolean bounces, boolean penetrates, Vector2f position) {
         // Create body
         Body body = world.createBody(projectileBodyDef);
-        body.setTransform(position.getX(), position.getY(), 0);
+        final float playerWidth = 25f * 0.0375f / 4f; // 25x25px
+        body.setTransform(position.getX() + playerWidth, position.getY() + playerWidth, 0);
 
         // Determine bounciness
         if (bounces) {
