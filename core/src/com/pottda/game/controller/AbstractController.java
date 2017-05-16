@@ -35,9 +35,12 @@ public abstract class AbstractController {
      * Called by MyGame every frame
      */
     public void onNewFrame() {
+        setInputVectors();
         updateModel();
         updateView();
     }
+
+    protected abstract void setInputVectors();
 
     private void updateModel() {
         modelActor.giveInput(movementVector, attackVector);

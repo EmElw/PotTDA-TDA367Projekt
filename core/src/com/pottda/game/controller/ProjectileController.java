@@ -8,4 +8,9 @@ public class ProjectileController extends AbstractController {
         super(modelActor, viewActor);
         // movementVector.set(0, 0);
     }
+
+    @Override
+    protected void setInputVectors() {
+
+    }
 }
