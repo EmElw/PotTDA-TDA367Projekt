@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.pottda.game.model.ModelActor;
-import com.pottda.game.view.ViewActor;
+import com.pottda.game.view.ActorView;
 
 /**
  * Created by Rikard on 2017-04-05.
@@ -14,8 +14,8 @@ import com.pottda.game.view.ViewActor;
 public class KeyboardMouseController extends AbstractController {
     private final Stage stage;
 
-    KeyboardMouseController(ModelActor modelActor, ViewActor viewActor, Stage stage) {
-        super(modelActor, viewActor);
+    KeyboardMouseController(ModelActor modelActor, ActorView actorView, Stage stage) {
+        super(modelActor, actorView);
         this.stage = stage;
     }
 
