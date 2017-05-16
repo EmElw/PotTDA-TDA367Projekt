@@ -83,7 +83,7 @@ public class Character extends ModelActor {
     public void takeDamage(int incomingDamage) {
         currentHealth -= incomingDamage;
         if (currentHealth <= 0) {
-            // TODO Die
+            shouldBeRemoved = true;
         }
     }
 
