@@ -25,29 +25,32 @@ public class KeyboardOnlyController extends AbstractController {
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             movementVector.x -= 1;
         }
-//        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-//            movementVector.y -= 1;
-//        }
-//        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-//            movementVector.y += 1;
-//        }
-//        movementVector.normalize();
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            movementVector.y += 1;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            movementVector.y -= 1;
+        }
+        if (movementVector.length() > 1) {
+            movementVector.normalize();
+        }
 
-//        attackVector.set(0, 0);
-//        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-//            attackVector.x += 1;
-//        }
-//        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-//            attackVector.x -= 1;
-//        }
-//        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-//            attackVector.y -= 1;
-//        }
-//        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-//            attackVector.y += 1;
-//        }
-//        attackVector.normalize();
-
+        attackVector.set(0, 0);
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            attackVector.x += 1;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            attackVector.x -= 1;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            attackVector.y += 1;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            attackVector.y -= 1;
+        }
+        if (attackVector.length() > 1) {
+            attackVector.normalize();
+        }
 //
 //        movementVector.set(
 //                (Gdx.input.isKeyPressed(Input.Keys.D) ? 1 : 0 -

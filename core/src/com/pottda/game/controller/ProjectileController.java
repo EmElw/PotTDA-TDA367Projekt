@@ -3,7 +3,7 @@ package com.pottda.game.controller;
 import com.pottda.game.model.ModelActor;
 import com.pottda.game.view.ActorView;
 
-public class ProjectileController extends AbstractController 
+public class ProjectileController extends AbstractController {
     ProjectileController(ModelActor modelActor, ActorView actorView) {
         super(modelActor, actorView);
         // movementVector.set(0, 0);
