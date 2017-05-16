@@ -3,20 +3,16 @@ package com.pottda.game.controller;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.pottda.game.view.Sprites;
-import com.pottda.game.controller.ControllerOptions;
-import com.pottda.game.controller.*;
 import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
 import com.pottda.game.physicsBox2D.Box2DPhysicsActor;
 import com.pottda.game.physicsBox2D.Box2DPhysicsCharacter;
 import com.pottda.game.physicsBox2D.Box2DPhysicsProjectile;
+import com.pottda.game.view.Sprites;
 import com.pottda.game.view.ViewActor;
 
 import javax.vecmath.Vector2f;
-
 import java.util.Collection;
-import java.util.List;
 
 import static com.pottda.game.model.ModelActor.ENEMY_TEAM;
 import static com.pottda.game.model.ModelActor.PLAYER_TEAM;

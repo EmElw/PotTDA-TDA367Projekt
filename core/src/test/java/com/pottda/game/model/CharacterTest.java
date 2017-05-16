@@ -5,11 +5,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.vecmath.Vector2f;
-import javax.xml.ws.soap.Addressing;
-
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CharacterTest {
     private Character character;

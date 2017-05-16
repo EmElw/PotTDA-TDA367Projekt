@@ -3,8 +3,6 @@ package com.pottda.game.controller;
 import com.pottda.game.model.ModelActor;
 import com.pottda.game.view.ViewActor;
 
-import javax.vecmath.Vector2f;
-
 public class DumbAIController extends AIController {
     public static ModelActor goal = null;
 

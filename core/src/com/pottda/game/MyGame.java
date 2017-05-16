@@ -1,19 +1,8 @@
 package com.pottda.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Input;
-import com.pottda.game.view.Sprites;
-import com.pottda.game.controller.Box2DActorFactory;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.pottda.game.model.ModelActor;
-import com.pottda.game.model.PhysicsActor;
-import com.pottda.game.view.*;
-import com.pottda.game.actorFactory.Box2DActorFactory;
-import com.pottda.game.controller.ControllerOptions;
-import com.pottda.game.model.ActorFactory;
-import com.pottda.game.model.InventoryFactory;
-import com.pottda.game.physicsBox2D.CollisionListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
@@ -23,13 +12,18 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.AbstractController;
+import com.pottda.game.controller.Box2DActorFactory;
+import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.controller.TouchJoystickController;
+import com.pottda.game.model.ActorFactory;
+import com.pottda.game.model.InventoryFactory;
+import com.pottda.game.physicsBox2D.CollisionListener;
+import com.pottda.game.view.*;
 
+import javax.vecmath.Vector2f;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-
-import javax.vecmath.Vector2f;
 
 import static com.pottda.game.MyGame.GameState.*;
 import static com.pottda.game.controller.ControllerOptions.ControllerMode.*;
