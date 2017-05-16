@@ -12,16 +12,20 @@ import com.pottda.game.view.ViewActor;
 public class TouchJoystickController extends AbstractController {
     private final JoysticksView joysticksView;
 
-    public TouchJoystickController(ModelActor modelActor, ViewActor viewActor, Stage stage) {
+    TouchJoystickController(ModelActor modelActor, ViewActor viewActor, Stage stage) {
         super(modelActor, viewActor);
         joysticksView = new JoysticksView(stage);
     }
 
     @Override
-    public void setInputVectors() {
+        public void setInputVectors() {
+
         joysticksView.onNewFrame();
-        movementVector.set(joysticksView.getMovementKnobX() * SPEED_MULT, joysticksView.getMovementKnobY() * SPEED_MULT);
-        attackVector.set(joysticksView.getAttackKnobX(), joysticksView.getAttackKnobY());
-        super.onNewFrame();
+
+        movementVector.set(joysticksView.getMovementKnobX(),
+                joysticksView.getMovementKnobY());
+
+        attackVector.set(joysticksView.getAttackKnobX(),
+                joysticksView.getAttackKnobY());
     }
 }
