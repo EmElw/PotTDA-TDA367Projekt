@@ -2,14 +2,12 @@ package com.pottda.game;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
-import com.pottda.game.view.Sprites;
+import com.pottda.game.view.*;
 import com.pottda.game.actorFactory.Box2DActorFactory;
 import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.model.ActorFactory;
 import com.pottda.game.model.InventoryFactory;
 import com.pottda.game.physicsBox2D.CollisionListener;
-import com.pottda.game.view.GameView;
-import com.pottda.game.view.HUDView;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -21,8 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.AbstractController;
 import com.pottda.game.controller.TouchJoystickController;
-import com.pottda.game.view.MainMenuView;
-import com.pottda.game.view.SoundsAndMusic;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,6 +33,7 @@ public class MyGame extends ApplicationAdapter {
     private Stage joystickStage;
     private Stage gameStage;
     private Stage mainMenuStage;
+    private Stage inventoryStage;
     private OrthographicCamera camera;
 
     /*
@@ -56,12 +53,14 @@ public class MyGame extends ApplicationAdapter {
     private GameView gameView;
     private Box2DActorFactory box2DActorFactory;
     private MainMenuView mainMenuView;
+    private InventoryView inventoryView;
 
     private static final int RUNNING = 1;
     private static final int PAUSED = 2;
     private static final int OPTIONS = 3;
     private static final int MAIN_MENU = 4;
     private static final int MAIN_CHOOSE = 5;
+    private static final int INVENTORY_VIEW = 7;
     private static int GAME_STATE = 0;
 
     private static final String playerImage = "circletest.png"; // change later
@@ -90,12 +89,14 @@ public class MyGame extends ApplicationAdapter {
         gameStage.getCamera().position.x = WIDTH_METERS / 2;
         gameStage.getCamera().position.y = HEIGHT_METERS / 2;
         mainMenuStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
+        inventoryStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
 
-        GAME_STATE = MAIN_MENU;
+        GAME_STATE = INVENTORY_VIEW;
         Gdx.input.setInputProcessor(mainMenuStage);
         Box2D.init();
 
         mainMenuView = new MainMenuView(mainMenuStage);
+        inventoryView = new InventoryView(inventoryStage);
     }
 
     private void doOnStartGame() {
@@ -176,6 +177,7 @@ public class MyGame extends ApplicationAdapter {
         gameStage.getViewport().update(width, height, false);
         joystickStage.getViewport().update(width, height, false);
         mainMenuStage.getViewport().update(width, height, false);
+        inventoryStage.getViewport().update(width, height, false);
     }
 
     @Override
@@ -219,6 +221,8 @@ public class MyGame extends ApplicationAdapter {
             mainMenuView.renderMainMenu();
         } else if (GAME_STATE == MAIN_CHOOSE) {
             mainMenuView.renderChooseDiff();
+        } else if (GAME_STATE == INVENTORY_VIEW) {
+            inventoryView.renderInventory();
         }
 
         if (GAME_STATE < MAIN_MENU) {
@@ -292,6 +296,8 @@ public class MyGame extends ApplicationAdapter {
                         Gdx.input.setInputProcessor(joystickStage);
                     }
                     break;
+                case INVENTORY_VIEW:
+                    break;
             }
         }
     }
@@ -317,5 +323,6 @@ public class MyGame extends ApplicationAdapter {
         soundsAndMusic.dispose();
         gameView.dispose();
         mainMenuView.dispose();
+        inventoryView.dispose();
     }
 }
