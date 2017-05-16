@@ -1,17 +1,16 @@
 package com.pottda.game;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.pottda.game.model.ModelActor;
-import com.pottda.game.model.PhysicsActor;
-import com.pottda.game.view.*;
+import com.pottda.game.controller.AIController;
+import com.pottda.game.view.Sprites;
 import com.pottda.game.actorFactory.Box2DActorFactory;
 import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.model.ActorFactory;
 import com.pottda.game.model.InventoryFactory;
 import com.pottda.game.physicsBox2D.CollisionListener;
+import com.pottda.game.view.GameView;
+import com.pottda.game.view.HUDView;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -23,6 +22,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.AbstractController;
 import com.pottda.game.controller.TouchJoystickController;
+import com.pottda.game.view.MainMenuView;
+import com.pottda.game.view.SoundsAndMusic;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,10 +48,6 @@ public class MyGame extends ApplicationAdapter {
     A Stack to buffer new controllers created during the list-iteration
      */
     private Stack<AbstractController> controllerBuffer;
-    /*
-    A Stack to buffer controllers that should be removed during rendering
-     */
-    private Stack<AbstractController> controllerRemovalBuffer;
 
     private World world;
     private float accumulator;
@@ -67,6 +64,7 @@ public class MyGame extends ApplicationAdapter {
     private static final int MAIN_MENU = 4;
     private static final int MAIN_CHOOSE = 5;
     private static final int MAIN_CONTROLS = 6;
+    private static final int WAITING = -1;
     private static int GAME_STATE = 0;
 
     //private static final String playerImage = "circletest.png"; // change later
@@ -83,6 +81,12 @@ public class MyGame extends ApplicationAdapter {
     public static final float HEIGHT_METERS = 18;
     public static final float HEIGHT_RATIO = WIDTH_METERS / WIDTH;
     public static final float WIDTH_RATIO = HEIGHT_METERS / HEIGHT;
+
+    private static int currentWave = 0;
+    private static final float scaling = 1.2f;
+
+    private static final long waitingTimeSeconds = 5;
+    private long startWait = 0;
 
     @Override
     public void create() {
@@ -104,9 +108,9 @@ public class MyGame extends ApplicationAdapter {
     }
 
     private void doOnStartGame() {
+        currentWave = 0;
         controllers = new ArrayList<AbstractController>();
         controllerBuffer = new Stack<AbstractController>();
-        controllerRemovalBuffer = new Stack<AbstractController>();
 
         hudView = new HUDView(hudStage);
         world = new World(new Vector2(0, 0), false);
@@ -122,28 +126,49 @@ public class MyGame extends ApplicationAdapter {
         box2DActorFactory = new Box2DActorFactory(world, gameStage, controllerBuffer);
         ActorFactory.setFactory(box2DActorFactory);
 
-        final float scaling = 1.2f;
+        createPlayer();
 
+        createWorldBorders();
+
+        GAME_STATE = WAITING;
+
+        //startWave(++currentWave);
+    }
+
+    private void createPlayer() {
         // Add player
         ActorFactory.get().buildPlayer(Sprites.PLAYER,
                 new Vector2f(WIDTH_METERS * scaling / 2, HEIGHT_METERS * scaling / 2));
+    }
+
+    private void startWave(int waveToStart) {
+        System.out.println("Start wave " + waveToStart);
+
+        final int enemiesToSpawn = 2 * (waveToStart - 1) + 5 + (waveToStart - 1);
 
         // Add some enemies
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 2 * enemiesToSpawn; i++) {
             float xx = (float) (Math.random() * WIDTH_METERS * scaling);
             float yy = (float) (Math.random() * HEIGHT_METERS * scaling);
             try {
                 ActorFactory.get().buildEnemy(Sprites.ENEMY,
                         new Vector2f(xx, yy),
-                        InventoryFactory.createFromXML(Gdx.files.internal(playerStartInventory).file()));
+                        InventoryFactory.createFromXML(Gdx.files.internal(playerStartInventory).file())); // TODO change inventory
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        createWorldBorders();
-
     }
 
+    private boolean enemiesAlive() {
+        boolean enemiesAlive = false;
+        for (AbstractController c : controllers) {
+            if (c instanceof AIController) {
+                enemiesAlive = true;
+            }
+        }
+        return enemiesAlive;
+    }
 
     /**
      * Creates four obstacles around the playing area
@@ -186,25 +211,12 @@ public class MyGame extends ApplicationAdapter {
         checkTouch();
 
         if (controllers != null) {
-            // Prepare removal of "dead" actors
-            for (AbstractController c : controllers) {
-                if (c.shouldBeRemoved()) {
-                    prepareForRemoval(c);
-                }
-            }
-
-            // Remove "dead" actors
-            if(controllerRemovalBuffer.size() > 0) {
-                controllers.removeAll(controllerRemovalBuffer);
-                controllerRemovalBuffer.clear();
-            }
-
             // Update all controllers, causing the model to update
             for (AbstractController c : controllers) {
-                if (c instanceof TouchJoystickController && GAME_STATE != RUNNING) {
+                if (c instanceof TouchJoystickController && GAME_STATE != RUNNING && GAME_STATE != WAITING) {
                     // Render joysticks
                     c.onNewFrame();
-                } else if (GAME_STATE == RUNNING) {
+                } else if (GAME_STATE == RUNNING || GAME_STATE == WAITING) {
                     c.onNewFrame();
                 }
             }
@@ -218,12 +230,12 @@ public class MyGame extends ApplicationAdapter {
             hudView.renderPaused();
 
         } else if (GAME_STATE == RUNNING) {
-            gameView.render();
+            renderWorld();
 
-            hudView.renderRunning();
-
-            // Update the world
-            doPhysicsStep(Gdx.graphics.getDeltaTime());
+            if (!enemiesAlive()) {
+                GAME_STATE = WAITING;
+                startWait = System.currentTimeMillis();
+            }
 
         } else if (GAME_STATE == OPTIONS) {
             hudView.renderOptions();
@@ -233,6 +245,16 @@ public class MyGame extends ApplicationAdapter {
             mainMenuView.renderChooseDiff();
         } else if (GAME_STATE == MAIN_CONTROLS) {
             mainMenuView.renderChooseControls();
+        } else if (GAME_STATE == WAITING) {
+            renderWorld();
+
+            // check if user has waited 5 seconds
+            final long currentTime = System.currentTimeMillis();
+            if ((currentTime - startWait) / 1000 >= waitingTimeSeconds) {
+                GAME_STATE = RUNNING;
+                // start next wave
+                startWave(++currentWave);
+            }
         }
 
         if (GAME_STATE < MAIN_MENU) {
@@ -253,6 +275,15 @@ public class MyGame extends ApplicationAdapter {
             }
         }
 
+    }
+
+    private void renderWorld() {
+        gameView.render();
+
+        hudView.renderRunning();
+
+        // Update the world
+        doPhysicsStep(Gdx.graphics.getDeltaTime());
     }
 
     /**
@@ -353,17 +384,13 @@ public class MyGame extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        hudView.dispose();
+        if (hudView != null) {
+            hudView.dispose();
+        }
         hudStage.dispose();
         world.dispose();
         soundsAndMusic.dispose();
         gameView.dispose();
         mainMenuView.dispose();
-    }
-
-    private void prepareForRemoval(AbstractController controller) {
-        controller.getModel().getPhysicsActor().destroyBody();
-        controller.getView().remove();
-        controllerRemovalBuffer.add(controller);
     }
 }
