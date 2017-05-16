@@ -1,8 +1,9 @@
 package com.pottda.game.physicsBox2D;
 
 import com.badlogic.gdx.physics.box2d.*;
-import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
+import com.pottda.game.model.Obstacle;
+import com.pottda.game.model.Projectile;
 
 public class CollisionListener implements ContactListener {
     @Override

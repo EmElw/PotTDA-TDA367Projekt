@@ -43,6 +43,8 @@ public abstract class AbstractController {
         return modelActor.shouldBeRemoved;
     }
 
+    protected abstract void setInputVectors();
+
     private void updateModel() {
         modelActor.giveInput(movementVector, attackVector);
         modelActor.handleCollisions();

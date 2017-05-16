@@ -1,7 +1,5 @@
 package com.pottda.game.model;
 
-import com.pottda.game.controller.AbstractController;
-
 import javax.vecmath.Vector2f;
 
 
