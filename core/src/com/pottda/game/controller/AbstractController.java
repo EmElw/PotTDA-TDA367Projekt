@@ -14,7 +14,6 @@ import javax.vecmath.Vector2f;
 public abstract class AbstractController {
     Vector2f movementVector;
     Vector2f attackVector;
-    static final float SPEED_MULT = 3;
 //    final boolean isAI;
 
     final ModelActor modelActor;
@@ -35,19 +34,19 @@ public abstract class AbstractController {
      * Called by MyGame every frame
      */
     public void onNewFrame() {
+        setInputVectors();
         updateModel();
         updateView();
     }
+
+    protected abstract void setInputVectors();
 
     public boolean shouldBeRemoved() {
         return modelActor.shouldBeRemoved;
     }
 
-    protected abstract void setInputVectors();
-
     private void updateModel() {
         modelActor.giveInput(movementVector, attackVector);
-        modelActor.handleCollisions();
     }
 
     /**

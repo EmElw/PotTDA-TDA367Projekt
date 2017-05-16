@@ -11,18 +11,30 @@ import com.pottda.game.view.ActorView;
 
 public class KeyboardOnlyController extends AbstractController {
 
-    public KeyboardOnlyController(ModelActor modelActor, ActorView actorView) {
+    KeyboardOnlyController(ModelActor modelActor, ActorView actorView) {
         super(modelActor, actorView);
     }
 
     @Override
     public void setInputVectors() {
-        movementVector.set((Gdx.input.isKeyPressed(Input.Keys.D) ? 1 : 0 - (Gdx.input.isKeyPressed(Input.Keys.A) ? 1 : 0)) * SPEED_MULT,
-                (Gdx.input.isKeyPressed(Input.Keys.W) ? 1 : 0 - (Gdx.input.isKeyPressed(Input.Keys.S) ? 1 : 0)) * SPEED_MULT);
-        movementVector.normalize();
+        movementVector.set(
+                (Gdx.input.isKeyPressed(Input.Keys.D) ? 1 : 0 -
+                        (Gdx.input.isKeyPressed(Input.Keys.A) ? 1 : 0)),
 
-        attackVector.set(Gdx.input.isKeyPressed(Input.Keys.RIGHT) ? 1 : 0 - (Gdx.input.isKeyPressed(Input.Keys.LEFT) ? 1 : 0),
-                Gdx.input.isKeyPressed(Input.Keys.UP) ? 1 : 0 - (Gdx.input.isKeyPressed(Input.Keys.DOWN) ? 1 : 0));
+                (Gdx.input.isKeyPressed(Input.Keys.W) ? 1 : 0 -
+                        (Gdx.input.isKeyPressed(Input.Keys.S) ? 1 : 0)));
+
+        if (movementVector.length() > 1) {
+            movementVector.normalize();
+        }
+
+        attackVector.set(
+                Gdx.input.isKeyPressed(Input.Keys.RIGHT) ? 1 : 0 -
+                        (Gdx.input.isKeyPressed(Input.Keys.LEFT) ? 1 : 0),
+
+                Gdx.input.isKeyPressed(Input.Keys.UP) ? 1 : 0 -
+                        (Gdx.input.isKeyPressed(Input.Keys.DOWN) ? 1 : 0));
+
         attackVector.normalize();
     }
 }

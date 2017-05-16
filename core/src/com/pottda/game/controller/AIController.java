@@ -8,8 +8,8 @@ import com.pottda.game.view.ActorView;
  */
 
 public abstract class AIController extends AbstractController {
-    public AIController(ModelActor modelActor, ActorView actorView) {
-        super(modelActor, actorView);
+    AIController(ModelActor modelActor, ViewActor viewActor) {
+        super(modelActor, viewActor);
     }
 
 
