@@ -1,7 +1,7 @@
 package com.pottda.game.controller;
 
 import com.pottda.game.model.ModelActor;
-import com.pottda.game.view.ViewActor;
+import com.pottda.game.view.ActorView;
 
 import javax.vecmath.Vector2f;
 
@@ -18,15 +18,15 @@ public abstract class AbstractController {
 //    final boolean isAI;
 
     final ModelActor modelActor;
-    private final ViewActor viewActor;
+    private final ActorView actorView;
 
     /**
      * @param modelActor
-     * @param viewActor
+     * @param actorView
      */
-    AbstractController(ModelActor modelActor, ViewActor viewActor) {
+    AbstractController(ModelActor modelActor, ActorView actorView) {
         this.modelActor = modelActor;
-        this.viewActor = viewActor;
+        this.actorView = actorView;
         movementVector = new Vector2f(0, 0);
         attackVector = new Vector2f(0, 0);
     }
@@ -51,22 +51,22 @@ public abstract class AbstractController {
     }
 
     /**
-     * Updates the ViewActor so everything can be drawn out later
+     * Updates the ActorView so everything can be drawn out later
      */
     protected void updateView() {
         // TODO extend with other modifications such as rotation and stuff
         Vector2f position = modelActor.getPosition();
 //        float degrees = modelActor.getAngle();
 
-        viewActor.setPoint(position.x, position.y);
-        viewActor.setAngle(modelActor.getAngle());
+        actorView.setPoint(position.x, position.y);
+        actorView.setAngle(modelActor.getAngle());
     }
 
     public ModelActor getModel() {
         return modelActor;
     }
 
-    public ViewActor getView() {
-        return viewActor;
+    public ActorView getView() {
+        return actorView;
     }
 }

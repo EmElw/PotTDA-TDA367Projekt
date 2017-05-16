@@ -1,13 +1,13 @@
 package com.pottda.game.controller;
 
 import com.pottda.game.model.ModelActor;
-import com.pottda.game.view.ViewActor;
+import com.pottda.game.view.ActorView;
 
 public class DumbAIController extends AIController {
     public static ModelActor goal = null;
 
-    public DumbAIController(ModelActor modelActor, ViewActor viewActor) {
-        super(modelActor, viewActor);
+    public DumbAIController(ModelActor modelActor, ActorView actorView) {
+        super(modelActor, actorView);
     }
 
     @Override
