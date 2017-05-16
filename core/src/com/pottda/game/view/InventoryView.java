@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.pottda.game.model.Item;
 
 /**
  * Created by Mr Cornholio on 15/05/2017.
@@ -12,6 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 public class InventoryView {
     private Stage stage;
     private Table table;
+    private VerticalGroup storageTable;
+    private Table inventoryTable;
+    private Skin mySkin = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
 
     public InventoryView(Stage inventoryStage) {
         this.stage = inventoryStage;
@@ -21,19 +25,19 @@ public class InventoryView {
     public void create() {
         Gdx.input.setInputProcessor(stage);
 
-        Skin mySkin = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
+
 
         // See Scene2D.ui github page for instructions to design the page
         Label storageLabel = new Label("Storage", mySkin);
         Label inventoryLabel = new Label("Inventory", mySkin);
 
         // Create storage
-        VerticalGroup storageTable = new VerticalGroup();
+        storageTable = new VerticalGroup();
         ScrollPane storageScroll = new ScrollPane(storageTable);
         Container storage = new Container(storageScroll);
 
         // Create inventory
-        Table inventoryTable = new Table();
+        inventoryTable = new Table();
         Container inventory = new Container(inventoryTable);
 
         table = new Table();
@@ -59,5 +63,10 @@ public class InventoryView {
 
     public void dispose() {
         stage.dispose();
+    }
+
+    public void addToViewStorage(Item item) {
+        Label itemName = new Label(item.name, mySkin);
+        storageTable.addActor(itemName);
     }
 }

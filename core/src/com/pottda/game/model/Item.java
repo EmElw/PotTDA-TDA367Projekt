@@ -53,6 +53,10 @@ public abstract class Item extends ProjectileListenerAdapter {
      * Y-orientation within its inventory
      */
     public int y;
+    /**
+     * The name of the item
+     */
+    public String name;
 
     /**
      * Pseudo-constructor, called if instantiated without constructor (probably really bad practice)
@@ -135,6 +139,10 @@ public abstract class Item extends ProjectileListenerAdapter {
      */
     protected Item getNext() {
         return outputItems.get(0);
+    }
+
+    public List<Point2i> getBasePositions() {
+        return basePositions;
     }
 
     @Override
