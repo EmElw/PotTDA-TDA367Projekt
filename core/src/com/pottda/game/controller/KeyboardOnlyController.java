@@ -16,12 +16,13 @@ public class KeyboardOnlyController extends AbstractController {
     }
 
     @Override
-    public void onNewFrame() {
+    public void setInputVectors() {
         movementVector.set((Gdx.input.isKeyPressed(Input.Keys.D) ? 1 : 0 - (Gdx.input.isKeyPressed(Input.Keys.A) ? 1 : 0)) * SPEED_MULT,
                 (Gdx.input.isKeyPressed(Input.Keys.W) ? 1 : 0 - (Gdx.input.isKeyPressed(Input.Keys.S) ? 1 : 0)) * SPEED_MULT);
+        movementVector.normalize();
 
         attackVector.set(Gdx.input.isKeyPressed(Input.Keys.RIGHT) ? 1 : 0 - (Gdx.input.isKeyPressed(Input.Keys.LEFT) ? 1 : 0),
                 Gdx.input.isKeyPressed(Input.Keys.UP) ? 1 : 0 - (Gdx.input.isKeyPressed(Input.Keys.DOWN) ? 1 : 0));
-        super.onNewFrame();
+        attackVector.normalize();
     }
 }

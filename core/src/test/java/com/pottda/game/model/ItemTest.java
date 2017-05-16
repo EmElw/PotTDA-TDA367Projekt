@@ -1,6 +1,5 @@
 package com.pottda.game.model;
 
-import com.pottda.game.Util;
 import com.pottda.game.model.items.DemoItemA;
 import com.pottda.game.model.items.DemoItemB;
 import org.junit.Assert;

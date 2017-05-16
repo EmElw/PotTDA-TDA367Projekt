@@ -21,9 +21,10 @@ public class KeyboardMouseController extends AbstractController {
 
 
     @Override
-    public void onNewFrame() {
+    public void setInputVectors() {
         movementVector.set((Gdx.input.isKeyPressed(Input.Keys.D) ? 1 : 0 - (Gdx.input.isKeyPressed(Input.Keys.A) ? 1 : 0)) * SPEED_MULT,
                 (Gdx.input.isKeyPressed(Input.Keys.W) ? 1 : 0 - (Gdx.input.isKeyPressed(Input.Keys.S) ? 1 : 0)) * SPEED_MULT);
+        movementVector.normalize();
 
         final Vector3 vector3 = stage.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
 
@@ -33,9 +34,7 @@ public class KeyboardMouseController extends AbstractController {
         final float xDiff = mousePosX - modelActor.getPosition().x;
         final float yDiff = mousePosY - modelActor.getPosition().y;
 
-        // y-axis is inverted in Box2D
         attackVector.set(xDiff, yDiff);
-
-        super.onNewFrame();
+        attackVector.normalize();
     }
 }

@@ -9,7 +9,7 @@ public class ObstacleController extends AbstractController {
     }
 
     @Override
-    public void onNewFrame() {
-        updateView();
+    protected void setInputVectors() {
+
     }
 }
