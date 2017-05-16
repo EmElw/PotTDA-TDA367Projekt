@@ -3,7 +3,7 @@ package com.pottda.game.controller;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.pottda.game.model.ModelActor;
-import com.pottda.game.view.ViewActor;
+import com.pottda.game.view.ActorView;
 
 /**
  * Created by Rikard Teodorsson on 2017-04-07.
@@ -11,8 +11,8 @@ import com.pottda.game.view.ViewActor;
 
 public class KeyboardOnlyController extends AbstractController {
 
-    KeyboardOnlyController(ModelActor modelActor, ViewActor viewActor) {
-        super(modelActor, viewActor);
+    KeyboardOnlyController(ModelActor modelActor, ActorView actorView) {
+        super(modelActor, actorView);
     }
 
     @Override
