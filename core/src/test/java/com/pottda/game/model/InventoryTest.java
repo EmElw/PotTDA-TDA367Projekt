@@ -79,11 +79,11 @@ public class InventoryTest {
                 cannon = (AttackItem) i;
             }
         }
-        List<ProjectileListener> list = cannon.attack(new Vector2f(), new Vector2f());
+        List<ProjectileListener> list = cannon.attack(new Vector2f(), new Vector2f(),0);
 
         Assert.assertTrue(list.get(0) instanceof ChainAttack);
 
-        list = cannon.attack(new Vector2f(), new Vector2f());
+        list = cannon.attack(new Vector2f(), new Vector2f(),0);
 
         Assert.assertTrue(list.get(0) instanceof MultiShot);
         Assert.assertTrue(list.get(1) instanceof MultiShot);

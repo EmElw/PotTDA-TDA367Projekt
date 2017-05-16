@@ -1,5 +1,7 @@
 package com.pottda.game.model;
 
+import com.pottda.game.view.Sprites;
+
 import javax.vecmath.Vector2f;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +37,7 @@ public abstract class AttackItem extends Item {
      * @param origin
      * @return
      */
-    public List<ProjectileListener> attack(Vector2f direction, Vector2f origin) {
+    public List<ProjectileListener> attack(Vector2f direction, Vector2f origin, int team) {
         List<ProjectileListener> listeners = new ArrayList<ProjectileListener>();
 
         Item i = this;
@@ -47,15 +49,27 @@ public abstract class AttackItem extends Item {
             }
         }
 
+
+        Projectile proj = (Projectile) ActorFactory.get().buildProjectile(
+                Sprites.PROJECTILE1,
+                team,
+                false,
+                false,
+                origin).getModel();
+
+        direction.normalize();
+        proj.setListeners(listeners);
+        proj.giveInput(direction, null);
+        proj.onAttack();
+
         lastAttackTime = System.currentTimeMillis();
         return listeners;
-        // TODO create projectiles
 
     }
 
-    public void tryAttack(Vector2f direction, Vector2f origin) {
+    public void tryAttack(Vector2f direction, Vector2f origin, int team) {
         if (System.currentTimeMillis() - lastAttackTime > cooldown) {
-            attack(direction, origin);
+            attack(direction, origin, team);
         }
     }
 }

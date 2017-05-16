@@ -1,10 +1,15 @@
 package com.pottda.game.model.items;
 
+import com.pottda.game.model.ActorFactory;
 import com.pottda.game.model.Item;
 import com.pottda.game.model.Projectile;
 import com.pottda.game.model.ProjectileListener;
+import com.pottda.game.view.Sprites;
 
 import javax.vecmath.Point2i;
+import javax.vecmath.Vector2f;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A "MultiShot" item:
@@ -12,6 +17,12 @@ import javax.vecmath.Point2i;
  * It creates copies at in a fan-pattern
  */
 public class MultiShot extends Item {
+
+    /*
+    The spread between each projectile, expressed as degrees
+     */
+    private final static float SPREAD = 0.3f;
+
     /*
     Shaped like
 
@@ -29,10 +40,9 @@ public class MultiShot extends Item {
         basePositions.add(new Point2i(0, -1));
         basePositions.add(new Point2i(-1, -1));
 
-        baseOutputs.add(new Point2i(2,0));
+        baseOutputs.add(new Point2i(2, 0));
 
         additionalProjectiles = 2;
-        isFirstMultiShot = true;
     }
 
     private int additionalProjectiles;
@@ -51,17 +61,50 @@ public class MultiShot extends Item {
         on that.
          */
 
-        if (isProjectileModifier) {
-            int sumProjectiles = 0;
-            for (ProjectileListener item : p.projectileListeners) {
-                if (item instanceof MultiShot) {
-                    ((MultiShot) item).isFirstMultiShot = false;
-                    sumProjectiles += ((MultiShot) item).additionalProjectiles;
-                }
+        int sumAdditionalProjectiles = 0;
+
+        /*
+         Get all the MultiShot listeners of the projectile
+         and set them to be further be ignored. Sum the total
+         number of additional projectiles.
+
+         Needs to be ignored so that the created projectiles
+         themselves don't create further copies
+          */
+        for (int i = 0; i < p.getListeners().size(); i++) {
+            if (p.getListeners().get(i) instanceof MultiShot) {
+                p.ignoreListener(i);
+                sumAdditionalProjectiles += ((MultiShot) p.getListeners().get(i)).additionalProjectiles;
             }
-            // TODO multiply projectiles
-        } else {
-            isFirstMultiShot = true;
+        }
+
+
+        Vector2f position = p.getPosition();
+        double direction = Math.toRadians(p.getAngle());
+
+        /*
+        Create thew new projectiles, set their appropiate direction
+        and call their onAttack()
+         */
+        for (int i = 0; i < sumAdditionalProjectiles; i++) {
+            double newDir = direction - SPREAD * sumAdditionalProjectiles / 2
+                    + SPREAD * i;
+            if (newDir >= direction) {
+                newDir += SPREAD;
+            }
+
+            Projectile newProj = (Projectile) ActorFactory.get().
+                    buildProjectile(Sprites.PROJECTILE1, p.team, false, false, position).
+                    getModel();
+
+            newProj.giveInput(
+                    new Vector2f(
+                            (float) Math.cos(newDir),
+                            (float) Math.sin(newDir)),
+                    null);
+
+            newProj.setListeners(p.getListeners(), p.getIgnored());
+            newProj.onAttack();
         }
     }
 }

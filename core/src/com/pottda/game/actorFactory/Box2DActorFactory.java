@@ -143,7 +143,7 @@ public class Box2DActorFactory extends ActorFactory {
         // Add inventory
         try {
             player.inventory = InventoryFactory.createFromXML(Gdx.files.internal(
-                    "inventoryblueprint/playerStartInventory.xml").file());
+                    "inventoryblueprint/testInv2.xml").file());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -214,12 +214,21 @@ public class Box2DActorFactory extends ActorFactory {
     }
 
     @Override
-    public AbstractController buildObstacle(Sprites sprite, Vector2f position, Vector2f size) {
+    public AbstractController buildObstacle(Sprites sprite, Vector2f position, Vector2f size, boolean isBorder) {
         Body body = world.createBody(obstacleBodyDef);
         body.setTransform(position.getX(), position.getY(), 0);
 
         PolygonShape tempPolygon = new PolygonShape();
-        tempPolygon.setAsBox(size.x, size.y);
+        if (isBorder) {
+            if (size.x > size.y) {
+                tempPolygon.setAsBox(size.x, size.y / 2); // setAsBox uses half-width and half-height as parameters
+            } else {
+                tempPolygon.setAsBox(size.x / 2, size.y);
+            }
+        } else {
+            tempPolygon.setAsBox(size.x, size.y);
+        }
+
         obstacleFixtureDef.shape = tempPolygon;
 
         body.createFixture(obstacleFixtureDef);
