@@ -33,6 +33,12 @@ import java.util.Stack;
 import javax.vecmath.Vector2f;
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.pottda.game.controller.ControllerOptions.ControllerMode;
+
+import static com.pottda.game.controller.ControllerOptions.ControllerMode.KEYBOARD_MOUSE;
+import static com.pottda.game.controller.ControllerOptions.ControllerMode.KEYBOARD_ONLY;
+import static com.pottda.game.controller.ControllerOptions.ControllerMode.TOUCH_JOYSTICK;
+
 public class MyGame extends ApplicationAdapter {
     private Stage hudStage;
     private Stage joystickStage;
@@ -307,14 +313,14 @@ public class MyGame extends ApplicationAdapter {
                 case MAIN_CONTROLS:
                     if (mainMenuView.checkIfTouchingTouch(vector3)) {
                         GAME_STATE = MAIN_CHOOSE;
-                        ControllerOptions.controllerSettings = ControllerOptions.TOUCH_JOYSTICK;
+                        ControllerOptions.controllerSettings = TOUCH_JOYSTICK;
                         ControllerOptions.joystickStage = joystickStage;
                     } else if (mainMenuView.checkIfTouchingKeyboardOnly(vector3)) {
                         GAME_STATE = MAIN_CHOOSE;
-                        ControllerOptions.controllerSettings = ControllerOptions.KEYBOARD_ONLY;
+                        ControllerOptions.controllerSettings = KEYBOARD_ONLY;
                     } else if (mainMenuView.checkIfTouchingKeyboardMouse(vector3)) {
                         GAME_STATE = MAIN_CHOOSE;
-                        ControllerOptions.controllerSettings = ControllerOptions.KEYBOARD_MOUSE;
+                        ControllerOptions.controllerSettings = KEYBOARD_MOUSE;
                     }
                     break;
             }
