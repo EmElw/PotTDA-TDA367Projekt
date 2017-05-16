@@ -185,16 +185,20 @@ public class MyGame extends ApplicationAdapter {
 
         checkTouch();
 
-        for (AbstractController c : controllers) {
-            if (c.shouldBeRemoved()) {
-                prepareForRemoval(c);
-            }
-        }
-
-        controllers.removeAll(controllerRemovalBuffer);
-        controllerRemovalBuffer.clear();
-
         if (controllers != null) {
+            // Prepare removal of "dead" actors
+            for (AbstractController c : controllers) {
+                if (c.shouldBeRemoved()) {
+                    prepareForRemoval(c);
+                }
+            }
+
+            // Remove "dead" actors
+            if(controllerRemovalBuffer.size() > 0) {
+                controllers.removeAll(controllerRemovalBuffer);
+                controllerRemovalBuffer.clear();
+            }
+
             // Update all controllers, causing the model to update
             for (AbstractController c : controllers) {
                 if (c instanceof TouchJoystickController && GAME_STATE != RUNNING) {

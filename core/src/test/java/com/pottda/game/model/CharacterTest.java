@@ -29,6 +29,11 @@ public class CharacterTest {
             public void giveMovementVector(Vector2f movementVector) {
                 position = movementVector;
             }
+
+            @Override
+            public void destroyBody() {
+
+            }
         };
         character = new Character(fakePhysicsActor);
     }
