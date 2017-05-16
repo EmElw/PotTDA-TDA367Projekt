@@ -16,11 +16,22 @@ import com.pottda.game.controller.Box2DActorFactory;
 import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.controller.TouchJoystickController;
 import com.pottda.game.model.ActorFactory;
+import com.pottda.game.model.Inventory;
 import com.pottda.game.model.InventoryFactory;
 import com.pottda.game.physicsBox2D.CollisionListener;
 import com.pottda.game.view.*;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 import javax.vecmath.Vector2f;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -129,6 +140,42 @@ public class MyGame extends ApplicationAdapter {
         ActorFactory.get().buildPlayer(Sprites.PLAYER,
                 new Vector2f(WIDTH_METERS * scaling / 2, HEIGHT_METERS * scaling / 2));
 
+        // Create the inventory to return
+        Inventory inventory = new Inventory();
+        File file = Gdx.files.internal("inventoryblueprint/testInv2.xml").file();
+
+
+        // Magic loading, based on https://www.tutorialspoint.com/java_xml/java_dom_parse_document.htm
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = null;
+        try {
+            db = documentBuilderFactory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+        Document doc = null;
+        try {
+            doc = db.parse(file);
+
+            // If the loaded file does not contain an inventory tag, throw exception
+            if (!doc.getDocumentElement().getNodeName().equals("inventory")) {
+                throw new IOException("Couldn't find <inventory> tag");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        }
+        doc.getDocumentElement().normalize();
+
+        // Set the dimensions of the inventory
+        inventory.setDimensions(
+                Integer.parseInt(doc.getDocumentElement().getAttribute("w")),
+                Integer.parseInt(doc.getDocumentElement().getAttribute("h")));
+
+        // Create a list item nodes
+        NodeList nList = doc.getElementsByTagName("item");
+
         // Add some enemies
         for (int i = 0; i < 5; i++) {
             float xx = (float) (Math.random() * WIDTH_METERS * scaling);
@@ -136,7 +183,7 @@ public class MyGame extends ApplicationAdapter {
             try {
                 ActorFactory.get().buildEnemy(Sprites.ENEMY,
                         new Vector2f(xx, yy),
-                        InventoryFactory.createFromXML(Gdx.files.internal(playerStartInventory).file()));
+                        InventoryFactory.createFromXML(nList, inventory, file.getName()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
