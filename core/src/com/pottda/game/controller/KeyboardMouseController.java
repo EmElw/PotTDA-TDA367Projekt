@@ -12,6 +12,8 @@ import com.pottda.game.view.ViewActor;
  */
 
 public class KeyboardMouseController extends AbstractController {
+
+    // Uses this to get the cursor's position
     private final Stage stage;
 
     KeyboardMouseController(ModelActor modelActor, ViewActor viewActor, Stage stage) {

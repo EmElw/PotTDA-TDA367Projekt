@@ -152,6 +152,7 @@ public class Box2DActorFactory extends ActorFactory {
                 controller = new TouchJoystickController(player, view, ControllerOptions.joystickStage);
                 break;
             case KEYBOARD_MOUSE:
+//            case KEYBOARD_ONLY:
                 controller = new KeyboardMouseController(player, view, stage);
                 break;
             case KEYBOARD_ONLY:
