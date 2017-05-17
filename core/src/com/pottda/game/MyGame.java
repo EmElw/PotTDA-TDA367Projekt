@@ -139,8 +139,14 @@ public class MyGame extends ApplicationAdapter {
 
     }
 
+    private void initNextLevel(int levelToStart) {
+        currentLevel = levelToStart;
+        nrOfWaves = 2 + (int) (Math.random() * 3);
+        System.out.println("current level: " + currentLevel + ", nr of waves: " + nrOfWaves);
+    }
+
     private void startWave(int waveToStart) {
-        final int enemiesToSpawn = 5 + 3 * (waveToStart - 1);
+        final int enemiesToSpawn = 5 + (int)(Math.random() * 3 * (waveToStart - 1));
         System.out.println("Starting wave " + waveToStart + " with " + enemiesToSpawn + " enemies");
 
         // Add some enemies
@@ -213,6 +219,11 @@ public class MyGame extends ApplicationAdapter {
                 updateGame();
                 updateWorld();
                 if (!enemiesAlive()) {
+                    if (currentWave >= nrOfWaves) {
+                        // TODO Go to inventory
+                        System.out.println("To inventory");
+                        initNextLevel(++currentLevel);
+                    }
                     gameState = WAITING;
                     startTime = System.currentTimeMillis();
                 }
