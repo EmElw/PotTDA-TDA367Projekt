@@ -26,11 +26,19 @@ public abstract class AttackItem extends Item {
      */
     private long lastAttackTime;
 
+    protected boolean bounces;
+    protected boolean penetrates;
+
     @Override
     public void init() {
         damage = 0;
         cooldown = 100;
         lastAttackTime = 0;
+        bounces = false;
+        penetrates = false;
+        isPrimaryAttack = false;
+        isProjectileModifier = false;
+        isSecondaryAttack = false;
         super.init();
     }
 
@@ -58,9 +66,11 @@ public abstract class AttackItem extends Item {
         Projectile proj = (Projectile) ActorFactory.get().buildProjectile(
                 Sprites.PROJECTILE1,
                 team,
-                false,
-                false,
+                bounces,
+                penetrates,
                 origin).getModel();
+
+        proj.damage = damage;
 
         direction.normalize();
         proj.setListeners(listeners);
