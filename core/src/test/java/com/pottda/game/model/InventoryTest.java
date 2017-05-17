@@ -1,13 +1,8 @@
 package com.pottda.game.model;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.XmlReader;
-import com.badlogic.gdx.backends.headless.HeadlessApplication;
-import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
 import com.pottda.game.controller.AbstractController;
-import com.pottda.game.controller.Box2DActorFactory;
-import com.pottda.game.controller.ProjectileController;
 import com.pottda.game.model.items.ChainAttack;
 import com.pottda.game.model.items.MultiShot;
 import com.pottda.game.model.items.SimpleCannon;
@@ -17,9 +12,7 @@ import com.pottda.game.view.Sprites;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import testrunner.GdxTestRunner;
 
 import javax.vecmath.Vector2f;
 import javax.xml.parsers.ParserConfigurationException;
@@ -28,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 /**
  * Test some items and Inventory.compile()
@@ -45,7 +37,7 @@ public class InventoryTest {
 
         ActorFactory.setFactory(new ActorFactory() {
             @Override
-            public AbstractController buildEnemy(Sprites sprite, Vector2f position, Inventory inventory) {
+            public AbstractController buildEnemy(Sprites sprite, Vector2f position, String xmlFilePath) {
                 return null;
             }
 

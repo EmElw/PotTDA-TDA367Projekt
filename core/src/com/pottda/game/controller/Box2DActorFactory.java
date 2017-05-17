@@ -92,7 +92,7 @@ public class Box2DActorFactory extends ActorFactory {
     }
 
     @Override
-    public AIController buildEnemy(Sprites sprite, Vector2f position, Inventory inventory) {
+    public AIController buildEnemy(Sprites sprite, Vector2f position, String xmlFilePath) {
         // Create body
         Body body = world.createBody(characterBodyDef);
         body.setTransform(position.getX(), position.getY(), 0);
@@ -112,7 +112,19 @@ public class Box2DActorFactory extends ActorFactory {
         body.setUserData(model);
 
         // Add inventory
-        //model.inventory = inventory;
+        try {
+            model.inventory = getInventory(xmlFilePath);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         ActorView view = new ActorView(sprite.texture);
         stage.addActor(view);
