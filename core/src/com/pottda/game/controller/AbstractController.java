@@ -34,7 +34,7 @@ public abstract class AbstractController {
     }
 
     /**
-     * Called by MyGame every frame
+     * Called by PoTDA every frame
      */
     public void onNewFrame() {
         setInputVectors();
