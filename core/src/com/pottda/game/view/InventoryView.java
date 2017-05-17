@@ -2,6 +2,7 @@ package com.pottda.game.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -16,6 +17,7 @@ public class InventoryView {
     private VerticalGroup storageTable;
     private Table inventoryTable;
     private Skin mySkin = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
+    private Texture itemImageTexture;
 
     public InventoryView(Stage inventoryStage) {
         this.stage = inventoryStage;
@@ -66,14 +68,27 @@ public class InventoryView {
     }
 
     /**
-     * Takes an item to show up in storage
+     * Takes an item and shows it on the storage display
      *
      * @param item item to show up in storage
      */
-    public void addToViewStorage(Item item) {
-        Label itemName = new Label(item.name, mySkin);
-        storageTable.addActor(itemName);
+    public void addToStorageView(Item item) {
+        VerticalGroup itemGroupTable = new VerticalGroup();
+        imageToTexture(item);
 
-        Table itemStorageTable = new Table(mySkin);
+        Label itemName = new Label(item.name, mySkin);
+        Image itemImage = new Image(itemImageTexture);
+        itemGroupTable.addActor(itemName);
+        itemGroupTable.addActor(itemImage);
+
+        storageTable.addActor(itemGroupTable);
+    }
+
+    /**
+     * Converts an image to a texture to be used
+     * @param item item containing the image you want converted
+     */
+    private void imageToTexture(Item item) {
+        itemImageTexture = new Texture(Gdx.files.internal(item.itemImageLocation));
     }
 }

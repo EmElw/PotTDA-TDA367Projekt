@@ -57,7 +57,10 @@ public abstract class Item extends ProjectileListenerAdapter {
      * The name of the item
      */
     public String name;
-
+    /**
+     *
+     */
+    public String itemImageLocation;
     /**
      * Pseudo-constructor, called if instantiated without constructor (probably really bad practice)
      */
