@@ -3,6 +3,7 @@ package com.pottda.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
@@ -10,17 +11,25 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.AbstractController;
 import com.pottda.game.controller.Box2DActorFactory;
 import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.controller.TouchJoystickController;
 import com.pottda.game.model.ActorFactory;
+import com.pottda.game.model.Inventory;
 import com.pottda.game.model.InventoryFactory;
+import com.pottda.game.model.XMLItem;
 import com.pottda.game.physicsBox2D.CollisionListener;
 import com.pottda.game.view.*;
 
 import javax.vecmath.Vector2f;
+import javax.xml.parsers.ParserConfigurationException;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.*;
 
 import static com.pottda.game.MyGame.GameState.*;
@@ -67,10 +76,6 @@ public class MyGame extends ApplicationAdapter {
     }
 
     private static GameState gameState = NONE;
-
-    //private static final String playerImage = "circletest.png"; // change later
-    //private static final String enemyImage = "circletestred.png";
-    //private static final String borderImage = "game/border.png";
 
     private static final String playerStartInventory = "inventoryblueprint/playerStartInventory.xml";
 
@@ -132,15 +137,67 @@ public class MyGame extends ApplicationAdapter {
             float xx = (float) (Math.random() * WIDTH_METERS * scaling);
             float yy = (float) (Math.random() * HEIGHT_METERS * scaling);
             try {
-                ActorFactory.get().buildEnemy(Sprites.ENEMY,
-                        new Vector2f(xx, yy),
-                        InventoryFactory.createFromXML(Gdx.files.internal(playerStartInventory).file()));
+                ActorFactory.get().buildEnemy(Sprites.ENEMY, new Vector2f(xx, yy), getInventory("inventoryblueprint/playerStartInventory.xml"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         createWorldBorders();
 
+    }
+
+    /**
+     * Creates and returns a new inventory
+     *
+     * @param filePath path to the xml file to get inventory from
+     * @return a new inventory from the given xml file
+     * @throws ClassNotFoundException
+     * @throws ParserConfigurationException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws IOException
+     */
+    private Inventory getInventory(String filePath) throws ClassNotFoundException, ParserConfigurationException, InstantiationException, IllegalAccessException, IOException {
+        List<XMLItem> xmlItemList = new ArrayList<XMLItem>();
+
+        FileHandle file = Gdx.files.internal(filePath);
+        // Create the inventory to return
+        XmlReader xml = new XmlReader();
+        XmlReader.Element xml_element = null;
+        try {
+            // Read the file
+            xml_element = xml.parse(file);
+            // If the loaded file does not contain an inventory tag, throw exception
+            if (!xml_element.toString().split("\n")[0].contains("inventory")) {
+                throw new IOException("Couldn't find <inventory> tag");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        assert xml_element != null;
+        String secondLine = xml_element.toString().split("\n")[0];
+        // Get w and h from XML file
+        final int width = Integer.parseInt(secondLine.split("\"")[1]);
+        final int height = Integer.parseInt(secondLine.split("\"")[3]);
+
+        // Set the dimensions of the inventory
+        Inventory inventory = new Inventory();
+        inventory.setDimensions(width, height);
+
+        // Create the XMLItem list
+        for (String s : xml_element.toString().split("\n")) {
+            if (s.contains("<item ")) {
+                int orientation = Integer.parseInt(s.split("\"")[1]);
+                int x = Integer.parseInt(s.split("\"")[3]);
+                int y = Integer.parseInt(s.split("\"")[5]);
+                String name = s.split("\"")[7];
+                XMLItem xmlItem = new XMLItem(name, x, y, orientation);
+                xmlItemList.add(xmlItem);
+            }
+        }
+
+        return InventoryFactory.createFromXML(xmlItemList, inventory, file.name());
     }
 
 
@@ -249,7 +306,7 @@ public class MyGame extends ApplicationAdapter {
 
             // Update all controllers, causing the model to update
             for (AbstractController c : controllers) {
-                    c.onNewFrame();
+                c.onNewFrame();
             }
             // Add created during the cycle to the list
             // TODO could potentially do some juggling to also execute the onFrame for all o these
