@@ -130,6 +130,8 @@ public class MyGame extends ApplicationAdapter {
         gameState = WAITING;
 
         createWorldBorders();
+
+        initNextLevel(1);
     }
 
     private void createPlayer() {
@@ -141,6 +143,7 @@ public class MyGame extends ApplicationAdapter {
 
     private void initNextLevel(int levelToStart) {
         currentLevel = levelToStart;
+        currentWave = 0;
         nrOfWaves = 2 + (int) (Math.random() * 3);
         System.out.println("current level: " + currentLevel + ", nr of waves: " + nrOfWaves);
     }
@@ -223,9 +226,11 @@ public class MyGame extends ApplicationAdapter {
                         // TODO Go to inventory
                         System.out.println("To inventory");
                         initNextLevel(++currentLevel);
+                        gameState = WAITING;
+                    } else {
+                        gameState = WAITING;
+                        startTime = System.currentTimeMillis();
                     }
-                    gameState = WAITING;
-                    startTime = System.currentTimeMillis();
                 }
                 break;
             case WAITING:
