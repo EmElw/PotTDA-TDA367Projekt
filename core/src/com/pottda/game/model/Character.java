@@ -20,10 +20,11 @@ public class Character extends ModelActor {
     /**
      * Current health of a character
      */
-    public int currentHealth;
+    int currentHealth;
     private static Map<Stat, Double> stats;
     private Vector2f movementVector;
 
+    public static Character player;
 
     // -- Constructors --
 
@@ -69,9 +70,6 @@ public class Character extends ModelActor {
 
     @Override
     public float getAngle() {
-//        if (team == ENEMY_TEAM) { // Fix rotation for enemies so they rotate towards player
-//            return 0 - super.getAngle();
-//        }
         return super.getAngle();
     }
 
@@ -80,13 +78,17 @@ public class Character extends ModelActor {
      *
      * @param incomingDamage Damage dealt to this character
      */
-    public void takeDamage(int incomingDamage) {
-        if (team != 0) {
+    void takeDamage(int incomingDamage) {
+        //if (team != 0) {
             currentHealth -= incomingDamage;
             if (currentHealth <= 0) {
                 shouldBeRemoved = true;
             }
-        }
+        //}
+    }
+
+    public int getCurrentHealth() {
+        return currentHealth;
     }
 
 //    private void setProjectileMovement(List<Projectile> projectiles, Vector2f attack) {

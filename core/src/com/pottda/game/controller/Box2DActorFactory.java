@@ -153,6 +153,8 @@ public class Box2DActorFactory extends ActorFactory {
         Character player = new Character(physics);
         DumbAIController.goal = player;
         player.team = PLAYER_TEAM;
+        // Set the player
+        Character.player = player;
         body.setUserData(player);
 
         try {
@@ -269,7 +271,7 @@ public class Box2DActorFactory extends ActorFactory {
 
         Box2DPhysicsProjectile physics = new Box2DPhysicsProjectile(body);
 
-        Projectile model = new Projectile(physics, 20, null);
+        Projectile model = new Projectile(physics, 5, null);
         model.team = team;
         body.setUserData(model);
 

@@ -16,6 +16,7 @@ import com.pottda.game.controller.AbstractController;
 import com.pottda.game.controller.Box2DActorFactory;
 import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.model.ActorFactory;
+import com.pottda.game.model.Character;
 import com.pottda.game.physicsBox2D.CollisionListener;
 import com.pottda.game.view.*;
 
@@ -305,6 +306,9 @@ public class PoTDA extends ApplicationAdapter {
     private void updateWorld() {
         // Update the physics world
         doPhysicsStep(Gdx.graphics.getDeltaTime());
+
+        // Set the health bar to player's current health
+        hudView.setHealthbar(Character.player.getCurrentHealth());
 
         // Draw the game
         gameView.render();
