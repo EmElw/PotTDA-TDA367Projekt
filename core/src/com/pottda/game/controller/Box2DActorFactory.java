@@ -10,8 +10,8 @@ import com.pottda.game.model.Character;
 import com.pottda.game.physicsBox2D.Box2DPhysicsActor;
 import com.pottda.game.physicsBox2D.Box2DPhysicsCharacter;
 import com.pottda.game.physicsBox2D.Box2DPhysicsProjectile;
+import com.pottda.game.view.ActorView;
 import com.pottda.game.view.Sprites;
-import com.pottda.game.view.ViewActor;
 
 import javax.vecmath.Vector2f;
 import javax.xml.parsers.ParserConfigurationException;
@@ -78,7 +78,7 @@ public class Box2DActorFactory extends ActorFactory {
 
     /**
      * @param world          a {@link World} to handle the Actor's {@link Body}
-     * @param stage          a {@link Stage} to draw the {@link ViewActor on}
+     * @param stage          a {@link Stage} to draw the {@link ActorView on}
      * @param controllerList a {@link Collection} to add the controllers to
      */
     public Box2DActorFactory(World world, Stage stage,
@@ -114,7 +114,7 @@ public class Box2DActorFactory extends ActorFactory {
         // Add inventory
         //model.inventory = inventory;
 
-        ViewActor view = new ViewActor(sprite.texture);
+        ActorView view = new ActorView(sprite.texture);
         stage.addActor(view);
         AIController aiController = new DumbAIController(model, view);
         controllers.add(aiController);
@@ -148,7 +148,7 @@ public class Box2DActorFactory extends ActorFactory {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ViewActor view = new ViewActor(sprite.texture);
+        ActorView view = new ActorView(sprite.texture);
 
         AbstractController controller = null;
 
@@ -157,6 +157,7 @@ public class Box2DActorFactory extends ActorFactory {
                 controller = new TouchJoystickController(player, view, ControllerOptions.joystickStage);
                 break;
             case KEYBOARD_MOUSE:
+//            case KEYBOARD_ONLY:
                 controller = new KeyboardMouseController(player, view, stage);
                 break;
             case KEYBOARD_ONLY:
@@ -249,7 +250,7 @@ public class Box2DActorFactory extends ActorFactory {
         model.team = team;
         body.setUserData(model);
 
-        ViewActor view = new ViewActor(sprite.texture);
+        ActorView view = new ActorView(sprite.texture);
 
         stage.addActor(view);
 
@@ -283,7 +284,7 @@ public class Box2DActorFactory extends ActorFactory {
         Obstacle model = new Obstacle(physics);
         body.setUserData(model);
 
-        ViewActor view = new ViewActor(sprite.texture, size);
+        ActorView view = new ActorView(sprite.texture, size);
 
         stage.addActor(view);
 

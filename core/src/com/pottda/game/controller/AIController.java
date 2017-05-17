@@ -1,15 +1,15 @@
 package com.pottda.game.controller;
 
 import com.pottda.game.model.ModelActor;
-import com.pottda.game.view.ViewActor;
+import com.pottda.game.view.ActorView;
 
 /**
  * Created by Rikard Teodorsson on 2017-04-07.
  */
 
 public abstract class AIController extends AbstractController {
-    public AIController(ModelActor modelActor, ViewActor viewActor) {
-        super(modelActor, viewActor);
+    AIController(ModelActor modelActor, ActorView actorView) {
+        super(modelActor, actorView);
     }
 
 

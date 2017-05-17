@@ -45,7 +45,7 @@ public class MyGame extends ApplicationAdapter {
     /*
     A List of controllers to iterate through every game-update
      */
-    private List<AbstractController> controllers;
+    private Set<AbstractController> controllers;
     /*
     A Stack to buffer new controllers created during the list-iteration
      */
@@ -108,7 +108,7 @@ public class MyGame extends ApplicationAdapter {
     }
 
     private void doOnStartGame() {
-        controllers = new ArrayList<AbstractController>();
+        controllers = new HashSet<AbstractController>();
         controllerBuffer = new Stack<AbstractController>();
         controllerRemovalBuffer = new Stack<AbstractController>();
 
@@ -239,62 +239,42 @@ public class MyGame extends ApplicationAdapter {
 
         checkTouch();
 
-        if (controllers != null) {
-            // Prepare removal of "dead" actors
-            for (AbstractController c : controllers) {
-                if (c.shouldBeRemoved()) {
-                    prepareForRemoval(c);
-                }
-            }
 
-            // Remove "dead" actors
-            if(controllerRemovalBuffer.size() > 0) {
-                controllers.removeAll(controllerRemovalBuffer);
-                controllerRemovalBuffer.clear();
-            }
-
-            // Update all controllers, causing the model to update
-            for (AbstractController c : controllers) {
-                if (c instanceof TouchJoystickController && gameState != RUNNING) {
-                    // Render joysticks
-                    c.onNewFrame();
-                } else if (gameState == RUNNING) {
-                    c.onNewFrame();
-                }
-            }
-            // Add created during the cycle to the list
-            // TODO could potentially do some juggling to also execute the onFrame for all o these
-            controllers.addAll(controllerBuffer);
-            controllerBuffer.clear();
-        }
         switch (gameState) {
-
             case NONE:
                 break;
             case RUNNING:
-                gameView.render();
+                // Update the model
+                updateGame();
 
-                hudView.renderRunning();
-
-                // Update the world
+                // Update the physics world
                 doPhysicsStep(Gdx.graphics.getDeltaTime());
+
+                // Draw the game
+                gameView.render();
+                hudView.renderRunning();
                 hudStage.draw();
                 break;
             case PAUSED:
+                // Draw the pause menu
                 hudView.renderPaused();
                 hudStage.draw();
                 break;
             case OPTIONS:
+                // Draw the options menu
                 hudView.renderOptions();
                 hudStage.draw();
                 break;
             case MAIN_MENU:
+                // Draw the main menu
                 mainMenuView.renderMainMenu();
                 break;
             case MAIN_CHOOSE:
+                // Draw the choose difficulty menu
                 mainMenuView.renderChooseDiff();
                 break;
             case MAIN_CONTROLS:
+                // Draw the choose controller menu
                 mainMenuView.renderChooseControls();
                 break;
         }
@@ -313,6 +293,42 @@ public class MyGame extends ApplicationAdapter {
             }
         }
 
+    }
+
+    /**
+     * Updates the game logic
+     */
+    private void updateGame() {
+        if (controllers != null) {
+            bringOutYourDead();
+
+            // Update all controllers, causing the model to update
+            for (AbstractController c : controllers) {
+                    c.onNewFrame();
+            }
+            // Add created during the cycle to the list
+            // TODO could potentially do some juggling to also execute the onFrame for all o these
+            controllers.addAll(controllerBuffer);
+            controllerBuffer.clear();
+        }
+    }
+
+    /**
+     * Removes actors that have flagged themselvs as dead
+     */
+    private void bringOutYourDead() {
+        // Prepare removal of "dead" actors
+        for (AbstractController c : controllers) {
+            if (c.shouldBeRemoved()) {
+                prepareForRemoval(c);
+            }
+        }
+
+        // Remove "dead" actors
+        if (controllerRemovalBuffer.size() > 0) {
+            controllers.removeAll(controllerRemovalBuffer);
+            controllerRemovalBuffer.clear();
+        }
     }
 
     /**
