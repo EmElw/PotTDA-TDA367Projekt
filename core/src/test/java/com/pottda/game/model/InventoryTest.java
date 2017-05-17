@@ -13,14 +13,18 @@ import com.pottda.game.model.items.MultiShot;
 import com.pottda.game.model.items.SimpleCannon;
 import com.pottda.game.model.items.Switcher;
 import com.pottda.game.view.Sprites;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import testrunner.GdxTestRunner;
 
 import javax.vecmath.Vector2f;
 import javax.xml.parsers.ParserConfigurationException;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -168,7 +172,12 @@ public class InventoryTest {
     private Inventory getInventory() throws ClassNotFoundException, ParserConfigurationException, InstantiationException, IllegalAccessException, IOException {
         List<XMLItem> xmlItemList = new ArrayList<XMLItem>();
 
-        FileHandle file = Gdx.files.internal("inventoryblueprint/testInv2.xml");
+        String basePath = new File("").getAbsolutePath();
+        String filePath = basePath.
+                replace("\\core", "").  // No one must know of this blasphemy
+                concat("\\android\\assets\\inventoryblueprint\\testInv2.xml");
+
+        FileHandle file = new FileHandle(filePath);
         // Create the inventory to return
         XmlReader xml = new XmlReader();
         XmlReader.Element xml_element = null;
