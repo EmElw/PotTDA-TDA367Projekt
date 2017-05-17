@@ -20,10 +20,13 @@ public abstract class AbstractController {
     private final ActorView actorView;
 
     /**
-     * @param modelActor
-     * @param actorView
+     * Creates a new AbstractController and sets its
+     * actor and view
+     *
+     * @param modelActor a {@link ModelActor}
+     * @param actorView  a {@link ActorView}
      */
-    AbstractController(ModelActor modelActor, ActorView actorView) {
+    public AbstractController(ModelActor modelActor, ActorView actorView) {
         this.modelActor = modelActor;
         this.actorView = actorView;
         movementVector = new Vector2f(0, 0);
@@ -39,6 +42,14 @@ public abstract class AbstractController {
         updateView();
     }
 
+    /**
+     * Called every frame and should set the movement- and attack
+     * vectors of the controller.
+     * <p>
+     * {@code movementVector} should be of 0 <= length <= 1
+     * <p>
+     * {@code attackVector} should be normalized or 0,0
+     */
     protected abstract void setInputVectors();
 
     public boolean shouldBeRemoved() {

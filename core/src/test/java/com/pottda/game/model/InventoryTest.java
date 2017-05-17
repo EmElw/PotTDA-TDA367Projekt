@@ -3,25 +3,33 @@ package com.pottda.game.model;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.XmlReader;
+import com.badlogic.gdx.backends.headless.HeadlessApplication;
+import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
+import com.pottda.game.controller.AbstractController;
+import com.pottda.game.controller.Box2DActorFactory;
+import com.pottda.game.controller.ProjectileController;
 import com.pottda.game.model.items.ChainAttack;
 import com.pottda.game.model.items.MultiShot;
 import com.pottda.game.model.items.SimpleCannon;
 import com.pottda.game.model.items.Switcher;
-
+import com.pottda.game.view.Sprites;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import testrunner.GdxTestRunner;
 
 import javax.vecmath.Vector2f;
 import javax.xml.parsers.ParserConfigurationException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Test some items and Inventory.compile()
  */
+//@RunWith(GdxTestRunner.class)
 public class InventoryTest {
     Inventory testInv2;
     AttackItem cannon;
@@ -30,6 +38,52 @@ public class InventoryTest {
     @Before
     public void setUp() {
 
+
+        ActorFactory.setFactory(new ActorFactory() {
+            @Override
+            public AbstractController buildEnemy(Sprites sprite, Vector2f position, Inventory inventory) {
+                return null;
+            }
+
+            @Override
+            public AbstractController buildPlayer(Sprites sprite, Vector2f position) {
+                return null;
+            }
+
+            @Override
+            public AbstractController buildProjectile(Sprites sprite, int team, boolean bounces, boolean penetrates, Vector2f position) {
+                PhysicsActor pa = new PhysicsActor() {
+                    @Override
+                    public Vector2f getPosition() {
+                        return new Vector2f();
+                    }
+
+                    @Override
+                    public void giveMovementVector(Vector2f movementVector) {
+
+                    }
+
+                    @Override
+                    public void destroyBody() {
+
+                    }
+                };
+
+                Projectile p = new Projectile(pa, 0, new ArrayList<ProjectileListener>());
+
+                return new AbstractController(p, null) {
+                    @Override
+                    protected void setInputVectors() {
+
+                    }
+                };
+            }
+
+            @Override
+            public AbstractController buildObstacle(Sprites sprite, Vector2f position, Vector2f size, boolean isBorder) {
+                return null;
+            }
+        });
 
         try {
             testInv2 = getInventory();

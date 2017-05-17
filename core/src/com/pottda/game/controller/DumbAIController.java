@@ -3,28 +3,66 @@ package com.pottda.game.controller;
 import com.pottda.game.model.ModelActor;
 import com.pottda.game.view.ActorView;
 
-public class DumbAIController extends AIController {
-    private static final int SAFE_DISTANCE = 4;
-    static ModelActor goal = null;
 
+/**
+ * Basic AI controller that always wants to move towards its goal
+ * and continuously attacks in that direction.
+ * <p>
+ * It stops moving towards its goal when within a set distance but
+ * will remain attacking
+ */
+public class DumbAIController extends AIController {
+    private static final int DEFAULT_SAFE_DISTANCE = 4;
+    static ModelActor goal = null;
+    private int localSafeDistance;
+
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param modelActor
+     * @param actorView
+     */
     DumbAIController(ModelActor modelActor, ActorView actorView) {
         super(modelActor, actorView);
+        localSafeDistance = DEFAULT_SAFE_DISTANCE;
     }
 
+    /**
+     * Sets the safeDistance to another value
+     *
+     * @param modelActor   {@inheritDoc}
+     * @param actorView    {@inheritDoc}
+     * @param safeDistance an integer in meters
+     */
+    DumbAIController(ModelActor modelActor, ActorView actorView, int safeDistance) {
+        super(modelActor, actorView);
+        this.localSafeDistance = safeDistance;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setInputVectors() {
         if (goal != null) {
             movementVector.set(goal.getPosition());
             movementVector.sub(modelActor.getPosition());
 
-            if (movementVector.length() < SAFE_DISTANCE) {
+            attackVector.set(movementVector);
+            if (attackVector.length() != 0) {
+                attackVector.normalize();
+            }
+
+            if (movementVector.length() < localSafeDistance) {
                 movementVector.set(0, 0);
-            } else {
+            }
+            {
                 if (movementVector.length() > 1) {
                     movementVector.normalize();
                 }
             }
-            attackVector.set(movementVector);
         } else {
             movementVector.set(0, 0);
             attackVector.set(0, 0);
