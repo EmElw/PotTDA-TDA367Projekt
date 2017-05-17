@@ -1,5 +1,6 @@
 package com.pottda.game.model;
 
+import com.pottda.game.controller.Box2DActorFactory;
 import com.pottda.game.view.Sprites;
 
 import javax.vecmath.Vector2f;
@@ -8,6 +9,7 @@ import java.util.List;
 
 
 public abstract class AttackItem extends Item {
+    private final static float CHARACTER_RADIUS = 0.5f;
 
     /**
      * The base damage of any {@link Projectile} created by this Item
@@ -49,6 +51,9 @@ public abstract class AttackItem extends Item {
             }
         }
 
+        direction.scale(CHARACTER_RADIUS);
+        origin.add(direction);
+        direction.normalize();
 
         Projectile proj = (Projectile) ActorFactory.get().buildProjectile(
                 Sprites.PROJECTILE1,
