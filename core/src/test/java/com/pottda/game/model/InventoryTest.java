@@ -90,7 +90,7 @@ public class InventoryTest {
         });
 
         try {
-            testInv2 = getInventory();
+            testInv2 = getInventory("testInv2.xml");
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();
@@ -159,7 +159,7 @@ public class InventoryTest {
             Inventory i;
 
             try {
-                i = getIllegalInventory();
+                i = getInventory("illegalTestInv.xml");
                 i.compile();
                 Assert.assertFalse(i.isLegal());
             } catch (Exception e) {
@@ -169,13 +169,13 @@ public class InventoryTest {
         }
     }
 
-    private Inventory getInventory() throws ClassNotFoundException, ParserConfigurationException, InstantiationException, IllegalAccessException, IOException {
+    private Inventory getInventory(String fileName) throws ClassNotFoundException, ParserConfigurationException, InstantiationException, IllegalAccessException, IOException {
         List<XMLItem> xmlItemList = new ArrayList<XMLItem>();
 
         String basePath = new File("").getAbsolutePath();
         String filePath = basePath.
                 replace("\\core", "").  // No one must know of this blasphemy
-                concat("\\android\\assets\\inventoryblueprint\\testInv2.xml");
+                concat("\\android\\assets\\inventoryblueprint\\" + fileName);
 
         FileHandle file = new FileHandle(filePath);
         // Create the inventory to return
@@ -218,52 +218,4 @@ public class InventoryTest {
         return InventoryFactory.createFromXML(xmlItemList, inventory, file.name());
     }
 
-    private Inventory getIllegalInventory() throws ClassNotFoundException, ParserConfigurationException, InstantiationException, IllegalAccessException, IOException {
-        List<XMLItem> xmlItemList = new ArrayList<XMLItem>();
-
-        String basePath = new File("").getAbsolutePath();
-        String filePath = basePath.
-                replace("\\core", "").  // No one must know of this blasphemy
-                concat("\\android\\assets\\inventoryblueprint\\illegalTestInv.xml");
-
-        FileHandle file = new FileHandle(filePath);
-        // Create the inventory to return
-        XmlReader xml = new XmlReader();
-        XmlReader.Element xml_element = null;
-        try {
-            // Read the file
-            xml_element = xml.parse(file);
-            // If the loaded file does not contain an inventory tag, throw exception
-            if (!xml_element.toString().split("\n")[0].contains("inventory")) {
-                throw new IOException("Couldn't find <inventory> tag");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        assert xml_element != null;
-        String secondLine = xml_element.toString().split("\n")[0];
-        // Get w and h from XML file
-        final int width = Integer.parseInt(secondLine.split("\"")[1]);
-        final int height = Integer.parseInt(secondLine.split("\"")[3]);
-
-        // Set the dimensions of the inventory
-        Inventory inventory = new Inventory();
-        inventory.setDimensions(width, height);
-
-        // Create the XMLItem list
-        for (String s : xml_element.toString().split("\n")) {
-            if (s.contains("<item ")) {
-                int orientation = Integer.parseInt(s.split("\"")[1]);
-                int x = Integer.parseInt(s.split("\"")[3]);
-                int y = Integer.parseInt(s.split("\"")[5]);
-                String name = s.split("\"")[7];
-                XMLItem xmlItem = new XMLItem(name, x, y, orientation);
-                xmlItemList.add(xmlItem);
-            }
-        }
-
-        return InventoryFactory.createFromXML(xmlItemList, inventory, file.name());
-    }
 }
