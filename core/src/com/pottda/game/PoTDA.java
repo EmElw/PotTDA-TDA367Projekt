@@ -23,10 +23,10 @@ import javax.vecmath.Vector2f;
 
 import java.util.*;
 
-import static com.pottda.game.MyGame.GameState.*;
+import static com.pottda.game.PoTDA.GameState.*;
 import static com.pottda.game.controller.ControllerOptions.ControllerMode.*;
 
-public class MyGame extends ApplicationAdapter {
+public class PoTDA extends ApplicationAdapter {
     private Stage hudStage;
     private Stage joystickStage;
     private Stage gameStage;
