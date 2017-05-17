@@ -150,7 +150,7 @@ public class PoTDA extends ApplicationAdapter {
     }
 
     private void startWave(int waveToStart) {
-        final int enemiesToSpawn = 5 + (int)(Math.random() * 3 * (waveToStart - 1));
+        final int enemiesToSpawn = 5 + (int)(Math.random() * 3 * (currentLevel + waveToStart - 2));
         System.out.println("Starting wave " + waveToStart + " with " + enemiesToSpawn + " enemies");
 
         // Add some enemies

@@ -1,6 +1,7 @@
 package com.pottda.game.model;
 
 import javax.vecmath.Vector2f;
+
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -79,12 +80,10 @@ public class Character extends ModelActor {
      * @param incomingDamage Damage dealt to this character
      */
     void takeDamage(int incomingDamage) {
-        //if (team != 0) {
-            currentHealth -= incomingDamage;
-            if (currentHealth <= 0) {
-                shouldBeRemoved = true;
-            }
-        //}
+        currentHealth -= incomingDamage;
+        if (currentHealth <= 0) {
+            shouldBeRemoved = true;
+        }
     }
 
     public int getCurrentHealth() {
