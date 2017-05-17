@@ -86,21 +86,11 @@ public class Character extends ModelActor {
         }
     }
 
+    /**
+     * Returns the current health of the actor
+     * @return the health of the actor
+     */
     public int getCurrentHealth() {
         return currentHealth;
     }
-
-//    private void setProjectileMovement(List<Projectile> projectiles, Vector2f attack) {
-//        Vector2f temp;
-//        for (int i = 0, n = projectiles.size(); i < n; i++) {
-//            temp = rotateVector(attack, PROJECTILE_ANGLE * ((n / 2f) - (float) i));
-//            temp.normalize();
-//            projectiles.get(i).giveInput(temp, null);
-//        }
-//    }
-//
-//    private Vector2f rotateVector(Vector2f vector, float rad) {
-//        return new Vector2f(vector.x * (float) Math.cos((double) rad),
-//                vector.y * (float) Math.sin((double) rad));
-//    }
 }

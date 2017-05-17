@@ -107,6 +107,9 @@ public class PoTDA extends ApplicationAdapter {
         mainMenuView = new MainMenuView(mainMenuStage);
     }
 
+    /**
+     * Inits the game world and player
+     */
     private void doOnStartGame() {
         controllers = new HashSet<AbstractController>();
         controllerBuffer = new Stack<AbstractController>();
@@ -132,9 +135,12 @@ public class PoTDA extends ApplicationAdapter {
 
         createWorldBorders();
 
-        initNextLevel(1);
+        initNextLevel(++currentLevel);
     }
 
+    /**
+     * Creates the player
+     */
     private void createPlayer() {
         // Add player
         ActorFactory.get().buildPlayer(Sprites.PLAYER,
@@ -142,6 +148,10 @@ public class PoTDA extends ApplicationAdapter {
 
     }
 
+    /**
+     * Sets variables to prepare for next level
+     * @param levelToStart the next level
+     */
     private void initNextLevel(int levelToStart) {
         currentLevel = levelToStart;
         currentWave = 0;
@@ -149,6 +159,10 @@ public class PoTDA extends ApplicationAdapter {
         System.out.println("current level: " + currentLevel + ", nr of waves: " + nrOfWaves);
     }
 
+    /**
+     * Starts the next wave and spawns enemies
+     * @param waveToStart the wave to start. Higher spawns more enemies
+     */
     private void startWave(int waveToStart) {
         final int enemiesToSpawn = 5 + (int)(Math.random() * 3 * (currentLevel + waveToStart - 2));
         System.out.println("Starting wave " + waveToStart + " with " + enemiesToSpawn + " enemies");
@@ -165,6 +179,10 @@ public class PoTDA extends ApplicationAdapter {
         }
     }
 
+    /**
+     * Checks if any enemies are alive
+     * @return true if at least one enemy is alive
+     */
     private boolean enemiesAlive() {
         for (AbstractController a : controllers) {
             if (a instanceof AIController) {
@@ -303,6 +321,9 @@ public class PoTDA extends ApplicationAdapter {
         }
     }
 
+    /**
+     * Updates physics, health bar and renders views
+     */
     private void updateWorld() {
         // Update the physics world
         doPhysicsStep(Gdx.graphics.getDeltaTime());
@@ -426,6 +447,9 @@ public class PoTDA extends ApplicationAdapter {
         }
     }
 
+    /**
+     * Plays music
+     */
     private void startMusic() {
         soundsAndMusic.play();
     }
