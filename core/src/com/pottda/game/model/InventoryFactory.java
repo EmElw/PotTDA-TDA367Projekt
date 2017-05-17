@@ -1,16 +1,9 @@
 package com.pottda.game.model;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -32,7 +25,7 @@ public class InventoryFactory {
      * @throws IllegalAccessException       as per {@code Class.newInstance}
      * @throws InstantiationException       as per {@code Class.newInstance}
      */
-    public static Inventory createFromXML(NodeList nList, Inventory inventory, String name) throws ParserConfigurationException, IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
+    public static Inventory createFromXML(List<XMLItem> xmlItemList, Inventory inventory, String name) throws ParserConfigurationException, IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
 
         if (InventoryBlueprint.hasInventory(name)) {
             inventory = InventoryBlueprint.getInventory(name);
@@ -40,18 +33,14 @@ public class InventoryFactory {
             return inventory;
         }
 
-        for (int idx = 0; idx < nList.getLength(); idx++) {
-            // Get the item as an element from the list
-            Element element = (Element) nList.item(idx);
-
+        for (XMLItem xmlItem : xmlItemList) {
             // Try to load the item type given by the file
-            String className = element.getAttribute("name");
-            Item item = (Item) getClass(className).newInstance();   // TODO fix so that it uses constructor instead
+            Item item = (Item) getClass(xmlItem.getClassName()).newInstance();
             item.init();
-            // Set properties of the item given by the file
-            item.x = (Integer.parseInt(element.getAttribute("x")));
-            item.y = (Integer.parseInt(element.getAttribute("y")));
-            item.orientation = (Integer.parseInt(element.getAttribute("orientation")));
+            // Set item properties
+            item.x = xmlItem.getX();
+            item.y = xmlItem.getY();
+            item.orientation = xmlItem.getOrientation();
 
             // Add the item to the inventory
             inventory.addItem(item);

@@ -13,22 +13,13 @@ import com.pottda.game.physicsBox2D.Box2DPhysicsProjectile;
 import com.pottda.game.view.Sprites;
 import com.pottda.game.view.ViewActor;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-
 import javax.vecmath.Vector2f;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.List;
 
 import static com.pottda.game.model.ModelActor.ENEMY_TEAM;
 import static com.pottda.game.model.ModelActor.PLAYER_TEAM;
@@ -152,59 +143,8 @@ public class Box2DActorFactory extends ActorFactory {
         player.team = PLAYER_TEAM;
         body.setUserData(player);
 
-        //File file = Gdx.files.internal("inventoryblueprint/playerStartInventory.xml").file();
-        FileHandle file = Gdx.files.internal("inventoryblueprint/playerStartInventory.xml");
-        // Create the inventory to return
-        XmlReader xml = new XmlReader();
-        XmlReader.Element xml_element = null;
         try {
-            xml_element = xml.parse(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Iterator iterator_level = xml_element.getChildrenByName("level").iterator();
-        while (iterator_level.hasNext()) {
-            XmlReader.Element level_element = (XmlReader.Element) iterator_level.next();
-            String level_number = level_element.getAttribute("number");
-            String level_status = level_element.getAttribute("status");
-        }
-
-        Inventory inventory = new Inventory();
-
-        // Magic loading, based on https://www.tutorialspoint.com/java_xml/java_dom_parse_document.htm
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = null;
-        try {
-            db = documentBuilderFactory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
-        Document doc = null;
-        try {
-            doc = db.parse("");
-
-            // If the loaded file does not contain an inventory tag, throw exception
-            if (!doc.getDocumentElement().getNodeName().equals("inventory")) {
-                throw new IOException("Couldn't find <inventory> tag");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        }
-        doc.getDocumentElement().normalize();
-
-        // Set the dimensions of the inventory
-        inventory.setDimensions(
-                Integer.parseInt(doc.getDocumentElement().getAttribute("w")),
-                Integer.parseInt(doc.getDocumentElement().getAttribute("h")));
-
-        // Create a list item nodes
-        NodeList nList = doc.getElementsByTagName("item");
-
-        try {
-            player.inventory = InventoryFactory.createFromXML(nList, inventory, /*file.getName()*/ "");
+            player.inventory = getInventory();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -227,6 +167,49 @@ public class Box2DActorFactory extends ActorFactory {
 
         controllers.add(controller);
         return controller;
+    }
+
+    private Inventory getInventory() throws ClassNotFoundException, ParserConfigurationException, InstantiationException, IllegalAccessException, IOException {
+        List<XMLItem> xmlItemList = new ArrayList<XMLItem>();
+
+        FileHandle file = Gdx.files.internal("inventoryblueprint/testInv2.xml");
+        // Create the inventory to return
+        XmlReader xml = new XmlReader();
+        XmlReader.Element xml_element = null;
+        try {
+            // Read the file
+            xml_element = xml.parse(file);
+            // If the loaded file does not contain an inventory tag, throw exception
+            if (!xml_element.toString().split("\n")[0].contains("inventory")) {
+                throw new IOException("Couldn't find <inventory> tag");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        assert xml_element != null;
+        String secondLine = xml_element.toString().split("\n")[0];
+        // Get w and h from XML file
+        final int width = Integer.parseInt(secondLine.split("\"")[1]);
+        final int height = Integer.parseInt(secondLine.split("\"")[3]);
+
+        // Set the dimensions of the inventory
+        Inventory inventory = new Inventory();
+        inventory.setDimensions(width, height);
+
+        // Create the XMLItem list
+        for (String s : xml_element.toString().split("\n")) {
+            if (s.contains("<item ")) {
+                int orientation = Integer.parseInt(s.split("\"")[1]);
+                int x = Integer.parseInt(s.split("\"")[3]);
+                int y = Integer.parseInt(s.split("\"")[5]);
+                String name = s.split("\"")[7];
+                XMLItem xmlItem = new XMLItem(name, x, y, orientation);
+                xmlItemList.add(xmlItem);
+            }
+        }
+
+        return InventoryFactory.createFromXML(xmlItemList, inventory, file.name());
     }
 
     @Override
