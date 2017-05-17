@@ -97,6 +97,11 @@ public class MyGame extends ApplicationAdapter {
 
         mainMenuView = new MainMenuView(mainMenuStage);
         inventoryView = new InventoryView(inventoryStage);
+        inventoryView.addToStorageView();
+        inventoryView.addToStorageView();
+        inventoryView.addToStorageView();
+        inventoryView.addToStorageView();
+        inventoryView.addToStorageView();
     }
 
     private void doOnStartGame() {

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Scaling;
 import com.pottda.game.model.Item;
 
 /**
@@ -33,10 +34,11 @@ public class InventoryView {
         Label storageLabel = new Label("Storage", mySkin);
         Label inventoryLabel = new Label("Inventory", mySkin);
 
-        // Create storage
+        // Create storage & scroll for storage
         storageTable = new VerticalGroup();
-        ScrollPane storageScroll = new ScrollPane(storageTable);
-        Container storage = new Container(storageScroll);
+        ScrollPane scroll = new ScrollPane(storageTable, mySkin);
+        Table storage = new Table();
+        storage.add(scroll).expand().fill();
 
         // Create inventory
         inventoryTable = new Table();
@@ -51,7 +53,7 @@ public class InventoryView {
         table.add(storageLabel);
         table.add(inventoryLabel);
         table.row();
-        table.add(storage).fill();
+        table.add(storage);
         table.add(inventory).expand().fill();
      }
 
@@ -70,10 +72,10 @@ public class InventoryView {
     /**
      * Takes an item and shows it on the storage display
      *
-     * @param item item to show up in storage
+     * //@param item item to show up in storage
      */
-    public void addToStorageView(Item item) {
-        VerticalGroup itemGroupTable = new VerticalGroup();
+    public void addToStorageView() {
+        /*VerticalGroup itemGroupTable = new VerticalGroup();
         imageToTexture(item);
 
         Label itemName = new Label(item.name, mySkin);
@@ -81,7 +83,24 @@ public class InventoryView {
         itemGroupTable.addActor(itemName);
         itemGroupTable.addActor(itemImage);
 
-        storageTable.addActor(itemGroupTable);
+        storageTable.addActor(itemGroupTable);*/
+
+        // Create a table to hold name + image
+        Table pancakeGroupTable = new Table();
+        itemImageTexture = new Texture(Gdx.files.internal("pancake1.jpg"));
+
+        Label pancakeName = new Label("Pancake", mySkin);
+        Image pancakeImage = new Image(itemImageTexture);
+
+        // Add a label and image to the table and fit the image
+        pancakeGroupTable.add(pancakeName);
+        pancakeGroupTable.row();
+        pancakeGroupTable.add(pancakeImage).width(125).height(125);
+        pancakeImage.setScaling(Scaling.fit);
+        pancakeGroupTable.setDebug(true);
+
+        // Add the table to our main storage table
+        storageTable.addActor(pancakeGroupTable);
     }
 
     /**
