@@ -23,7 +23,7 @@ public abstract class AbstractController {
      * @param modelActor
      * @param actorView
      */
-    AbstractController(ModelActor modelActor, ActorView actorView) {
+    public AbstractController(ModelActor modelActor, ActorView actorView) {
         this.modelActor = modelActor;
         this.actorView = actorView;
         movementVector = new Vector2f(0, 0);
