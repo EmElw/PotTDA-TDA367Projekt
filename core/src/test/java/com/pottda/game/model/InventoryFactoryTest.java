@@ -71,7 +71,13 @@ public class InventoryFactoryTest {
     private Inventory getInventory() throws ClassNotFoundException, ParserConfigurationException, InstantiationException, IllegalAccessException, IOException {
         List<XMLItem> xmlItemList = new ArrayList<XMLItem>();
 
-        FileHandle file = Gdx.files.internal("inventoryblueprint/testInv.xml");
+        String basePath = new File("").getAbsolutePath();
+        String filePath = basePath.
+                replace("\\core", "").  // No one must know of this blasphemy
+                concat("\\android\\assets\\inventoryblueprint\\testInv.xml");
+
+        FileHandle file = new FileHandle(filePath);
+
         // Create the inventory to return
         XmlReader xml = new XmlReader();
         XmlReader.Element xml_element = null;
@@ -107,6 +113,7 @@ public class InventoryFactoryTest {
                 xmlItemList.add(xmlItem);
             }
         }
+        System.out.println(xmlItemList.size());
 
         return InventoryFactory.createFromXML(xmlItemList, inventory, file.name());
     }
