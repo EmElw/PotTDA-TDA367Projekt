@@ -1,18 +1,25 @@
 package com.pottda.game.controller;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.XmlReader;
 import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
 import com.pottda.game.physicsBox2D.Box2DPhysicsActor;
 import com.pottda.game.physicsBox2D.Box2DPhysicsCharacter;
 import com.pottda.game.physicsBox2D.Box2DPhysicsProjectile;
+import com.pottda.game.view.ActorView;
 import com.pottda.game.view.Sprites;
-import com.pottda.game.view.ViewActor;
 
 import javax.vecmath.Vector2f;
+import javax.xml.parsers.ParserConfigurationException;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import static com.pottda.game.model.ModelActor.ENEMY_TEAM;
 import static com.pottda.game.model.ModelActor.PLAYER_TEAM;
@@ -71,7 +78,7 @@ public class Box2DActorFactory extends ActorFactory {
 
     /**
      * @param world          a {@link World} to handle the Actor's {@link Body}
-     * @param stage          a {@link Stage} to draw the {@link ViewActor on}
+     * @param stage          a {@link Stage} to draw the {@link ActorView on}
      * @param controllerList a {@link Collection} to add the controllers to
      */
     public Box2DActorFactory(World world, Stage stage,
@@ -85,7 +92,7 @@ public class Box2DActorFactory extends ActorFactory {
     }
 
     @Override
-    public AIController buildEnemy(Sprites sprite, Vector2f position, Inventory inventory) {
+    public AIController buildEnemy(Sprites sprite, Vector2f position, String xmlFilePath) {
         // Create body
         Body body = world.createBody(characterBodyDef);
         body.setTransform(position.getX(), position.getY(), 0);
@@ -105,9 +112,21 @@ public class Box2DActorFactory extends ActorFactory {
         body.setUserData(model);
 
         // Add inventory
-        model.inventory = inventory;
+        try {
+            model.inventory = getInventory(xmlFilePath);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        ViewActor view = new ViewActor(sprite.texture);
+        ActorView view = new ActorView(sprite.texture);
         stage.addActor(view);
         AIController aiController = new DumbAIController(model, view);
         controllers.add(aiController);
@@ -136,14 +155,12 @@ public class Box2DActorFactory extends ActorFactory {
         player.team = PLAYER_TEAM;
         body.setUserData(player);
 
-        // Add inventory
         try {
-            player.inventory = InventoryFactory.createFromXML(Gdx.files.internal(
-                    "inventoryblueprint/testInv2.xml").file());
+            player.inventory = getInventory("inventoryblueprint/testInv2.xml");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ViewActor view = new ViewActor(sprite.texture);
+        ActorView view = new ActorView(sprite.texture);
 
         AbstractController controller = null;
 
@@ -152,6 +169,7 @@ public class Box2DActorFactory extends ActorFactory {
                 controller = new TouchJoystickController(player, view, ControllerOptions.joystickStage);
                 break;
             case KEYBOARD_MOUSE:
+//            case KEYBOARD_ONLY:
                 controller = new KeyboardMouseController(player, view, stage);
                 break;
             case KEYBOARD_ONLY:
@@ -162,6 +180,60 @@ public class Box2DActorFactory extends ActorFactory {
 
         controllers.add(controller);
         return controller;
+    }
+
+    /**
+     * Creates and returns a new inventory
+     *
+     * @param filePath path to the xml file to get inventory from
+     * @return a new inventory from the given xml file
+     * @throws ClassNotFoundException
+     * @throws ParserConfigurationException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws IOException
+     */
+    private Inventory getInventory(String filePath) throws ClassNotFoundException, ParserConfigurationException, InstantiationException, IllegalAccessException, IOException {
+        List<XMLItem> xmlItemList = new ArrayList<XMLItem>();
+
+        FileHandle file = Gdx.files.internal(filePath);
+        // Create the inventory to return
+        XmlReader xml = new XmlReader();
+        XmlReader.Element xml_element = null;
+        try {
+            // Read the file
+            xml_element = xml.parse(file);
+            // If the loaded file does not contain an inventory tag, throw exception
+            if (!xml_element.toString().split("\n")[0].contains("inventory")) {
+                throw new IOException("Couldn't find <inventory> tag");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        assert xml_element != null;
+        String secondLine = xml_element.toString().split("\n")[0];
+        // Get w and h from XML file
+        final int width = Integer.parseInt(secondLine.split("\"")[1]);
+        final int height = Integer.parseInt(secondLine.split("\"")[3]);
+
+        // Set the dimensions of the inventory
+        Inventory inventory = new Inventory();
+        inventory.setDimensions(width, height);
+
+        // Create the XMLItem list
+        for (String s : xml_element.toString().split("\n")) {
+            if (s.contains("<item ")) {
+                int orientation = Integer.parseInt(s.split("\"")[1]);
+                int x = Integer.parseInt(s.split("\"")[3]);
+                int y = Integer.parseInt(s.split("\"")[5]);
+                String name = s.split("\"")[7];
+                XMLItem xmlItem = new XMLItem(name, x, y, orientation);
+                xmlItemList.add(xmlItem);
+            }
+        }
+
+        return InventoryFactory.createFromXML(xmlItemList, inventory, file.name());
     }
 
     @Override
@@ -201,7 +273,7 @@ public class Box2DActorFactory extends ActorFactory {
         model.team = team;
         body.setUserData(model);
 
-        ViewActor view = new ViewActor(sprite.texture);
+        ActorView view = new ActorView(sprite.texture);
 
         stage.addActor(view);
 
@@ -235,7 +307,7 @@ public class Box2DActorFactory extends ActorFactory {
         Obstacle model = new Obstacle(physics);
         body.setUserData(model);
 
-        ViewActor view = new ViewActor(sprite.texture, size);
+        ActorView view = new ActorView(sprite.texture, size);
 
         stage.addActor(view);
 

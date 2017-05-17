@@ -1,16 +1,49 @@
 package com.pottda.game.controller;
 
 import com.pottda.game.model.ModelActor;
-import com.pottda.game.view.ViewActor;
+import com.pottda.game.view.ActorView;
 
+
+/**
+ * Basic AI controller that always wants to move towards its goal
+ * and continuously attacks in that direction.
+ * <p>
+ * It stops moving towards its goal when within a set distance but
+ * will remain attacking
+ */
 public class DumbAIController extends AIController {
-    private static final int SAFE_DISTANCE = 4;
+    private static final int DEFAULT_SAFE_DISTANCE = 4;
     static ModelActor goal = null;
+    private int localSafeDistance;
 
-    DumbAIController(ModelActor modelActor, ViewActor viewActor) {
-        super(modelActor, viewActor);
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param modelActor
+     * @param actorView
+     */
+    DumbAIController(ModelActor modelActor, ActorView actorView) {
+        super(modelActor, actorView);
+        localSafeDistance = DEFAULT_SAFE_DISTANCE;
     }
 
+    /**
+     * Sets the safeDistance to another value
+     *
+     * @param modelActor   {@inheritDoc}
+     * @param actorView    {@inheritDoc}
+     * @param safeDistance an integer in meters
+     */
+    DumbAIController(ModelActor modelActor, ActorView actorView, int safeDistance) {
+        super(modelActor, actorView);
+        this.localSafeDistance = safeDistance;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setInputVectors() {
         if (goal != null) {
@@ -18,12 +51,17 @@ public class DumbAIController extends AIController {
             movementVector.sub(modelActor.getPosition());
 
             attackVector.set(movementVector);
-            attackVector.normalize();
+            if (attackVector.length() != 0) {
+                attackVector.normalize();
+            }
 
-            if (movementVector.length() < SAFE_DISTANCE) {
+            if (movementVector.length() < localSafeDistance) {
                 movementVector.set(0, 0);
-            } else {
-                movementVector.normalize();
+            }
+            {
+                if (movementVector.length() > 1) {
+                    movementVector.normalize();
+                }
             }
         } else {
             movementVector.set(0, 0);

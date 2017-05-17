@@ -11,13 +11,13 @@ import javax.vecmath.Vector2f;
 /**
  *
  */
-public class ViewActor extends Image {
+public class ActorView extends Image {
 
     /**
      * calls super class to set image for actor
      * @param texture the texture to set as image
      */
-    public ViewActor(Texture texture) {
+    public ActorView(Texture texture) {
         super(new TextureRegionDrawable(new TextureRegion(texture)));
         // set the rotation point to middle of image
         this.setOrigin((texture.getWidth() * MyGame.WIDTH_RATIO) / 2, (texture.getHeight() * MyGame.HEIGHT_RATIO) / 2);
@@ -29,7 +29,7 @@ public class ViewActor extends Image {
      * @param texture the texture to set as image
      * @param size vector with width and height of image
      */
-    public ViewActor(Texture texture, Vector2f size) {
+    public ActorView(Texture texture, Vector2f size) {
         super(new TextureRegionDrawable(new TextureRegion(texture)));
         this.setSize(size.x, size.y);
     }

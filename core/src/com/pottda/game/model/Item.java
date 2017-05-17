@@ -1,7 +1,5 @@
 package com.pottda.game.model;
 
-import com.pottda.game.Util;
-
 import javax.vecmath.Point2i;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -84,7 +82,7 @@ public abstract class Item extends ProjectileListenerAdapter {
         List<Integer> list = new ArrayList<Integer>();
 
         for (Point2i p : basePositions) {
-            Point2i rotatedPoint = Util.rotate(p.x, p.y, orientation);
+            Point2i rotatedPoint = rotate(p.x, p.y, orientation);
             int v = (rotatedPoint.x + x) +    // Add x to convert to absolute coordinate in Inventory
                     (rotatedPoint.y + y) * w;     // Multiply to add the whole number of rows
             list.add(v);
@@ -107,7 +105,7 @@ public abstract class Item extends ProjectileListenerAdapter {
         List<Integer> list = new ArrayList<Integer>();
 
         for (Point2i p : baseOutputs) {
-            Point2i rotatedPoint = Util.rotate(p.x, p.y, orientation);
+            Point2i rotatedPoint = rotate(p.x, p.y, orientation);
             int v = (rotatedPoint.x + x) +    // Add x to convert to absolute coordinate in Inventory
                     (rotatedPoint.y + y) * w;     // Multiply to add the whole number of rows
             list.add(v);
@@ -141,5 +139,31 @@ public abstract class Item extends ProjectileListenerAdapter {
     public String toString() {
         return this.getClass().toString();
     }
+
+
+    /**
+     * Returns a copy of a rotated 2D point by n * pi/2 rad or n * 90 degrees around (0,0)
+     * <p>
+     * Home-brew rotation function (because vecmath doesn't support 2D matrices?)
+     *
+     * @param x the x-coordinate of the point
+     * @param y the y-coordinate of the point
+     * @param n the rotation, expressed as n multiples of pi/2 rad
+     * @return {@code int[]} of size 2
+     */
+    public static Point2i rotate(int x, int y, int n) {
+        Point2i returnValue = new Point2i(x, y);
+        returnValue.x = a[n] * x + b[n] * y;
+        returnValue.y = c[n] * x + a[n] * y;
+        return returnValue;
+    }
+
+    /**
+     * Rotation matrix for r * pi/2
+     * R = [ a[r] b[r] ; c[r] a[r]]
+     */
+    private static final int[] a = {1, 0, -1, 0};
+    private static final int[] b = {0, -1, 0, 1};
+    private static final int[] c = {0, 1, 0, -1};
 
 }

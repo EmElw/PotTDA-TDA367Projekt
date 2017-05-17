@@ -21,6 +21,7 @@ public class CharacterTest {
 
             @Override
             public Vector2f getPosition() {
+                position.normalize();
                 return position;
             }
 
@@ -49,7 +50,11 @@ public class CharacterTest {
         Vector2f attackVector = new Vector2f(1f, 1f);
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
-                movementVector.set((float) (15 * i), (float) (37 * j));
+                movementVector.set((float) (Math.random() * i), (float) (Math.random() * j));
+                if(movementVector.x == 0 && movementVector.y == 0){
+                    break;
+                }
+                movementVector.normalize();
                 character.giveInput(movementVector, attackVector);
                 assertTrue((Math.abs(fakePhysicsActor.getPosition().x - movementVector.x) < 0.01f) &&
                         (Math.abs(fakePhysicsActor.getPosition().y - movementVector.y) < 0.01));

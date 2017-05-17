@@ -1,7 +1,7 @@
 package com.pottda.game.controller;
 
 import com.pottda.game.model.ModelActor;
-import com.pottda.game.view.ViewActor;
+import com.pottda.game.view.ActorView;
 
 import javax.vecmath.Vector2f;
 
@@ -17,17 +17,20 @@ public abstract class AbstractController {
 //    final boolean isAI;
 
     final ModelActor modelActor;
-    private final ViewActor viewActor;
+    private final ActorView actorView;
 
     /**
-     * @param modelActor
-     * @param viewActor
+     * Creates a new AbstractController and sets its
+     * actor and view
+     *
+     * @param modelActor a {@link ModelActor}
+     * @param actorView  a {@link ActorView}
      */
-    protected AbstractController(ModelActor modelActor, ViewActor viewActor) {
+    public AbstractController(ModelActor modelActor, ActorView actorView) {
         this.modelActor = modelActor;
-        this.viewActor = viewActor;
-        movementVector = new Vector2f();
-        attackVector = new Vector2f();
+        this.actorView = actorView;
+        movementVector = new Vector2f(0, 0);
+        attackVector = new Vector2f(0, 0);
     }
 
     /**
@@ -39,6 +42,14 @@ public abstract class AbstractController {
         updateView();
     }
 
+    /**
+     * Called every frame and should set the movement- and attack
+     * vectors of the controller.
+     * <p>
+     * {@code movementVector} should be of 0 <= length <= 1
+     * <p>
+     * {@code attackVector} should be normalized or 0,0
+     */
     protected abstract void setInputVectors();
 
     public boolean shouldBeRemoved() {
@@ -50,22 +61,22 @@ public abstract class AbstractController {
     }
 
     /**
-     * Updates the ViewActor so everything can be drawn out later
+     * Updates the ActorView so everything can be drawn out later
      */
     protected void updateView() {
         // TODO extend with other modifications such as rotation and stuff
         Vector2f position = modelActor.getPosition();
 //        float degrees = modelActor.getAngle();
 
-        viewActor.setPoint(position.x, position.y);
-        viewActor.setAngle(modelActor.getAngle());
+        actorView.setPoint(position.x, position.y);
+        actorView.setAngle(modelActor.getAngle());
     }
 
     public ModelActor getModel() {
         return modelActor;
     }
 
-    public ViewActor getView() {
-        return viewActor;
+    public ActorView getView() {
+        return actorView;
     }
 }

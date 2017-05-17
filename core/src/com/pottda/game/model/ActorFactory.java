@@ -32,10 +32,10 @@ public abstract class ActorFactory {
      *
      * @param sprite    the sprite of the enemy
      * @param position  the position of the enemy
-     * @param inventory the inventory of the enemy
+     * @param xmlFilePath path to xml file to add as inventory
      * @return a {@link AbstractController} that handles the new enemy-actor
      */
-    public abstract AbstractController buildEnemy(Sprites sprite, Vector2f position, Inventory inventory);
+    public abstract AbstractController buildEnemy(Sprites sprite, Vector2f position, String xmlFilePath);
 
     /**
      * Creates a new actor-clump for a Player with a default inventory
