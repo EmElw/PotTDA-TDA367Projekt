@@ -269,7 +269,7 @@ public class Box2DActorFactory extends ActorFactory {
 
         Box2DPhysicsProjectile physics = new Box2DPhysicsProjectile(body);
 
-        Projectile model = new Projectile(physics, 0, null);
+        Projectile model = new Projectile(physics, 20, null);
         model.team = team;
         body.setUserData(model);
 
