@@ -1,26 +1,26 @@
 package com.pottda.game.model;
 
-import com.badlogic.gdx.backends.headless.HeadlessApplication;
-import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.XmlReader;
 import com.pottda.game.controller.AbstractController;
-import com.pottda.game.controller.Box2DActorFactory;
-import com.pottda.game.controller.ProjectileController;
 import com.pottda.game.model.items.ChainAttack;
 import com.pottda.game.model.items.MultiShot;
 import com.pottda.game.model.items.SimpleCannon;
 import com.pottda.game.model.items.Switcher;
 import com.pottda.game.view.Sprites;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import testrunner.GdxTestRunner;
+
 
 import javax.vecmath.Vector2f;
+import javax.xml.parsers.ParserConfigurationException;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 /**
  * Test some items and Inventory.compile()
@@ -29,15 +29,15 @@ import java.util.Stack;
 public class InventoryTest {
     Inventory testInv2;
     AttackItem cannon;
+    private Inventory inventory;
 
     @Before
     public void setUp() {
-        File xml;
 
 
         ActorFactory.setFactory(new ActorFactory() {
             @Override
-            public AbstractController buildEnemy(Sprites sprite, Vector2f position, Inventory inventory) {
+            public AbstractController buildEnemy(Sprites sprite, Vector2f position, String xmlFilePath) {
                 return null;
             }
 
@@ -80,15 +80,9 @@ public class InventoryTest {
                 return null;
             }
         });
-        String basePath = new File("").getAbsolutePath();
-
-        String filePath = basePath.
-                replace("\\core", "").  // No one must know of this blasphemy
-                concat("\\android\\assets\\inventoryblueprint\\testInv2.xml");
-        xml = new File(filePath);
 
         try {
-            testInv2 = InventoryFactory.createFromXML(xml);
+            testInv2 = getInventory("testInv2.xml");
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail();
@@ -154,17 +148,10 @@ public class InventoryTest {
         boolean isLegal = testInv2.isLegal();
         Assert.assertTrue(isLegal);
         {
-            File xml;
             Inventory i;
-            String basePath = new File("").getAbsolutePath();
 
-            String filePath = basePath.
-                    replace("\\core", "").  // No one must know of this blasphemy
-                    concat("\\android\\assets\\inventoryblueprint\\illegalTestInv.xml");
-
-            xml = new File(filePath);
             try {
-                i = InventoryFactory.createFromXML(xml);
+                i = getInventory("illegalTestInv.xml");
                 i.compile();
                 Assert.assertFalse(i.isLegal());
             } catch (Exception e) {
@@ -173,4 +160,54 @@ public class InventoryTest {
             }
         }
     }
+
+    private Inventory getInventory(String fileName) throws ClassNotFoundException, ParserConfigurationException, InstantiationException, IllegalAccessException, IOException {
+        List<XMLItem> xmlItemList = new ArrayList<XMLItem>();
+
+        String basePath = new File("").getAbsolutePath();
+        String filePath = basePath.
+                replace("\\core", "").  // No one must know of this blasphemy
+                concat("\\android\\assets\\inventoryblueprint\\" + fileName);
+
+        FileHandle file = new FileHandle(filePath);
+        // Create the inventory to return
+        XmlReader xml = new XmlReader();
+        XmlReader.Element xml_element = null;
+        try {
+            // Read the file
+            xml_element = xml.parse(file);
+            // If the loaded file does not contain an inventory tag, throw exception
+            if (!xml_element.toString().split("\n")[0].contains("inventory")) {
+                throw new IOException("Couldn't find <inventory> tag");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        assert xml_element != null;
+        String secondLine = xml_element.toString().split("\n")[0];
+        // Get w and h from XML file
+        final int width = Integer.parseInt(secondLine.split("\"")[1]);
+        final int height = Integer.parseInt(secondLine.split("\"")[3]);
+
+        // Set the dimensions of the inventory
+        Inventory inventory = new Inventory();
+        inventory.setDimensions(width, height);
+
+        // Create the XMLItem list
+        for (String s : xml_element.toString().split("\n")) {
+            if (s.contains("<item ")) {
+                int orientation = Integer.parseInt(s.split("\"")[1]);
+                int x = Integer.parseInt(s.split("\"")[3]);
+                int y = Integer.parseInt(s.split("\"")[5]);
+                String name = s.split("\"")[7];
+                XMLItem xmlItem = new XMLItem(name, x, y, orientation);
+                xmlItemList.add(xmlItem);
+            }
+        }
+
+        return InventoryFactory.createFromXML(xmlItemList, inventory, file.name());
+    }
+
 }

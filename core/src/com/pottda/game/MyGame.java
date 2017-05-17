@@ -14,13 +14,12 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.AbstractController;
 import com.pottda.game.controller.Box2DActorFactory;
 import com.pottda.game.controller.ControllerOptions;
-import com.pottda.game.controller.TouchJoystickController;
 import com.pottda.game.model.ActorFactory;
-import com.pottda.game.model.InventoryFactory;
 import com.pottda.game.physicsBox2D.CollisionListener;
 import com.pottda.game.view.*;
 
 import javax.vecmath.Vector2f;
+
 import java.util.*;
 
 import static com.pottda.game.MyGame.GameState.*;
@@ -67,10 +66,6 @@ public class MyGame extends ApplicationAdapter {
     }
 
     private static GameState gameState = NONE;
-
-    //private static final String playerImage = "circletest.png"; // change later
-    //private static final String enemyImage = "circletestred.png";
-    //private static final String borderImage = "game/border.png";
 
     private static final String playerStartInventory = "inventoryblueprint/playerStartInventory.xml";
 
@@ -132,9 +127,7 @@ public class MyGame extends ApplicationAdapter {
             float xx = (float) (Math.random() * WIDTH_METERS * scaling);
             float yy = (float) (Math.random() * HEIGHT_METERS * scaling);
             try {
-                ActorFactory.get().buildEnemy(Sprites.ENEMY,
-                        new Vector2f(xx, yy),
-                        InventoryFactory.createFromXML(Gdx.files.internal(playerStartInventory).file()));
+                ActorFactory.get().buildEnemy(Sprites.ENEMY, new Vector2f(xx, yy), "inventoryblueprint/playerStartInventory.xml");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -142,7 +135,6 @@ public class MyGame extends ApplicationAdapter {
         createWorldBorders();
 
     }
-
 
     /**
      * Creates four obstacles around the playing area
@@ -249,7 +241,7 @@ public class MyGame extends ApplicationAdapter {
 
             // Update all controllers, causing the model to update
             for (AbstractController c : controllers) {
-                    c.onNewFrame();
+                c.onNewFrame();
             }
             // Add created during the cycle to the list
             // TODO could potentially do some juggling to also execute the onFrame for all o these
