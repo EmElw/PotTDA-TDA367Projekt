@@ -332,21 +332,34 @@ public class Box2DActorFactory extends ActorFactory {
         OBSTACLE_FILTER.categoryBits = 0x0020;
 
         // Player collides with Enemy Character and Projectile and obstacle
-        CHARACTER_PLAYER_FILTER.maskBits = (short) ((int) CHARACTER_ENEMY_FILTER.categoryBits +
-                (int) PROJECTILE_ENEMY_FILTER.categoryBits + (int) OBSTACLE_FILTER.categoryBits);
+        CHARACTER_PLAYER_FILTER.maskBits = (short) (CHARACTER_PLAYER_FILTER.categoryBits |
+                CHARACTER_ENEMY_FILTER.categoryBits |
+                PROJECTILE_ENEMY_FILTER.categoryBits |
+                OBSTACLE_FILTER.categoryBits);
 
         // Enemy collides with itself, Player Character, Projectile and obstacle
-        CHARACTER_ENEMY_FILTER.maskBits = (short) ((int) CHARACTER_PLAYER_FILTER.categoryBits +
-                (int) CHARACTER_ENEMY_FILTER.categoryBits + (int) PROJECTILE_PLAYER_FILTER.categoryBits + (int) OBSTACLE_FILTER.categoryBits);
+        CHARACTER_ENEMY_FILTER.maskBits = (short)(CHARACTER_PLAYER_FILTER.categoryBits |
+                CHARACTER_ENEMY_FILTER.categoryBits |
+                PROJECTILE_PLAYER_FILTER.categoryBits |
+                OBSTACLE_FILTER.categoryBits);
 
         // Player Projectile collides with Enemy Character and obstacle
-        PROJECTILE_PLAYER_FILTER.maskBits = (short) ((int) CHARACTER_ENEMY_FILTER.categoryBits + (int) OBSTACLE_FILTER.categoryBits);
+        PROJECTILE_PLAYER_FILTER.maskBits = (short) (CHARACTER_ENEMY_FILTER.categoryBits |
+                OBSTACLE_FILTER.categoryBits);
 
         // Enemy Projectile collides with Player Character and obstacle
-        PROJECTILE_ENEMY_FILTER.maskBits = (short) ((int) CHARACTER_PLAYER_FILTER.categoryBits + (int) OBSTACLE_FILTER.categoryBits);
+        PROJECTILE_ENEMY_FILTER.maskBits = (short) (CHARACTER_PLAYER_FILTER.categoryBits |
+                OBSTACLE_FILTER.categoryBits);
 
         // Projectiles with the 'penetrates' flag only collide with the terrain and obstacle
         PROJECTILE_PENETRATION_FILTER.maskBits = OBSTACLE_FILTER.categoryBits;
+
+        // Obstacles collide with everything
+        OBSTACLE_FILTER.maskBits = (short) (CHARACTER_PLAYER_FILTER.categoryBits |
+                CHARACTER_ENEMY_FILTER.categoryBits |
+                PROJECTILE_PLAYER_FILTER.categoryBits |
+                PROJECTILE_ENEMY_FILTER.categoryBits |
+                PROJECTILE_PENETRATION_FILTER.categoryBits);
     }
 
     private void bodyDefInit() {
