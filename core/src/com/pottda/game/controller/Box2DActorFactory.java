@@ -144,7 +144,7 @@ public class Box2DActorFactory extends ActorFactory {
         body.setUserData(player);
 
         try {
-            player.inventory = getInventory();
+            player.inventory = getInventory("inventoryblueprint/testInv2.xml");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -170,10 +170,21 @@ public class Box2DActorFactory extends ActorFactory {
         return controller;
     }
 
-    private Inventory getInventory() throws ClassNotFoundException, ParserConfigurationException, InstantiationException, IllegalAccessException, IOException {
+    /**
+     * Creates and returns a new inventory
+     *
+     * @param filePath path to the xml file to get inventory from
+     * @return a new inventory from the given xml file
+     * @throws ClassNotFoundException
+     * @throws ParserConfigurationException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws IOException
+     */
+    private Inventory getInventory(String filePath) throws ClassNotFoundException, ParserConfigurationException, InstantiationException, IllegalAccessException, IOException {
         List<XMLItem> xmlItemList = new ArrayList<XMLItem>();
 
-        FileHandle file = Gdx.files.internal("inventoryblueprint/testInv2.xml");
+        FileHandle file = Gdx.files.internal(filePath);
         // Create the inventory to return
         XmlReader xml = new XmlReader();
         XmlReader.Element xml_element = null;

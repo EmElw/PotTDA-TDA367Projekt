@@ -137,7 +137,7 @@ public class MyGame extends ApplicationAdapter {
             float xx = (float) (Math.random() * WIDTH_METERS * scaling);
             float yy = (float) (Math.random() * HEIGHT_METERS * scaling);
             try {
-                ActorFactory.get().buildEnemy(Sprites.ENEMY, new Vector2f(xx, yy), getInventory());
+                ActorFactory.get().buildEnemy(Sprites.ENEMY, new Vector2f(xx, yy), getInventory("inventoryblueprint/playerStartInventory.xml"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -148,17 +148,19 @@ public class MyGame extends ApplicationAdapter {
 
     /**
      * Creates and returns a new inventory
-     * @return inventory
+     *
+     * @param filePath path to the xml file to get inventory from
+     * @return a new inventory from the given xml file
      * @throws ClassNotFoundException
      * @throws ParserConfigurationException
      * @throws InstantiationException
      * @throws IllegalAccessException
      * @throws IOException
      */
-    private Inventory getInventory() throws ClassNotFoundException, ParserConfigurationException, InstantiationException, IllegalAccessException, IOException {
+    private Inventory getInventory(String filePath) throws ClassNotFoundException, ParserConfigurationException, InstantiationException, IllegalAccessException, IOException {
         List<XMLItem> xmlItemList = new ArrayList<XMLItem>();
 
-        FileHandle file = Gdx.files.internal("inventoryblueprint/playerStartInventory.xml");
+        FileHandle file = Gdx.files.internal(filePath);
         // Create the inventory to return
         XmlReader xml = new XmlReader();
         XmlReader.Element xml_element = null;
@@ -304,7 +306,7 @@ public class MyGame extends ApplicationAdapter {
 
             // Update all controllers, causing the model to update
             for (AbstractController c : controllers) {
-                    c.onNewFrame();
+                c.onNewFrame();
             }
             // Add created during the cycle to the list
             // TODO could potentially do some juggling to also execute the onFrame for all o these
