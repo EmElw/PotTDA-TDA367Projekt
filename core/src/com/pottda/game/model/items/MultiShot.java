@@ -93,7 +93,7 @@ public class MultiShot extends Item {
             }
 
             Projectile newProj = (Projectile) ActorFactory.get().
-                    buildProjectile(Sprites.PROJECTILE1, p.team, false, false, position).
+                    buildProjectile(Sprites.PROJECTILE1, p.team, p.isBouncy, p.isPiercing, position).
                     getModel();
 
             newProj.giveInput(

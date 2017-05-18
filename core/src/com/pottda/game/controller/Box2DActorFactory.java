@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.XmlReader;
 import com.pottda.game.model.*;
+import com.pottda.game.model.ActorFactory;
 import com.pottda.game.model.Character;
 import com.pottda.game.physicsBox2D.Box2DPhysicsActor;
 import com.pottda.game.physicsBox2D.Box2DPhysicsCharacter;
@@ -271,6 +272,8 @@ public class Box2DActorFactory extends ActorFactory {
 
         Projectile model = new Projectile(physics, 0, null);
         model.team = team;
+        model.isBouncy = bounces;
+        model.isPiercing = penetrates;
         body.setUserData(model);
 
         ActorView view = new ActorView(sprite.texture);
