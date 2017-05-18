@@ -22,6 +22,12 @@ public class MainDifficultyView {
     private Image easyImage;
     private Image hardImage;
 
+    private enum imageEnum {
+        CHOOSEDIFFIMAGE,
+        EASYIMAGE,
+        HARDIMAGE
+    }
+
     public MainDifficultyView(final Stage stage) {
         this.stage = stage;
         create();
@@ -29,20 +35,32 @@ public class MainDifficultyView {
 
     private void create() {
         // Add choose difficulty title
-        addToStage(chooseTitle, chooseDiffImage, stage.getWidth() / 2 - 256, stage.getHeight() * 3 / 4);
+        addToStage(chooseTitle, imageEnum.CHOOSEDIFFIMAGE, stage.getWidth() / 2 - 256, stage.getHeight() * 3 / 4);
 
         // Add easy button
-        addToStage(chooseEasy, easyImage, stage.getWidth() / 2 - 256, stage.getHeight() * 2 / 4);
+        addToStage(chooseEasy, imageEnum.EASYIMAGE, stage.getWidth() / 2 - 256, stage.getHeight() * 2 / 4);
 
         // Add hard button
-        addToStage(chooseHard, hardImage, stage.getWidth() / 2 - 256, stage.getHeight() * 1 / 4);
+        addToStage(chooseHard, imageEnum.HARDIMAGE, stage.getWidth() / 2 - 256, stage.getHeight() * 1 / 4);
     }
 
-    private void addToStage(String texturePath, Image image, float xPos, float yPos) {
-        image = new Image(new Texture(Gdx.files.internal(texturePath)));
-        image.setX(xPos);
-        image.setY(yPos);
-        stage.addActor(image);
+    private void addToStage(String texturePath, imageEnum image, float xPos, float yPos) {
+        Image image2 = getImage(texturePath, image);
+        image2.setX(xPos);
+        image2.setY(yPos);
+        stage.addActor(image2);
+    }
+
+    private Image getImage(String texturePath, imageEnum image) {
+        switch (image) {
+            case CHOOSEDIFFIMAGE:
+                return chooseDiffImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+            case EASYIMAGE:
+                return easyImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+            case HARDIMAGE:
+                return hardImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+        }
+        return null;
     }
 
     public void render() {

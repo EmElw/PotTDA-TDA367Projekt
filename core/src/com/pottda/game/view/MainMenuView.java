@@ -17,13 +17,19 @@ public class MainMenuView {
     private static final String mainMenuQuit = "menu/quit.png";
     private static final String mainMenuBG = "menu/bg.png";
 
-    private Texture texture;
     private final Stage stage;
 
     private Image titleImage;
     private Image startImage;
     private Image quitImage;
     private Image bgImage;
+
+    private enum imageEnum {
+        BGIMAGE,
+        TITLEIMAGE,
+        STARTIMAGE,
+        QUITIMAGE
+    }
 
     public MainMenuView(final Stage stage) {
         this.stage = stage;
@@ -32,40 +38,50 @@ public class MainMenuView {
 
     private void create() {
         // Add background
-        addToStage(mainMenuBG, bgImage, 0, 0, stage.getWidth(), stage.getHeight());
+        addToStage(mainMenuBG, imageEnum.BGIMAGE, 0, 0, stage.getWidth(), stage.getHeight());
 
         // Add title
-        addToStage(mainMenuTitle, titleImage, stage.getWidth() / 2 - 512 / 2, stage.getHeight() * 3 / 4);
+        addToStage(mainMenuTitle, imageEnum.TITLEIMAGE, stage.getWidth() / 2 - 512 / 2, stage.getHeight() * 3 / 4);
 
         // Add start button
-        addToStage(mainMenuStart, startImage, stage.getWidth() * 1 / 4 - 128 / 2, stage.getHeight() * 1 / 4);
+        addToStage(mainMenuStart, imageEnum.STARTIMAGE, stage.getWidth() * 1 / 4 - 128 / 2, stage.getHeight() * 1 / 4);
 
         // Add quit button
-        addToStage(mainMenuQuit, quitImage, stage.getWidth() * 3 / 4 - 128 / 2, stage.getHeight() * 1 / 4);
+        addToStage(mainMenuQuit, imageEnum.QUITIMAGE, stage.getWidth() * 3 / 4 - 128 / 2, stage.getHeight() * 1 / 4);
     }
 
-    private void addToStage(String texturePath, Image image, float xPos, float yPos) {
-        image = new Image(new Texture(Gdx.files.internal(texturePath)));
-        image.setX(xPos);
-        image.setY(yPos);
-        stage.addActor(image);
+    private void addToStage(String texturePath, imageEnum image, float xPos, float yPos) {
+        Image image2 = getImage(texturePath, image);
+        image2.setX(xPos);
+        image2.setY(yPos);
+        stage.addActor(image2);
     }
 
-    private void addToStage(String texturePath, Image image, float xPos, float yPos, float width, float height) {
-        image = new Image(new Texture(Gdx.files.internal(texturePath)));
-        image.setX(xPos);
-        image.setY(yPos);
-        image.setWidth(width);
-        image.setHeight(height);
-        stage.addActor(image);
+    private void addToStage(String texturePath, imageEnum image, float xPos, float yPos, float width, float height) {
+        Image image2 = getImage(texturePath, image);
+        image2.setX(xPos);
+        image2.setY(yPos);
+        image2.setWidth(width);
+        image2.setHeight(height);
+        stage.addActor(image2);
+    }
+
+    private Image getImage(String texturePath, imageEnum image) {
+        switch (image) {
+            case BGIMAGE:
+                return bgImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+            case TITLEIMAGE:
+                return titleImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+            case STARTIMAGE:
+                return startImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+            case QUITIMAGE:
+                return quitImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+        }
+        return null;
     }
 
     public void render() {
         stage.draw();
-    }
-
-    public void dispose() {
-        texture.dispose();
     }
 
     /**

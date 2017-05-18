@@ -22,6 +22,12 @@ public class HUDView {
     private Image healthbarRed;
     private Image pauseButton;
 
+    private enum imageEnum {
+        HEALTHBAR,
+        HEALTHBARRED,
+        PAUSEBUTTON
+    }
+
     public HUDView(final Stage stage) {
         this.stage = stage;
         create();
@@ -29,24 +35,36 @@ public class HUDView {
 
     public void create() {
         // Add health bar
-        addToStage(healthbarString, healthbar, 10, stage.getHeight() - 30);
+        addToStage(healthbarString, imageEnum.HEALTHBAR, 10, stage.getHeight() - 30);
 
         // Add health to health bar
-        addToStage(healthbarRedString, healthbarRed, healthbar.getX(), stage.getHeight() - 30);
+        addToStage(healthbarRedString, imageEnum.HEALTHBARRED, healthbar.getX(), stage.getHeight() - 30);
 
         // Add pause button
-        addToStage(pauseButtonString, pauseButton, stage.getWidth() - 60, stage.getHeight() - 50);
+        addToStage(pauseButtonString, imageEnum.PAUSEBUTTON, stage.getWidth() - 60, stage.getHeight() - 50);
     }
 
     public void render() {
         stage.draw();
     }
 
-    private void addToStage(String texturePath, Image image, float xPos, float yPos) {
-        image = new Image(new Texture(Gdx.files.internal(texturePath)));
-        image.setX(xPos);
-        image.setY(yPos);
-        stage.addActor(image);
+    private void addToStage(String texturePath, imageEnum image, float xPos, float yPos) {
+        Image image2 = getImage(texturePath, image);
+        image2.setX(xPos);
+        image2.setY(yPos);
+        stage.addActor(image2);
+    }
+
+    private Image getImage(String texturePath, imageEnum image) {
+        switch (image) {
+            case HEALTHBAR:
+                return healthbar = new Image(new Texture(Gdx.files.internal(texturePath)));
+            case HEALTHBARRED:
+                return healthbarRed = new Image(new Texture(Gdx.files.internal(texturePath)));
+            case PAUSEBUTTON:
+                return pauseButton = new Image(new Texture(Gdx.files.internal(texturePath)));
+        }
+        return null;
     }
 
     /**

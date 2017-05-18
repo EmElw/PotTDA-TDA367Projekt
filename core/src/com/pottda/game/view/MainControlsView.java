@@ -24,6 +24,13 @@ public class MainControlsView {
     private Image controlsKeyOnlyImage;
     private Image controlsKeyMouseImage;
 
+    private enum imageEnum {
+        TITLE,
+        TOUCH,
+        KEYONLY,
+        KEYMOUSE
+    }
+
     public MainControlsView(final Stage stage) {
         this.stage = stage;
         create();
@@ -31,23 +38,37 @@ public class MainControlsView {
 
     private void create() {
         // Add choose controls title
-        addToStage(controlsTitle, controlsTitleImage, stage.getWidth() / 2 - 256, stage.getHeight() * 6.5f / 8);
+        addToStage(controlsTitle, imageEnum.TITLE, stage.getWidth() / 2 - 256, stage.getHeight() * 6.5f / 8);
 
         // Add touch button
-        addToStage(controlsTouch, controlsTouchImage, stage.getWidth() / 2 - 256, stage.getHeight() * 3 / 8);
+        addToStage(controlsTouch, imageEnum.TOUCH, stage.getWidth() / 2 - 256, stage.getHeight() * 3 / 8);
 
         // Add keyboard only button
-        addToStage(controlsKeyboardOnly, controlsKeyOnlyImage, stage.getWidth() / 2 - 256, stage.getHeight() * 5 / 8);
+        addToStage(controlsKeyboardOnly, imageEnum.KEYONLY, stage.getWidth() / 2 - 256, stage.getHeight() * 5 / 8);
 
         // Add keyboard mouse button
-        addToStage(controlsKeyboardMouse, controlsKeyMouseImage, stage.getWidth() / 2 - 256, stage.getHeight() * 1 / 8);
+        addToStage(controlsKeyboardMouse, imageEnum.KEYMOUSE, stage.getWidth() / 2 - 256, stage.getHeight() * 1 / 8);
     }
 
-    private void addToStage(String texturePath, Image image, float xPos, float yPos) {
-        image = new Image(new Texture(Gdx.files.internal(texturePath)));
-        image.setX(xPos);
-        image.setY(yPos);
-        stage.addActor(image);
+    private void addToStage(String texturePath, imageEnum image, float xPos, float yPos) {
+        Image image2 = getImage(texturePath, image);
+        image2.setX(xPos);
+        image2.setY(yPos);
+        stage.addActor(image2);
+    }
+
+    private Image getImage(String texturePath, imageEnum image) {
+        switch (image) {
+            case TITLE:
+                return controlsTitleImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+            case TOUCH:
+                return controlsTouchImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+            case KEYONLY:
+                return controlsKeyOnlyImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+            case KEYMOUSE:
+                return controlsKeyMouseImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+        }
+        return null;
     }
 
     public void render() {

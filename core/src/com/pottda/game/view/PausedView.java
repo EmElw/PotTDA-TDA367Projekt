@@ -24,6 +24,13 @@ public class PausedView {
     private Image pauseOptions;
     private Image pauseQuit;
 
+    private enum imageEnum {
+        BACKGROUND,
+        RESUME,
+        OPTIONS,
+        QUIT
+    }
+
     public PausedView(final Stage stage) {
         this.stage = stage;
         create();
@@ -31,32 +38,46 @@ public class PausedView {
 
     private void create() {
         // Add pause background
-        addToStage(pauseBackgroundString, pauseBackground, 0, 0, stage.getWidth(), stage.getHeight());
+        addToStage(pauseBackgroundString, imageEnum.BACKGROUND, 0, 0, stage.getWidth(), stage.getHeight());
 
         // Add pause resume button
-        addToStage(pauseResumeString, pauseResume, stage.getWidth() / 2 - 150, stage.getHeight() - 150);
+        addToStage(pauseResumeString, imageEnum.RESUME, stage.getWidth() / 2 - 150, stage.getHeight() - 150);
 
         // Add pause options button
-        addToStage(pauseOptionsString, pauseOptions, stage.getWidth() / 2 - 150, stage.getHeight() - 300);
+        addToStage(pauseOptionsString, imageEnum.OPTIONS, stage.getWidth() / 2 - 150, stage.getHeight() - 300);
 
         // Add pause quit button
-        addToStage(pauseQuitString, pauseQuit, stage.getWidth() / 2 - 150, 30);
+        addToStage(pauseQuitString, imageEnum.QUIT, stage.getWidth() / 2 - 150, 30);
     }
 
-    private void addToStage(String texturePath, Image image, float xPos, float yPos) {
-        image = new Image(new Texture(Gdx.files.internal(texturePath)));
-        image.setX(xPos);
-        image.setY(yPos);
-        stage.addActor(image);
+    private void addToStage(String texturePath, imageEnum image, float xPos, float yPos) {
+        Image image2 = getImage(texturePath, image);
+        image2.setX(xPos);
+        image2.setY(yPos);
+        stage.addActor(image2);
     }
 
-    private void addToStage(String texturePath, Image image, float xPos, float yPos, float width, float height) {
-        image = new Image(new Texture(Gdx.files.internal(texturePath)));
-        image.setX(xPos);
-        image.setY(yPos);
-        image.setWidth(width);
-        image.setHeight(height);
-        stage.addActor(image);
+    private void addToStage(String texturePath, imageEnum image, float xPos, float yPos, float width, float height) {
+        Image image2 = getImage(texturePath, image);
+        image2.setX(xPos);
+        image2.setY(yPos);
+        image2.setWidth(width);
+        image2.setHeight(height);
+        stage.addActor(image2);
+    }
+
+    private Image getImage(String texturePath, imageEnum image) {
+        switch (image) {
+            case BACKGROUND:
+                return pauseBackground = new Image(new Texture(Gdx.files.internal(texturePath)));
+            case RESUME:
+                return pauseResume = new Image(new Texture(Gdx.files.internal(texturePath)));
+            case OPTIONS:
+                return pauseOptions = new Image(new Texture(Gdx.files.internal(texturePath)));
+            case QUIT:
+                return pauseQuit = new Image(new Texture(Gdx.files.internal(texturePath)));
+        }
+        return null;
     }
 
     public void render() {
