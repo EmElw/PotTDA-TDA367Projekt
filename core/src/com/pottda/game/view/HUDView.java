@@ -30,17 +30,21 @@ public class HUDView {
 
     public void create() {
         // Add health bar
-        addToStage(new Texture(Gdx.files.internal(healthbarString)), healthbar, 10, stage.getHeight() - 30);
+        addToStage(healthbarString, healthbar, 10, stage.getHeight() - 30);
 
         // Add health to health bar
-        addToStage(new Texture(Gdx.files.internal(healthbarRedString)), healthbarRed, healthbar.getX(), stage.getHeight() - 30);
+        addToStage(healthbarRedString, healthbarRed, healthbar.getX(), stage.getHeight() - 30);
 
         // Add pause button
-        addToStage(new Texture(Gdx.files.internal(pauseButtonString)), pauseButton, stage.getWidth() - 60, stage.getHeight() - 50);
+        addToStage(pauseButtonString, pauseButton, stage.getWidth() - 60, stage.getHeight() - 50);
     }
 
-    private void addToStage(Texture texture, Image image, float xPos, float yPos) {
-        image = new Image(texture);
+    public void render() {
+        stage.draw();
+    }
+
+    private void addToStage(String texturePath, Image image, float xPos, float yPos) {
+        image = new Image(new Texture(Gdx.files.internal(texturePath)));
         image.setX(xPos);
         image.setY(yPos);
         stage.addActor(image);

@@ -38,32 +38,36 @@ public class OptionsView {
 
     private void create() {
         // Add options return button
-        addToStage(new Texture(Gdx.files.internal(optionReturnString)), optionReturn, stage.getWidth() / 2 - texture.getWidth() / 2, 30);
+        addToStage(optionReturnString, optionReturn, stage.getWidth() / 2 - texture.getWidth() / 2, 30);
 
         // Add options music control
-        addToStage(new Texture(Gdx.files.internal(optionsMusicString)), optionsMusic, stage.getWidth() / 2 - texture.getWidth() / 2, (stage.getHeight() / 5) * 4);
+        addToStage(optionsMusicString, optionsMusic, stage.getWidth() / 2 - texture.getWidth() / 2, (stage.getHeight() / 5) * 4);
 
         // Add options music bar
-        addToStage(new Texture(Gdx.files.internal(optionsMusicBarString)), optionsMusicBar, stage.getWidth() / 2 - texture.getWidth() / 2, (stage.getHeight() / 5) * 4);
+        addToStage(optionsMusicBarString, optionsMusicBar, stage.getWidth() / 2 - texture.getWidth() / 2, (stage.getHeight() / 5) * 4);
 
         // Add options sfx control
-        addToStage(new Texture(Gdx.files.internal(optionsSFXString)), optionsSFX, stage.getWidth() / 2 - texture.getWidth() / 2, (stage.getHeight() / 5) * 3);
+        addToStage(optionsSFXString, optionsSFX, stage.getWidth() / 2 - texture.getWidth() / 2, (stage.getHeight() / 5) * 3);
 
         // Add options sfx bar
-        addToStage(new Texture(Gdx.files.internal(optionsSFXBarString)), optionsSFXBar, stage.getWidth() / 2 - texture.getWidth() / 2, (stage.getHeight() / 5) * 3);
+        addToStage(optionsSFXBarString, optionsSFXBar, stage.getWidth() / 2 - texture.getWidth() / 2, (stage.getHeight() / 5) * 3);
 
         // Add options sfx text
-        addToStage(new Texture(Gdx.files.internal(optionsSFXTextString)), optionsSFXText, optionsSFXBar.getX() - 168, (stage.getHeight() / 5) * 3);
+        addToStage(optionsSFXTextString, optionsSFXText, optionsSFXBar.getX() - 168, (stage.getHeight() / 5) * 3);
 
         // Add options music text
-        addToStage(new Texture(Gdx.files.internal(optionsMusicTextString)), optionsMusicText, optionsMusicBar.getX() - 168, (stage.getHeight() / 5) * 4);
+        addToStage(optionsMusicTextString, optionsMusicText, optionsMusicBar.getX() - 168, (stage.getHeight() / 5) * 4);
     }
 
-    private void addToStage(Texture texture, Image image, float xPos, float yPos) {
-        image = new Image(texture);
+    private void addToStage(String texturePath, Image image, float xPos, float yPos) {
+        image = new Image(new Texture(Gdx.files.internal(texturePath)));
         image.setX(xPos);
         image.setY(yPos);
         stage.addActor(image);
+    }
+
+    public void render() {
+        stage.draw();
     }
 
     /**

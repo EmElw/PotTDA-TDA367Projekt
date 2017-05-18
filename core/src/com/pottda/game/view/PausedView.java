@@ -32,30 +32,36 @@ public class PausedView {
 
     private void create() {
         // Add pause background
-        addToStage(new Texture(Gdx.files.internal(pauseBackgroundString)), pauseBackground, 0, 0, stage.getWidth(), stage.getHeight());
+        addToStage(pauseBackgroundString, pauseBackground, 0, 0, stage.getWidth(), stage.getHeight());
 
         // Add pause resume button
-        addToStage(new Texture(Gdx.files.internal(pauseResumeString)), pauseResume, stage.getWidth() / 2 - texture.getWidth() / 2, stage.getHeight() - 150);
+        addToStage(pauseResumeString, pauseResume, stage.getWidth() / 2 - texture.getWidth() / 2, stage.getHeight() - 150);
 
         // Add pause options button
-        addToStage(new Texture(Gdx.files.internal(pauseOptionsString)), pauseOptions, stage.getWidth() / 2 - texture.getWidth() / 2, stage.getHeight() - 300);
+        addToStage(pauseOptionsString, pauseOptions, stage.getWidth() / 2 - texture.getWidth() / 2, stage.getHeight() - 300);
 
         // Add pause quit button
-        addToStage(new Texture(Gdx.files.internal(pauseQuitString)), pauseQuit, stage.getWidth() / 2 - texture.getWidth() / 2, 30);
+        addToStage(pauseQuitString, pauseQuit, stage.getWidth() / 2 - texture.getWidth() / 2, 30);
     }
 
-    private void addToStage(Texture texture, Image image, float xPos, float yPos) {
-        image = new Image(texture);
+    private void addToStage(String texturePath, Image image, float xPos, float yPos) {
+        image = new Image(new Texture(Gdx.files.internal(texturePath)));
         image.setX(xPos);
         image.setY(yPos);
         stage.addActor(image);
     }
 
-    private void addToStage(Texture texture, Image image, float xPos, float yPos, float width, float height) {
-        image = new Image(texture);
+    private void addToStage(String texturePath, Image image, float xPos, float yPos, float width, float height) {
+        image = new Image(new Texture(Gdx.files.internal(texturePath)));
         image.setX(xPos);
         image.setY(yPos);
+        image.setWidth(width);
+        image.setHeight(height);
         stage.addActor(image);
+    }
+
+    public void render() {
+        stage.draw();
     }
 
     /**

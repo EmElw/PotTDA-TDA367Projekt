@@ -192,17 +192,14 @@ public class PoTDA extends ApplicationAdapter {
                 // Draw the game
                 gameView.render();
                 hudView.renderRunning();
-                hudStage.draw();
                 break;
             case PAUSED:
                 // Draw the pause menu
                 hudView.renderPaused();
-                hudStage.draw();
                 break;
             case OPTIONS:
                 // Draw the options menu
                 hudView.renderOptions();
-                hudStage.draw();
                 break;
             case MAIN_MENU:
                 // Draw the main menu
