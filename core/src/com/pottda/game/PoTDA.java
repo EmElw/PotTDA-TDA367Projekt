@@ -49,6 +49,8 @@ public class PoTDA extends ApplicationAdapter {
     private float accumulator;
 
     private HUDView hudView;
+    private PausedView pausedView;
+    private OptionsView optionsView;
     private SoundsAndMusic soundsAndMusic;
     private GameView gameView;
     private Box2DActorFactory box2DActorFactory;

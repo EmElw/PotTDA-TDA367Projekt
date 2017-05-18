@@ -12,22 +12,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
  * Created by Rikard Teodorsson on 2017-05-03.
  */
 
-public class HUDView extends ApplicationAdapter {
+public class HUDView {
     private static final String healthbarString = "hud/healthbar.png";
     private static final String healthbarRedString = "hud/health.png";
     private static final String pauseButtonString = "hud/pauseButton.png";
-    private static final String pauseBackgroundString = "hud/pauseBackground.png";
-    private static final String pauseResumeString = "hud/pauseResume.png";
-    private static final String pauseOptionsString = "hud/pauseOptions.png";
-    private static final String pauseQuitString = "hud/pauseQuit.png";
     private static final String optionReturnString = "hud/optionsReturn.png";
-    private static final String specialAttacksBarString = "hud/specialattacksbar.png";
-    private static final String optionsMusicBarString = "hud/optionsVolumeBar.png";
-    private static final String optionsMusicString = "hud/optionsVolume.png";
-    private static final String optionsSFXBarString = "hud/optionsVolumeBar.png";
-    private static final String optionsSFXString = "hud/optionsVolume.png";
-    private static final String optionsSFXTextString = "hud/text/sfx.png";
-    private static final String optionsMusicTextString = "hud/text/music.png";
 
     private Texture texture;
     private final Stage stage;
@@ -35,25 +24,12 @@ public class HUDView extends ApplicationAdapter {
     private Image healthbar;
     private Image healthbarRed;
     private Image pauseButton;
-    private Image pauseBackground;
-    private Image pauseResume;
-    private Image pauseOptions;
-    private Image pauseQuit;
-    private Image optionReturn;
-    private Image specialAttacksBar;
-    private Image optionsMusicBar;
-    private Image optionsMusic;
-    private Image optionsSFXBar;
-    private Image optionsSFX;
-    private Image optionsSFXText;
-    private Image optionsMusicText;
 
     public HUDView(final Stage stage) {
         this.stage = stage;
         create();
     }
 
-    @Override
     public void create() {
         // Add health bar
         texture = new Texture(Gdx.files.internal(healthbarString));
@@ -69,54 +45,12 @@ public class HUDView extends ApplicationAdapter {
         healthbarRed.setY(stage.getHeight() - 30);
         stage.addActor(healthbarRed);
 
-        // Add special attacks bar
-        texture = new Texture(Gdx.files.internal(specialAttacksBarString));
-        specialAttacksBar = new Image(texture);
-        specialAttacksBar.setX(stage.getWidth() / 2 - texture.getWidth() / 2);
-        specialAttacksBar.setY(30);
-        specialAttacksBar.setColor(specialAttacksBar.getColor().r, specialAttacksBar.getColor().g, specialAttacksBar.getColor().b, (float) 0.6);
-        stage.addActor(specialAttacksBar);
-
         // Add pause button
         texture = new Texture(Gdx.files.internal(pauseButtonString));
         pauseButton = new Image(texture);
         pauseButton.setX(stage.getWidth() - 60);
         pauseButton.setY(stage.getHeight() - 50);
         stage.addActor(pauseButton);
-
-        // Add pause background
-        texture = new Texture(Gdx.files.internal(pauseBackgroundString));
-        pauseBackground = new Image(texture);
-        pauseBackground.setX(0);
-        pauseBackground.setY(0);
-        pauseBackground.setWidth(stage.getWidth());
-        pauseBackground.setHeight(stage.getHeight());
-        pauseBackground.setVisible(false);
-        stage.addActor(pauseBackground);
-
-        // Add pause resume button
-        texture = new Texture(Gdx.files.internal(pauseResumeString)); // 300x120px
-        pauseResume = new Image(texture);
-        pauseResume.setX(stage.getWidth() / 2 - texture.getWidth() / 2);
-        pauseResume.setY(stage.getHeight() - 150);
-        pauseResume.setVisible(false);
-        stage.addActor(pauseResume);
-
-        // Add pause options button
-        texture = new Texture(Gdx.files.internal(pauseOptionsString));
-        pauseOptions = new Image(texture);
-        pauseOptions.setX(stage.getWidth() / 2 - texture.getWidth() / 2);
-        pauseOptions.setY(stage.getHeight() - 300);
-        pauseOptions.setVisible(false);
-        stage.addActor(pauseOptions);
-
-        // Add pause quit button
-        texture = new Texture(Gdx.files.internal(pauseQuitString));
-        pauseQuit = new Image(texture);
-        pauseQuit.setX(stage.getWidth() / 2 - texture.getWidth() / 2);
-        pauseQuit.setY(30);
-        pauseQuit.setVisible(false);
-        stage.addActor(pauseQuit);
 
         // Add options return button
         texture = new Texture(Gdx.files.internal(optionReturnString));
