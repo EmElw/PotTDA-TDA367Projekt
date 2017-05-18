@@ -12,7 +12,7 @@ import com.pottda.game.physicsBox2D.Box2DPhysicsActor;
 import com.pottda.game.physicsBox2D.Box2DPhysicsCharacter;
 import com.pottda.game.physicsBox2D.Box2DPhysicsProjectile;
 import com.pottda.game.view.ActorView;
-import com.pottda.game.view.Sprites;
+import com.pottda.game.model.Sprites;
 
 import javax.vecmath.Vector2f;
 import javax.xml.parsers.ParserConfigurationException;

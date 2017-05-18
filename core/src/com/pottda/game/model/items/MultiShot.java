@@ -3,7 +3,7 @@ package com.pottda.game.model.items;
 import com.pottda.game.model.ActorFactory;
 import com.pottda.game.model.Item;
 import com.pottda.game.model.Projectile;
-import com.pottda.game.view.Sprites;
+import com.pottda.game.model.Sprites;
 
 import javax.vecmath.Point2i;
 import javax.vecmath.Vector2f;
