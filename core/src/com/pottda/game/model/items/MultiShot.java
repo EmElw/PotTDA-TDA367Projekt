@@ -16,7 +16,7 @@ import javax.vecmath.Vector2f;
 public class MultiShot extends Item {
 
     /*
-    The spread between each projectile, expressed as degrees
+    The spread between each projectile, expressed as radians?
      */
     private final static float SPREAD = 0.3f;
 
@@ -30,6 +30,8 @@ public class MultiShot extends Item {
     @Override
     protected void initDynamic() {
         isProjectileModifier = true;
+
+        dropRate = 0.05f;
 
         basePositions.add(new Point2i(0, 0));
         basePositions.add(new Point2i(1, 0));
