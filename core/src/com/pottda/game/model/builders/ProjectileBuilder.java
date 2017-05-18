@@ -1,4 +1,8 @@
-package com.pottda.game.model;
+package com.pottda.game.model.builders;
+
+import com.pottda.game.model.ModelActor;
+import com.pottda.game.model.Projectile;
+import com.pottda.game.model.ProjectileListener;
 
 import javax.vecmath.Vector2f;
 import java.util.ArrayList;
@@ -7,7 +11,7 @@ import java.util.List;
 /**
  * Created by Magnus on 2017-05-18.
  */
-public class ProjectileBuilder extends AbstractModelBuilder implements BuilderProjectile {
+public class ProjectileBuilder extends AbstractModelBuilder implements IProjectileBuilder {
 
 
     private Boolean bouncy = false;
@@ -30,8 +34,7 @@ public class ProjectileBuilder extends AbstractModelBuilder implements BuilderPr
         projectile.isPiercing = piercing;
         projectile.giveInput(velocity, null);
 
-        setCommonParameters(projectile);
-
+        setCommonAndNotify(projectile);
         return projectile;
 
     }
@@ -39,47 +42,47 @@ public class ProjectileBuilder extends AbstractModelBuilder implements BuilderPr
     // ------------ Setters ---------
 
     @Override
-    public BuilderProjectile setBouncy() {
+    public IProjectileBuilder setBouncy() {
         return setBouncy(true);
     }
 
     @Override
-    public BuilderProjectile setBouncy(boolean bouncy) {
+    public IProjectileBuilder setBouncy(boolean bouncy) {
         this.bouncy = bouncy;
         return this;
     }
 
     @Override
-    public BuilderProjectile setPiercing() {
+    public IProjectileBuilder setPiercing() {
         return setPiercing(true);
     }
 
     @Override
-    public BuilderProjectile setPiercing(boolean piercing) {
+    public IProjectileBuilder setPiercing(boolean piercing) {
         this.piercing = piercing;
         return this;
     }
 
     @Override
-    public BuilderProjectile setListeners(List<ProjectileListener> list) {
+    public IProjectileBuilder setListeners(List<ProjectileListener> list) {
         this.listeners.addAll(list);
         return this;
     }
 
     @Override
-    public BuilderProjectile setDamage(int n) {
+    public IProjectileBuilder setDamage(int n) {
         this.damage = n;
         return this;
     }
 
     @Override
-    public BuilderProjectile setLifetime(long ms) {
+    public IProjectileBuilder setLifetime(long ms) {
         this.lifetime = ms;
         return this;
     }
 
     @Override
-    public BuilderProjectile setVelocity(Vector2f velocity) {
+    public IProjectileBuilder setVelocity(Vector2f velocity) {
         this.velocity = velocity;
         return this;
     }
