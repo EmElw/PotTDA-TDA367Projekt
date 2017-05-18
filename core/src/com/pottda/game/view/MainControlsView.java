@@ -16,6 +16,7 @@ public class MainControlsView {
     private static final String controlsTouch = "menu/touch.png";
     private static final String controlsKeyboardOnly = "menu/keyOnly.png";
     private static final String controlsKeyboardMouse = "menu/keyMouse.png";
+    private static final String mainMenuBG = "menu/bg.png";
 
     private final Stage stage;
 
@@ -23,12 +24,14 @@ public class MainControlsView {
     private Image controlsTouchImage;
     private Image controlsKeyOnlyImage;
     private Image controlsKeyMouseImage;
+    private Image bgImage;
 
     private enum imageEnum {
         TITLE,
         TOUCH,
         KEYONLY,
-        KEYMOUSE
+        KEYMOUSE,
+        BGIMAGE
     }
 
     public MainControlsView(final Stage stage) {
@@ -37,6 +40,9 @@ public class MainControlsView {
     }
 
     private void create() {
+        // Add background
+        addToStage(mainMenuBG, imageEnum.BGIMAGE, 0, 0, stage.getWidth(), stage.getHeight());
+
         // Add choose controls title
         addToStage(controlsTitle, imageEnum.TITLE, stage.getWidth() / 2 - 256, stage.getHeight() * 6.5f / 8);
 
@@ -57,6 +63,15 @@ public class MainControlsView {
         stage.addActor(image2);
     }
 
+    private void addToStage(String texturePath, imageEnum image, float xPos, float yPos, float width, float height) {
+        Image image2 = getImage(texturePath, image);
+        image2.setX(xPos);
+        image2.setY(yPos);
+        image2.setWidth(width);
+        image2.setHeight(height);
+        stage.addActor(image2);
+    }
+
     private Image getImage(String texturePath, imageEnum image) {
         switch (image) {
             case TITLE:
@@ -67,6 +82,8 @@ public class MainControlsView {
                 return controlsKeyOnlyImage = new Image(new Texture(Gdx.files.internal(texturePath)));
             case KEYMOUSE:
                 return controlsKeyMouseImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+            case BGIMAGE:
+                return bgImage = new Image(new Texture(Gdx.files.internal(texturePath)));
         }
         return null;
     }

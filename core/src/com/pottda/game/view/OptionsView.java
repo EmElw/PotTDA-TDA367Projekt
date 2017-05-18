@@ -19,6 +19,7 @@ public class OptionsView {
     private static final String optionsSFXTextString = "hud/text/sfx.png";
     private static final String optionsMusicTextString = "hud/text/music.png";
     private static final String optionReturnString = "hud/optionsReturn.png";
+    private static final String optionsBackgroundString = "hud/pauseBackground.png";
 
     private final Stage stage;
 
@@ -29,8 +30,10 @@ public class OptionsView {
     private Image optionsSFXText;
     private Image optionsMusicText;
     private Image optionReturn;
+    private Image pauseBackground;
 
     private enum imageEnum {
+        BACKGROUND,
         MUSICBAR,
         MUSIC,
         SFXBAR,
@@ -46,6 +49,9 @@ public class OptionsView {
     }
 
     private void create() {
+        // Add pause background
+        addToStage(optionsBackgroundString, imageEnum.BACKGROUND, 0, 0, stage.getWidth(), stage.getHeight());
+
         // Add options return button
         addToStage(optionReturnString, imageEnum.RETURN, stage.getWidth() / 2 - 150, 30);
 
@@ -75,8 +81,19 @@ public class OptionsView {
         stage.addActor(image2);
     }
 
+    private void addToStage(String texturePath, imageEnum image, float xPos, float yPos, float width, float height) {
+        Image image2 = getImage(texturePath, image);
+        image2.setX(xPos);
+        image2.setY(yPos);
+        image2.setWidth(width);
+        image2.setHeight(height);
+        stage.addActor(image2);
+    }
+
     private Image getImage(String texturePath, imageEnum image) {
         switch (image) {
+            case BACKGROUND:
+                return pauseBackground = new Image(new Texture(Gdx.files.internal(texturePath)));
             case RETURN:
                 return optionReturn = new Image(new Texture(Gdx.files.internal(texturePath)));
             case MUSIC:

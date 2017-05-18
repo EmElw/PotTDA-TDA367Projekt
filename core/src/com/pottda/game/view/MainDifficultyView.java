@@ -15,17 +15,20 @@ public class MainDifficultyView {
     private static final String chooseTitle = "menu/chooseDiff.png";
     private static final String chooseEasy = "menu/easy.png";
     private static final String chooseHard = "menu/hard.png";
+    private static final String mainMenuBG = "menu/bg.png";
 
     private final Stage stage;
 
     private Image chooseDiffImage;
     private Image easyImage;
     private Image hardImage;
+    private Image bgImage;
 
     private enum imageEnum {
         CHOOSEDIFFIMAGE,
         EASYIMAGE,
-        HARDIMAGE
+        HARDIMAGE,
+        BGIMAGE
     }
 
     public MainDifficultyView(final Stage stage) {
@@ -34,6 +37,9 @@ public class MainDifficultyView {
     }
 
     private void create() {
+        // Add background
+        addToStage(mainMenuBG, imageEnum.BGIMAGE, 0, 0, stage.getWidth(), stage.getHeight());
+
         // Add choose difficulty title
         addToStage(chooseTitle, imageEnum.CHOOSEDIFFIMAGE, stage.getWidth() / 2 - 256, stage.getHeight() * 3 / 4);
 
@@ -51,6 +57,15 @@ public class MainDifficultyView {
         stage.addActor(image2);
     }
 
+    private void addToStage(String texturePath, imageEnum image, float xPos, float yPos, float width, float height) {
+        Image image2 = getImage(texturePath, image);
+        image2.setX(xPos);
+        image2.setY(yPos);
+        image2.setWidth(width);
+        image2.setHeight(height);
+        stage.addActor(image2);
+    }
+
     private Image getImage(String texturePath, imageEnum image) {
         switch (image) {
             case CHOOSEDIFFIMAGE:
@@ -59,6 +74,8 @@ public class MainDifficultyView {
                 return easyImage = new Image(new Texture(Gdx.files.internal(texturePath)));
             case HARDIMAGE:
                 return hardImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+            case BGIMAGE:
+                return bgImage = new Image(new Texture(Gdx.files.internal(texturePath)));
         }
         return null;
     }
