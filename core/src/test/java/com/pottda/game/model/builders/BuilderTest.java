@@ -9,6 +9,9 @@ import org.junit.Test;
 import javax.vecmath.Tuple2f;
 import javax.vecmath.Vector2f;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.pottda.game.view.Sprites.*;
 import static org.junit.Assert.*;
 
@@ -57,6 +60,7 @@ public class BuilderTest {
 
     @Test
     public void projectileTest() {
+        // Create a projectile and fiddle with most parameters
         Projectile projA = (Projectile) new ProjectileBuilder().
                 setBouncy().
                 setPiercing().
@@ -65,22 +69,28 @@ public class BuilderTest {
                 setSprite(PROJECTILE1).
                 create();
 
+        // Create a projectile that is mostly default parameters
         Projectile projB = (Projectile) new ProjectileBuilder().
-                setDamage(20).
                 setSprite(PROJECTILE1).
                 create();
 
+        // Test the fiddled projectile
         assertEquals(true, projA.isBouncy);
         assertEquals(true, projA.isPiercing);
         assertEquals(10, projA.damage);
         assertEquals(50, projA.lifeTimeMS);
         assertEquals(PROJECTILE1, projA.sprite);
+        assertEquals(0, projA.getListeners().size());
 
-        assertEquals(20, projB.damage);
+        // Test the mostly default projectile
+        assertEquals(0, projB.damage);
         assertEquals(PROJECTILE1, projB.sprite);
+        assertEquals(0, projB.getListeners().size());
+
 
         assertEquals(2, myDummyListener.calls);
-
+        assertTrue(myDummyListener.modelActors.contains(projA));
+        assertTrue(myDummyListener.modelActors.contains(projB));
     }
 
 
@@ -88,9 +98,12 @@ public class BuilderTest {
 
         int calls = 0;
 
+        private List<ModelActor> modelActors = new ArrayList<ModelActor>();
+
         @Override
         public void onNewModel(ModelActor m) {
             calls++;
+            modelActors.add(m);
         }
     }
 
