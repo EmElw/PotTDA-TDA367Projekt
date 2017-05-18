@@ -15,7 +15,7 @@ import com.pottda.game.model.Item;
 public class InventoryView {
     private Stage stage;
     private Table table;
-    private VerticalGroup storageTable;
+    private Table storageTable;
     private Table inventoryTable;
     private Skin mySkin = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
     private Texture itemImageTexture;
@@ -35,10 +35,12 @@ public class InventoryView {
         Label inventoryLabel = new Label("Inventory", mySkin);
 
         // Create storage & scroll for storage
-        storageTable = new VerticalGroup();
+        storageTable = new Table();
         ScrollPane scroll = new ScrollPane(storageTable, mySkin);
+        scroll.layout();
+        scroll.setForceScroll(false, true);
         Table storage = new Table();
-        storage.add(scroll).expand().fill();
+        storage.add(scroll).expand().fill().height(stage.getHeight()-25);
 
         // Create inventory
         inventoryTable = new Table();
@@ -62,6 +64,7 @@ public class InventoryView {
     }
 
     public void renderInventory () {
+        stage.act();
         stage.draw();
     }
 
@@ -100,7 +103,8 @@ public class InventoryView {
         pancakeGroupTable.setDebug(true);
 
         // Add the table to our main storage table
-        storageTable.addActor(pancakeGroupTable);
+        storageTable.add(pancakeGroupTable);
+        storageTable.row();
     }
 
     /**
