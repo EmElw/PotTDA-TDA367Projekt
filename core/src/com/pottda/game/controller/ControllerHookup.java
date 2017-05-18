@@ -10,17 +10,25 @@ import com.pottda.game.view.ActorView;
 import java.util.List;
 
 /**
- * Created by Magnus on 2017-05-18.
+ * A class which implements NewModelListener
+ * <p>
+ * On new model, it creates a new controller and sets its view and model
  */
 public class ControllerHookup implements NewModelListener {
 
+    /**
+     * The stage onto which the ViewActors are put
+     */
+    private final Stage stage;
+
+    public ControllerHookup(Stage stage) {
+        this.stage = stage;
+    }
 
     private List<NewControllerListener> listenerList;
 
-    private Stage stage;
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
+    public void addListener(NewControllerListener ncl) {
+        listenerList.add(ncl);
     }
 
     @Override
@@ -38,6 +46,12 @@ public class ControllerHookup implements NewModelListener {
                 controller = createController(m, view);
 
             }
+        }
+    }
+
+    private void notifyListeners(AbstractController c) {
+        for (NewControllerListener ncl : listenerList) {
+            ncl.onNewController(c);
         }
     }
 
