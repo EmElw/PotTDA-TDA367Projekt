@@ -72,7 +72,7 @@ public class PoTDA extends ApplicationAdapter {
     private int currentWave = 0;
     private int nrOfWaves = 0;
     private long startTime = 0;
-    private static final int waitingTimeSeconds = 5;
+    private static final int WAITING_TIME_SECONDS = 5;
 
     private static GameState gameState = NONE;
 
@@ -257,7 +257,7 @@ public class PoTDA extends ApplicationAdapter {
                 updateWorld();
                 // Check if user has waited 5 seconds
                 final long currentTime = System.currentTimeMillis();
-                if ((currentTime - startTime) / 1000 >= waitingTimeSeconds) {
+                if ((currentTime - startTime) / 1000 >= WAITING_TIME_SECONDS) {
                     gameState = RUNNING;
                     // Start next wave
                     startWave(++currentWave);
