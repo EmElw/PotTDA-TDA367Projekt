@@ -169,7 +169,7 @@ public class Inventory {
     }
 
     /**
-     * Adds any numbr of Items to the Inventory
+     * Adds any number of Items to the Inventory
      * NOTE that the item's position within the inventory is for the Item to handle
      *
      * @param items

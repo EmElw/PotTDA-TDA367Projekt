@@ -34,29 +34,17 @@ public class InventoryView {
         Label storageLabel = new Label("Storage", mySkin);
         Label inventoryLabel = new Label("Inventory", mySkin);
 
-        // Create storage & scroll for storage
-        storageTable = new Table();
-        ScrollPane scroll = new ScrollPane(storageTable, mySkin);
-        scroll.layout();
-        scroll.setForceScroll(false, true);
-        Table storage = new Table();
-        storage.add(scroll).expand().fill().height(stage.getHeight()-25);
-
-        // Create inventory
-        inventoryTable = new Table();
-        Container inventory = new Container(inventoryTable);
-
         table = new Table();
         table.setFillParent(true);
         stage.addActor(table);
 
         table.setDebug(true);
 
+        // Add labels
         table.add(storageLabel);
         table.add(inventoryLabel);
-        table.row();
-        table.add(storage);
-        table.add(inventory).expand().fill();
+        createStorage();
+        createInventory();
      }
 
     public void resize (int width, int height) {
@@ -66,6 +54,27 @@ public class InventoryView {
     public void renderInventory () {
         stage.act();
         stage.draw();
+    }
+
+    private void createStorage() {
+        // Create storage & scroll for storage
+        storageTable = new Table();
+        ScrollPane scroll = new ScrollPane(storageTable);
+        scroll.layout();
+        scroll.setForceScroll(false, true);
+        Table storage = new Table();
+        storage.add(scroll).expand().fill().height(stage.getHeight()-25);
+
+        table.row();
+        table.add(storage);
+    }
+
+    private void createInventory() {
+        // Create inventory
+        inventoryTable = new Table();
+        Container inventory = new Container(inventoryTable);
+
+        table.add(inventory).expand().fill();
     }
 
     public void dispose() {
