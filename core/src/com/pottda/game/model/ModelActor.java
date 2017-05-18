@@ -22,6 +22,7 @@ public abstract class ModelActor {
     public final static int ENEMY_TEAM = 1;
 
     protected final PhysicsActor physicsActor;
+    public Behaviour behaviour;
 
     public ModelActor(PhysicsActor physicsActor) {
         this.physicsActor = physicsActor;
@@ -70,4 +71,8 @@ public abstract class ModelActor {
         return physicsActor;
     }
 
+    public enum Behaviour {
+        PLAYER,
+        DUMB
+    }
 }

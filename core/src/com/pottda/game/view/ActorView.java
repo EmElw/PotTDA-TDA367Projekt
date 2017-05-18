@@ -15,6 +15,7 @@ public class ActorView extends Image {
 
     /**
      * calls super class to set image for actor
+     *
      * @param texture the texture to set as image
      */
     public ActorView(Texture texture) {
@@ -26,12 +27,17 @@ public class ActorView extends Image {
 
     /**
      * calls super class to set image for actor
+     *
      * @param texture the texture to set as image
-     * @param size vector with width and height of image
+     * @param size    vector with width and height of image
      */
     public ActorView(Texture texture, Vector2f size) {
         super(new TextureRegionDrawable(new TextureRegion(texture)));
         this.setSize(size.x, size.y);
+    }
+
+    public ActorView(Sprites sprite) {
+        // TODO translation between sprite and texture
     }
 
     /**
@@ -47,12 +53,11 @@ public class ActorView extends Image {
     /**
      * Sets the angle which the actor is looking
      *
-     * @param degrees   The angle that the actor is looking
+     * @param degrees The angle that the actor is looking
      */
     public void setAngle(float degrees) {
         this.setRotation(degrees);
     }
-
 
 
 }
