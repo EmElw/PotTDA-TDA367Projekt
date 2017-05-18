@@ -36,7 +36,7 @@ public class Inventory {
     /**
      * Initiate data structures
      */
-    Inventory() {
+    public Inventory() {
         overlap = false;
         attackItems = new HashSet<AttackItem>();
         items = new HashSet<Item>();
