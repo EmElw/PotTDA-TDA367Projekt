@@ -17,7 +17,6 @@ public class MainControlsView {
     private static final String controlsKeyboardOnly = "menu/keyOnly.png";
     private static final String controlsKeyboardMouse = "menu/keyMouse.png";
 
-    private Texture texture;
     private final Stage stage;
 
     private Image controlsTitleImage;
@@ -32,16 +31,16 @@ public class MainControlsView {
 
     private void create() {
         // Add choose controls title
-        addToStage(controlsTitle, controlsTitleImage, stage.getWidth() / 2 - texture.getWidth() / 2, stage.getHeight() * 6.5f / 8);
+        addToStage(controlsTitle, controlsTitleImage, stage.getWidth() / 2 - 256, stage.getHeight() * 6.5f / 8);
 
         // Add touch button
-        addToStage(controlsTouch, controlsTouchImage, stage.getWidth() / 2 - texture.getWidth() / 2, stage.getHeight() * 3 / 8);
+        addToStage(controlsTouch, controlsTouchImage, stage.getWidth() / 2 - 256, stage.getHeight() * 3 / 8);
 
         // Add keyboard only button
-        addToStage(controlsKeyboardOnly, controlsKeyOnlyImage, stage.getWidth() / 2 - texture.getWidth() / 2, stage.getHeight() * 5 / 8);
+        addToStage(controlsKeyboardOnly, controlsKeyOnlyImage, stage.getWidth() / 2 - 256, stage.getHeight() * 5 / 8);
 
         // Add keyboard mouse button
-        addToStage(controlsKeyboardMouse, controlsKeyMouseImage, stage.getWidth() / 2 - texture.getWidth() / 2, stage.getHeight() * 1 / 8);
+        addToStage(controlsKeyboardMouse, controlsKeyMouseImage, stage.getWidth() / 2 - 256, stage.getHeight() * 1 / 8);
     }
 
     private void addToStage(String texturePath, Image image, float xPos, float yPos) {
@@ -86,10 +85,6 @@ public class MainControlsView {
     public boolean checkIfTouchingKeyboardMouse(Vector3 vector3) {
         Rectangle tr = new Rectangle(controlsKeyMouseImage.getX(), controlsKeyMouseImage.getY(), controlsKeyMouseImage.getWidth(), controlsKeyMouseImage.getHeight());
         return tr.contains(vector3.x, vector3.y);
-    }
-
-    public void dispose() {
-        texture.dispose();
     }
 
 }

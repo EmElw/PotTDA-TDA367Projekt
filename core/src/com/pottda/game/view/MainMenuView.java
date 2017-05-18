@@ -35,13 +35,13 @@ public class MainMenuView {
         addToStage(mainMenuBG, bgImage, 0, 0, stage.getWidth(), stage.getHeight());
 
         // Add title
-        addToStage(mainMenuTitle, titleImage, stage.getWidth() / 2 - texture.getWidth() / 2, stage.getHeight() * 3 / 4);
+        addToStage(mainMenuTitle, titleImage, stage.getWidth() / 2 - 512 / 2, stage.getHeight() * 3 / 4);
 
         // Add start button
-        addToStage(mainMenuStart, startImage, stage.getWidth() * 1 / 4 - texture.getWidth() / 2, stage.getHeight() * 1 / 4);
+        addToStage(mainMenuStart, startImage, stage.getWidth() * 1 / 4 - 128 / 2, stage.getHeight() * 1 / 4);
 
         // Add quit button
-        addToStage(mainMenuQuit, quitImage, stage.getWidth() * 3 / 4 - texture.getWidth() / 2, stage.getHeight() * 1 / 4);
+        addToStage(mainMenuQuit, quitImage, stage.getWidth() * 3 / 4 - 128 / 2, stage.getHeight() * 1 / 4);
     }
 
     private void addToStage(String texturePath, Image image, float xPos, float yPos) {

@@ -16,7 +16,6 @@ public class HUDView {
     private static final String healthbarRedString = "hud/health.png";
     private static final String pauseButtonString = "hud/pauseButton.png";
 
-    private Texture texture;
     private final Stage stage;
 
     private Image healthbar;
@@ -71,7 +70,4 @@ public class HUDView {
         healthbarRed.setWidth(health);
     }
 
-    public void dispose() {
-        texture.dispose();
-    }
 }

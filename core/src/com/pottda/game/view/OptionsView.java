@@ -20,7 +20,6 @@ public class OptionsView {
     private static final String optionsMusicTextString = "hud/text/music.png";
     private static final String optionReturnString = "hud/optionsReturn.png";
 
-    private Texture texture;
     private final Stage stage;
 
     private Image optionsMusicBar;
@@ -38,19 +37,19 @@ public class OptionsView {
 
     private void create() {
         // Add options return button
-        addToStage(optionReturnString, optionReturn, stage.getWidth() / 2 - texture.getWidth() / 2, 30);
+        addToStage(optionReturnString, optionReturn, stage.getWidth() / 2 - 150, 30);
 
         // Add options music control
-        addToStage(optionsMusicString, optionsMusic, stage.getWidth() / 2 - texture.getWidth() / 2, (stage.getHeight() / 5) * 4);
+        addToStage(optionsMusicString, optionsMusic, stage.getWidth() / 2 - 150, (stage.getHeight() / 5) * 4);
 
         // Add options music bar
-        addToStage(optionsMusicBarString, optionsMusicBar, stage.getWidth() / 2 - texture.getWidth() / 2, (stage.getHeight() / 5) * 4);
+        addToStage(optionsMusicBarString, optionsMusicBar, stage.getWidth() / 2 - 150, (stage.getHeight() / 5) * 4);
 
         // Add options sfx control
-        addToStage(optionsSFXString, optionsSFX, stage.getWidth() / 2 - texture.getWidth() / 2, (stage.getHeight() / 5) * 3);
+        addToStage(optionsSFXString, optionsSFX, stage.getWidth() / 2 - 150, (stage.getHeight() / 5) * 3);
 
         // Add options sfx bar
-        addToStage(optionsSFXBarString, optionsSFXBar, stage.getWidth() / 2 - texture.getWidth() / 2, (stage.getHeight() / 5) * 3);
+        addToStage(optionsSFXBarString, optionsSFXBar, stage.getWidth() / 2 - 150, (stage.getHeight() / 5) * 3);
 
         // Add options sfx text
         addToStage(optionsSFXTextString, optionsSFXText, optionsSFXBar.getX() - 168, (stage.getHeight() / 5) * 3);
@@ -143,10 +142,6 @@ public class OptionsView {
      */
     private void setOptionsSFXWidth(float width) {
         optionsSFX.setWidth(width);
-    }
-
-    public void dispose() {
-        texture.dispose();
     }
 
 }

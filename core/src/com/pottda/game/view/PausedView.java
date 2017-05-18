@@ -17,7 +17,6 @@ public class PausedView {
     private static final String pauseOptionsString = "hud/pauseOptions.png";
     private static final String pauseQuitString = "hud/pauseQuit.png";
 
-    private Texture texture;
     private final Stage stage;
 
     private Image pauseBackground;
@@ -35,13 +34,13 @@ public class PausedView {
         addToStage(pauseBackgroundString, pauseBackground, 0, 0, stage.getWidth(), stage.getHeight());
 
         // Add pause resume button
-        addToStage(pauseResumeString, pauseResume, stage.getWidth() / 2 - texture.getWidth() / 2, stage.getHeight() - 150);
+        addToStage(pauseResumeString, pauseResume, stage.getWidth() / 2 - 150, stage.getHeight() - 150);
 
         // Add pause options button
-        addToStage(pauseOptionsString, pauseOptions, stage.getWidth() / 2 - texture.getWidth() / 2, stage.getHeight() - 300);
+        addToStage(pauseOptionsString, pauseOptions, stage.getWidth() / 2 - 150, stage.getHeight() - 300);
 
         // Add pause quit button
-        addToStage(pauseQuitString, pauseQuit, stage.getWidth() / 2 - texture.getWidth() / 2, 30);
+        addToStage(pauseQuitString, pauseQuit, stage.getWidth() / 2 - 150, 30);
     }
 
     private void addToStage(String texturePath, Image image, float xPos, float yPos) {
@@ -95,10 +94,6 @@ public class PausedView {
     public boolean checkIfTouchingPauseQuit(Vector3 vector3) {
         Rectangle tr = new Rectangle(pauseQuit.getX(), pauseQuit.getY(), pauseQuit.getWidth(), pauseQuit.getHeight());
         return tr.contains(vector3.x, vector3.y);
-    }
-
-    public void dispose() {
-        texture.dispose();
     }
 
 }

@@ -16,7 +16,6 @@ public class MainDifficultyView {
     private static final String chooseEasy = "menu/easy.png";
     private static final String chooseHard = "menu/hard.png";
 
-    private Texture texture;
     private final Stage stage;
 
     private Image chooseDiffImage;
@@ -30,13 +29,13 @@ public class MainDifficultyView {
 
     private void create() {
         // Add choose difficulty title
-        addToStage(chooseTitle, chooseDiffImage, stage.getWidth() / 2 - texture.getWidth() / 2, stage.getHeight() * 3 / 4);
+        addToStage(chooseTitle, chooseDiffImage, stage.getWidth() / 2 - 256, stage.getHeight() * 3 / 4);
 
         // Add easy button
-        addToStage(chooseEasy, easyImage, stage.getWidth() / 2 - texture.getWidth() / 2, stage.getHeight() * 2 / 4);
+        addToStage(chooseEasy, easyImage, stage.getWidth() / 2 - 256, stage.getHeight() * 2 / 4);
 
         // Add hard button
-        addToStage(chooseHard, hardImage, stage.getWidth() / 2 - texture.getWidth() / 2, stage.getHeight() * 1 / 4);
+        addToStage(chooseHard, hardImage, stage.getWidth() / 2 - 256, stage.getHeight() * 1 / 4);
     }
 
     private void addToStage(String texturePath, Image image, float xPos, float yPos) {
@@ -70,10 +69,6 @@ public class MainDifficultyView {
     public boolean checkIfTouchingHard(Vector3 vector3) {
         Rectangle tr = new Rectangle(hardImage.getX(), hardImage.getY(), hardImage.getWidth(), hardImage.getHeight());
         return tr.contains(vector3.x, vector3.y);
-    }
-
-    public void dispose() {
-        texture.dispose();
     }
 
 }
