@@ -2,17 +2,15 @@ package com.pottda.game.model.builders;
 
 import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
-import com.pottda.game.view.Sprites;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.vecmath.Tuple2f;
-import javax.vecmath.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.pottda.game.view.Sprites.*;
+import static com.pottda.game.model.Sprites.*;
 import static org.junit.Assert.*;
 
 /**

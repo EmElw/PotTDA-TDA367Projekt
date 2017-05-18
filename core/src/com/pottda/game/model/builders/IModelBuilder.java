@@ -2,7 +2,7 @@ package com.pottda.game.model.builders;
 
 
 import com.pottda.game.model.ModelActor;
-import com.pottda.game.view.Sprites;
+import com.pottda.game.model.Sprites;
 
 import javax.vecmath.Vector2f;
 

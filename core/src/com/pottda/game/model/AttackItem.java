@@ -1,7 +1,5 @@
 package com.pottda.game.model;
 
-import com.pottda.game.view.Sprites;
-
 import javax.vecmath.Vector2f;
 import java.util.ArrayList;
 import java.util.List;

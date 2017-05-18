@@ -1,10 +1,12 @@
 package com.pottda.game.view;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.pottda.game.PoTDA;
+import com.pottda.game.model.Sprites;
 
 import javax.vecmath.Vector2f;
 
@@ -37,7 +39,7 @@ public class ActorView extends Image {
     }
 
     public ActorView(Sprites sprite) {
-        // TODO translation between sprite and texture
+        super(new Texture(Gdx.files.internal(sprite.fileName)));
     }
 
     /**

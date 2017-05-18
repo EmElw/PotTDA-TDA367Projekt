@@ -7,7 +7,6 @@ import com.pottda.game.model.items.ChainAttack;
 import com.pottda.game.model.items.MultiShot;
 import com.pottda.game.model.items.SimpleCannon;
 import com.pottda.game.model.items.Switcher;
-import com.pottda.game.view.Sprites;
 
 import org.junit.Assert;
 import org.junit.Before;
