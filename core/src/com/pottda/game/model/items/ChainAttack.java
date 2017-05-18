@@ -23,6 +23,9 @@ public class ChainAttack extends AttackItem {
      */
     @Override
     protected void initDynamic() {
+
+        dropRate = 0.03f;
+        
         isProjectileModifier = true;
         isSecondaryAttack = true;
 
