@@ -7,6 +7,7 @@ import com.pottda.game.model.PhysicsActorFactory;
 import com.pottda.game.view.Sprites;
 
 import javax.vecmath.Vector2f;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,12 +15,12 @@ import java.util.List;
  */
 public abstract class AbstractModelBuilder implements IModelBuilder {
 
-    private List<NewModelListener> listenerList;
+    private static List<NewModelListener> listenerList = new ArrayList<NewModelListener>();
 
-    protected PhysicsActorFactory physiscActorFactory;
+    protected static PhysicsActorFactory physiscActorFactory;
 
-    public void setPhysiscActorFactory(PhysicsActorFactory physiscActorFactory) {
-        this.physiscActorFactory = physiscActorFactory;
+    public static void setPhysiscActorFactory(PhysicsActorFactory paf) {
+        physiscActorFactory = paf;
     }
 
     protected Sprites sprite;
@@ -51,5 +52,9 @@ public abstract class AbstractModelBuilder implements IModelBuilder {
         for (NewModelListener nml : listenerList) {
             nml.onNewModel(m);
         }
+    }
+
+    public static void addListener(NewModelListener nml){
+        listenerList.add(nml);
     }
 }
