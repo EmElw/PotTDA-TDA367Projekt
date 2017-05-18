@@ -8,11 +8,8 @@ import javax.vecmath.Tuple2f;
  * <p>
  * Specifically, an {@link Obstacle}
  */
-public interface BuilderObstacle extends BuilderCharacter {
+public interface BuilderObstacle extends BuilderModel {
 
-    BuilderObstacle setBorder();
-
-    BuilderObstacle setBorder(boolean isBorder);
 
     BuilderObstacle setSize(float width, float heigth);
 
