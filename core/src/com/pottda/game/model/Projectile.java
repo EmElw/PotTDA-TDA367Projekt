@@ -6,7 +6,7 @@ import java.util.List;
 
 
 public class Projectile extends ModelActor {
-    int damage;
+    public int damage;
     public boolean isBouncy = false;
     public boolean isPiercing = false;
     public final long timeOfConstructionMS;
