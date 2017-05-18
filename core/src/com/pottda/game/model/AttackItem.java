@@ -1,6 +1,5 @@
 package com.pottda.game.model;
 
-import com.pottda.game.controller.Box2DActorFactory;
 import com.pottda.game.view.Sprites;
 
 import javax.vecmath.Vector2f;
@@ -71,6 +70,8 @@ public abstract class AttackItem extends Item {
                 origin).getModel();
 
         proj.damage = damage;
+        proj.isPiercing = penetrates;
+        proj.isBouncy = bounces;
 
         direction.normalize();
         proj.setListeners(listeners);
