@@ -15,6 +15,7 @@ import com.pottda.game.controller.AIController;
 import com.pottda.game.controller.AbstractController;
 import com.pottda.game.controller.Box2DActorFactory;
 import com.pottda.game.controller.ControllerOptions;
+import com.pottda.game.controller.WaveController;
 import com.pottda.game.model.ActorFactory;
 import com.pottda.game.model.Character;
 import com.pottda.game.physicsBox2D.CollisionListener;
@@ -56,6 +57,8 @@ public class PoTDA extends ApplicationAdapter {
     private Box2DActorFactory box2DActorFactory;
     private MainMenuView mainMenuView;
 
+    private WaveController waveController;
+
 
     public enum GameState {
         NONE,
@@ -68,15 +71,7 @@ public class PoTDA extends ApplicationAdapter {
         MAIN_CONTROLS
     }
 
-    private int currentLevel = 0;
-    private int currentWave = 0;
-    private int nrOfWaves = 0;
-    private long startTime = 0;
-    private static final int WAITING_TIME_SECONDS = 5;
-
     private static GameState gameState = NONE;
-
-    private static final String playerStartInventory = "inventoryblueprint/playerStartInventory.xml";
 
     private static final String GAME_TITLE = "Panic on TDAncefloor";
 
@@ -105,6 +100,8 @@ public class PoTDA extends ApplicationAdapter {
         Box2D.init();
 
         mainMenuView = new MainMenuView(mainMenuStage);
+
+        waveController = new WaveController(WIDTH_METERS, HEIGHT_METERS, scaling);
     }
 
     /**
@@ -135,7 +132,7 @@ public class PoTDA extends ApplicationAdapter {
 
         createWorldBorders();
 
-        initNextLevel(++currentLevel);
+        waveController.initNextLevel();
     }
 
     /**
@@ -148,36 +145,7 @@ public class PoTDA extends ApplicationAdapter {
 
     }
 
-    /**
-     * Sets variables to prepare for next level
-     * @param levelToStart the next level
-     */
-    private void initNextLevel(int levelToStart) {
-        currentLevel = levelToStart;
-        currentWave = 0;
-        nrOfWaves = 2 + (int) (Math.random() * 3);
-        System.out.println("current level: " + currentLevel + ", nr of waves: " + nrOfWaves);
-    }
 
-    /**
-     * Starts the next wave and spawns enemies
-     * @param waveToStart the wave to start. Higher spawns more enemies
-     */
-    private void startWave(int waveToStart) {
-        final int enemiesToSpawn = 5 + (int)(Math.random() * 3 * (currentLevel + waveToStart - 2));
-        System.out.println("Starting wave " + waveToStart + " with " + enemiesToSpawn + " enemies");
-
-        // Add some enemies
-        for (int i = 0; i < enemiesToSpawn; i++) {
-            float xx = (float) (Math.random() * WIDTH_METERS * scaling);
-            float yy = (float) (Math.random() * HEIGHT_METERS * scaling);
-            try {
-                ActorFactory.get().buildEnemy(Sprites.ENEMY, new Vector2f(xx, yy), "inventoryblueprint/playerStartInventory.xml");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     /**
      * Checks if any enemies are alive
@@ -241,14 +209,14 @@ public class PoTDA extends ApplicationAdapter {
                 updateGame();
                 updateWorld();
                 if (!enemiesAlive()) {
-                    if (currentWave >= nrOfWaves) {
+                    if (waveController.finishedWaves()) {
                         // TODO Go to inventory
                         System.out.println("To inventory");
-                        initNextLevel(++currentLevel);
+                        waveController.initNextLevel();
                         gameState = WAITING;
                     } else {
                         gameState = WAITING;
-                        startTime = System.currentTimeMillis();
+                        waveController.setStartTime(System.currentTimeMillis());
                     }
                 }
                 break;
@@ -256,11 +224,10 @@ public class PoTDA extends ApplicationAdapter {
                 updateGame();
                 updateWorld();
                 // Check if user has waited 5 seconds
-                final long currentTime = System.currentTimeMillis();
-                if ((currentTime - startTime) / 1000 >= WAITING_TIME_SECONDS) {
+                if (waveController.waited()) {
                     gameState = RUNNING;
                     // Start next wave
-                    startWave(++currentWave);
+                    waveController.startWave();
                 }
                 break;
             case PAUSED:
@@ -353,15 +320,6 @@ public class PoTDA extends ApplicationAdapter {
             controllers.removeAll(controllerRemovalBuffer);
             controllerRemovalBuffer.clear();
         }
-    }
-
-    /**
-     * Returns the game state
-     *
-     * @return 1=running, 2=paused, 3=options
-     */
-    public static GameState getGameState() {
-        return gameState;
     }
 
     /**
