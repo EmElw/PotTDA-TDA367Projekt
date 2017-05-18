@@ -22,10 +22,26 @@ public class Inventory {
     /*
     A map kept to quickly find what Item is at a given position, if any
      */
-    public final Map<Integer, Item> positionMap;
+    private final Map<Integer, Item> positionMap;
 
     private int height;
     private int width;
+
+    /*
+    Set to true if two items attempts to set to the same coordinate.
+    overlap = false is a condition for isLegal
+     */
+    private boolean overlap;
+
+    /**
+     * Initiate data structures
+     */
+    public Inventory() {
+        overlap = false;
+        attackItems = new HashSet<AttackItem>();
+        items = new HashSet<Item>();
+        positionMap = new TreeMap<Integer, Item>();
+    }
 
     /**
      * Called on creation and should be called whenever the
@@ -34,9 +50,14 @@ public class Inventory {
     public void compile() {
         // Map out all the positions of the items
         positionMap.clear();
+        overlap = false;
+//        Item oldItem;
         for (Item item : items) {
             for (Integer n : item.getPositionsAsIntegers(width)) {
-                positionMap.put(n, item);
+                if ((/*oldItem = */positionMap.put(n, item)) != null) {
+                    overlap = true;
+//                    throw new Exception("Illegal inventory: " + item + " overlaps with " + oldItem + " at " + n);
+                }
             }
         }
 
@@ -60,11 +81,19 @@ public class Inventory {
      * Checks to see if the current inventory state is legal, i.e.
      * <p>
      * - no infinite loops are created
+     * <p>
+     * - no items are overlapping
      *
      * @return true if the above conditions are fulfilled
      */
     public boolean isLegal() {
 
+        // Check for overlapping items
+        if (overlap) {
+            return false;
+        }
+
+        // Check for infinite loops (e.g. two items outputting to the other)
         for (Item i : this.attackItems) {
             if (isLooping(i, new HashSet<Item>())) {
                 return false;
@@ -115,7 +144,6 @@ public class Inventory {
      *
      * @param direction a {@link Vector2f} in the wanted direction
      */
-
     public void attack(Vector2f direction, Vector2f origin, int team) {
 
         // Iterate through all attack items and do stuff
@@ -124,13 +152,6 @@ public class Inventory {
                 a.tryAttack(direction, origin, team);
             }
         }
-    }
-
-
-    public Inventory() {
-        attackItems = new HashSet<AttackItem>();
-        items = new HashSet<Item>();
-        positionMap = new TreeMap<Integer, Item>();
     }
 
     /**
@@ -142,14 +163,6 @@ public class Inventory {
     public void setDimensions(int w, int h) {
         this.width = w;
         this.height = h;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
     }
 
     /**
@@ -176,5 +189,27 @@ public class Inventory {
      */
     public void addItem(Item... items) {
         this.items.addAll(Arrays.asList(items));
+    }
+
+    public Set<Item> getItemDropList() {
+        return getItemDropList(1);
+    }
+
+    public Set<Item> getItemDropList(float dropRateFactor) {
+        Set<Item> returnSet = new HashSet<Item>();
+        for (Item i : items) {
+            if (i.drop(dropRateFactor)) {
+                returnSet.add(i);
+            }
+        }
+        return returnSet;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }
