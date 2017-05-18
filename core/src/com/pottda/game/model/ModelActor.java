@@ -1,5 +1,7 @@
 package com.pottda.game.model;
 
+import com.pottda.game.view.Sprites;
+
 import javax.vecmath.Vector2f;
 
 
@@ -13,6 +15,8 @@ public abstract class ModelActor {
     public int team;
     //    public AbstractController controller;
     float angle = 0;
+
+    public Sprites sprite;
 
     public final static int PLAYER_TEAM = 0;
     public final static int ENEMY_TEAM = 1;
@@ -31,6 +35,11 @@ public abstract class ModelActor {
      */
     public void giveInput(Vector2f movementVector, Vector2f attackVector) {
 
+    }
+
+
+    public void setPosition(Vector2f position) {
+        physicsActor.setPosition(position);
     }
 
     /**
@@ -57,7 +66,7 @@ public abstract class ModelActor {
     public void handleCollisions() {
     }
 
-    public PhysicsActor getPhysicsActor(){
+    public PhysicsActor getPhysicsActor() {
         return physicsActor;
     }
 

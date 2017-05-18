@@ -21,4 +21,5 @@ public abstract class PhysicsActor {
 
     public abstract void destroyBody();
 
+    public abstract void setPosition(Vector2f position);
 }

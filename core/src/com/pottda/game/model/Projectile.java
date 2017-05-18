@@ -10,7 +10,7 @@ public class Projectile extends ModelActor {
     public boolean isBouncy = false;
     public boolean isPiercing = false;
     public final long timeOfConstructionMS;
-    public final long lifeTimeMS;
+    public long lifeTimeMS;
     static final int DEFAULT_PROJECTILE_LIFETIME_MS = 10000;
     /**
      * Listeners that care about various game-oriented events
@@ -83,7 +83,7 @@ public class Projectile extends ModelActor {
         this.lifeTimeMS = lifeTimeMS;
         //hasDamaged = new ArrayList<Character>();
     }
-    
+
     public Projectile(PhysicsActor physicsActor, int damage, List<ProjectileListener> listeners) {
         super(physicsActor);
         this.damage = damage;
@@ -99,7 +99,7 @@ public class Projectile extends ModelActor {
     }*/
     @Override
     public void giveInput(Vector2f movementVector, Vector2f attackVector) {
-        if(isDying()){
+        if (isDying()) {
             return;
         }
         if (movementVector.length() == 0) {
@@ -124,20 +124,20 @@ public class Projectile extends ModelActor {
                 listeners.get(i).onHit(this);
             }
         }
-        if(!isPiercing){
+        if (!isPiercing) {
             onCollision();
         }
     }
 
     public void onCollision() {
-        if(!isBouncy) {
+        if (!isBouncy) {
             shouldBeRemoved = true;
             onDestruction();
         }
     }
-    
-    private boolean isDying(){
-        if (System.currentTimeMillis() - timeOfConstructionMS > lifeTimeMS){
+
+    private boolean isDying() {
+        if (System.currentTimeMillis() - timeOfConstructionMS > lifeTimeMS) {
             shouldBeRemoved = true;
             onDestruction();
         }
