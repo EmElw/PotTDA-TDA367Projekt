@@ -11,7 +11,7 @@ public class Projectile extends ModelActor {
     public boolean isPiercing = false;
     public final long timeOfConstructionMS;
     public long lifeTimeMS;
-    static final int DEFAULT_PROJECTILE_LIFETIME_MS = 10000;
+    public static final int DEFAULT_PROJECTILE_LIFETIME_MS = 10000;
     /**
      * Listeners that care about various game-oriented events
      */

@@ -1,9 +1,13 @@
-package com.pottda.game.model;
+package com.pottda.game.model.builders;
+
+import com.pottda.game.model.Character;
+import com.pottda.game.model.Inventory;
+import com.pottda.game.model.ModelActor;
 
 /**
  * Concrete implementation of a Character Builder pattern
  */
-public class CharacterBuilder extends AbstractModelBuilder implements BuilderCharacter {
+public class CharacterBuilder extends AbstractModelBuilder implements ICharacterBuilder {
     private int team = 0;
     private Inventory inventory;
 
@@ -16,26 +20,26 @@ public class CharacterBuilder extends AbstractModelBuilder implements BuilderCha
         character.team = team;
         character.inventory = inventory;
 
-        setCommonParameters(character);
+        setCommonAndNotify(character);
         return character;
     }
 
     // --------- Setters
 
     @Override
-    public BuilderCharacter setTeam(int n) {
+    public ICharacterBuilder setTeam(int n) {
         this.team = n;
         return this;
     }
 
     @Override
-    public BuilderCharacter setInventory(Inventory inv) {
+    public ICharacterBuilder setInventory(Inventory inv) {
         this.inventory = inv;
         return this;
     }
 
     @Override
-    public BuilderCharacter setInventoryFromFile(String xmlFilePath) {
+    public ICharacterBuilder setInventoryFromFile(String xmlFilePath) {
         // TODO
         return this;
     }
