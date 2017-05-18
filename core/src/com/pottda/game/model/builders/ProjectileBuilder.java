@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Magnus on 2017-05-18.
+ * A concrete implementation for a Character Builder pattern
  */
 public class ProjectileBuilder extends AbstractModelBuilder implements IProjectileBuilder {
 
