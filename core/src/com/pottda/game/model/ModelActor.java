@@ -42,6 +42,9 @@ public abstract class ModelActor {
     public void setPosition(Vector2f position) {
         physicsActor.setPosition(position);
     }
+    public void setPosition(float x, float y) {
+        physicsActor.setPosition(new Vector2f(x, y));
+    }
 
     /**
      * Returns the position of the Actor
