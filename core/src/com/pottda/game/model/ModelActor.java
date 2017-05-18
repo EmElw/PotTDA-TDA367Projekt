@@ -21,11 +21,11 @@ public abstract class ModelActor {
     public final static int PLAYER_TEAM = 0;
     public final static int ENEMY_TEAM = 1;
 
-    protected final PhysicsActor physicsActor;
+    protected PhysicsActor physicsActor;
     public Behaviour behaviour;
 
-    public ModelActor(PhysicsActor physicsActor) {
-        this.physicsActor = physicsActor;
+    public ModelActor() {
+
     }
 
     /**
@@ -65,6 +65,10 @@ public abstract class ModelActor {
      * Called by the controller every frame to handle any collisions that have occurred
      */
     public void handleCollisions() {
+    }
+
+    public void setPhysicsActor(PhysicsActor physicsActor) {
+        this.physicsActor = physicsActor;
     }
 
     public PhysicsActor getPhysicsActor() {

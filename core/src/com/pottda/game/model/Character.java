@@ -27,8 +27,7 @@ public class Character extends ModelActor {
 
     // -- Constructors --
 
-    public Character(PhysicsActor physicsActor) {
-        super(physicsActor);
+    public Character() {
         this.inventory = new Inventory();
         this.isProjectile = false;
         this.movementVector = new Vector2f();

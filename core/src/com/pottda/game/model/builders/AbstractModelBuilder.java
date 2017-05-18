@@ -3,6 +3,7 @@ package com.pottda.game.model.builders;
 import com.pottda.game.model.ModelActor;
 import com.pottda.game.model.NewModelListener;
 import com.pottda.game.model.PhysicsActor;
+import com.pottda.game.model.PhysicsActorFactory;
 import com.pottda.game.view.Sprites;
 
 import javax.vecmath.Vector2f;
@@ -15,7 +16,7 @@ public abstract class AbstractModelBuilder implements IModelBuilder {
 
     private List<NewModelListener> listenerList;
 
-    protected PhysiscActorFactory physiscActorFactory;
+    protected PhysicsActorFactory physiscActorFactory;
 
     public void setPhysiscActorFactory(PhysicsActorFactory physiscActorFactory) {
         this.physiscActorFactory = physiscActorFactory;

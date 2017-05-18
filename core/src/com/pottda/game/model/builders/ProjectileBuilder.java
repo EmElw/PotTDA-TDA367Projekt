@@ -25,13 +25,14 @@ public class ProjectileBuilder extends AbstractModelBuilder implements IProjecti
     @Override
     public ModelActor create() {
 
-        Projectile projectile = new Projectile(null,    // TODO
-                damage,
+        Projectile projectile = new Projectile(damage,
                 listeners,
                 lifetime);
-
         projectile.isBouncy = bouncy;
         projectile.isPiercing = piercing;
+
+        projectile.setPhysicsActor(physiscActorFactory.getProjectilePhysicsActor(projectile));
+        
         projectile.giveInput(velocity, null);
 
         setCommonAndNotify(projectile);

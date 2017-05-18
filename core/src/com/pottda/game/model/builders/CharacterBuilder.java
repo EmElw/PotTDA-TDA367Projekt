@@ -13,12 +13,12 @@ public class CharacterBuilder extends AbstractModelBuilder implements ICharacter
 
     @Override
     public ModelActor create() {
-        Character character = new Character(
-                null // TODO
-        );
+        Character character = new Character();
 
         character.team = team;
         character.inventory = inventory;
+
+        character.setPhysicsActor(physiscActorFactory.getCharacterPhysicsActor(character));
 
         setCommonAndNotify(character);
         return character;

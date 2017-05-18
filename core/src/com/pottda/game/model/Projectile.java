@@ -75,8 +75,7 @@ public class Projectile extends ModelActor {
     }
 
 
-    public Projectile(PhysicsActor physicsActor, int damage, List<ProjectileListener> listeners, Long lifeTimeMS) {
-        super(physicsActor);
+    public Projectile(int damage, List<ProjectileListener> listeners, Long lifeTimeMS) {
         this.damage = damage;
         this.listeners = listeners;
         timeOfConstructionMS = System.currentTimeMillis();
@@ -84,8 +83,7 @@ public class Projectile extends ModelActor {
         //hasDamaged = new ArrayList<Character>();
     }
 
-    public Projectile(PhysicsActor physicsActor, int damage, List<ProjectileListener> listeners) {
-        super(physicsActor);
+    public Projectile(int damage, List<ProjectileListener> listeners) {
         this.damage = damage;
         this.listeners = listeners;
         timeOfConstructionMS = System.currentTimeMillis();

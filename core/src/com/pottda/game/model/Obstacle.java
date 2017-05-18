@@ -5,8 +5,7 @@ package com.pottda.game.model;
  */
 
 public class Obstacle extends ModelActor {
-    public Obstacle(PhysicsActor physicsActor) {
-        super(physicsActor);
+    public Obstacle() {
     }
 
 //    @Override
