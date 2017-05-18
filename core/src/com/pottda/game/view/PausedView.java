@@ -2,6 +2,8 @@ package com.pottda.game.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
@@ -30,38 +32,67 @@ public class PausedView {
 
     private void create() {
         // Add pause background
-        texture = new Texture(Gdx.files.internal(pauseBackgroundString));
-        pauseBackground = new Image(texture);
-        pauseBackground.setX(0);
-        pauseBackground.setY(0);
-        pauseBackground.setWidth(stage.getWidth());
-        pauseBackground.setHeight(stage.getHeight());
-        pauseBackground.setVisible(false);
-        stage.addActor(pauseBackground);
+        addToStage(new Texture(Gdx.files.internal(pauseBackgroundString)), pauseBackground, 0, 0, stage.getWidth(), stage.getHeight());
 
         // Add pause resume button
-        texture = new Texture(Gdx.files.internal(pauseResumeString)); // 300x120px
-        pauseResume = new Image(texture);
-        pauseResume.setX(stage.getWidth() / 2 - texture.getWidth() / 2);
-        pauseResume.setY(stage.getHeight() - 150);
-        pauseResume.setVisible(false);
-        stage.addActor(pauseResume);
+        addToStage(new Texture(Gdx.files.internal(pauseResumeString)), pauseResume, stage.getWidth() / 2 - texture.getWidth() / 2, stage.getHeight() - 150);
 
         // Add pause options button
-        texture = new Texture(Gdx.files.internal(pauseOptionsString));
-        pauseOptions = new Image(texture);
-        pauseOptions.setX(stage.getWidth() / 2 - texture.getWidth() / 2);
-        pauseOptions.setY(stage.getHeight() - 300);
-        pauseOptions.setVisible(false);
-        stage.addActor(pauseOptions);
+        addToStage(new Texture(Gdx.files.internal(pauseOptionsString)), pauseOptions, stage.getWidth() / 2 - texture.getWidth() / 2, stage.getHeight() - 300);
 
         // Add pause quit button
-        texture = new Texture(Gdx.files.internal(pauseQuitString));
-        pauseQuit = new Image(texture);
-        pauseQuit.setX(stage.getWidth() / 2 - texture.getWidth() / 2);
-        pauseQuit.setY(30);
-        pauseQuit.setVisible(false);
-        stage.addActor(pauseQuit);
+        addToStage(new Texture(Gdx.files.internal(pauseQuitString)), pauseQuit, stage.getWidth() / 2 - texture.getWidth() / 2, 30);
+    }
+
+    private void addToStage(Texture texture, Image image, float xPos, float yPos) {
+        image = new Image(texture);
+        image.setX(xPos);
+        image.setY(yPos);
+        stage.addActor(image);
+    }
+
+    private void addToStage(Texture texture, Image image, float xPos, float yPos, float width, float height) {
+        image = new Image(texture);
+        image.setX(xPos);
+        image.setY(yPos);
+        stage.addActor(image);
+    }
+
+    /**
+     * Checks if the user touches the resume button in the pause menu
+     *
+     * @param vector3 Vector with touch coordinates to check
+     * @return true if touching button
+     */
+    public boolean checkIfTouchingPauseResume(Vector3 vector3) {
+        Rectangle tr = new Rectangle(pauseResume.getX(), pauseResume.getY(), pauseResume.getWidth(), pauseResume.getHeight());
+        return tr.contains(vector3.x, vector3.y);
+    }
+
+    /**
+     * Checks if the user touches the options button in the pause menu
+     *
+     * @param vector3 Vector with touch coordinates to check
+     * @return true if touching button
+     */
+    public boolean checkIfTouchingPauseOptions(Vector3 vector3) {
+        Rectangle tr = new Rectangle(pauseOptions.getX(), pauseOptions.getY(), pauseOptions.getWidth(), pauseOptions.getHeight());
+        return tr.contains(vector3.x, vector3.y);
+    }
+
+    /**
+     * Checks if the user touches the quit button in the pause menu
+     *
+     * @param vector3 Vector with touch coordinates to check
+     * @return true if touching button
+     */
+    public boolean checkIfTouchingPauseQuit(Vector3 vector3) {
+        Rectangle tr = new Rectangle(pauseQuit.getX(), pauseQuit.getY(), pauseQuit.getWidth(), pauseQuit.getHeight());
+        return tr.contains(vector3.x, vector3.y);
+    }
+
+    public void dispose() {
+        texture.dispose();
     }
 
 }
