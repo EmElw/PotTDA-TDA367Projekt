@@ -16,6 +16,4 @@ public interface BuilderCharacter extends BuilderModel {
     BuilderCharacter setInventory(Inventory inv);
 
     BuilderCharacter setInventoryFromFile(String xmlFilePath);
-
-    BuilderCharacter setPhysicsActor(PhysicsActor physicsActor);
 }
