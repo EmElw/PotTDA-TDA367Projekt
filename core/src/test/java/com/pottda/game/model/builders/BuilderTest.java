@@ -20,7 +20,7 @@ public class BuilderTest {
 
     DummyListener myDummyListener;
 
-    @Beforeg
+    @Before
     public void setUp() {
         // Set concrete PhysicsActorFactory implementation
         AbstractModelBuilder.setPhysiscActorFactory(new PhysicsActorFactory() {

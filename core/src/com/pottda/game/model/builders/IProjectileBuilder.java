@@ -13,6 +13,10 @@ import java.util.List;
  */
 public interface IProjectileBuilder extends IModelBuilder {
 
+    IProjectileBuilder copyProperties(Projectile p);
+
+    IProjectileBuilder setTeam(int n);
+
     IProjectileBuilder setBouncy();
 
     IProjectileBuilder setBouncy(boolean bouncy);

@@ -14,6 +14,7 @@ import java.util.List;
 public class ProjectileBuilder extends AbstractModelBuilder implements IProjectileBuilder {
 
 
+    private int team = 0;
     private Boolean bouncy = false;
     private Boolean piercing = false;
     private List<ProjectileListener> listeners = new ArrayList<ProjectileListener>();
@@ -30,9 +31,10 @@ public class ProjectileBuilder extends AbstractModelBuilder implements IProjecti
                 lifetime);
         projectile.isBouncy = bouncy;
         projectile.isPiercing = piercing;
+        projectile.team = team;
 
         projectile.setPhysicsActor(physiscActorFactory.getProjectilePhysicsActor(projectile));
-        
+
         projectile.giveInput(velocity, null);
 
         setCommonAndNotify(projectile);
@@ -41,6 +43,22 @@ public class ProjectileBuilder extends AbstractModelBuilder implements IProjecti
     }
 
     // ------------ Setters ---------
+
+    @Override
+    public IProjectileBuilder copyProperties(Projectile p) {
+        team = p.team;
+        bouncy = p.isBouncy;
+        piercing = p.isPiercing;
+        damage = p.damage;
+        lifetime = p.lifeTimeMS;
+        return this;
+    }
+
+    @Override
+    public IProjectileBuilder setTeam(int n) {
+        team = n;
+        return this;
+    }
 
     @Override
     public IProjectileBuilder setBouncy() {

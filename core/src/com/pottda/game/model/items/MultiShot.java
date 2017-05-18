@@ -4,6 +4,7 @@ import com.pottda.game.model.ActorFactory;
 import com.pottda.game.model.Item;
 import com.pottda.game.model.Projectile;
 import com.pottda.game.model.Sprites;
+import com.pottda.game.model.builders.ProjectileBuilder;
 
 import javax.vecmath.Point2i;
 import javax.vecmath.Vector2f;
@@ -19,6 +20,7 @@ public class MultiShot extends Item {
     The spread between each projectile, expressed as radians?
      */
     private final static float SPREAD = 0.3f;
+    private Vector2f temporaryVector;
 
     /*
     Shaped like
@@ -92,17 +94,14 @@ public class MultiShot extends Item {
                 newDir += SPREAD;
             }
 
-            Projectile newProj = (Projectile) ActorFactory.get().
-                    buildProjectile(Sprites.PROJECTILE1, p.team, p.isBouncy, p.isPiercing, position).
-                    getModel();
+            temporaryVector.set((float) Math.cos(newDir), (float) Math.sin(newDir));
+            Projectile newProj = (Projectile) new ProjectileBuilder().
+                    copyProperties(p).
+                    setVelocity(temporaryVector).
+                    setListeners(p.getListeners()).
+                    setPosition(position).
+                    create();
 
-            newProj.giveInput(
-                    new Vector2f(
-                            (float) Math.cos(newDir),
-                            (float) Math.sin(newDir)),
-                    null);
-
-            newProj.setListeners(p.getListeners(), p.getIgnored());
             newProj.onAttack();
         }
     }

@@ -354,7 +354,7 @@ public class Box2DActorFactory extends ActorFactory {
         PROJECTILE_ENEMY_FILTER.maskBits = (short) (CHARACTER_PLAYER_FILTER.categoryBits |
                 OBSTACLE_FILTER.categoryBits);
 
-        // Projectiles with the 'penetrates' flag only collide with the terrain and obstacle
+        // Projectiles with the 'piercing' flag only collide with the terrain and obstacle
         PROJECTILE_PENETRATION_FILTER.maskBits = OBSTACLE_FILTER.categoryBits;
 
         // Obstacles collide with everything
