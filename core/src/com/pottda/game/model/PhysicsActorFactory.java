@@ -7,5 +7,5 @@ public interface PhysicsActorFactory {
 
     PhysicsActor getCharacterPhysicsActor(Character character);
 
-    PhysicsActor getObstaclePhysicsActor(Obstacle obstacle, Tuple2f dimensions);
+    PhysicsActor getObstaclePhysicsActor(Obstacle obstacle);
 }
