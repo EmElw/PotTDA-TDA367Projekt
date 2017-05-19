@@ -11,6 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Scaling;
 import com.pottda.game.model.Item;
+import com.pottda.game.view.AtlasCreator;
+
+import static com.pottda.game.view.AtlasCreator.atlas;
 
 /**
  * Created by Mr Cornholio on 15/05/2017.
@@ -21,7 +24,7 @@ public class InventoryView {
     private Table storageTable;
     private Table inventoryTable;
     private Skin mySkin = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
-    private Texture itemImageTexture;
+    private Image itemImage;
 
     public InventoryView(Stage inventoryStage) {
         this.stage = inventoryStage;
@@ -89,7 +92,7 @@ public class InventoryView {
      *
      * //@param item item to show up in storage
      */
-    public void addToStorageView() {
+    public void addToStorageView(Item item) {
         /*VerticalGroup itemGroupTable = new VerticalGroup();
         imageToTexture(item);
 
@@ -102,13 +105,13 @@ public class InventoryView {
 
         // Create a table to hold name + image
         Table pancakeGroupTable = new Table();
-        itemImageTexture = new Texture(Gdx.files.internal("pancake1.jpg"));
+        itemImage = new Image(atlas.findRegion(item.name));
 
         SpriteBatch batch = new SpriteBatch();
         FrameBuffer fbo = new FrameBuffer(Pixmap.Format.RGBA8888, 125, 125, false);
 
         Label pancakeName = new Label("Pancake", mySkin);
-        Image pancakeImage = new Image(itemImageTexture);
+        Image pancakeImage = itemImage;
 
         // Add a label and image to the table and fit the image
         pancakeGroupTable.add(pancakeName);
@@ -126,7 +129,4 @@ public class InventoryView {
      * Converts an image to a texture to be used
      * @param item item containing the image you want converted
      */
-    private void imageToTexture(Item item) {
-        itemImageTexture = new Texture(Gdx.files.internal(item.itemImageLocation));
-    }
 }

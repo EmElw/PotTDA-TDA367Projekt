@@ -8,6 +8,8 @@ import javax.vecmath.Point2i;
 public class PenetratingCannon extends AttackItem{
     @Override
     protected void initDynamic() {
+        name = "Penetrating Cannon";
+
         isPrimaryAttack = true;
 
         penetrates = true;

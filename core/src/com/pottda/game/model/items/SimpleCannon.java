@@ -10,6 +10,8 @@ import javax.vecmath.Point2i;
 public class SimpleCannon extends AttackItem {
     @Override
     protected void initDynamic() {
+        name = "Simple Cannon";
+
         isPrimaryAttack = true;
 
         /*

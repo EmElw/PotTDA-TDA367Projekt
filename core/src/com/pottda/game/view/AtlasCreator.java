@@ -2,25 +2,35 @@ package com.pottda.game.view;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.pottda.game.model.Item;
 
 import javax.vecmath.Point2i;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Created by Mr Cornholio on 19/05/2017.
  */
 public class AtlasCreator {
-    private Pixmap itemPix;
+    public static TextureAtlas atlas = new TextureAtlas();
     private final static int size = 25;
 
-    
+    public static void createAtlas(LinkedList<Item> itemList) {
+        for (Item i: itemList) {
+            atlas.addRegion(i.name, new TextureRegion(createTextureForItem(i)));
+        }
+    }
 
-    private Texture createTextureForItem(Item item) {
+    private static Texture createTextureForItem(Item item) {
         List<Point2i> basePos = item.getBasePositions();
         List<Point2i> baseOut = item.getBaseOutputs();
 
-        getBoundingBox(basePos, baseOut);
+        Pixmap itemPix;
+        itemPix = getBoundingBox(basePos, baseOut);
 
         itemPix.setColor(255, 0, 0, 1);
         for (Point2i i : basePos) {
@@ -36,7 +46,7 @@ public class AtlasCreator {
         return itemTex;
     }
 
-    private void getBoundingBox(List<Point2i> basePos, List<Point2i> baseOut) {
+    private static Pixmap getBoundingBox(List<Point2i> basePos, List<Point2i> baseOut) {
         int xLow = 0, xHigh = 0, yLow = 0, yHigh = 0, boundingX = 0, boundingY = 0;
         for (Point2i i: basePos) {
             xLow = Math.min(xLow, i.getX());
@@ -58,10 +68,6 @@ public class AtlasCreator {
 
         boundingX = (xHigh - xLow)*25;
         boundingY = (yHigh - yLow)*25;
-        itemPix = new Pixmap(boundingX, boundingY, Pixmap.Format.RGBA8888);
-    }
-
-    public Pixmap getImg() {
-        return  itemPix;
+        return new Pixmap(boundingX, boundingY, Pixmap.Format.RGBA8888);
     }
 }

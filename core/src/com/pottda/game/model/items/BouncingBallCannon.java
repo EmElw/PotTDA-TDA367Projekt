@@ -8,6 +8,7 @@ public class BouncingBallCannon extends AttackItem {
 
     @Override
     protected void initDynamic() {
+        name = "Bouncing Ball Cannon";
         bounces = true;
         isPrimaryAttack = true;
 

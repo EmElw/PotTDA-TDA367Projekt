@@ -14,16 +14,17 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.*;
 import com.pottda.game.model.ActorFactory;
 import com.pottda.game.model.Character;
+import com.pottda.game.model.Item;
+import com.pottda.game.model.items.*;
 import com.pottda.game.physicsBox2D.CollisionListener;
 import com.pottda.game.view.*;
 
 import javax.vecmath.Vector2f;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 import static com.pottda.game.PoTDA.GameState.*;
 import static com.pottda.game.controller.ControllerOptions.ControllerMode.*;
+import static com.pottda.game.view.AtlasCreator.createAtlas;
 
 public class PoTDA extends ApplicationAdapter {
     private Stage hudStage;
@@ -85,6 +86,7 @@ public class PoTDA extends ApplicationAdapter {
 
     @Override
     public void create() {
+        createViewAtlas();
         Gdx.graphics.setTitle(GAME_TITLE);
         camera = new OrthographicCamera();
 
@@ -102,11 +104,11 @@ public class PoTDA extends ApplicationAdapter {
 
         mainMenuView = new MainMenuView(mainMenuStage);
         inventoryView = new InventoryView(inventoryStage);
-        inventoryView.addToStorageView();
-        inventoryView.addToStorageView();
-        inventoryView.addToStorageView();
-        inventoryView.addToStorageView();
-        inventoryView.addToStorageView();
+        inventoryView.addToStorageView(new SimpleCannon());
+        inventoryView.addToStorageView(new MultiShot());
+        inventoryView.addToStorageView(new BouncingBallCannon());
+        inventoryView.addToStorageView(new ChainAttack());
+        inventoryView.addToStorageView(new Switcher());
 
         waveController = new WaveController(WIDTH_METERS, HEIGHT_METERS, scaling);
     }
@@ -152,7 +154,20 @@ public class PoTDA extends ApplicationAdapter {
 
     }
 
+    /**
+     * Create the texture atlas
+     */
+    private void createViewAtlas() {
+        LinkedList<Item> itemList = new LinkedList<Item>();
+        itemList.add(new SimpleCannon());
+        itemList.add(new MultiShot());
+        itemList.add(new BouncingBallCannon());
+        itemList.add(new ChainAttack());
+        itemList.add(new PenetratingCannon());
+        itemList.add(new Switcher());
 
+        createAtlas(itemList);
+    }
 
     /**
      * Checks if any enemies are alive

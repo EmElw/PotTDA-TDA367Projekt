@@ -23,6 +23,7 @@ public class ChainAttack extends AttackItem {
      */
     @Override
     protected void initDynamic() {
+        name = "Chain";
 
         dropRate = 0.03f;
 

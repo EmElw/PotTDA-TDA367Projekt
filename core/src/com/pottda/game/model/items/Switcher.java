@@ -22,6 +22,7 @@ public class Switcher extends Item {
      */
     @Override
     protected void initDynamic() {
+        name = "Switcher";
 
         dropRate = 0.1f;
 
