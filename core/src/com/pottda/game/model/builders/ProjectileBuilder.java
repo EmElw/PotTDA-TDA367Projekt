@@ -18,6 +18,7 @@ public class ProjectileBuilder extends AbstractModelBuilder implements IProjecti
     private Boolean bouncy = false;
     private Boolean piercing = false;
     private List<ProjectileListener> listeners = new ArrayList<ProjectileListener>();
+    private List<Boolean> ignored = null;
     private int damage = 0;
     private long lifetime = Projectile.DEFAULT_PROJECTILE_LIFETIME_MS;
     private Vector2f velocity = new Vector2f(0, 0);
@@ -32,6 +33,14 @@ public class ProjectileBuilder extends AbstractModelBuilder implements IProjecti
         projectile.isBouncy = bouncy;
         projectile.isPiercing = piercing;
         projectile.team = team;
+
+        if(ignored != null) {
+            for (int i = 0; i < ignored.size(); i++) {
+                if (ignored.get(i)) {
+                    projectile.ignoreListener(i);
+                }
+            }
+        }
 
         projectile.setPhysicsActor(physiscActorFactory.getProjectilePhysicsActor(projectile));
 
@@ -85,6 +94,13 @@ public class ProjectileBuilder extends AbstractModelBuilder implements IProjecti
     @Override
     public IProjectileBuilder setListeners(List<ProjectileListener> list) {
         this.listeners.addAll(list);
+        return this;
+    }
+
+    @Override
+    public IProjectileBuilder setListeners(List<ProjectileListener> listeners, List<Boolean> ignored) {
+        this.listeners = listeners;
+        this.ignored = ignored;
         return this;
     }
 

@@ -77,7 +77,7 @@ public class Projectile extends ModelActor {
 
     public Projectile(int damage, List<ProjectileListener> listeners, Long lifeTimeMS) {
         this.damage = damage;
-        this.listeners = listeners;
+        setListeners(listeners);
         timeOfConstructionMS = System.currentTimeMillis();
         this.lifeTimeMS = lifeTimeMS;
         //hasDamaged = new ArrayList<Character>();

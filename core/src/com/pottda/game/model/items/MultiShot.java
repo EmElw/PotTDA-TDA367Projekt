@@ -20,7 +20,7 @@ public class MultiShot extends Item {
     The spread between each projectile, expressed as radians?
      */
     private final static float SPREAD = 0.3f;
-    private Vector2f temporaryVector;
+    private Vector2f temporaryVector = new Vector2f();
 
     /*
     Shaped like
@@ -98,7 +98,7 @@ public class MultiShot extends Item {
             Projectile newProj = (Projectile) new ProjectileBuilder().
                     copyProperties(p).
                     setVelocity(temporaryVector).
-                    setListeners(p.getListeners()).
+                    setListeners(p.getListeners(), p.getIgnored()).
                     setPosition(position).
                     create();
 

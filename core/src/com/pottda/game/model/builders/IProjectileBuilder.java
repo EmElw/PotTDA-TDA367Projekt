@@ -27,6 +27,8 @@ public interface IProjectileBuilder extends IModelBuilder {
 
     IProjectileBuilder setListeners(List<ProjectileListener> collection);
 
+    IProjectileBuilder setListeners(List<ProjectileListener> listeners, List<Boolean> ignored);
+
     IProjectileBuilder setDamage(int n);
 
     IProjectileBuilder setLifetime(long ms);
