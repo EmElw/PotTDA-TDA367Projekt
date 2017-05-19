@@ -325,8 +325,6 @@ public class PoTDA extends ApplicationAdapter {
 
         // Draw the game
         gameView.render();
-        hudView.renderRunning();
-        hudStage.draw();
     }
 
     /**
@@ -443,10 +441,6 @@ public class PoTDA extends ApplicationAdapter {
         world.dispose();
         soundsAndMusic.dispose();
         gameView.dispose();
-        mainMenuView.dispose();
-        if (hudView != null) {
-            hudView.dispose();
-        }
         if (world != null) {
             world.dispose();
         }
