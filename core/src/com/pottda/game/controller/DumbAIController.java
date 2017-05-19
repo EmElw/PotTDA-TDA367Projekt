@@ -1,5 +1,6 @@
 package com.pottda.game.controller;
 
+import com.pottda.game.model.Character;
 import com.pottda.game.model.ModelActor;
 import com.pottda.game.view.ActorView;
 
@@ -13,7 +14,6 @@ import com.pottda.game.view.ActorView;
  */
 public class DumbAIController extends AIController {
     private static final int DEFAULT_SAFE_DISTANCE = 4;
-    static ModelActor goal = null;
     private int localSafeDistance;
 
 
@@ -46,8 +46,8 @@ public class DumbAIController extends AIController {
      */
     @Override
     public void setInputVectors() {
-        if (goal != null) {
-            movementVector.set(goal.getPosition());
+        if (Character.player != null) {
+            movementVector.set(Character.player.getPosition());
             movementVector.sub(modelActor.getPosition());
 
             attackVector.set(movementVector);
