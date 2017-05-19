@@ -35,8 +35,8 @@ public class ActorView extends Image {
      */
     private ActorView(Texture texture, Vector2f size) {
         super(new TextureRegionDrawable(new TextureRegion(texture)));
-        this.setOrigin((texture.getWidth() * PoTDA.WIDTH_RATIO) / 2, (texture.getHeight() * PoTDA.HEIGHT_RATIO) / 2);
-        this.setSize(size.x / PoTDA.WIDTH_RATIO, size.y / PoTDA.HEIGHT_RATIO); // Resize to make in meters instead of pixels
+        this.setOrigin(-(texture.getWidth() * PoTDA.WIDTH_RATIO) / 2, -(texture.getHeight() * PoTDA.HEIGHT_RATIO) / 2);
+        this.setSize(size.x, size.y); // Resize to make in meters instead of pixels
 
     }
 

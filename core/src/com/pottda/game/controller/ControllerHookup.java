@@ -34,7 +34,7 @@ public class ControllerHookup implements NewModelListener {
     @Override
     public void onNewModel(ModelActor m) {
 
-        ActorView view;
+        ActorView view = null;
 
         // Determine what kind of controller
         AbstractController controller = null;
@@ -43,7 +43,6 @@ public class ControllerHookup implements NewModelListener {
             controller = new ProjectileController(m, view);
         } else if (m instanceof Character) {
             view = new ActorView(m.sprite);
-            stage.addActor(view);
             if (m.team == Character.PLAYER_TEAM) {
                 controller = createInputController(m, view);
 
@@ -53,6 +52,9 @@ public class ControllerHookup implements NewModelListener {
         } else if (m instanceof Obstacle) {
             view = new ActorView(m.sprite, ((Vector2f) ((Obstacle) m).size));
             controller = new ObstacleController(m, view);
+        }
+        if(view != null) {
+            stage.addActor(view);
         }
         if (controller != null) {
             notifyListeners(controller);
