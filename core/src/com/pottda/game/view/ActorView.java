@@ -39,7 +39,11 @@ public class ActorView extends Image {
     }
 
     public ActorView(Sprites sprite) {
-        super(new Texture(Gdx.files.internal(sprite.fileName)));
+        this(new Texture(Gdx.files.internal(sprite.fileName)));
+    }
+
+    public ActorView(Sprites sprite, Vector2f size) {
+        this(new Texture(Gdx.files.internal(sprite.fileName)), size);
     }
 
     /**

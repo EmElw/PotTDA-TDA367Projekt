@@ -34,8 +34,14 @@ public class CharacterTest {
             public void destroyBody() {
 
             }
+
+            @Override
+            public void setPosition(Vector2f position) {
+
+            }
         };
-        character = new Character(fakePhysicsActor);
+        character = new Character();
+        character.setPhysicsActor(fakePhysicsActor);
     }
 
     @After

@@ -108,7 +108,7 @@ public class Box2DActorFactory extends ActorFactory {
 
         Box2DPhysicsCharacter physics = new Box2DPhysicsCharacter(body);
 
-        Character model = new Character(physics);
+        Character model = new Character();
         model.team = ENEMY_TEAM;
         body.setUserData(model);
 
@@ -127,7 +127,7 @@ public class Box2DActorFactory extends ActorFactory {
             e.printStackTrace();
         }
 
-        ActorView view = new ActorView(sprite.texture);
+        ActorView view = new ActorView(sprite);
         stage.addActor(view);
         AIController aiController = new DumbAIController(model, view);
         controllers.add(aiController);
@@ -151,7 +151,7 @@ public class Box2DActorFactory extends ActorFactory {
 
         Box2DPhysicsCharacter physics = new Box2DPhysicsCharacter(body);
 
-        Character player = new Character(physics);
+        Character player = new Character();
         player.team = PLAYER_TEAM;
         // Set the player
         Character.player = player;
@@ -163,7 +163,7 @@ public class Box2DActorFactory extends ActorFactory {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ActorView view = new ActorView(sprite.texture);
+        ActorView view = new ActorView(sprite);
 
         AbstractController controller = null;
 
@@ -272,13 +272,13 @@ public class Box2DActorFactory extends ActorFactory {
 
         Box2DPhysicsProjectile physics = new Box2DPhysicsProjectile(body);
 
-        Projectile model = new Projectile(physics, 20, null);
+        Projectile model = new Projectile(20, null);
         model.team = team;
         model.isBouncy = bounces;
         model.isPiercing = penetrates;
         body.setUserData(model);
 
-        ActorView view = new ActorView(sprite.texture);
+        ActorView view = new ActorView(sprite);
 
         stage.addActor(view);
 
@@ -309,10 +309,10 @@ public class Box2DActorFactory extends ActorFactory {
 
         Box2DPhysicsActor physics = new Box2DPhysicsActor(body);
 
-        Obstacle model = new Obstacle(physics);
+        Obstacle model = new Obstacle();
         body.setUserData(model);
 
-        ActorView view = new ActorView(sprite.texture, size);
+        ActorView view = new ActorView(sprite, size);
 
         stage.addActor(view);
 
@@ -343,7 +343,7 @@ public class Box2DActorFactory extends ActorFactory {
                 OBSTACLE_FILTER.categoryBits);
 
         // Enemy collides with itself, Player Character, Projectile and obstacle
-        CHARACTER_ENEMY_FILTER.maskBits = (short)(CHARACTER_PLAYER_FILTER.categoryBits |
+        CHARACTER_ENEMY_FILTER.maskBits = (short) (CHARACTER_PLAYER_FILTER.categoryBits |
                 CHARACTER_ENEMY_FILTER.categoryBits |
                 PROJECTILE_PLAYER_FILTER.categoryBits |
                 OBSTACLE_FILTER.categoryBits);

@@ -62,9 +62,14 @@ public class InventoryTest {
                     public void destroyBody() {
 
                     }
+
+                    @Override
+                    public void setPosition(Vector2f position) {
+
+                    }
                 };
 
-                Projectile p = new Projectile(pa, 0, new ArrayList<ProjectileListener>());
+                Projectile p = new Projectile(0, new ArrayList<ProjectileListener>());
 
                 return new AbstractController(p, null) {
                     @Override
