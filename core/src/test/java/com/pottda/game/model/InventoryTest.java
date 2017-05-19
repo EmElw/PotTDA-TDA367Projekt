@@ -70,7 +70,7 @@ public class InventoryTest {
             }
 
             @Override
-            public PhysicsActor getObstaclePhysicsActor(Obstacle obstacle, Tuple2f dimensions) {
+            public PhysicsActor getObstaclePhysicsActor(Obstacle obstacle) {
                 return pa;
             }
         });

@@ -1,8 +1,7 @@
 package com.pottda.game.model.builders;
 
+import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
-import com.pottda.game.model.Inventory;
-import com.pottda.game.model.ModelActor;
 
 /**
  * Concrete implementation of a Character Builder pattern
@@ -45,8 +44,8 @@ public class CharacterBuilder extends AbstractModelBuilder implements ICharacter
     }
 
     @Override
-    public ICharacterBuilder setInventoryFromFile(String xmlFilePath) {
-        // TODO
+    public ICharacterBuilder setInventoryFromFile(String xmlFile) {
+        this.inventory = InventoryBlueprint.getInventory(xmlFile);
         return this;
     }
 

@@ -59,7 +59,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
     private HUDView hudView;
     private SoundsAndMusic soundsAndMusic;
     private GameView gameView;
-    private Box2DActorFactory box2DActorFactory;
+//    private Box2DActorFactory box2DActorFactory;
     private MainMenuView mainMenuView;
 
     private WaveController waveController;
@@ -132,6 +132,8 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
         soundsAndMusic = new SoundsAndMusic();
         startMusic();
 
+        generateInventoryBlueprints();
+
         // Make a ControllerHookup and add PoTDA as a listener
         ControllerHookup controllerHookup = new ControllerHookup(gameStage);
         controllerHookup.addListener(this);
@@ -158,7 +160,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
 //                new Vector2f(WIDTH_METERS * scaling / 2, HEIGHT_METERS * scaling / 2));
         new CharacterBuilder().
                 setTeam(Character.PLAYER_TEAM).
-                setInventoryFromFile("inventoryblueprint/playerStartInventory.xml").
+                setInventoryFromFile("playerStartInventory.xml").
                 setBehaviour(ModelActor.Behaviour.PLAYER).
                 setPosition(new Vector2f(WIDTH_METERS * scaling / 2, HEIGHT_METERS * scaling / 2)).
                 setSprite(Sprites.PLAYER).

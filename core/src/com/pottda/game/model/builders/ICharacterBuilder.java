@@ -15,7 +15,7 @@ public interface ICharacterBuilder extends IModelBuilder {
 
     ICharacterBuilder setInventory(Inventory inv);
 
-    ICharacterBuilder setInventoryFromFile(String xmlFilePath);
+    ICharacterBuilder setInventoryFromFile(String xmlFile);
 
     ICharacterBuilder setBehaviour(ModelActor.Behaviour behaviour);
 }

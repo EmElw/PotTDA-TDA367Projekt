@@ -1,16 +1,11 @@
 package com.pottda.game.model;
 
-import com.pottda.game.model.ActorFactory;
 import com.pottda.game.model.Levels;
 import com.pottda.game.model.Sprites;
 import com.pottda.game.model.builders.CharacterBuilder;
 
 import javax.vecmath.Vector2f;
 import java.lang.*;
-
-/**
- * Created by Rikard Teodorsson on 2017-05-18.
- */
 
 public class WaveController {
     private final float WIDTH_METERS;
@@ -89,7 +84,7 @@ public class WaveController {
 //                ActorFactory.get().buildEnemy(Sprites.ENEMY, new Vector2f(xx, yy), "inventoryblueprint/playerStartInventory.xml");
                 new CharacterBuilder().
                         setTeam(Character.ENEMY_TEAM).
-                        setInventoryFromFile("inventoryblueprint/playerStartInventory.xml").
+                        setInventoryFromFile("playerStartInventory.xml").
                         setBehaviour(Character.Behaviour.DUMB).
                         setPosition(new Vector2f(xx, yy)).
                         setSprite(Sprites.ENEMY).
