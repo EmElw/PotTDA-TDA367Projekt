@@ -152,8 +152,10 @@ public class Box2DActorFactory extends ActorFactory {
         Box2DPhysicsCharacter physics = new Box2DPhysicsCharacter(body);
 
         Character player = new Character(physics);
-        DumbAIController.goal = player;
         player.team = PLAYER_TEAM;
+        // Set the player
+        Character.player = player;
+        DumbAIController.goal = Character.player;
         body.setUserData(player);
 
         try {
@@ -270,7 +272,7 @@ public class Box2DActorFactory extends ActorFactory {
 
         Box2DPhysicsProjectile physics = new Box2DPhysicsProjectile(body);
 
-        Projectile model = new Projectile(physics, 0, null);
+        Projectile model = new Projectile(physics, 20, null);
         model.team = team;
         model.isBouncy = bounces;
         model.isPiercing = penetrates;
