@@ -1,7 +1,7 @@
 package com.pottda.game.model;
 
+import com.pottda.game.controller.AbstractController;
 import com.pottda.game.view.Sprites;
-import com.pottda.game.controller.*;
 
 import javax.vecmath.Vector2f;
 
@@ -32,10 +32,10 @@ public abstract class ActorFactory {
      *
      * @param sprite    the sprite of the enemy
      * @param position  the position of the enemy
-     * @param inventory the inventory of the enemy
+     * @param xmlFilePath path to xml file to add as inventory
      * @return a {@link AbstractController} that handles the new enemy-actor
      */
-    public abstract AbstractController buildEnemy(Sprites sprite, Vector2f position, Inventory inventory);
+    public abstract AbstractController buildEnemy(Sprites sprite, Vector2f position, String xmlFilePath);
 
     /**
      * Creates a new actor-clump for a Player with a default inventory
@@ -65,7 +65,8 @@ public abstract class ActorFactory {
      * @param sprite   the sprite of the obstacle
      * @param position the position of the obstacle
      * @param size     the size of the obstacle
+     * @param isBorder if the obstacle is the border around the game area
      * @return a {@link AbstractController} that handles the new obstacle-actor
      */
-    public abstract AbstractController buildObstacle(Sprites sprite, Vector2f position, Vector2f size);
+    public abstract AbstractController buildObstacle(Sprites sprite, Vector2f position, Vector2f size, boolean isBorder);
 }

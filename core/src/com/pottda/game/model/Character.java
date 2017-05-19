@@ -1,8 +1,11 @@
 package com.pottda.game.model;
 
 import javax.vecmath.Vector2f;
+
 import java.util.EnumMap;
 import java.util.Map;
+
+import static com.pottda.game.model.Stat.ACCEL;
 
 
 public class Character extends ModelActor {
@@ -18,9 +21,11 @@ public class Character extends ModelActor {
     /**
      * Current health of a character
      */
-    public int currentHealth;
+    int currentHealth;
     private static Map<Stat, Double> stats;
+    private Vector2f movementVector;
 
+    public static Character player;
 
     // -- Constructors --
 
@@ -28,7 +33,7 @@ public class Character extends ModelActor {
         super(physicsActor);
         this.inventory = new Inventory();
         this.isProjectile = false;
-        // this.team = 0;
+        this.movementVector = new Vector2f();
 
         stats = new EnumMap<Stat, Double>(Stat.class);
 
@@ -38,7 +43,7 @@ public class Character extends ModelActor {
         }
         // Add base values
         stats.put(Stat.HEALTH, stats.get(Stat.HEALTH) + (double) BASE_HEALTH);
-        stats.put(Stat.ACCEL, stats.get(Stat.ACCEL)+ (double) BASE_ACCEL);
+        stats.put(ACCEL, stats.get(ACCEL) + (double) BASE_ACCEL);
 
         // Assign further as necessary
         this.currentHealth = stats.get(Stat.HEALTH).intValue();
@@ -49,22 +54,23 @@ public class Character extends ModelActor {
     @Override
     public void giveInput(Vector2f move, Vector2f attack) {
         // Movement
-        move.set(move.x * stats.get(Stat.ACCEL).floatValue(),
-                move.y * stats.get(Stat.ACCEL).floatValue());
-        physicsActor.giveMovementVector(move);
-        this.angle = (float) Math.toDegrees(Math.atan2(-attack.getY(), attack.getX()));
-        attack(attack);
+        movementVector.set(move);
+        // Scale the vector based on the Character's capabilities
+        movementVector.scale(stats.get(ACCEL).floatValue());
+
+        physicsActor.giveMovementVector(movementVector);
+        if (attack.length() != 0) {
+            attack(attack);
+            this.angle = (float) Math.toDegrees(Math.atan2(attack.getY(), attack.getX()));
+        }
     }
 
     private void attack(Vector2f direction) {
-        inventory.attack(direction, getPosition());
+        inventory.attack(direction, getPosition(), team);
     }
 
     @Override
     public float getAngle() {
-        if (team == ENEMY_TEAM) { // Fix rotation for enemies so they rotate towards player
-            return 0 - super.getAngle();
-        }
         return super.getAngle();
     }
 
@@ -73,24 +79,18 @@ public class Character extends ModelActor {
      *
      * @param incomingDamage Damage dealt to this character
      */
-    public void takeDamage(int incomingDamage) {
+    void takeDamage(int incomingDamage) {
         currentHealth -= incomingDamage;
         if (currentHealth <= 0) {
-            // TODO Die
+            shouldBeRemoved = true;
         }
     }
 
-//    private void setProjectileMovement(List<Projectile> projectiles, Vector2f attack) {
-//        Vector2f temp;
-//        for (int i = 0, n = projectiles.size(); i < n; i++) {
-//            temp = rotateVector(attack, PROJECTILE_ANGLE * ((n / 2f) - (float) i));
-//            temp.normalize();
-//            projectiles.get(i).giveInput(temp, null);
-//        }
-//    }
-//
-//    private Vector2f rotateVector(Vector2f vector, float rad) {
-//        return new Vector2f(vector.x * (float) Math.cos((double) rad),
-//                vector.y * (float) Math.sin((double) rad));
-//    }
+    /**
+     * Returns the current health of the actor
+     * @return the health of the actor
+     */
+    public int getCurrentHealth() {
+        return currentHealth;
+    }
 }

@@ -1,41 +1,71 @@
 package com.pottda.game.controller;
 
 import com.pottda.game.model.ModelActor;
-import com.pottda.game.view.ViewActor;
+import com.pottda.game.view.ActorView;
 
-import javax.vecmath.Vector2f;
 
+/**
+ * Basic AI controller that always wants to move towards its goal
+ * and continuously attacks in that direction.
+ * <p>
+ * It stops moving towards its goal when within a set distance but
+ * will remain attacking
+ */
 public class DumbAIController extends AIController {
-    public final static float SPEED_MULTIPLIER = 0.3f;
-    public static ModelActor goal = null;
+    private static final int DEFAULT_SAFE_DISTANCE = 4;
+    static ModelActor goal = null;
+    private int localSafeDistance;
 
-    public DumbAIController(ModelActor modelActor, ViewActor viewActor) {
-        super(modelActor, viewActor);
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param modelActor
+     * @param actorView
+     */
+    DumbAIController(ModelActor modelActor, ActorView actorView) {
+        super(modelActor, actorView);
+        localSafeDistance = DEFAULT_SAFE_DISTANCE;
     }
 
+    /**
+     * Sets the safeDistance to another value
+     *
+     * @param modelActor   {@inheritDoc}
+     * @param actorView    {@inheritDoc}
+     * @param safeDistance an integer in meters
+     */
+    DumbAIController(ModelActor modelActor, ActorView actorView, int safeDistance) {
+        super(modelActor, actorView);
+        this.localSafeDistance = safeDistance;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void onNewFrame() {
+    public void setInputVectors() {
         if (goal != null) {
-            final Vector2f goalPos = goal.getPosition();
-            final Vector2f currentPos = modelActor.getPosition();
+            movementVector.set(goal.getPosition());
+            movementVector.sub(modelActor.getPosition());
 
-            movementVector = new Vector2f(goalPos.getX() - currentPos.getX(), goalPos.getY() - currentPos.getY());
+            attackVector.set(movementVector);
+            if (attackVector.length() != 0) {
+                attackVector.normalize();
+            }
 
-            if (movementVector.length() < 3) {
+            if (movementVector.length() < localSafeDistance) {
                 movementVector.set(0, 0);
-            } else {
-                movementVector.normalize();
-                movementVector.set(movementVector.x * 5f, movementVector.y * 5f);
             }
-
-            if (movementVector.length() != 0) { // keep rotation when standing still
-                attackVector = movementVector;
-            } else {
-                attackVector = new Vector2f(goalPos.getX() - currentPos.getX(), goalPos.getY() - currentPos.getY());
+            {
+                if (movementVector.length() > 1) {
+                    movementVector.normalize();
+                }
             }
-            attackVector.set(attackVector.x, attackVector.y);
-            movementVector.set(movementVector.x * SPEED_MULTIPLIER, movementVector.y * SPEED_MULTIPLIER);
+        } else {
+            movementVector.set(0, 0);
+            attackVector.set(0, 0);
         }
-        super.onNewFrame();
     }
 }

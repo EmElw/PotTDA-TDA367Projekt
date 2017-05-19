@@ -1,6 +1,5 @@
 package com.pottda.game;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.pottda.game.view.*;
 import com.pottda.game.actorFactory.Box2DActorFactory;
@@ -9,6 +8,7 @@ import com.pottda.game.model.ActorFactory;
 import com.pottda.game.model.InventoryFactory;
 import com.pottda.game.physicsBox2D.CollisionListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
@@ -17,7 +17,14 @@ import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.pottda.game.controller.AIController;
 import com.pottda.game.controller.AbstractController;
+import com.pottda.game.controller.ControllerOptions;
+import com.pottda.game.controller.WaveController;
+import com.pottda.game.model.ActorFactory;
+import com.pottda.game.model.Character;
+import com.pottda.game.physicsBox2D.CollisionListener;
+import com.pottda.game.view.*;
 import com.pottda.game.controller.TouchJoystickController;
 
 import java.io.IOException;
@@ -26,9 +33,13 @@ import java.util.List;
 import java.util.Stack;
 
 import javax.vecmath.Vector2f;
-import javax.xml.parsers.ParserConfigurationException;
 
-public class MyGame extends ApplicationAdapter {
+import java.util.*;
+
+import static com.pottda.game.PoTDA.GameState.*;
+import static com.pottda.game.controller.ControllerOptions.ControllerMode.*;
+
+public class PoTDA extends ApplicationAdapter {
     private Stage hudStage;
     private Stage joystickStage;
     private Stage gameStage;
@@ -39,11 +50,15 @@ public class MyGame extends ApplicationAdapter {
     /*
     A List of controllers to iterate through every game-update
      */
-    private List<AbstractController> controllers;
+    private Set<AbstractController> controllers;
     /*
     A Stack to buffer new controllers created during the list-iteration
      */
     private Stack<AbstractController> controllerBuffer;
+    /*
+    A Stack to buffer controllers that should be removed during rendering
+     */
+    private Stack<AbstractController> controllerRemovalBuffer;
 
     private World world;
     private float accumulator;
@@ -55,19 +70,22 @@ public class MyGame extends ApplicationAdapter {
     private MainMenuView mainMenuView;
     private InventoryView inventoryView;
 
-    private static final int RUNNING = 1;
-    private static final int PAUSED = 2;
-    private static final int OPTIONS = 3;
-    private static final int MAIN_MENU = 4;
-    private static final int MAIN_CHOOSE = 5;
-    private static final int INVENTORY_VIEW = 7;
-    private static int GAME_STATE = 0;
+    private WaveController waveController;
 
-    private static final String playerImage = "circletest.png"; // change later
-    private static final String enemyImage = "circletestred.png";
-    private static final String borderImage = "game/border.png";
 
-    private static final String playerStartInventory = "inventoryblueprint/playerStartInventory.xml";
+    public enum GameState {
+        NONE,
+        RUNNING,
+        WAITING,
+        PAUSED,
+        OPTIONS,
+        MAIN_MENU,
+        MAIN_CHOOSE,
+        MAIN_CONTROLS,
+        INVENTORY_VIEW
+    }
+
+    private static GameState gameState = NONE;
 
     private static final String GAME_TITLE = "Panic on TDAncefloor";
 
@@ -77,6 +95,7 @@ public class MyGame extends ApplicationAdapter {
     public static final float HEIGHT_METERS = 18;
     public static final float HEIGHT_RATIO = WIDTH_METERS / WIDTH;
     public static final float WIDTH_RATIO = HEIGHT_METERS / HEIGHT;
+    private static final float scaling = 1.2f;
 
     @Override
     public void create() {
@@ -91,7 +110,7 @@ public class MyGame extends ApplicationAdapter {
         mainMenuStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         inventoryStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
 
-        GAME_STATE = INVENTORY_VIEW;
+        gameState = INVENTORY_VIEW;
         Gdx.input.setInputProcessor(mainMenuStage);
         Box2D.init();
 
@@ -102,11 +121,17 @@ public class MyGame extends ApplicationAdapter {
         inventoryView.addToStorageView();
         inventoryView.addToStorageView();
         inventoryView.addToStorageView();
+
+        waveController = new WaveController(WIDTH_METERS, HEIGHT_METERS, scaling);
     }
 
+    /**
+     * Inits the game world and player
+     */
     private void doOnStartGame() {
-        controllers = new ArrayList<AbstractController>();
+        controllers = new HashSet<AbstractController>();
         controllerBuffer = new Stack<AbstractController>();
+        controllerRemovalBuffer = new Stack<AbstractController>();
 
         hudView = new HUDView(hudStage);
         world = new World(new Vector2(0, 0), false);
@@ -122,36 +147,39 @@ public class MyGame extends ApplicationAdapter {
         box2DActorFactory = new Box2DActorFactory(world, gameStage, controllerBuffer);
         ActorFactory.setFactory(box2DActorFactory);
 
-        ControllerOptions.joystickStage = joystickStage;
+        createPlayer();
 
-        if (Gdx.app.getType() == Application.ApplicationType.Android) { // if on android
-            ControllerOptions.controllerSettings = ControllerOptions.TOUCH_JOYSTICK;
-        } else if (Gdx.app.getType() == Application.ApplicationType.Desktop) { // if on desktop
-            ControllerOptions.controllerSettings = ControllerOptions.KEYBOARD_MOUSE;
-        }
+        gameState = WAITING;
 
-        final float scaling = 1.2f;
+        createWorldBorders();
 
+        waveController.initNextLevel();
+    }
+
+    /**
+     * Creates the player
+     */
+    private void createPlayer() {
         // Add player
         ActorFactory.get().buildPlayer(Sprites.PLAYER,
                 new Vector2f(WIDTH_METERS * scaling / 2, HEIGHT_METERS * scaling / 2));
 
-        // Add some enemies
-        for (int i = 0; i < 5; i++) {
-            float xx = (float) (Math.random() * WIDTH_METERS * scaling);
-            float yy = (float) (Math.random() * HEIGHT_METERS * scaling);
-            try {
-                ActorFactory.get().buildEnemy(Sprites.ENEMY,
-                        new Vector2f(xx, yy),
-                        InventoryFactory.createFromXML(Gdx.files.internal(playerStartInventory).file()));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        createWorldBorders();
-
     }
 
+
+
+    /**
+     * Checks if any enemies are alive
+     * @return true if at least one enemy is alive
+     */
+    private boolean enemiesAlive() {
+        for (AbstractController a : controllers) {
+            if (a instanceof AIController) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Creates four obstacles around the playing area
@@ -160,18 +188,19 @@ public class MyGame extends ApplicationAdapter {
         final float border_thickness = 25f;
         // Scale the area bigger or smaller
         final float area_scaling = 1.2f;
+        final float right_border_extra = 0.78f;
         // Bottom
         controllers.add(ActorFactory.get().buildObstacle(Sprites.BORDER,
-                new Vector2f(0, 0), new Vector2f(WIDTH_METERS * area_scaling, border_thickness * HEIGHT_RATIO)));
+                new Vector2f(0, 0), new Vector2f(WIDTH_METERS * area_scaling, border_thickness * HEIGHT_RATIO), true));
         // Left
         controllers.add(ActorFactory.get().buildObstacle(Sprites.BORDER,
-                new Vector2f(0, 0), new Vector2f(border_thickness * WIDTH_RATIO, HEIGHT_METERS * area_scaling)));
+                new Vector2f(0, 0), new Vector2f(border_thickness * WIDTH_RATIO, HEIGHT_METERS * area_scaling), true));
         // Top
         controllers.add(ActorFactory.get().buildObstacle(Sprites.BORDER,
-                new Vector2f(0, HEIGHT_METERS * area_scaling), new Vector2f(WIDTH_METERS * area_scaling, border_thickness * HEIGHT_RATIO)));
+                new Vector2f(0, HEIGHT_METERS * area_scaling), new Vector2f(WIDTH_METERS * area_scaling, border_thickness * HEIGHT_RATIO), true));
         // Right
         controllers.add(ActorFactory.get().buildObstacle(Sprites.BORDER,
-                new Vector2f(WIDTH_METERS * area_scaling, 0), new Vector2f(border_thickness * WIDTH_RATIO, (HEIGHT_METERS + 0.78f) * area_scaling)));
+                new Vector2f(WIDTH_METERS * area_scaling, 0), new Vector2f(border_thickness * WIDTH_RATIO, (HEIGHT_METERS + right_border_extra) * area_scaling), true));
     }
 
     @Override
@@ -193,55 +222,126 @@ public class MyGame extends ApplicationAdapter {
 
         checkTouch();
 
+
+        switch (gameState) {
+            case NONE:
+                break;
+            case RUNNING:
+                // Update the model
+                updateGame();
+                updateWorld();
+                if (!enemiesAlive()) {
+                    if (waveController.finishedWaves()) {
+                        // TODO Go to inventory
+                        System.out.println("To inventory");
+                        waveController.initNextLevel();
+                        gameState = WAITING;
+                    } else {
+                        gameState = WAITING;
+                        waveController.setStartTime(System.currentTimeMillis());
+                    }
+                }
+                break;
+            case WAITING:
+                updateGame();
+                updateWorld();
+                // Check if user has waited 5 seconds
+                if (waveController.waited()) {
+                    gameState = RUNNING;
+                    // Start next wave
+                    waveController.startWave();
+                }
+                break;
+            case PAUSED:
+                // Draw the pause menu
+                hudView.renderPaused();
+                hudStage.draw();
+                break;
+            case OPTIONS:
+                // Draw the options menu
+                hudView.renderOptions();
+                hudStage.draw();
+                break;
+            case MAIN_MENU:
+                // Draw the main menu
+                mainMenuView.renderMainMenu();
+                break;
+            case MAIN_CHOOSE:
+                // Draw the choose difficulty menu
+                mainMenuView.renderChooseDiff();
+                break;
+            case MAIN_CONTROLS:
+                // Draw the choose controller menu
+                mainMenuView.renderChooseControls();
+                break;
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            switch (gameState) {
+                case RUNNING:
+                    gameState = PAUSED;
+                    break;
+                case PAUSED:
+                    gameState = RUNNING;
+                    break;
+                case OPTIONS:
+                    gameState = PAUSED;
+                    break;
+            }
+        }
+
+    }
+
+    /**
+     * Updates the game logic
+     */
+    private void updateGame() {
         if (controllers != null) {
+            bringOutYourDead();
+
             // Update all controllers, causing the model to update
             for (AbstractController c : controllers) {
-                if (c instanceof TouchJoystickController && GAME_STATE != RUNNING) {
-                    // Render joysticks
-                    c.onNewFrame();
-                } else if (GAME_STATE == RUNNING) {
-                    c.onNewFrame();
-                }
+                c.onNewFrame();
             }
             // Add created during the cycle to the list
             // TODO could potentially do some juggling to also execute the onFrame for all o these
             controllers.addAll(controllerBuffer);
             controllerBuffer.clear();
         }
-
-        if (GAME_STATE == PAUSED) {
-            hudView.renderPaused();
-
-        } else if (GAME_STATE == RUNNING) {
-            gameView.render();
-
-            hudView.renderRunning();
-
-            // Update the world
-            doPhysicsStep(Gdx.graphics.getDeltaTime());
-
-        } else if (GAME_STATE == OPTIONS) {
-            hudView.renderOptions();
-        } else if (GAME_STATE == MAIN_MENU) {
-            mainMenuView.renderMainMenu();
-        } else if (GAME_STATE == MAIN_CHOOSE) {
-            mainMenuView.renderChooseDiff();
-        } else if (GAME_STATE == INVENTORY_VIEW) {
-            inventoryView.renderInventory();
-        }
-
-        if (GAME_STATE < MAIN_MENU) {
-            hudStage.draw();
-        }
     }
 
     /**
-     * Returns the game state
-     *
-     * @return 1=running, 2=paused, 3=options
+     * Updates physics, health bar and renders views
      */
-    public static int getGameState() {
-        return GAME_STATE;
+    private void updateWorld() {
+        // Update the physics world
+        doPhysicsStep(Gdx.graphics.getDeltaTime());
+
+        // Set the health bar to player's current health
+        hudView.setHealthbar(Character.player.getCurrentHealth());
+
+        // Draw the game
+        gameView.render();
+        hudView.renderRunning();
+        hudStage.draw();
+    }
+
+    /**
+     * Removes actors that have flagged themselvs as dead
+     */
+    private void bringOutYourDead() {
+        // Prepare removal of "dead" actors
+        for (AbstractController c : controllers) {
+            if (c.shouldBeRemoved()) {
+                prepareForRemoval(c);
+            }
+        }
+
+        // Remove "dead" actors
+        if (controllerRemovalBuffer.size() > 0) {
+            controllers.removeAll(controllerRemovalBuffer);
+            controllerRemovalBuffer.clear();
+        }
     }
 
     /**
@@ -251,20 +351,20 @@ public class MyGame extends ApplicationAdapter {
         if (Gdx.input.justTouched()) { // Only check first touch
             // Get hudStage camera and unproject to get correct coordinates!
             Vector3 vector3 = hudStage.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-            switch (GAME_STATE) {
+            switch (gameState) {
                 case RUNNING:
                     if (hudView.checkIfTouchingPauseButton(vector3)) {
                         // Touching pause button
-                        GAME_STATE = PAUSED;
+                        gameState = PAUSED;
                     }
                     break;
                 case PAUSED:
                     if (hudView.checkIfTouchingPauseResume(vector3)) {
                         // Touching pause resume
-                        GAME_STATE = RUNNING;
+                        gameState = RUNNING;
                     } else if (hudView.checkIfTouchingPauseOptions(vector3)) {
                         // Touching pause options
-                        GAME_STATE = OPTIONS;
+                        gameState = OPTIONS;
                     } else if (hudView.checkIfTouchingPauseQuit(vector3)) {
                         // Touching pause quit
                         Gdx.app.exit();
@@ -273,7 +373,7 @@ public class MyGame extends ApplicationAdapter {
                 case OPTIONS:
                     if (hudView.checkIfTouchingOptionsReturn(vector3)) {
                         // Touched
-                        GAME_STATE = PAUSED;
+                        gameState = PAUSED;
                     } else if (hudView.checkIfTouchingOptionsMusic(vector3)) {
                         soundsAndMusic.setMusicVolume(hudView.getNewMusicVolume(vector3));
                     } else if (hudView.checkIfTouchingOptionsSFX(vector3)) {
@@ -282,7 +382,7 @@ public class MyGame extends ApplicationAdapter {
                     break;
                 case MAIN_MENU:
                     if (mainMenuView.checkIfTouchingStart(vector3)) {
-                        GAME_STATE = MAIN_CHOOSE;
+                        gameState = MAIN_CONTROLS;
                     } else if (mainMenuView.checkIfTouchingQuit(vector3)) {
                         // Exit game
                         Gdx.app.exit();
@@ -292,16 +392,29 @@ public class MyGame extends ApplicationAdapter {
                     if (mainMenuView.checkIfTouchingEasy(vector3)) {
                         // TODO Set easy mode
                         doOnStartGame();
-                        GAME_STATE = RUNNING;
+                        gameState = RUNNING;
                         Gdx.input.setInputProcessor(joystickStage);
                     } else if (mainMenuView.checkIfTouchingHard(vector3)) {
                         // TODO Set hard mode
                         doOnStartGame();
-                        GAME_STATE = RUNNING;
+                        gameState = RUNNING;
                         Gdx.input.setInputProcessor(joystickStage);
                     }
                     break;
                 case INVENTORY_VIEW:
+                    break;
+                case MAIN_CONTROLS:
+                    if (mainMenuView.checkIfTouchingTouch(vector3)) {
+                        gameState = MAIN_CHOOSE;
+                        ControllerOptions.controllerSettings = TOUCH_JOYSTICK;
+                        ControllerOptions.joystickStage = joystickStage;
+                    } else if (mainMenuView.checkIfTouchingKeyboardOnly(vector3)) {
+                        gameState = MAIN_CHOOSE;
+                        ControllerOptions.controllerSettings = KEYBOARD_ONLY;
+                    } else if (mainMenuView.checkIfTouchingKeyboardMouse(vector3)) {
+                        gameState = MAIN_CHOOSE;
+                        ControllerOptions.controllerSettings = KEYBOARD_MOUSE;
+                    }
                     break;
             }
         }
@@ -316,18 +429,39 @@ public class MyGame extends ApplicationAdapter {
         }
     }
 
+    /**
+     * Plays music
+     */
     private void startMusic() {
         soundsAndMusic.play();
     }
 
     @Override
     public void dispose() {
-        hudView.dispose();
         hudStage.dispose();
         world.dispose();
         soundsAndMusic.dispose();
         gameView.dispose();
         mainMenuView.dispose();
         inventoryView.dispose();
+        mainMenuView.dispose();
+        if (hudView != null) {
+            hudView.dispose();
+        }
+        if (world != null) {
+            world.dispose();
+        }
+        if (soundsAndMusic != null) {
+            soundsAndMusic.dispose();
+        }
+        if (gameView != null) {
+            gameView.dispose();
+        }
+    }
+
+    private void prepareForRemoval(AbstractController controller) {
+        controller.getModel().getPhysicsActor().destroyBody();
+        controller.getView().remove();
+        controllerRemovalBuffer.add(controller);
     }
 }

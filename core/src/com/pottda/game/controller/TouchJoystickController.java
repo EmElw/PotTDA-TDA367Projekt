@@ -3,7 +3,7 @@ package com.pottda.game.controller;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.pottda.game.model.ModelActor;
 import com.pottda.game.view.JoysticksView;
-import com.pottda.game.view.ViewActor;
+import com.pottda.game.view.ActorView;
 
 /**
  * Created by Rikard Teodorsson on 2017-04-07.
@@ -12,16 +12,20 @@ import com.pottda.game.view.ViewActor;
 public class TouchJoystickController extends AbstractController {
     private final JoysticksView joysticksView;
 
-    public TouchJoystickController(ModelActor modelActor, ViewActor viewActor, Stage stage) {
-        super(modelActor, viewActor);
+    TouchJoystickController(ModelActor modelActor, ActorView actorView, Stage stage) {
+        super(modelActor, actorView);
         joysticksView = new JoysticksView(stage);
     }
 
     @Override
-    public void onNewFrame() {
+        public void setInputVectors() {
+
         joysticksView.onNewFrame();
-        movementVector.set(joysticksView.getMovementKnobX(), joysticksView.getMovementKnobY());
-        attackVector.set(joysticksView.getAttackKnobX(), -joysticksView.getAttackKnobY());
-        super.onNewFrame();
+
+        movementVector.set(joysticksView.getMovementKnobX(),
+                joysticksView.getMovementKnobY());
+
+        attackVector.set(joysticksView.getAttackKnobX(),
+                joysticksView.getAttackKnobY());
     }
 }

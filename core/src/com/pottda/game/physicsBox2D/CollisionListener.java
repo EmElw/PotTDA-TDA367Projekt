@@ -1,8 +1,9 @@
 package com.pottda.game.physicsBox2D;
 
 import com.badlogic.gdx.physics.box2d.*;
-import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
+import com.pottda.game.model.Obstacle;
+import com.pottda.game.model.Projectile;
 
 public class CollisionListener implements ContactListener {
     @Override
@@ -27,7 +28,7 @@ public class CollisionListener implements ContactListener {
         // Make sure projectile actually IS a Projectile
         Projectile projectile = projectileBody.getUserData() instanceof Projectile ?
                 ((Projectile) projectileBody.getUserData()) : null;
-        if(projectile == null){
+        if (projectile == null) {
             return;
         }
 
@@ -36,11 +37,9 @@ public class CollisionListener implements ContactListener {
         Character target = targetBody.getUserData() instanceof Character ?
                 ((Character) targetBody.getUserData()) : null;
         if (target == null) {
-            Obstacle obstacle = targetBody.getUserData() instanceof Obstacle ?
-                    ((Obstacle) targetBody.getUserData()) : null;
-
-            if(obstacle != null){
+            if (targetBody.getUserData() instanceof Obstacle) {
                 projectile.onCollision();
+                return;
             }
             return;
         }

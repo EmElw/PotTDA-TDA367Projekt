@@ -1,11 +1,14 @@
 package com.pottda.game.model;
 
+import com.pottda.game.view.Sprites;
+
 import javax.vecmath.Vector2f;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public abstract class AttackItem extends Item {
+    private final static float CHARACTER_RADIUS = 0.5f;
 
     /**
      * The base damage of any {@link Projectile} created by this Item
@@ -22,11 +25,19 @@ public abstract class AttackItem extends Item {
      */
     private long lastAttackTime;
 
+    protected boolean bounces;
+    protected boolean penetrates;
+
     @Override
     public void init() {
         damage = 0;
         cooldown = 100;
         lastAttackTime = 0;
+        bounces = false;
+        penetrates = false;
+        isPrimaryAttack = false;
+        isProjectileModifier = false;
+        isSecondaryAttack = false;
         super.init();
     }
 
@@ -35,7 +46,7 @@ public abstract class AttackItem extends Item {
      * @param origin
      * @return
      */
-    public List<ProjectileListener> attack(Vector2f direction, Vector2f origin) {
+    public List<ProjectileListener> attack(Vector2f direction, Vector2f origin, int team) {
         List<ProjectileListener> listeners = new ArrayList<ProjectileListener>();
 
         Item i = this;
@@ -47,15 +58,34 @@ public abstract class AttackItem extends Item {
             }
         }
 
+        direction.scale(CHARACTER_RADIUS);
+        origin.add(direction);
+        direction.normalize();
+
+        Projectile proj = (Projectile) ActorFactory.get().buildProjectile(
+                Sprites.PROJECTILE1,
+                team,
+                bounces,
+                penetrates,
+                origin).getModel();
+
+        proj.damage = damage;
+        proj.isPiercing = penetrates;
+        proj.isBouncy = bounces;
+
+        direction.normalize();
+        proj.setListeners(listeners);
+        proj.giveInput(direction, null);
+        proj.onAttack();
+
         lastAttackTime = System.currentTimeMillis();
         return listeners;
-        // TODO create projectiles
 
     }
 
-    public void tryAttack(Vector2f direction, Vector2f origin) {
+    public void tryAttack(Vector2f direction, Vector2f origin, int team) {
         if (System.currentTimeMillis() - lastAttackTime > cooldown) {
-            attack(direction, origin);
+            attack(direction, origin, team);
         }
     }
 }

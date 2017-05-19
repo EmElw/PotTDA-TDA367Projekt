@@ -23,6 +23,8 @@ public class Switcher extends Item {
     @Override
     protected void initDynamic() {
 
+        dropRate = 0.1f;
+
         basePositions.add(new Point2i(0, 0));
         basePositions.add(new Point2i(1, 0));
 

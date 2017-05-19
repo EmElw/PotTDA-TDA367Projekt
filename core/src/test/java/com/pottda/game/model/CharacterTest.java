@@ -5,11 +5,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.vecmath.Vector2f;
-import javax.xml.ws.soap.Addressing;
-
 import java.util.Random;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CharacterTest {
     private Character character;
@@ -22,12 +21,18 @@ public class CharacterTest {
 
             @Override
             public Vector2f getPosition() {
+                position.normalize();
                 return position;
             }
 
             @Override
             public void giveMovementVector(Vector2f movementVector) {
                 position = movementVector;
+            }
+
+            @Override
+            public void destroyBody() {
+
             }
         };
         character = new Character(fakePhysicsActor);
@@ -45,7 +50,11 @@ public class CharacterTest {
         Vector2f attackVector = new Vector2f(1f, 1f);
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
-                movementVector.set((float) (15 * i), (float) (37 * j));
+                movementVector.set((float) (Math.random() * i), (float) (Math.random() * j));
+                if(movementVector.x == 0 && movementVector.y == 0){
+                    break;
+                }
+                movementVector.normalize();
                 character.giveInput(movementVector, attackVector);
                 assertTrue((Math.abs(fakePhysicsActor.getPosition().x - movementVector.x) < 0.01f) &&
                         (Math.abs(fakePhysicsActor.getPosition().y - movementVector.y) < 0.01));

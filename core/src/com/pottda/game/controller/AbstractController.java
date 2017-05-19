@@ -1,7 +1,7 @@
 package com.pottda.game.controller;
 
 import com.pottda.game.model.ModelActor;
-import com.pottda.game.view.ViewActor;
+import com.pottda.game.view.ActorView;
 
 import javax.vecmath.Vector2f;
 
@@ -17,43 +17,66 @@ public abstract class AbstractController {
 //    final boolean isAI;
 
     final ModelActor modelActor;
-    private final ViewActor viewActor;
+    private final ActorView actorView;
 
     /**
+     * Creates a new AbstractController and sets its
+     * actor and view
      *
-     * @param modelActor
-     * @param viewActor
+     * @param modelActor a {@link ModelActor}
+     * @param actorView  a {@link ActorView}
      */
-    AbstractController(ModelActor modelActor, ViewActor viewActor) {
+    public AbstractController(ModelActor modelActor, ActorView actorView) {
         this.modelActor = modelActor;
-        this.viewActor = viewActor;
-        movementVector = new Vector2f(0,0);
-        attackVector = new Vector2f(0,0);
+        this.actorView = actorView;
+        movementVector = new Vector2f(0, 0);
+        attackVector = new Vector2f(0, 0);
     }
 
     /**
-     * Called by MyGame every frame
+     * Called by PoTDA every frame
      */
     public void onNewFrame() {
+        setInputVectors();
         updateModel();
         updateView();
     }
 
+    /**
+     * Called every frame and should set the movement- and attack
+     * vectors of the controller.
+     * <p>
+     * {@code movementVector} should be of 0 <= length <= 1
+     * <p>
+     * {@code attackVector} should be normalized or 0,0
+     */
+    protected abstract void setInputVectors();
+
+    public boolean shouldBeRemoved() {
+        return modelActor.shouldBeRemoved;
+    }
+
     private void updateModel() {
         modelActor.giveInput(movementVector, attackVector);
-        modelActor.handleCollisions();
     }
 
     /**
-     * Updates the ViewActor so everything can be drawn out later
+     * Updates the ActorView so everything can be drawn out later
      */
     protected void updateView() {
         // TODO extend with other modifications such as rotation and stuff
         Vector2f position = modelActor.getPosition();
-        float degrees = modelActor.getAngle();
+//        float degrees = modelActor.getAngle();
 
-        viewActor.setPoint(position.x, position.y);
-        viewActor.setAngle(degrees);
+        actorView.setPoint(position.x, position.y);
+        actorView.setAngle(modelActor.getAngle());
     }
 
+    public ModelActor getModel() {
+        return modelActor;
+    }
+
+    public ActorView getView() {
+        return actorView;
+    }
 }
