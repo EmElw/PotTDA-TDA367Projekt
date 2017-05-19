@@ -1,6 +1,5 @@
 package com.pottda.game.view;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -12,14 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
  */
 
 public class OptionsView {
-    private static final String optionsMusicBarString = "hud/optionsVolumeBar.png";
-    private static final String optionsMusicString = "hud/optionsVolume.png";
-    private static final String optionsSFXBarString = "hud/optionsVolumeBar.png";
-    private static final String optionsSFXString = "hud/optionsVolume.png";
-    private static final String optionsSFXTextString = "hud/text/sfx.png";
-    private static final String optionsMusicTextString = "hud/text/music.png";
-    private static final String optionReturnString = "hud/optionsReturn.png";
-    private static final String optionsBackgroundString = "hud/pauseBackground.png";
 
     private final Stage stage;
 
@@ -27,10 +18,7 @@ public class OptionsView {
     private Image optionsMusic;
     private Image optionsSFXBar;
     private Image optionsSFX;
-    private Image optionsSFXText;
-    private Image optionsMusicText;
     private Image optionReturn;
-    private Image pauseBackground;
 
     private enum imageEnum {
         BACKGROUND,
@@ -50,39 +38,39 @@ public class OptionsView {
 
     private void create() {
         // Add pause background
-        addToStage(optionsBackgroundString, imageEnum.BACKGROUND, 0, 0, stage.getWidth(), stage.getHeight());
+        addToStage(Sprites.OPTIONSBG, imageEnum.BACKGROUND, 0, 0, stage.getWidth(), stage.getHeight());
 
         // Add options return button
-        addToStage(optionReturnString, imageEnum.RETURN, stage.getWidth() / 2 - 150, 30);
+        addToStage(Sprites.OPTIONSRETURN, imageEnum.RETURN, stage.getWidth() / 2 - 150, 30);
 
         // Add options music control
-        addToStage(optionsMusicString, imageEnum.MUSIC, stage.getWidth() / 2 - 150, (stage.getHeight() / 5) * 4);
+        addToStage(Sprites.OPTIONSMUSIC, imageEnum.MUSIC, stage.getWidth() / 2 - 150, (stage.getHeight() / 5) * 4);
 
         // Add options music bar
-        addToStage(optionsMusicBarString, imageEnum.MUSICBAR, stage.getWidth() / 2 - 150, (stage.getHeight() / 5) * 4);
+        addToStage(Sprites.OPTIONSMUSICBAR, imageEnum.MUSICBAR, stage.getWidth() / 2 - 150, (stage.getHeight() / 5) * 4);
 
         // Add options sfx control
-        addToStage(optionsSFXString, imageEnum.SFX, stage.getWidth() / 2 - 150, (stage.getHeight() / 5) * 3);
+        addToStage(Sprites.OPTIONSSFX, imageEnum.SFX, stage.getWidth() / 2 - 150, (stage.getHeight() / 5) * 3);
 
         // Add options sfx bar
-        addToStage(optionsSFXBarString, imageEnum.SFXBAR, stage.getWidth() / 2 - 150, (stage.getHeight() / 5) * 3);
+        addToStage(Sprites.OPTIONSSFXBAR, imageEnum.SFXBAR, stage.getWidth() / 2 - 150, (stage.getHeight() / 5) * 3);
 
         // Add options sfx text
-        addToStage(optionsSFXTextString, imageEnum.SFXTEXT, optionsSFXBar.getX() - 168, (stage.getHeight() / 5) * 3);
+        addToStage(Sprites.OPTIONSSFXTEXT, imageEnum.SFXTEXT, optionsSFXBar.getX() - 168, (stage.getHeight() / 5) * 3);
 
         // Add options music text
-        addToStage(optionsMusicTextString, imageEnum.MUSICTEXT, optionsMusicBar.getX() - 168, (stage.getHeight() / 5) * 4);
+        addToStage(Sprites.OPTIONSMUSICTEXT, imageEnum.MUSICTEXT, optionsMusicBar.getX() - 168, (stage.getHeight() / 5) * 4);
     }
 
-    private void addToStage(String texturePath, imageEnum image, float xPos, float yPos) {
-        Image image2 = getImage(texturePath, image);
+    private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos) {
+        Image image2 = getImage(texturePath.texture, image);
         image2.setX(xPos);
         image2.setY(yPos);
         stage.addActor(image2);
     }
 
-    private void addToStage(String texturePath, imageEnum image, float xPos, float yPos, float width, float height) {
-        Image image2 = getImage(texturePath, image);
+    private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos, float width, float height) {
+        Image image2 = getImage(texturePath.texture, image);
         image2.setX(xPos);
         image2.setY(yPos);
         image2.setWidth(width);
@@ -90,24 +78,24 @@ public class OptionsView {
         stage.addActor(image2);
     }
 
-    private Image getImage(String texturePath, imageEnum image) {
+    private Image getImage(Texture texturePath, imageEnum image) {
         switch (image) {
             case BACKGROUND:
-                return pauseBackground = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return new Image(texturePath);
             case RETURN:
-                return optionReturn = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return optionReturn = new Image(texturePath);
             case MUSIC:
-                return optionsMusic = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return optionsMusic = new Image(texturePath);
             case MUSICBAR:
-                return optionsMusicBar = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return optionsMusicBar = new Image(texturePath);
             case SFX:
-                return optionsSFX = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return optionsSFX = new Image(texturePath);
             case SFXBAR:
-                return optionsSFXBar = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return optionsSFXBar = new Image(texturePath);
             case SFXTEXT:
-                return optionsSFXText = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return new Image(texturePath);
             case MUSICTEXT:
-                return optionsMusicText = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return new Image(texturePath);
         }
         return null;
     }

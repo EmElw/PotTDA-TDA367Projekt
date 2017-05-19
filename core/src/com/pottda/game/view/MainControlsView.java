@@ -1,6 +1,5 @@
 package com.pottda.game.view;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -12,19 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
  */
 
 public class MainControlsView {
-    private static final String controlsTitle = "menu/chooseControls.png";
-    private static final String controlsTouch = "menu/touch.png";
-    private static final String controlsKeyboardOnly = "menu/keyOnly.png";
-    private static final String controlsKeyboardMouse = "menu/keyMouse.png";
-    private static final String mainMenuBG = "menu/bg.png";
 
     private final Stage stage;
 
-    private Image controlsTitleImage;
     private Image controlsTouchImage;
     private Image controlsKeyOnlyImage;
     private Image controlsKeyMouseImage;
-    private Image bgImage;
 
     private enum imageEnum {
         TITLE,
@@ -41,30 +33,30 @@ public class MainControlsView {
 
     private void create() {
         // Add background
-        addToStage(mainMenuBG, imageEnum.BGIMAGE, 0, 0, stage.getWidth(), stage.getHeight());
+        addToStage(Sprites.MAINMENUBG, imageEnum.BGIMAGE, 0, 0, stage.getWidth(), stage.getHeight());
 
         // Add choose controls title
-        addToStage(controlsTitle, imageEnum.TITLE, stage.getWidth() / 2 - 256, stage.getHeight() * 6.5f / 8);
+        addToStage(Sprites.CONTROLSTITLE, imageEnum.TITLE, stage.getWidth() / 2 - 256, stage.getHeight() * 6.5f / 8);
 
         // Add touch button
-        addToStage(controlsTouch, imageEnum.TOUCH, stage.getWidth() / 2 - 256, stage.getHeight() * 3 / 8);
+        addToStage(Sprites.CONTROLSTOUCH, imageEnum.TOUCH, stage.getWidth() / 2 - 256, stage.getHeight() * 3 / 8);
 
         // Add keyboard only button
-        addToStage(controlsKeyboardOnly, imageEnum.KEYONLY, stage.getWidth() / 2 - 256, stage.getHeight() * 5 / 8);
+        addToStage(Sprites.CONTROLSKEYBOARDONLY, imageEnum.KEYONLY, stage.getWidth() / 2 - 256, stage.getHeight() * 5 / 8);
 
         // Add keyboard mouse button
-        addToStage(controlsKeyboardMouse, imageEnum.KEYMOUSE, stage.getWidth() / 2 - 256, stage.getHeight() * 1 / 8);
+        addToStage(Sprites.CONTROLSKEYBOARDMOUSE, imageEnum.KEYMOUSE, stage.getWidth() / 2 - 256, stage.getHeight() * 1 / 8);
     }
 
-    private void addToStage(String texturePath, imageEnum image, float xPos, float yPos) {
-        Image image2 = getImage(texturePath, image);
+    private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos) {
+        Image image2 = getImage(texturePath.texture, image);
         image2.setX(xPos);
         image2.setY(yPos);
         stage.addActor(image2);
     }
 
-    private void addToStage(String texturePath, imageEnum image, float xPos, float yPos, float width, float height) {
-        Image image2 = getImage(texturePath, image);
+    private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos, float width, float height) {
+        Image image2 = getImage(texturePath.texture, image);
         image2.setX(xPos);
         image2.setY(yPos);
         image2.setWidth(width);
@@ -72,18 +64,18 @@ public class MainControlsView {
         stage.addActor(image2);
     }
 
-    private Image getImage(String texturePath, imageEnum image) {
+    private Image getImage(Texture texturePath, imageEnum image) {
         switch (image) {
             case TITLE:
-                return controlsTitleImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return new Image(texturePath);
             case TOUCH:
-                return controlsTouchImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return controlsTouchImage = new Image(texturePath);
             case KEYONLY:
-                return controlsKeyOnlyImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return controlsKeyOnlyImage = new Image(texturePath);
             case KEYMOUSE:
-                return controlsKeyMouseImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return controlsKeyMouseImage = new Image(texturePath);
             case BGIMAGE:
-                return bgImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return new Image(texturePath);
         }
         return null;
     }

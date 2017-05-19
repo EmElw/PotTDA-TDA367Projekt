@@ -1,6 +1,5 @@
 package com.pottda.game.view;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -12,9 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
  */
 
 public class HUDView {
-    private static final String healthbarString = "hud/healthbar.png";
-    private static final String healthbarRedString = "hud/health.png";
-    private static final String pauseButtonString = "hud/pauseButton.png";
 
     private final Stage stage;
 
@@ -35,34 +31,34 @@ public class HUDView {
 
     public void create() {
         // Add health bar
-        addToStage(healthbarString, imageEnum.HEALTHBAR, 10, stage.getHeight() - 30);
+        addToStage(Sprites.HEALTHBAR, imageEnum.HEALTHBAR, 10, stage.getHeight() - 30);
 
         // Add health to health bar
-        addToStage(healthbarRedString, imageEnum.HEALTHBARRED, healthbar.getX(), stage.getHeight() - 30);
+        addToStage(Sprites.HEALTHBARRED, imageEnum.HEALTHBARRED, healthbar.getX(), stage.getHeight() - 30);
 
         // Add pause button
-        addToStage(pauseButtonString, imageEnum.PAUSEBUTTON, stage.getWidth() - 60, stage.getHeight() - 50);
+        addToStage(Sprites.PAUSEBUTTON, imageEnum.PAUSEBUTTON, stage.getWidth() - 60, stage.getHeight() - 50);
     }
 
     public void render() {
         stage.draw();
     }
 
-    private void addToStage(String texturePath, imageEnum image, float xPos, float yPos) {
-        Image image2 = getImage(texturePath, image);
+    private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos) {
+        Image image2 = getImage(texturePath.texture, image);
         image2.setX(xPos);
         image2.setY(yPos);
         stage.addActor(image2);
     }
 
-    private Image getImage(String texturePath, imageEnum image) {
+    private Image getImage(Texture texturePath, imageEnum image) {
         switch (image) {
             case HEALTHBAR:
-                return healthbar = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return healthbar = new Image(texturePath);
             case HEALTHBARRED:
-                return healthbarRed = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return healthbarRed = new Image(texturePath);
             case PAUSEBUTTON:
-                return pauseButton = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return pauseButton = new Image(texturePath);
         }
         return null;
     }

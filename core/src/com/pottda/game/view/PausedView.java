@@ -1,6 +1,5 @@
 package com.pottda.game.view;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -12,14 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
  */
 
 public class PausedView {
-    private static final String pauseBackgroundString = "hud/pauseBackground.png";
-    private static final String pauseResumeString = "hud/pauseResume.png";
-    private static final String pauseOptionsString = "hud/pauseOptions.png";
-    private static final String pauseQuitString = "hud/pauseQuit.png";
 
     private final Stage stage;
 
-    private Image pauseBackground;
     private Image pauseResume;
     private Image pauseOptions;
     private Image pauseQuit;
@@ -38,27 +32,27 @@ public class PausedView {
 
     private void create() {
         // Add pause background
-        addToStage(pauseBackgroundString, imageEnum.BACKGROUND, 0, 0, stage.getWidth(), stage.getHeight());
+        addToStage(Sprites.OPTIONSBG, imageEnum.BACKGROUND, 0, 0, stage.getWidth(), stage.getHeight());
 
         // Add pause resume button
-        addToStage(pauseResumeString, imageEnum.RESUME, stage.getWidth() / 2 - 150, stage.getHeight() - 150);
+        addToStage(Sprites.PAUSERESUME, imageEnum.RESUME, stage.getWidth() / 2 - 150, stage.getHeight() - 150);
 
         // Add pause options button
-        addToStage(pauseOptionsString, imageEnum.OPTIONS, stage.getWidth() / 2 - 150, stage.getHeight() - 300);
+        addToStage(Sprites.PAUSEOPTIONS, imageEnum.OPTIONS, stage.getWidth() / 2 - 150, stage.getHeight() - 300);
 
         // Add pause quit button
-        addToStage(pauseQuitString, imageEnum.QUIT, stage.getWidth() / 2 - 150, 30);
+        addToStage(Sprites.PAUSEQUIT, imageEnum.QUIT, stage.getWidth() / 2 - 150, 30);
     }
 
-    private void addToStage(String texturePath, imageEnum image, float xPos, float yPos) {
-        Image image2 = getImage(texturePath, image);
+    private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos) {
+        Image image2 = getImage(texturePath.texture, image);
         image2.setX(xPos);
         image2.setY(yPos);
         stage.addActor(image2);
     }
 
-    private void addToStage(String texturePath, imageEnum image, float xPos, float yPos, float width, float height) {
-        Image image2 = getImage(texturePath, image);
+    private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos, float width, float height) {
+        Image image2 = getImage(texturePath.texture, image);
         image2.setX(xPos);
         image2.setY(yPos);
         image2.setWidth(width);
@@ -66,16 +60,16 @@ public class PausedView {
         stage.addActor(image2);
     }
 
-    private Image getImage(String texturePath, imageEnum image) {
+    private Image getImage(Texture texturePath, imageEnum image) {
         switch (image) {
             case BACKGROUND:
-                return pauseBackground = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return new Image(texturePath);
             case RESUME:
-                return pauseResume = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return pauseResume = new Image(texturePath);
             case OPTIONS:
-                return pauseOptions = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return pauseOptions = new Image(texturePath);
             case QUIT:
-                return pauseQuit = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return pauseQuit = new Image(texturePath);
         }
         return null;
     }

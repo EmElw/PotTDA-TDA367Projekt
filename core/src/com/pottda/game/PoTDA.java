@@ -162,9 +162,9 @@ public class PoTDA extends ApplicationAdapter {
     }
 
 
-
     /**
      * Checks if any enemies are alive
+     *
      * @return true if at least one enemy is alive
      */
     private boolean enemiesAlive() {
@@ -231,9 +231,6 @@ public class PoTDA extends ApplicationAdapter {
                 // Update the physics world
                 doPhysicsStep(Gdx.graphics.getDeltaTime());
 
-                // Draw the game
-                gameView.render();
-                hudView.render();
                 updateWorld();
                 if (!enemiesAlive()) {
                     if (waveController.finishedWaves()) {
@@ -325,6 +322,7 @@ public class PoTDA extends ApplicationAdapter {
 
         // Draw the game
         gameView.render();
+        hudView.render();
     }
 
     /**
@@ -354,6 +352,12 @@ public class PoTDA extends ApplicationAdapter {
             Vector3 vector3 = hudStage.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
             switch (gameState) {
                 case RUNNING:
+                    if (hudView.checkIfTouchingPauseButton(vector3)) {
+                        // Touching pause button
+                        gameState = PAUSED;
+                    }
+                    break;
+                case WAITING:
                     if (hudView.checkIfTouchingPauseButton(vector3)) {
                         // Touching pause button
                         gameState = PAUSED;
@@ -438,9 +442,11 @@ public class PoTDA extends ApplicationAdapter {
     @Override
     public void dispose() {
         hudStage.dispose();
-        world.dispose();
-        soundsAndMusic.dispose();
-        gameView.dispose();
+        mainControlsStage.dispose();
+        mainDifficultyStage.dispose();
+        mainMenuStage.dispose();
+        pausedStage.dispose();
+        optionsStage.dispose();
         if (world != null) {
             world.dispose();
         }

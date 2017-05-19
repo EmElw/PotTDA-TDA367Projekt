@@ -1,6 +1,5 @@
 package com.pottda.game.view;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -12,17 +11,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
  */
 
 public class MainDifficultyView {
-    private static final String chooseTitle = "menu/chooseDiff.png";
-    private static final String chooseEasy = "menu/easy.png";
-    private static final String chooseHard = "menu/hard.png";
-    private static final String mainMenuBG = "menu/bg.png";
 
     private final Stage stage;
 
-    private Image chooseDiffImage;
     private Image easyImage;
     private Image hardImage;
-    private Image bgImage;
 
     private enum imageEnum {
         CHOOSEDIFFIMAGE,
@@ -38,27 +31,27 @@ public class MainDifficultyView {
 
     private void create() {
         // Add background
-        addToStage(mainMenuBG, imageEnum.BGIMAGE, 0, 0, stage.getWidth(), stage.getHeight());
+        addToStage(Sprites.MAINMENUBG, imageEnum.BGIMAGE, 0, 0, stage.getWidth(), stage.getHeight());
 
         // Add choose difficulty title
-        addToStage(chooseTitle, imageEnum.CHOOSEDIFFIMAGE, stage.getWidth() / 2 - 256, stage.getHeight() * 3 / 4);
+        addToStage(Sprites.CHOOSETITLE, imageEnum.CHOOSEDIFFIMAGE, stage.getWidth() / 2 - 256, stage.getHeight() * 3 / 4);
 
         // Add easy button
-        addToStage(chooseEasy, imageEnum.EASYIMAGE, stage.getWidth() / 2 - 256, stage.getHeight() * 2 / 4);
+        addToStage(Sprites.CHOOSEEASY, imageEnum.EASYIMAGE, stage.getWidth() / 2 - 256, stage.getHeight() * 2 / 4);
 
         // Add hard button
-        addToStage(chooseHard, imageEnum.HARDIMAGE, stage.getWidth() / 2 - 256, stage.getHeight() * 1 / 4);
+        addToStage(Sprites.CHOOSEHARD, imageEnum.HARDIMAGE, stage.getWidth() / 2 - 256, stage.getHeight() * 1 / 4);
     }
 
-    private void addToStage(String texturePath, imageEnum image, float xPos, float yPos) {
-        Image image2 = getImage(texturePath, image);
+    private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos) {
+        Image image2 = getImage(texturePath.texture, image);
         image2.setX(xPos);
         image2.setY(yPos);
         stage.addActor(image2);
     }
 
-    private void addToStage(String texturePath, imageEnum image, float xPos, float yPos, float width, float height) {
-        Image image2 = getImage(texturePath, image);
+    private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos, float width, float height) {
+        Image image2 = getImage(texturePath.texture, image);
         image2.setX(xPos);
         image2.setY(yPos);
         image2.setWidth(width);
@@ -66,16 +59,16 @@ public class MainDifficultyView {
         stage.addActor(image2);
     }
 
-    private Image getImage(String texturePath, imageEnum image) {
+    private Image getImage(Texture texturePath, imageEnum image) {
         switch (image) {
             case CHOOSEDIFFIMAGE:
-                return chooseDiffImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return new Image(texturePath);
             case EASYIMAGE:
-                return easyImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return easyImage = new Image(texturePath);
             case HARDIMAGE:
-                return hardImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return hardImage = new Image(texturePath);
             case BGIMAGE:
-                return bgImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return new Image(texturePath);
         }
         return null;
     }

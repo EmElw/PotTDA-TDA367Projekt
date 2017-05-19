@@ -1,6 +1,5 @@
 package com.pottda.game.view;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -12,17 +11,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
  */
 
 public class MainMenuView {
-    private static final String mainMenuTitle = "menu/title.png";
-    private static final String mainMenuStart = "menu/start.png";
-    private static final String mainMenuQuit = "menu/quit.png";
-    private static final String mainMenuBG = "menu/bg.png";
 
     private final Stage stage;
 
-    private Image titleImage;
     private Image startImage;
     private Image quitImage;
-    private Image bgImage;
 
     private enum imageEnum {
         BGIMAGE,
@@ -38,27 +31,27 @@ public class MainMenuView {
 
     private void create() {
         // Add background
-        addToStage(mainMenuBG, imageEnum.BGIMAGE, 0, 0, stage.getWidth(), stage.getHeight());
+        addToStage(Sprites.MAINMENUBG, imageEnum.BGIMAGE, 0, 0, stage.getWidth(), stage.getHeight());
 
         // Add title
-        addToStage(mainMenuTitle, imageEnum.TITLEIMAGE, stage.getWidth() / 2 - 512 / 2, stage.getHeight() * 3 / 4);
+        addToStage(Sprites.MAINMENUTITLE, imageEnum.TITLEIMAGE, stage.getWidth() / 2 - 512 / 2, stage.getHeight() * 3 / 4);
 
         // Add start button
-        addToStage(mainMenuStart, imageEnum.STARTIMAGE, stage.getWidth() * 1 / 4 - 128 / 2, stage.getHeight() * 1 / 4);
+        addToStage(Sprites.MAINMENUSTART, imageEnum.STARTIMAGE, stage.getWidth() * 1 / 4 - 128 / 2, stage.getHeight() * 1 / 4);
 
         // Add quit button
-        addToStage(mainMenuQuit, imageEnum.QUITIMAGE, stage.getWidth() * 3 / 4 - 128 / 2, stage.getHeight() * 1 / 4);
+        addToStage(Sprites.MAINMENUQUIT, imageEnum.QUITIMAGE, stage.getWidth() * 3 / 4 - 128 / 2, stage.getHeight() * 1 / 4);
     }
 
-    private void addToStage(String texturePath, imageEnum image, float xPos, float yPos) {
-        Image image2 = getImage(texturePath, image);
+    private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos) {
+        Image image2 = getImage(texturePath.texture, image);
         image2.setX(xPos);
         image2.setY(yPos);
         stage.addActor(image2);
     }
 
-    private void addToStage(String texturePath, imageEnum image, float xPos, float yPos, float width, float height) {
-        Image image2 = getImage(texturePath, image);
+    private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos, float width, float height) {
+        Image image2 = getImage(texturePath.texture, image);
         image2.setX(xPos);
         image2.setY(yPos);
         image2.setWidth(width);
@@ -66,16 +59,16 @@ public class MainMenuView {
         stage.addActor(image2);
     }
 
-    private Image getImage(String texturePath, imageEnum image) {
+    private Image getImage(Texture texturePath, imageEnum image) {
         switch (image) {
             case BGIMAGE:
-                return bgImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return new Image(texturePath);
             case TITLEIMAGE:
-                return titleImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return new Image(texturePath);
             case STARTIMAGE:
-                return startImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return startImage = new Image(texturePath);
             case QUITIMAGE:
-                return quitImage = new Image(new Texture(Gdx.files.internal(texturePath)));
+                return quitImage = new Image(texturePath);
         }
         return null;
     }
