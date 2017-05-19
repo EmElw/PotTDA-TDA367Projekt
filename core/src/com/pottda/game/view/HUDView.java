@@ -361,6 +361,10 @@ public class HUDView extends ApplicationAdapter {
         healthbarRed.setWidth(health);
     }
 
+    public float getHealth() {
+        return healthbarRed.getWidth();
+    }
+
     @Override
     public void dispose() {
         texture.dispose();
