@@ -8,7 +8,13 @@ public enum Sprites {
     PLAYER("circletest.png"),
     ENEMY("circletestred.png"),
     PROJECTILE1("game/projectile1.png"),
-    BORDER("game/border.png");
+    BORDER("game/border.png"),
+
+    MAINMENUBG("menu/bg.png"),
+
+    TITLE("gameover/title.png"),
+    RESTARTBUTTON("gameover/restart.png"),
+    QUITBUTTON("gameover/quit.png");
 
     public final Texture texture;
 

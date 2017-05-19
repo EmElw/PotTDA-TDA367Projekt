@@ -310,6 +310,7 @@ public class HUDView extends ApplicationAdapter {
         optionsSFX.setVisible(false);
         optionsMusicText.setVisible(false);
         optionsSFXText.setVisible(false);
+        specialAttacksBar.setVisible(false);
     }
 
     /**
@@ -327,6 +328,7 @@ public class HUDView extends ApplicationAdapter {
         optionsSFX.setVisible(true);
         optionsMusicText.setVisible(true);
         optionsSFXText.setVisible(true);
+        specialAttacksBar.setVisible(false);
     }
 
     /**
@@ -344,6 +346,8 @@ public class HUDView extends ApplicationAdapter {
         optionsSFX.setVisible(false);
         optionsMusicText.setVisible(false);
         optionsSFXText.setVisible(false);
+        // Hide special attacks for now
+        specialAttacksBar.setVisible(false);
     }
 
     // text? https://gamedev.stackexchange.com/questions/65788/spritebatch-being-drawn-outside-of-stage
@@ -355,6 +359,10 @@ public class HUDView extends ApplicationAdapter {
      */
     public void setHealthbar(float health) {
         healthbarRed.setWidth(health);
+    }
+
+    public float getHealth() {
+        return healthbarRed.getWidth();
     }
 
     @Override
