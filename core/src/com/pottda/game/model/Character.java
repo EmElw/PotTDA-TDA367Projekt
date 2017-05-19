@@ -80,9 +80,11 @@ public class Character extends ModelActor {
      * @param incomingDamage Damage dealt to this character
      */
     void takeDamage(int incomingDamage) {
-        currentHealth -= incomingDamage;
-        if (currentHealth <= 0) {
-            shouldBeRemoved = true;
+        if (team != PLAYER_TEAM) {
+            currentHealth -= incomingDamage;
+            if (currentHealth <= 0) {
+                shouldBeRemoved = true;
+            }
         }
     }
 

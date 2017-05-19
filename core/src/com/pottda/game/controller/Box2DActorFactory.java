@@ -243,8 +243,7 @@ public class Box2DActorFactory extends ActorFactory {
     public ProjectileController buildProjectile(Sprites sprite, int team, boolean bounces, boolean penetrates, Vector2f position) {
         // Create body
         Body body = world.createBody(projectileBodyDef);
-        final float playerWidth = 25f * 0.0375f / 4f; // 25x25px
-        body.setTransform(position.getX() + playerWidth, position.getY() + playerWidth, 0);
+        body.setTransform(position.getX(), position.getY(), 0);
 
         // Determine bounciness
         if (bounces) {
@@ -272,7 +271,7 @@ public class Box2DActorFactory extends ActorFactory {
 
         Box2DPhysicsProjectile physics = new Box2DPhysicsProjectile(body);
 
-        Projectile model = new Projectile(physics, 20, null);
+        Projectile model = new Projectile(physics, 0, null);
         model.team = team;
         model.isBouncy = bounces;
         model.isPiercing = penetrates;
@@ -343,7 +342,7 @@ public class Box2DActorFactory extends ActorFactory {
                 OBSTACLE_FILTER.categoryBits);
 
         // Enemy collides with itself, Player Character, Projectile and obstacle
-        CHARACTER_ENEMY_FILTER.maskBits = (short)(CHARACTER_PLAYER_FILTER.categoryBits |
+        CHARACTER_ENEMY_FILTER.maskBits = (short) (CHARACTER_PLAYER_FILTER.categoryBits |
                 CHARACTER_ENEMY_FILTER.categoryBits |
                 PROJECTILE_PLAYER_FILTER.categoryBits |
                 OBSTACLE_FILTER.categoryBits);
