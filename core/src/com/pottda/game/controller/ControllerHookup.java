@@ -7,6 +7,7 @@ import com.pottda.game.model.NewModelListener;
 import com.pottda.game.model.Obstacle;
 import com.pottda.game.view.ActorView;
 
+import javax.vecmath.Vector2f;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,14 +36,16 @@ public class ControllerHookup implements NewModelListener {
     @Override
     public void onNewModel(ModelActor m) {
 
-        ActorView view = new ActorView(m.sprite);
-        stage.addActor(view);
+        ActorView view;
 
         // Determine what kind of controller
         AbstractController controller = null;
         if (m instanceof Obstacle) {
+            view = new ActorView(m.sprite,((Vector2f)((Obstacle) m).size));
             controller = new ObstacleController(m, view);
         } else if (m instanceof Character) {
+            view  = new ActorView(m.sprite);
+            stage.addActor(view);
             if (m.team == 0) {
                 controller = createController(m, view);
 

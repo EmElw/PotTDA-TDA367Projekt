@@ -113,10 +113,10 @@ public class Box2DPhysicsActorFactory implements PhysicsActorFactory{
     }
 
     @Override
-    public PhysicsActor getObstaclePhysicsActor(Obstacle obstacle, Tuple2f dimensions) {
+    public PhysicsActor getObstaclePhysicsActor(Obstacle obstacle) {
         // Set size of obstacle
         PolygonShape tempPolygon = new PolygonShape();
-        tempPolygon.setAsBox(dimensions.x / 2, dimensions.y / 2);
+        tempPolygon.setAsBox(obstacle.size.x / 2, obstacle.size.y / 2);
         obstacleFixtureDef.shape = tempPolygon;
         
         // Make obstacle's body

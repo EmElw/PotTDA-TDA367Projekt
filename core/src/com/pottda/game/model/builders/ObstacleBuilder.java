@@ -16,7 +16,8 @@ public class ObstacleBuilder extends AbstractModelBuilder implements IObstacleBu
     @Override
     public ModelActor create() {
         Obstacle obstacle = new Obstacle();
-        obstacle.setPhysicsActor(physiscActorFactory.getObstaclePhysicsActor(obstacle, size));
+        obstacle.size = this.size;
+        obstacle.setPhysicsActor(physiscActorFactory.getObstaclePhysicsActor(obstacle));
         setCommonAndNotify(obstacle);
         return obstacle;
     }
