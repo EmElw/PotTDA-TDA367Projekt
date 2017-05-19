@@ -11,10 +11,13 @@ import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.pottda.game.controller.AIController;
 import com.pottda.game.controller.AbstractController;
 import com.pottda.game.controller.Box2DActorFactory;
 import com.pottda.game.controller.ControllerOptions;
+import com.pottda.game.controller.WaveController;
 import com.pottda.game.model.ActorFactory;
+import com.pottda.game.model.Character;
 import com.pottda.game.physicsBox2D.CollisionListener;
 import com.pottda.game.view.*;
 
@@ -54,10 +57,13 @@ public class PoTDA extends ApplicationAdapter {
     private Box2DActorFactory box2DActorFactory;
     private MainMenuView mainMenuView;
 
+    private WaveController waveController;
+
 
     public enum GameState {
         NONE,
         RUNNING,
+        WAITING,
         PAUSED,
         OPTIONS,
         MAIN_MENU,
@@ -67,8 +73,6 @@ public class PoTDA extends ApplicationAdapter {
 
     private static GameState gameState = NONE;
 
-    private static final String playerStartInventory = "inventoryblueprint/playerStartInventory.xml";
-
     private static final String GAME_TITLE = "Panic on TDAncefloor";
 
     public static final float WIDTH = 800;
@@ -77,6 +81,7 @@ public class PoTDA extends ApplicationAdapter {
     public static final float HEIGHT_METERS = 18;
     public static final float HEIGHT_RATIO = WIDTH_METERS / WIDTH;
     public static final float WIDTH_RATIO = HEIGHT_METERS / HEIGHT;
+    private static final float scaling = 1.2f;
 
     @Override
     public void create() {
@@ -95,8 +100,13 @@ public class PoTDA extends ApplicationAdapter {
         Box2D.init();
 
         mainMenuView = new MainMenuView(mainMenuStage);
+
+        waveController = new WaveController(WIDTH_METERS, HEIGHT_METERS, scaling);
     }
 
+    /**
+     * Inits the game world and player
+     */
     private void doOnStartGame() {
         controllers = new HashSet<AbstractController>();
         controllerBuffer = new Stack<AbstractController>();
@@ -116,24 +126,38 @@ public class PoTDA extends ApplicationAdapter {
         box2DActorFactory = new Box2DActorFactory(world, gameStage, controllerBuffer);
         ActorFactory.setFactory(box2DActorFactory);
 
-        final float scaling = 1.2f;
+        createPlayer();
 
+        gameState = WAITING;
+
+        createWorldBorders();
+
+        waveController.initNextLevel();
+    }
+
+    /**
+     * Creates the player
+     */
+    private void createPlayer() {
         // Add player
         ActorFactory.get().buildPlayer(Sprites.PLAYER,
                 new Vector2f(WIDTH_METERS * scaling / 2, HEIGHT_METERS * scaling / 2));
 
-        // Add some enemies
-        for (int i = 0; i < 5; i++) {
-            float xx = (float) (Math.random() * WIDTH_METERS * scaling);
-            float yy = (float) (Math.random() * HEIGHT_METERS * scaling);
-            try {
-                ActorFactory.get().buildEnemy(Sprites.ENEMY, new Vector2f(xx, yy), "inventoryblueprint/playerStartInventory.xml");
-            } catch (Exception e) {
-                e.printStackTrace();
+    }
+
+
+
+    /**
+     * Checks if any enemies are alive
+     * @return true if at least one enemy is alive
+     */
+    private boolean enemiesAlive() {
+        for (AbstractController a : controllers) {
+            if (a instanceof AIController) {
+                return true;
             }
         }
-        createWorldBorders();
-
+        return false;
     }
 
     /**
@@ -183,14 +207,28 @@ public class PoTDA extends ApplicationAdapter {
             case RUNNING:
                 // Update the model
                 updateGame();
-
-                // Update the physics world
-                doPhysicsStep(Gdx.graphics.getDeltaTime());
-
-                // Draw the game
-                gameView.render();
-                hudView.renderRunning();
-                hudStage.draw();
+                updateWorld();
+                if (!enemiesAlive()) {
+                    if (waveController.finishedWaves()) {
+                        // TODO Go to inventory
+                        System.out.println("To inventory");
+                        waveController.initNextLevel();
+                        gameState = WAITING;
+                    } else {
+                        gameState = WAITING;
+                        waveController.setStartTime(System.currentTimeMillis());
+                    }
+                }
+                break;
+            case WAITING:
+                updateGame();
+                updateWorld();
+                // Check if user has waited 5 seconds
+                if (waveController.waited()) {
+                    gameState = RUNNING;
+                    // Start next wave
+                    waveController.startWave();
+                }
                 break;
             case PAUSED:
                 // Draw the pause menu
@@ -251,6 +289,22 @@ public class PoTDA extends ApplicationAdapter {
     }
 
     /**
+     * Updates physics, health bar and renders views
+     */
+    private void updateWorld() {
+        // Update the physics world
+        doPhysicsStep(Gdx.graphics.getDeltaTime());
+
+        // Set the health bar to player's current health
+        hudView.setHealthbar(Character.player.getCurrentHealth());
+
+        // Draw the game
+        gameView.render();
+        hudView.renderRunning();
+        hudStage.draw();
+    }
+
+    /**
      * Removes actors that have flagged themselvs as dead
      */
     private void bringOutYourDead() {
@@ -266,15 +320,6 @@ public class PoTDA extends ApplicationAdapter {
             controllers.removeAll(controllerRemovalBuffer);
             controllerRemovalBuffer.clear();
         }
-    }
-
-    /**
-     * Returns the game state
-     *
-     * @return 1=running, 2=paused, 3=options
-     */
-    public static GameState getGameState() {
-        return gameState;
     }
 
     /**
@@ -360,18 +405,29 @@ public class PoTDA extends ApplicationAdapter {
         }
     }
 
+    /**
+     * Plays music
+     */
     private void startMusic() {
         soundsAndMusic.play();
     }
 
     @Override
     public void dispose() {
-        hudView.dispose();
         hudStage.dispose();
-        world.dispose();
-        soundsAndMusic.dispose();
-        gameView.dispose();
         mainMenuView.dispose();
+        if (hudView != null) {
+            hudView.dispose();
+        }
+        if (world != null) {
+            world.dispose();
+        }
+        if (soundsAndMusic != null) {
+            soundsAndMusic.dispose();
+        }
+        if (gameView != null) {
+            gameView.dispose();
+        }
     }
 
     private void prepareForRemoval(AbstractController controller) {
