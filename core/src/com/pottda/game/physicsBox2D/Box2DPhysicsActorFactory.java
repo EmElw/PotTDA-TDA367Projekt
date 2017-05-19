@@ -79,8 +79,9 @@ public class Box2DPhysicsActorFactory implements PhysicsActorFactory{
         }
         
         // Make projectile's body
-        Body body = world.createBody(characterBodyDef);
-        body.createFixture(characterFixtureDef);
+        Body body = world.createBody(projectileBodyDef);
+        body.createFixture(projectileFixtureDef);
+        body.createFixture(projectileSensorFixtureDef);
 
         // Set body's user data, used in collision handling
         body.setUserData(projectile);
