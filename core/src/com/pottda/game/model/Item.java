@@ -10,6 +10,10 @@ import java.util.Map;
  * A basic Item, heavily modifiable based on properties
  */
 public abstract class Item extends ProjectileListenerAdapter {
+    public Item() {
+        init();
+    }
+
     /**
      * An AttackItem is a starting point and cannot be chained into
      */
