@@ -26,7 +26,6 @@ import com.pottda.game.view.*;
 import javax.vecmath.Vector2f;
 import javax.xml.parsers.ParserConfigurationException;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -156,12 +155,12 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
      */
     private void createPlayer() {
         // Add player
-//        ActorFactory.get().buildPlayer(com.pottda.game.model.Sprites.PLAYER,
+//        ActorFactory.get().buildPlayer(com.pottda.game.model.Sprites.NONE,
 //                new Vector2f(WIDTH_METERS * scaling / 2, HEIGHT_METERS * scaling / 2));
         new CharacterBuilder().
                 setTeam(Character.PLAYER_TEAM).
                 setInventoryFromFile("playerStartInventory.xml").
-                setBehaviour(ModelActor.Behaviour.PLAYER).
+                setBehaviour(ModelActor.Behaviour.NONE).
                 setPosition(new Vector2f(WIDTH_METERS * scaling / 2, HEIGHT_METERS * scaling / 2)).
                 setSprite(Sprites.PLAYER).
                 create();

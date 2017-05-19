@@ -20,7 +20,7 @@ public class ActorView extends Image {
      *
      * @param texture the texture to set as image
      */
-    public ActorView(Texture texture) {
+    private ActorView(Texture texture) {
         super(new TextureRegionDrawable(new TextureRegion(texture)));
         // set the rotation point to middle of image
         this.setOrigin((texture.getWidth() * PoTDA.WIDTH_RATIO) / 2, (texture.getHeight() * PoTDA.HEIGHT_RATIO) / 2);
@@ -33,9 +33,11 @@ public class ActorView extends Image {
      * @param texture the texture to set as image
      * @param size    vector with width and height of image
      */
-    public ActorView(Texture texture, Vector2f size) {
+    private ActorView(Texture texture, Vector2f size) {
         super(new TextureRegionDrawable(new TextureRegion(texture)));
-        this.setSize(size.x, size.y);
+        this.setOrigin((texture.getWidth() * PoTDA.WIDTH_RATIO) / 2, (texture.getHeight() * PoTDA.HEIGHT_RATIO) / 2);
+        this.setSize(size.x / PoTDA.WIDTH_RATIO, size.y / PoTDA.HEIGHT_RATIO); // Resize to make in meters instead of pixels
+
     }
 
     public ActorView(Sprites sprite) {

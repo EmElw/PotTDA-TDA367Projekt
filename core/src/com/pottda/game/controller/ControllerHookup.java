@@ -1,10 +1,8 @@
 package com.pottda.game.controller;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
-import com.pottda.game.model.ModelActor;
-import com.pottda.game.model.NewModelListener;
-import com.pottda.game.model.Obstacle;
 import com.pottda.game.view.ActorView;
 
 import javax.vecmath.Vector2f;
@@ -40,16 +38,21 @@ public class ControllerHookup implements NewModelListener {
 
         // Determine what kind of controller
         AbstractController controller = null;
-        if (m instanceof Obstacle) {
-            view = new ActorView(m.sprite,((Vector2f)((Obstacle) m).size));
-            controller = new ObstacleController(m, view);
+        if (m instanceof Projectile) {
+            view = new ActorView(m.sprite);
+            controller = new ProjectileController(m, view);
         } else if (m instanceof Character) {
-            view  = new ActorView(m.sprite);
+            view = new ActorView(m.sprite);
             stage.addActor(view);
-            if (m.team == 0) {
-                controller = createController(m, view);
+            if (m.team == Character.PLAYER_TEAM) {
+                controller = createInputController(m, view);
 
+            } else if (m.team == Character.ENEMY_TEAM) {
+                controller = createController(m, view);
             }
+        } else if (m instanceof Obstacle) {
+            view = new ActorView(m.sprite, ((Vector2f) ((Obstacle) m).size));
+            controller = new ObstacleController(m, view);
         }
         if (controller != null) {
             notifyListeners(controller);
@@ -64,8 +67,8 @@ public class ControllerHookup implements NewModelListener {
 
     private AbstractController createController(ModelActor m, ActorView view) {
         switch (m.behaviour) {
-            case PLAYER:
-                return createInputController(m, view);
+            case NONE:
+                break;
             case DUMB:
                 return new DumbAIController(m, view);
         }

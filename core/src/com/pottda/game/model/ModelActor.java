@@ -77,7 +77,7 @@ public abstract class ModelActor {
     }
 
     public enum Behaviour {
-        PLAYER,
+        NONE,
         DUMB
     }
 }

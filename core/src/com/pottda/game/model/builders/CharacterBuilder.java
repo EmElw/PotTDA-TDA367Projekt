@@ -20,6 +20,7 @@ public class CharacterBuilder extends AbstractModelBuilder implements ICharacter
             Character.player = character;
         }
         character.inventory = inventory;
+        inventory.compile();
 
         character.setPhysicsActor(physiscActorFactory.getCharacterPhysicsActor(character));
 
