@@ -2,6 +2,7 @@ package com.pottda.game.model.builders;
 
 import com.pottda.game.model.Character;
 import com.pottda.game.model.Inventory;
+import com.pottda.game.model.ModelActor;
 
 
 /**
@@ -15,4 +16,6 @@ public interface ICharacterBuilder extends IModelBuilder {
     ICharacterBuilder setInventory(Inventory inv);
 
     ICharacterBuilder setInventoryFromFile(String xmlFilePath);
+
+    ICharacterBuilder setBehaviour(ModelActor.Behaviour behaviour);
 }

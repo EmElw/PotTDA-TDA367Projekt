@@ -12,10 +12,11 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.*;
-import com.pottda.game.model.WaveController;
-import com.pottda.game.model.ActorFactory;
+import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
 import com.pottda.game.model.builders.AbstractModelBuilder;
+import com.pottda.game.model.builders.CharacterBuilder;
+import com.pottda.game.model.builders.ObstacleBuilder;
 import com.pottda.game.physicsBox2D.Box2DPhysicsActorFactory;
 import com.pottda.game.physicsBox2D.CollisionListener;
 import com.pottda.game.view.*;
@@ -27,7 +28,7 @@ import java.util.*;
 import static com.pottda.game.PoTDA.GameState.*;
 import static com.pottda.game.controller.ControllerOptions.ControllerMode.*;
 
-public class PoTDA extends ApplicationAdapter implements NewControllerListener{
+public class PoTDA extends ApplicationAdapter implements NewControllerListener {
     private Stage hudStage;
     private Stage joystickStage;
     private Stage gameStage;
@@ -148,15 +149,21 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener{
      */
     private void createPlayer() {
         // Add player
-        ActorFactory.get().buildPlayer(com.pottda.game.model.Sprites.PLAYER,
-                new Vector2f(WIDTH_METERS * scaling / 2, HEIGHT_METERS * scaling / 2));
+//        ActorFactory.get().buildPlayer(com.pottda.game.model.Sprites.PLAYER,
+//                new Vector2f(WIDTH_METERS * scaling / 2, HEIGHT_METERS * scaling / 2));
+        new CharacterBuilder().
+                setTeam(Character.PLAYER_TEAM).
+                setInventoryFromFile("inventoryblueprint/playerStartInventory.xml").
+                setBehaviour(ModelActor.Behaviour.PLAYER).
+                setPosition(new Vector2f(WIDTH_METERS * scaling / 2, HEIGHT_METERS * scaling / 2)).
+                setSprite(Sprites.PLAYER).
+                create();
 
     }
 
-
-
     /**
      * Checks if any enemies are alive
+     *
      * @return true if at least one enemy is alive
      */
     private boolean enemiesAlive() {
@@ -172,22 +179,42 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener{
      * Creates four obstacles around the playing area
      */
     private void createWorldBorders() {
-        final float border_thickness = 25f;
+        final float border_thickness = 0.25f;
         // Scale the area bigger or smaller
         final float area_scaling = 1.2f;
         final float right_border_extra = 0.78f;
         // Bottom
-        controllers.add(ActorFactory.get().buildObstacle(com.pottda.game.model.Sprites.BORDER,
-                new Vector2f(0, 0), new Vector2f(WIDTH_METERS * area_scaling, border_thickness * HEIGHT_RATIO), true));
+//        controllers.add(ActorFactory.get().buildObstacle(com.pottda.game.model.Sprites.BORDER,
+//                new Vector2f(0, 0), new Vector2f(WIDTH_METERS * area_scaling, border_thickness * HEIGHT_RATIO), true));
+        new ObstacleBuilder().
+                setSize(WIDTH_METERS, border_thickness).
+                setPosition(new Vector2f(WIDTH_METERS / 2, -border_thickness / 2)).
+                setSprite(Sprites.BORDER).
+                create();
         // Left
-        controllers.add(ActorFactory.get().buildObstacle(com.pottda.game.model.Sprites.BORDER,
-                new Vector2f(0, 0), new Vector2f(border_thickness * WIDTH_RATIO, HEIGHT_METERS * area_scaling), true));
+//        controllers.add(ActorFactory.get().buildObstacle(com.pottda.game.model.Sprites.BORDER,
+//                new Vector2f(0, 0), new Vector2f(border_thickness * WIDTH_RATIO, HEIGHT_METERS * area_scaling), true));
+        new ObstacleBuilder().
+                setSize(border_thickness, HEIGHT_METERS).
+                setPosition(new Vector2f(-border_thickness / 2, HEIGHT_METERS / 2)).
+                setSprite(Sprites.BORDER).
+                create();
         // Top
-        controllers.add(ActorFactory.get().buildObstacle(com.pottda.game.model.Sprites.BORDER,
-                new Vector2f(0, HEIGHT_METERS * area_scaling), new Vector2f(WIDTH_METERS * area_scaling, border_thickness * HEIGHT_RATIO), true));
+//        controllers.add(ActorFactory.get().buildObstacle(com.pottda.game.model.Sprites.BORDER,
+//                new Vector2f(0, HEIGHT_METERS * area_scaling), new Vector2f(WIDTH_METERS * area_scaling, border_thickness * HEIGHT_RATIO), true));
+        new ObstacleBuilder().
+                setSize(WIDTH_METERS, border_thickness).
+                setPosition(new Vector2f(WIDTH_METERS / 2, border_thickness / 2 + HEIGHT_METERS)).
+                setSprite(Sprites.BORDER).
+                create();
         // Right
-        controllers.add(ActorFactory.get().buildObstacle(com.pottda.game.model.Sprites.BORDER,
-                new Vector2f(WIDTH_METERS * area_scaling, 0), new Vector2f(border_thickness * WIDTH_RATIO, (HEIGHT_METERS + right_border_extra) * area_scaling), true));
+//        controllers.add(ActorFactory.get().buildObstacle(com.pottda.game.model.Sprites.BORDER,
+//                new Vector2f(WIDTH_METERS * area_scaling, 0), new Vector2f(border_thickness * WIDTH_RATIO, (HEIGHT_METERS + right_border_extra) * area_scaling), true));
+        new ObstacleBuilder().
+                setSize(border_thickness, HEIGHT_METERS).
+                setPosition(new Vector2f(border_thickness / 2 + WIDTH_METERS, HEIGHT_METERS / 2)).
+                setSprite(Sprites.BORDER).
+                create();
     }
 
     @Override

@@ -10,15 +10,21 @@ import com.pottda.game.model.ModelActor;
 public class CharacterBuilder extends AbstractModelBuilder implements ICharacterBuilder {
     private int team = 0;
     private Inventory inventory;
+    private ModelActor.Behaviour behaviour = null;
 
     @Override
     public ModelActor create() {
         Character character = new Character();
 
         character.team = team;
+        if (team == Character.PLAYER_TEAM) {
+            Character.player = character;
+        }
         character.inventory = inventory;
 
         character.setPhysicsActor(physiscActorFactory.getCharacterPhysicsActor(character));
+
+        character.behaviour = behaviour;
 
         setCommonAndNotify(character);
         return character;
@@ -41,6 +47,12 @@ public class CharacterBuilder extends AbstractModelBuilder implements ICharacter
     @Override
     public ICharacterBuilder setInventoryFromFile(String xmlFilePath) {
         // TODO
+        return this;
+    }
+
+    @Override
+    public ICharacterBuilder setBehaviour(ModelActor.Behaviour behaviour) {
+        this.behaviour = behaviour;
         return this;
     }
 

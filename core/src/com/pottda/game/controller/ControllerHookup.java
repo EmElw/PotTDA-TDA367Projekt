@@ -7,6 +7,7 @@ import com.pottda.game.model.NewModelListener;
 import com.pottda.game.model.Obstacle;
 import com.pottda.game.view.ActorView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ public class ControllerHookup implements NewModelListener {
         this.stage = stage;
     }
 
-    private List<NewControllerListener> listenerList;
+    private List<NewControllerListener> listenerList = new ArrayList<NewControllerListener>();
 
     public void addListener(NewControllerListener ncl) {
         listenerList.add(ncl);
@@ -38,7 +39,7 @@ public class ControllerHookup implements NewModelListener {
         stage.addActor(view);
 
         // Determine what kind of controller
-        AbstractController controller;
+        AbstractController controller = null;
         if (m instanceof Obstacle) {
             controller = new ObstacleController(m, view);
         } else if (m instanceof Character) {
@@ -46,6 +47,9 @@ public class ControllerHookup implements NewModelListener {
                 controller = createController(m, view);
 
             }
+        }
+        if (controller != null) {
+            notifyListeners(controller);
         }
     }
 
