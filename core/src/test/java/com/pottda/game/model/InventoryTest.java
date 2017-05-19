@@ -3,6 +3,7 @@ package com.pottda.game.model;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.XmlReader;
 import com.pottda.game.controller.*;
+import com.pottda.game.model.builders.AbstractModelBuilder;
 import com.pottda.game.model.items.ChainAttack;
 import com.pottda.game.model.items.MultiShot;
 import com.pottda.game.model.items.SimpleCannon;
@@ -13,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 
+import javax.vecmath.Tuple2f;
 import javax.vecmath.Vector2f;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -33,55 +35,43 @@ public class InventoryTest {
     @Before
     public void setUp() {
 
+        AbstractModelBuilder.setPhysiscActorFactory(new PhysicsActorFactory() {
 
-        ActorFactory.setFactory(new ActorFactory() {
+            PhysicsActor pa = new PhysicsActor() {
+                @Override
+                public Vector2f getPosition() {
+                    return null;
+                }
+
+                @Override
+                public void giveMovementVector(Vector2f movementVector) {
+
+                }
+
+                @Override
+                public void destroyBody() {
+
+                }
+
+                @Override
+                public void setPosition(Vector2f position) {
+
+                }
+            };
+
             @Override
-            public AbstractController buildEnemy(Sprites sprite, Vector2f position, String xmlFilePath) {
-                return null;
+            public PhysicsActor getProjectilePhysicsActor(Projectile projectile) {
+                return pa;
             }
 
             @Override
-            public AbstractController buildPlayer(Sprites sprite, Vector2f position) {
-                return null;
+            public PhysicsActor getCharacterPhysicsActor(Character character) {
+                return pa;
             }
 
             @Override
-            public AbstractController buildProjectile(Sprites sprite, int team, boolean bounces, boolean penetrates, Vector2f position) {
-                PhysicsActor pa = new PhysicsActor() {
-                    @Override
-                    public Vector2f getPosition() {
-                        return new Vector2f();
-                    }
-
-                    @Override
-                    public void giveMovementVector(Vector2f movementVector) {
-
-                    }
-
-                    @Override
-                    public void destroyBody() {
-
-                    }
-
-                    @Override
-                    public void setPosition(Vector2f position) {
-
-                    }
-                };
-
-                Projectile p = new Projectile(0, new ArrayList<ProjectileListener>());
-
-                return new AbstractController(p, null) {
-                    @Override
-                    protected void setInputVectors() {
-
-                    }
-                };
-            }
-
-            @Override
-            public AbstractController buildObstacle(Sprites sprite, Vector2f position, Vector2f size, boolean isBorder) {
-                return null;
+            public PhysicsActor getObstaclePhysicsActor(Obstacle obstacle, Tuple2f dimensions) {
+                return pa;
             }
         });
 
