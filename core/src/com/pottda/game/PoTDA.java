@@ -87,7 +87,7 @@ public class PoTDA extends ApplicationAdapter {
     private static final float scaling = 1.2f;
 
     private long startWaitGameOver = 0;
-    private long WAITING_TIME_GAME_OVER_SECONDS = 3;
+    private static final long WAITING_TIME_GAME_OVER_SECONDS = 3;
 
     @Override
     public void create() {
