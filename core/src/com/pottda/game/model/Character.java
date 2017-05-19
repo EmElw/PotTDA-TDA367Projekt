@@ -1,6 +1,7 @@
 package com.pottda.game.model;
 
 import javax.vecmath.Vector2f;
+
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -20,10 +21,11 @@ public class Character extends ModelActor {
     /**
      * Current health of a character
      */
-    public int currentHealth;
+    int currentHealth;
     private static Map<Stat, Double> stats;
     private Vector2f movementVector;
 
+    public static Character player;
 
     // -- Constructors --
 
@@ -68,9 +70,6 @@ public class Character extends ModelActor {
 
     @Override
     public float getAngle() {
-//        if (team == ENEMY_TEAM) { // Fix rotation for enemies so they rotate towards player
-//            return 0 - super.getAngle();
-//        }
         return super.getAngle();
     }
 
@@ -79,24 +78,18 @@ public class Character extends ModelActor {
      *
      * @param incomingDamage Damage dealt to this character
      */
-    public void takeDamage(int incomingDamage) {
+    void takeDamage(int incomingDamage) {
         currentHealth -= incomingDamage;
         if (currentHealth <= 0) {
             shouldBeRemoved = true;
         }
     }
 
-//    private void setProjectileMovement(List<Projectile> projectiles, Vector2f attack) {
-//        Vector2f temp;
-//        for (int i = 0, n = projectiles.size(); i < n; i++) {
-//            temp = rotateVector(attack, PROJECTILE_ANGLE * ((n / 2f) - (float) i));
-//            temp.normalize();
-//            projectiles.get(i).giveInput(temp, null);
-//        }
-//    }
-//
-//    private Vector2f rotateVector(Vector2f vector, float rad) {
-//        return new Vector2f(vector.x * (float) Math.cos((double) rad),
-//                vector.y * (float) Math.sin((double) rad));
-//    }
+    /**
+     * Returns the current health of the actor
+     * @return the health of the actor
+     */
+    public int getCurrentHealth() {
+        return currentHealth;
+    }
 }
