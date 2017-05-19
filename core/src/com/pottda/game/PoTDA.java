@@ -11,13 +11,12 @@ import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.pottda.game.controller.AIController;
-import com.pottda.game.controller.AbstractController;
-import com.pottda.game.controller.Box2DActorFactory;
-import com.pottda.game.controller.ControllerOptions;
+import com.pottda.game.controller.*;
 import com.pottda.game.model.WaveController;
 import com.pottda.game.model.ActorFactory;
 import com.pottda.game.model.Character;
+import com.pottda.game.model.builders.AbstractModelBuilder;
+import com.pottda.game.physicsBox2D.Box2DPhysicsActorFactory;
 import com.pottda.game.physicsBox2D.CollisionListener;
 import com.pottda.game.view.*;
 
@@ -28,7 +27,7 @@ import java.util.*;
 import static com.pottda.game.PoTDA.GameState.*;
 import static com.pottda.game.controller.ControllerOptions.ControllerMode.*;
 
-public class PoTDA extends ApplicationAdapter {
+public class PoTDA extends ApplicationAdapter implements NewControllerListener{
     private Stage hudStage;
     private Stage joystickStage;
     private Stage gameStage;
@@ -58,6 +57,11 @@ public class PoTDA extends ApplicationAdapter {
     private MainMenuView mainMenuView;
 
     private WaveController waveController;
+
+    @Override
+    public void onNewController(AbstractController c) {
+        controllerBuffer.add(c);
+    }
 
 
     public enum GameState {
@@ -122,9 +126,13 @@ public class PoTDA extends ApplicationAdapter {
         soundsAndMusic = new SoundsAndMusic();
         startMusic();
 
-        // Create and set ActorFactory implementation
-        box2DActorFactory = new Box2DActorFactory(world, gameStage, controllerBuffer);
-        ActorFactory.setFactory(box2DActorFactory);
+        // Make a ControllerHookup and add PoTDA as a listener
+        ControllerHookup controllerHookup = new ControllerHookup(gameStage);
+        controllerHookup.addListener(this);
+
+        // Set up ModelBuilder with PhysicsActorFactory and ControllerHookup
+        AbstractModelBuilder.setPhysiscActorFactory(new Box2DPhysicsActorFactory(world));
+        AbstractModelBuilder.addListener(controllerHookup);
 
         createPlayer();
 
