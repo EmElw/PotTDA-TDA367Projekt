@@ -15,10 +15,9 @@ import com.pottda.game.controller.AIController;
 import com.pottda.game.controller.AbstractController;
 import com.pottda.game.controller.Box2DActorFactory;
 import com.pottda.game.controller.ControllerOptions;
-import com.pottda.game.controller.WaveController;
+import com.pottda.game.model.WaveController;
 import com.pottda.game.model.ActorFactory;
 import com.pottda.game.model.Character;
-import com.pottda.game.model.*;
 import com.pottda.game.physicsBox2D.CollisionListener;
 import com.pottda.game.view.*;
 

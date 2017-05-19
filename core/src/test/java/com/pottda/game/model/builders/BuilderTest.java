@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.vecmath.Tuple2f;
+import javax.vecmath.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,22 +25,44 @@ public class BuilderTest {
     public void setUp() {
         // Set concrete PhysicsActorFactory implementation
         AbstractModelBuilder.setPhysiscActorFactory(new PhysicsActorFactory() {
+
+            private PhysicsActor pa = new PhysicsActor() {
+
+                @Override
+                public Vector2f getPosition() {
+                    return null;
+                }
+
+                @Override
+                public void giveMovementVector(Vector2f movementVector) {
+
+                }
+
+                @Override
+                public void destroyBody() {
+
+                }
+
+                @Override
+                public void setPosition(Vector2f position) {
+
+                }
+            };
+
             @Override
             public PhysicsActor getProjectilePhysicsActor(Projectile projectile) {
-                return null;
+                return pa;
             }
 
             @Override
             public PhysicsActor getCharacterPhysicsActor(Character character) {
-                return null;
+                return pa;
             }
 
             @Override
             public PhysicsActor getObstaclePhysicsActor(Obstacle obstacle, Tuple2f dimensions) {
-
-                return null;
+                return pa;
             }
-
         });
 
         // Add listeners

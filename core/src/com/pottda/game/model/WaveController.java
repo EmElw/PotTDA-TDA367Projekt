@@ -1,4 +1,4 @@
-package com.pottda.game.controller;
+package com.pottda.game.model;
 
 import com.pottda.game.model.ActorFactory;
 import com.pottda.game.model.Levels;
