@@ -2,8 +2,11 @@ package com.pottda.game.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Scaling;
@@ -100,6 +103,9 @@ public class InventoryView {
         // Create a table to hold name + image
         Table pancakeGroupTable = new Table();
         itemImageTexture = new Texture(Gdx.files.internal("pancake1.jpg"));
+
+        SpriteBatch batch = new SpriteBatch();
+        FrameBuffer fbo = new FrameBuffer(Pixmap.Format.RGBA8888, 125, 125, false);
 
         Label pancakeName = new Label("Pancake", mySkin);
         Image pancakeImage = new Image(itemImageTexture);
