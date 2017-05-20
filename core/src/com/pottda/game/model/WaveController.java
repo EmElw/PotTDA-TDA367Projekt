@@ -1,14 +1,11 @@
-package com.pottda.game.controller;
+package com.pottda.game.model;
 
-import com.pottda.game.model.ActorFactory;
 import com.pottda.game.model.Levels;
-import com.pottda.game.view.Sprites;
+import com.pottda.game.model.Sprites;
+import com.pottda.game.model.builders.CharacterBuilder;
 
 import javax.vecmath.Vector2f;
-
-/**
- * Created by Rikard Teodorsson on 2017-05-18.
- */
+import java.lang.*;
 
 public class WaveController {
     private final float WIDTH_METERS;
@@ -19,9 +16,10 @@ public class WaveController {
 
     /**
      * Creates the controller
-     * @param widthMeters the game stage width
+     *
+     * @param widthMeters  the game stage width
      * @param heightMeters the game stage height
-     * @param scale scale with this value
+     * @param scale        scale with this value
      */
     public WaveController(float widthMeters, float heightMeters, float scale) {
         WIDTH_METERS = widthMeters;
@@ -32,6 +30,7 @@ public class WaveController {
 
     /**
      * Checks if all waves are completed
+     *
      * @return true if all waves in a level is completed
      */
     public boolean finishedWaves() {
@@ -47,6 +46,7 @@ public class WaveController {
 
     /**
      * Sets the start time of the timer that checks waiting time
+     *
      * @param startTime current time
      */
     public void setStartTime(long startTime) {
@@ -55,6 +55,7 @@ public class WaveController {
 
     /**
      * Checks if the user has waited at least five seconds
+     *
      * @return true if waiting time is more than five seconds
      */
     public boolean waited() {
@@ -71,15 +72,23 @@ public class WaveController {
 
     /**
      * Spawns more enemies in the game
+     *
      * @param nrOfEnemies the number of enemies to spawn
      */
     private void spawnEnemies(int nrOfEnemies) {
         // Add some enemies
         for (int i = 0; i < nrOfEnemies; i++) {
-            float xx = (float) (Math.random() * WIDTH_METERS * scaling);
-            float yy = (float) (Math.random() * HEIGHT_METERS * scaling);
+            float xx = (float) (Math.random() * WIDTH_METERS);
+            float yy = (float) (Math.random() * HEIGHT_METERS);
             try {
-                ActorFactory.get().buildEnemy(Sprites.ENEMY, new Vector2f(xx, yy), "inventoryblueprint/playerStartInventory.xml");
+//                ActorFactory.get().buildEnemy(Sprites.ENEMY, new Vector2f(xx, yy), "inventoryblueprint/playerStartInventory.xml");
+                new CharacterBuilder().
+                        setTeam(Character.ENEMY_TEAM).
+                        setInventoryFromFile("playerStartInventory.xml").
+                        setBehaviour(Character.Behaviour.DUMB).
+                        setPosition(new Vector2f(xx, yy)).
+                        setSprite(Sprites.ENEMY).
+                        create();
             } catch (Exception e) {
                 e.printStackTrace();
             }

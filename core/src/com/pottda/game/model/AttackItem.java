@@ -1,6 +1,6 @@
 package com.pottda.game.model;
 
-import com.pottda.game.view.Sprites;
+import com.pottda.game.model.builders.ProjectileBuilder;
 
 import javax.vecmath.Vector2f;
 import java.util.ArrayList;
@@ -26,7 +26,9 @@ public abstract class AttackItem extends Item {
     private long lastAttackTime;
 
     protected boolean bounces;
-    protected boolean penetrates;
+    protected boolean piercing;
+
+    private Vector2f temporaryVector;
 
     @Override
     public void init() {
@@ -34,7 +36,7 @@ public abstract class AttackItem extends Item {
         cooldown = 100;
         lastAttackTime = 0;
         bounces = false;
-        penetrates = false;
+        piercing = false;
         isPrimaryAttack = false;
         isProjectileModifier = false;
         isSecondaryAttack = false;
@@ -42,11 +44,11 @@ public abstract class AttackItem extends Item {
     }
 
     /**
-     * @param direction
+     * @param velocity
      * @param origin
      * @return
      */
-    public List<ProjectileListener> attack(Vector2f direction, Vector2f origin, int team) {
+    public List<ProjectileListener> attack(Vector2f velocity, Vector2f origin, int team) {
         List<ProjectileListener> listeners = new ArrayList<ProjectileListener>();
 
         Item i = this;
@@ -58,24 +60,23 @@ public abstract class AttackItem extends Item {
             }
         }
 
-        direction.scale(CHARACTER_RADIUS);
-        origin.add(direction);
-        direction.normalize();
+        temporaryVector = new Vector2f(velocity);
+        temporaryVector.normalize();
+        temporaryVector.scale(CHARACTER_RADIUS);
+        origin.add(temporaryVector);
 
-        Projectile proj = (Projectile) ActorFactory.get().buildProjectile(
-                Sprites.PROJECTILE1,
-                team,
-                bounces,
-                penetrates,
-                origin).getModel();
+        Projectile proj = (Projectile) new ProjectileBuilder().
+                setTeam(team).
+                setBouncy(bounces).
+                setPiercing(piercing).
+                setDamage(damage).
+                setVelocity(velocity).
+                setListeners(listeners).
+                setPosition(origin).
+                setSprite(Sprites.PROJECTILE1).
+                create();
 
-        proj.damage = damage;
-        proj.isPiercing = penetrates;
-        proj.isBouncy = bounces;
-
-        direction.normalize();
-        proj.setListeners(listeners);
-        proj.giveInput(direction, null);
+        // Call the event
         proj.onAttack();
 
         lastAttackTime = System.currentTimeMillis();

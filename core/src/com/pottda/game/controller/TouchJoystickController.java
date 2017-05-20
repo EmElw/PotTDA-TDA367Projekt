@@ -12,7 +12,7 @@ import com.pottda.game.view.ActorView;
 public class TouchJoystickController extends AbstractController {
     private final JoysticksView joysticksView;
 
-    TouchJoystickController(ModelActor modelActor, ActorView actorView, Stage stage) {
+    public TouchJoystickController(ModelActor modelActor, ActorView actorView, Stage stage) {
         super(modelActor, actorView);
         joysticksView = new JoysticksView(stage);
     }
