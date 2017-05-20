@@ -15,9 +15,11 @@ public class GameView {
         this.gameStage = gameStage;
     }
 
-    public void render() {
-        // center camera to player each frame
-        gameStage.getCamera().position.set(gameStage.getActors().get(0).getX(), gameStage.getActors().get(0).getY(), 0);
+    public void render(boolean moveCamera) {
+        if (moveCamera) {
+            // center camera to player each frame
+            gameStage.getCamera().position.set(gameStage.getActors().get(0).getX(), gameStage.getActors().get(0).getY(), 0);
+        }
 
         // Update camera position before drawing stage to prevent shaking
         gameStage.draw();

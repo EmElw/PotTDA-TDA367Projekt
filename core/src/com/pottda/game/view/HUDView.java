@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class HUDView {
 
+    private Texture texture;
     private final Stage stage;
 
     private Image healthbar;
@@ -29,6 +30,7 @@ public class HUDView {
         create();
     }
 
+    @Override
     public void create() {
         // Add health bar
         addToStage(Sprites.HEALTHBAR, imageEnum.HEALTHBAR, 10, stage.getHeight() - 30);
@@ -82,6 +84,10 @@ public class HUDView {
      */
     public void setHealthbar(float health) {
         healthbarRed.setWidth(health);
+    }
+
+    public float getHealth() {
+        return healthbarRed.getWidth();
     }
 
 }

@@ -1,7 +1,6 @@
 package com.pottda.game.model.items;
 
 import com.pottda.game.model.AttackItem;
-import com.pottda.game.model.Item;
 
 import javax.vecmath.Point2i;
 
@@ -10,7 +9,7 @@ public class PenetratingCannon extends AttackItem{
     protected void initDynamic() {
         isPrimaryAttack = true;
 
-        penetrates = true;
+        piercing = true;
 
         /*
         Shaped like

@@ -6,12 +6,12 @@ import java.util.List;
 
 
 public class Projectile extends ModelActor {
-    int damage;
+    public int damage;
     public boolean isBouncy = false;
     public boolean isPiercing = false;
     public final long timeOfConstructionMS;
-    public final long lifeTimeMS;
-    static final int DEFAULT_PROJECTILE_LIFETIME_MS = 10000;
+    public long lifeTimeMS;
+    public static final int DEFAULT_PROJECTILE_LIFETIME_MS = 10000;
     /**
      * Listeners that care about various game-oriented events
      */
@@ -75,17 +75,15 @@ public class Projectile extends ModelActor {
     }
 
 
-    public Projectile(PhysicsActor physicsActor, int damage, List<ProjectileListener> listeners, Long lifeTimeMS) {
-        super(physicsActor);
+    public Projectile(int damage, List<ProjectileListener> listeners, Long lifeTimeMS) {
         this.damage = damage;
-        this.listeners = listeners;
+        setListeners(listeners);
         timeOfConstructionMS = System.currentTimeMillis();
         this.lifeTimeMS = lifeTimeMS;
         //hasDamaged = new ArrayList<Character>();
     }
-    
-    public Projectile(PhysicsActor physicsActor, int damage, List<ProjectileListener> listeners) {
-        super(physicsActor);
+
+    public Projectile(int damage, List<ProjectileListener> listeners) {
         this.damage = damage;
         this.listeners = listeners;
         timeOfConstructionMS = System.currentTimeMillis();
@@ -99,7 +97,7 @@ public class Projectile extends ModelActor {
     }*/
     @Override
     public void giveInput(Vector2f movementVector, Vector2f attackVector) {
-        if(isDying()){
+        if (isDying()) {
             return;
         }
         if (movementVector.length() == 0) {
@@ -124,20 +122,20 @@ public class Projectile extends ModelActor {
                 listeners.get(i).onHit(this);
             }
         }
-        if(!isPiercing){
+        if (!isPiercing) {
             onCollision();
         }
     }
 
     public void onCollision() {
-        if(!isBouncy) {
+        if (!isBouncy) {
             shouldBeRemoved = true;
             onDestruction();
         }
     }
-    
-    private boolean isDying(){
-        if (System.currentTimeMillis() - timeOfConstructionMS > lifeTimeMS){
+
+    private boolean isDying() {
+        if (System.currentTimeMillis() - timeOfConstructionMS > lifeTimeMS) {
             shouldBeRemoved = true;
             onDestruction();
         }
