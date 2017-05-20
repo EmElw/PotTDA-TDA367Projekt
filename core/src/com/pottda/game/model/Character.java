@@ -88,6 +88,7 @@ public class Character extends ModelActor {
 
     /**
      * Returns the current health of the actor
+     *
      * @return the health of the actor
      */
     public int getCurrentHealth() {
