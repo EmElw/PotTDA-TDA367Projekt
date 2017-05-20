@@ -3,6 +3,7 @@ package com.pottda.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
@@ -10,25 +11,29 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.pottda.game.controller.AIController;
-import com.pottda.game.controller.AbstractController;
-import com.pottda.game.controller.Box2DActorFactory;
-import com.pottda.game.controller.ControllerOptions;
-import com.pottda.game.controller.WaveController;
-import com.pottda.game.model.ActorFactory;
+import com.pottda.game.controller.*;
+import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
+import com.pottda.game.model.Sprites;
+import com.pottda.game.model.builders.AbstractModelBuilder;
+import com.pottda.game.model.builders.CharacterBuilder;
+import com.pottda.game.model.builders.ObstacleBuilder;
+import com.pottda.game.physicsBox2D.Box2DPhysicsActorFactory;
 import com.pottda.game.physicsBox2D.CollisionListener;
 import com.pottda.game.view.*;
 
 import javax.vecmath.Vector2f;
+import javax.xml.parsers.ParserConfigurationException;
 
+import java.io.IOException;
 import java.util.*;
 
 import static com.pottda.game.PoTDA.GameState.*;
 import static com.pottda.game.controller.ControllerOptions.ControllerMode.*;
 
-public class PoTDA extends ApplicationAdapter {
+public class PoTDA extends ApplicationAdapter implements NewControllerListener {
     private Stage hudStage;
     private Stage joystickStage;
     private Stage gameStage;
@@ -55,11 +60,16 @@ public class PoTDA extends ApplicationAdapter {
     private HUDView hudView;
     private SoundsAndMusic soundsAndMusic;
     private GameView gameView;
-    private Box2DActorFactory box2DActorFactory;
+//    private Box2DActorFactory box2DActorFactory;
     private MainMenuView mainMenuView;
     private GameOverView gameOverView;
 
     private WaveController waveController;
+
+    @Override
+    public void onNewController(AbstractController c) {
+        controllerBuffer.add(c);
+    }
 
 
     public enum GameState {
@@ -130,9 +140,15 @@ public class PoTDA extends ApplicationAdapter {
         soundsAndMusic = new SoundsAndMusic();
         startMusic();
 
-        // Create and set ActorFactory implementation
-        box2DActorFactory = new Box2DActorFactory(world, gameStage, controllerBuffer);
-        ActorFactory.setFactory(box2DActorFactory);
+        generateInventoryBlueprints();
+
+        // Make a ControllerHookup and add PoTDA as a listener
+        ControllerHookup controllerHookup = new ControllerHookup(gameStage);
+        controllerHookup.addListener(this);
+
+        // Set up ModelBuilder with PhysicsActorFactory and ControllerHookup
+        AbstractModelBuilder.setPhysiscActorFactory(new Box2DPhysicsActorFactory(world));
+        AbstractModelBuilder.addListener(controllerHookup);
 
         createPlayer();
 
@@ -148,8 +164,15 @@ public class PoTDA extends ApplicationAdapter {
      */
     private void createPlayer() {
         // Add player
-        ActorFactory.get().buildPlayer(Sprites.PLAYER,
-                new Vector2f(WIDTH_METERS * scaling / 2, HEIGHT_METERS * scaling / 2));
+//        ActorFactory.get().buildPlayer(com.pottda.game.model.Sprites.NONE,
+//                new Vector2f(WIDTH_METERS * scaling / 2, HEIGHT_METERS * scaling / 2));
+        new CharacterBuilder().
+                setTeam(Character.PLAYER_TEAM).
+                setInventoryFromFile("playerStartInventory.xml").
+                setBehaviour(ModelActor.Behaviour.NONE).
+                setPosition(new Vector2f(WIDTH_METERS * scaling / 2, HEIGHT_METERS * scaling / 2)).
+                setSprite(Sprites.PLAYER).
+                create();
 
     }
 
@@ -180,22 +203,42 @@ public class PoTDA extends ApplicationAdapter {
      * Creates four obstacles around the playing area
      */
     private void createWorldBorders() {
-        final float border_thickness = 25f;
+        final float border_thickness = 0.25f;
         // Scale the area bigger or smaller
         final float area_scaling = 1.2f;
         final float right_border_extra = 0.78f;
         // Bottom
-        controllers.add(ActorFactory.get().buildObstacle(Sprites.BORDER,
-                new Vector2f(0, 0), new Vector2f(WIDTH_METERS * area_scaling, border_thickness * HEIGHT_RATIO), true));
+//        controllers.add(ActorFactory.get().buildObstacle(com.pottda.game.model.Sprites.BORDER,
+//                new Vector2f(0, 0), new Vector2f(WIDTH_METERS * area_scaling, border_thickness * HEIGHT_RATIO), true));
+        new ObstacleBuilder().
+                setSize(WIDTH_METERS, border_thickness).
+                setPosition(new Vector2f(WIDTH_METERS / 2, -border_thickness / 2)).
+                setSprite(Sprites.BORDER).
+                create();
         // Left
-        controllers.add(ActorFactory.get().buildObstacle(Sprites.BORDER,
-                new Vector2f(0, 0), new Vector2f(border_thickness * WIDTH_RATIO, HEIGHT_METERS * area_scaling), true));
+//        controllers.add(ActorFactory.get().buildObstacle(com.pottda.game.model.Sprites.BORDER,
+//                new Vector2f(0, 0), new Vector2f(border_thickness * WIDTH_RATIO, HEIGHT_METERS * area_scaling), true));
+        new ObstacleBuilder().
+                setSize(border_thickness, HEIGHT_METERS).
+                setPosition(new Vector2f(-border_thickness / 2, HEIGHT_METERS / 2)).
+                setSprite(Sprites.BORDER).
+                create();
         // Top
-        controllers.add(ActorFactory.get().buildObstacle(Sprites.BORDER,
-                new Vector2f(0, HEIGHT_METERS * area_scaling), new Vector2f(WIDTH_METERS * area_scaling, border_thickness * HEIGHT_RATIO), true));
+//        controllers.add(ActorFactory.get().buildObstacle(com.pottda.game.model.Sprites.BORDER,
+//                new Vector2f(0, HEIGHT_METERS * area_scaling), new Vector2f(WIDTH_METERS * area_scaling, border_thickness * HEIGHT_RATIO), true));
+        new ObstacleBuilder().
+                setSize(WIDTH_METERS, border_thickness).
+                setPosition(new Vector2f(WIDTH_METERS / 2, border_thickness / 2 + HEIGHT_METERS)).
+                setSprite(Sprites.BORDER).
+                create();
         // Right
-        controllers.add(ActorFactory.get().buildObstacle(Sprites.BORDER,
-                new Vector2f(WIDTH_METERS * area_scaling, 0), new Vector2f(border_thickness * WIDTH_RATIO, (HEIGHT_METERS + right_border_extra) * area_scaling), true));
+//        controllers.add(ActorFactory.get().buildObstacle(com.pottda.game.model.Sprites.BORDER,
+//                new Vector2f(WIDTH_METERS * area_scaling, 0), new Vector2f(border_thickness * WIDTH_RATIO, (HEIGHT_METERS + right_border_extra) * area_scaling), true));
+        new ObstacleBuilder().
+                setSize(border_thickness, HEIGHT_METERS).
+                setPosition(new Vector2f(border_thickness / 2 + WIDTH_METERS, HEIGHT_METERS / 2)).
+                setSprite(Sprites.BORDER).
+                create();
     }
 
     @Override
@@ -482,4 +525,61 @@ public class PoTDA extends ApplicationAdapter {
         controller.getView().remove();
         controllerRemovalBuffer.add(controller);
     }
+
+    private void generateInventoryBlueprints() {
+
+        FileHandle folder = Gdx.files.internal("inventoryblueprint");
+
+        List<FileHandle> contents = Arrays.asList(folder.list("xml"));
+        try {
+            for (FileHandle f : contents) {
+                generateBlueprint(f);
+            }
+        } catch (Exception e) {
+            throw new Error();
+        }
+    }
+
+    private void generateBlueprint(FileHandle file) throws ClassNotFoundException, ParserConfigurationException, InstantiationException, IllegalAccessException, IOException {
+        List<XMLItem> xmlItemList = new ArrayList<XMLItem>();
+        XmlReader xml = new XmlReader();
+        XmlReader.Element xml_element = null;
+        try {
+            // Read the file
+            xml_element = xml.parse(file);
+            // If the loaded file does not contain an inventory tag, throw exception
+            if (!xml_element.toString().split("\n")[0].contains("inventory")) {
+                throw new IOException("Couldn't find <inventory> tag");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        assert xml_element != null;
+        String secondLine = xml_element.toString().split("\n")[0];
+        // Get w and h from XML file
+        final int width = Integer.parseInt(secondLine.split("\"")[1]);
+        final int height = Integer.parseInt(secondLine.split("\"")[3]);
+
+        // Set the dimensions of the inventory
+        Inventory inventory = new Inventory();
+        inventory.setDimensions(width, height);
+
+        // Create the XMLItem list
+        for (String s : xml_element.toString().split("\n")) {
+            if (s.contains("<item ")) {
+                int orientation = Integer.parseInt(s.split("\"")[1]);
+                int x = Integer.parseInt(s.split("\"")[3]);
+                int y = Integer.parseInt(s.split("\"")[5]);
+                String name = s.split("\"")[7];
+                XMLItem xmlItem = new XMLItem(name, x, y, orientation);
+                xmlItemList.add(xmlItem);
+            }
+        }
+
+        InventoryBlueprint.createBlueprint(file.name(),
+                InventoryFactory.createFromXML(xmlItemList, inventory, file.name()));
+    }
+
+
 }

@@ -6,12 +6,12 @@ import java.util.List;
 
 
 public class Projectile extends ModelActor {
-    int damage;
+    public int damage;
     public boolean isBouncy = false;
     public boolean isPiercing = false;
     public final long timeOfConstructionMS;
     public long lifeTimeMS;
-    static final int DEFAULT_PROJECTILE_LIFETIME_MS = 10000;
+    public static final int DEFAULT_PROJECTILE_LIFETIME_MS = 10000;
     /**
      * Listeners that care about various game-oriented events
      */
@@ -75,17 +75,15 @@ public class Projectile extends ModelActor {
     }
 
 
-    public Projectile(PhysicsActor physicsActor, int damage, List<ProjectileListener> listeners, Long lifeTimeMS) {
-        super(physicsActor);
+    public Projectile(int damage, List<ProjectileListener> listeners, Long lifeTimeMS) {
         this.damage = damage;
-        this.listeners = listeners;
+        setListeners(listeners);
         timeOfConstructionMS = System.currentTimeMillis();
         this.lifeTimeMS = lifeTimeMS;
         //hasDamaged = new ArrayList<Character>();
     }
 
-    public Projectile(PhysicsActor physicsActor, int damage, List<ProjectileListener> listeners) {
-        super(physicsActor);
+    public Projectile(int damage, List<ProjectileListener> listeners) {
         this.damage = damage;
         this.listeners = listeners;
         timeOfConstructionMS = System.currentTimeMillis();
