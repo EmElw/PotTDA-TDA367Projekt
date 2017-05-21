@@ -37,7 +37,11 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
     private Stage hudStage;
     private Stage joystickStage;
     private Stage gameStage;
+    private Stage pausedStage;
+    private Stage optionsStage;
     private Stage mainMenuStage;
+    private Stage mainControlsStage;
+    private Stage mainDifficultyStage;
     private Stage gameOverStage;
     private OrthographicCamera camera;
 
@@ -58,10 +62,13 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
     private float accumulator;
 
     private HUDView hudView;
+    private PausedView pausedView;
+    private OptionsView optionsView;
+    private MainMenuView mainMenuView;
+    private MainControlsView mainControlsView;
+    private MainDifficultyView mainDifficultyView;
     private SoundsAndMusic soundsAndMusic;
     private GameView gameView;
-//    private Box2DActorFactory box2DActorFactory;
-    private MainMenuView mainMenuView;
     private GameOverView gameOverView;
 
     private WaveController waveController;
@@ -110,6 +117,10 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
         gameStage.getCamera().position.x = WIDTH_METERS / 2;
         gameStage.getCamera().position.y = HEIGHT_METERS / 2;
         mainMenuStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
+        pausedStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
+        optionsStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
+        mainControlsStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
+        mainDifficultyStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         gameOverStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
 
         gameState = MAIN_MENU;
@@ -117,6 +128,8 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
         Box2D.init();
 
         mainMenuView = new MainMenuView(mainMenuStage);
+        mainDifficultyView = new MainDifficultyView(mainDifficultyStage);
+        mainControlsView = new MainControlsView(mainControlsStage);
         gameOverView = new GameOverView(gameOverStage);
 
         waveController = new WaveController(WIDTH_METERS, HEIGHT_METERS, scaling);
@@ -131,11 +144,13 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
         controllerRemovalBuffer = new Stack<AbstractController>();
 
         hudView = new HUDView(hudStage);
+        pausedView = new PausedView(pausedStage);
+        optionsView = new OptionsView(optionsStage);
+        gameView = new GameView(gameStage, joystickStage);
+
         world = new World(new Vector2(0, 0), false);
         world.setContactListener(new CollisionListener());
         accumulator = 0;
-
-        gameView = new GameView(gameStage, joystickStage);
 
         soundsAndMusic = new SoundsAndMusic();
         startMusic();
@@ -175,7 +190,6 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
                 create();
 
     }
-
 
     /**
      * Checks if any enemies are alive
@@ -249,6 +263,10 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
         gameStage.getViewport().update(width, height, false);
         joystickStage.getViewport().update(width, height, false);
         mainMenuStage.getViewport().update(width, height, false);
+        optionsStage.getViewport().update(width, height, false);
+        pausedStage.getViewport().update(width, height, false);
+        mainControlsStage.getViewport().update(width, height, false);
+        mainDifficultyStage.getViewport().update(width, height, false);
         gameOverStage.getViewport().update(width, height, false);
     }
 
@@ -267,6 +285,10 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
             case RUNNING:
                 // Update the model
                 updateGame();
+
+                // Update the physics world
+                doPhysicsStep(Gdx.graphics.getDeltaTime());
+
                 updateWorld(true);
                 if (!enemiesAlive()) {
                     if (waveController.finishedWaves()) {
@@ -296,25 +318,23 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
                 break;
             case PAUSED:
                 // Draw the pause menu
-                hudView.renderPaused();
-                hudStage.draw();
+                pausedView.render();
                 break;
             case OPTIONS:
                 // Draw the options menu
-                hudView.renderOptions();
-                hudStage.draw();
+                optionsView.render();
                 break;
             case MAIN_MENU:
                 // Draw the main menu
-                mainMenuView.renderMainMenu();
+                mainMenuView.render();
                 break;
             case MAIN_CHOOSE:
                 // Draw the choose difficulty menu
-                mainMenuView.renderChooseDiff();
+                mainDifficultyView.render();
                 break;
             case MAIN_CONTROLS:
                 // Draw the choose controller menu
-                mainMenuView.renderChooseControls();
+                mainControlsView.render();
                 break;
             case GAME_OVER:
                 final long currentTime = System.currentTimeMillis();
@@ -381,8 +401,8 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
 
         // Draw the game
         gameView.render(moveCamera);
-        hudView.renderRunning();
         hudStage.draw();
+        hudView.render();
     }
 
     /**
@@ -417,26 +437,32 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
                         gameState = PAUSED;
                     }
                     break;
+                case WAITING:
+                    if (hudView.checkIfTouchingPauseButton(vector3)) {
+                        // Touching pause button
+                        gameState = PAUSED;
+                    }
+                    break;
                 case PAUSED:
-                    if (hudView.checkIfTouchingPauseResume(vector3)) {
+                    if (pausedView.checkIfTouchingPauseResume(vector3)) {
                         // Touching pause resume
                         gameState = RUNNING;
-                    } else if (hudView.checkIfTouchingPauseOptions(vector3)) {
+                    } else if (pausedView.checkIfTouchingPauseOptions(vector3)) {
                         // Touching pause options
                         gameState = OPTIONS;
-                    } else if (hudView.checkIfTouchingPauseQuit(vector3)) {
+                    } else if (pausedView.checkIfTouchingPauseQuit(vector3)) {
                         // Touching pause quit
                         Gdx.app.exit();
                     }
                     break;
                 case OPTIONS:
-                    if (hudView.checkIfTouchingOptionsReturn(vector3)) {
+                    if (optionsView.checkIfTouchingOptionsReturn(vector3)) {
                         // Touched
                         gameState = PAUSED;
-                    } else if (hudView.checkIfTouchingOptionsMusic(vector3)) {
-                        soundsAndMusic.setMusicVolume(hudView.getNewMusicVolume(vector3));
-                    } else if (hudView.checkIfTouchingOptionsSFX(vector3)) {
-                        soundsAndMusic.setSFXVolume(hudView.getNewSFXVolume(vector3));
+                    } else if (optionsView.checkIfTouchingOptionsMusic(vector3)) {
+                        soundsAndMusic.setMusicVolume(optionsView.getNewMusicVolume(vector3));
+                    } else if (optionsView.checkIfTouchingOptionsSFX(vector3)) {
+                        soundsAndMusic.setSFXVolume(optionsView.getNewSFXVolume(vector3));
                     }
                     break;
                 case MAIN_MENU:
@@ -448,12 +474,12 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
                     }
                     break;
                 case MAIN_CHOOSE:
-                    if (mainMenuView.checkIfTouchingEasy(vector3)) {
+                    if (mainDifficultyView.checkIfTouchingEasy(vector3)) {
                         // TODO Set easy mode
                         doOnStartGame();
                         gameState = RUNNING;
                         Gdx.input.setInputProcessor(joystickStage);
-                    } else if (mainMenuView.checkIfTouchingHard(vector3)) {
+                    } else if (mainDifficultyView.checkIfTouchingHard(vector3)) {
                         // TODO Set hard mode
                         doOnStartGame();
                         gameState = RUNNING;
@@ -461,14 +487,14 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
                     }
                     break;
                 case MAIN_CONTROLS:
-                    if (mainMenuView.checkIfTouchingTouch(vector3)) {
+                    if (mainControlsView.checkIfTouchingTouch(vector3)) {
                         gameState = MAIN_CHOOSE;
                         ControllerOptions.controllerSettings = TOUCH_JOYSTICK;
                         ControllerOptions.joystickStage = joystickStage;
-                    } else if (mainMenuView.checkIfTouchingKeyboardOnly(vector3)) {
+                    } else if (mainControlsView.checkIfTouchingKeyboardOnly(vector3)) {
                         gameState = MAIN_CHOOSE;
                         ControllerOptions.controllerSettings = KEYBOARD_ONLY;
-                    } else if (mainMenuView.checkIfTouchingKeyboardMouse(vector3)) {
+                    } else if (mainControlsView.checkIfTouchingKeyboardMouse(vector3)) {
                         gameState = MAIN_CHOOSE;
                         ControllerOptions.controllerSettings = KEYBOARD_MOUSE;
                     }
@@ -504,11 +530,12 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
     @Override
     public void dispose() {
         hudStage.dispose();
-        mainMenuView.dispose();
+        mainControlsStage.dispose();
+        mainDifficultyStage.dispose();
+        mainMenuStage.dispose();
+        pausedStage.dispose();
+        optionsStage.dispose();
         gameOverStage.dispose();
-        if (hudView != null) {
-            hudView.dispose();
-        }
         if (world != null) {
             world.dispose();
         }
