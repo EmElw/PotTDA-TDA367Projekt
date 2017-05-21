@@ -5,4 +5,5 @@
     <difficulty>1</difficulty>
     <behaviour>DUMB</behaviour>
     <inventoryname>playerStartInventory.xml</inventoryname>
+    <spritename>circletestred.png</spritename>
 </enemy>
