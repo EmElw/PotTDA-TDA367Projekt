@@ -568,7 +568,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
         List<FileHandle> contents = Arrays.asList(folder.list("xml"));
         try {
             for (FileHandle f : contents) {
-                InventoryBlueprint.newBlueprint(reader.parseInventory(folder));
+                InventoryBlueprint.newBlueprint(reader.parseInventory(f));
             }
         } catch (Exception e) {
             throw new Error("failed to generate inventory blueprints: ", e);
