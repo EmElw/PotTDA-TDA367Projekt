@@ -131,12 +131,6 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
         mainDifficultyView = new MainDifficultyView(mainDifficultyStage);
         mainControlsView = new MainControlsView(mainControlsStage);
         gameOverView = new GameOverView(gameOverStage);
-
-
-        EnemyBlueprint.newBlueprint(new MyXMLReader().parseEnemy(Gdx.files.internal("enemies/testEnemy0.xml")));
-        EnemyGroup.addGroup(new MyXMLReader().parseEnemyGroup(Gdx.files.internal("enemies/testEnemyGroup0.xml")));
-        waveController = new WaveController();
-        waveController.newLevel(20, (long) 3E4);
     }
 
     /**
@@ -159,7 +153,11 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
         soundsAndMusic = new SoundsAndMusic();
         startMusic();
 
-        generateInventoryBlueprints();
+        // Generate XML-assets
+        MyXMLReader reader = new MyXMLReader();
+        generateInventories();
+        generateEnemies("enemies", reader);
+        generateEnemyGroups("enemygroups", reader);
 
         // Make a ControllerHookup and add PoTDA as a listener
         ControllerHookup controllerHookup = new ControllerHookup(gameStage);
@@ -557,7 +555,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
         controllerRemovalBuffer.add(controller);
     }
 
-    private void generateInventoryBlueprints() {
+    private void generateInventories(String path, MyXMLReader reader) {
 
         FileHandle folder = Gdx.files.internal("inventoryblueprint");
 
@@ -567,8 +565,35 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
                 generateBlueprint(f);
             }
         } catch (Exception e) {
-            throw new Error();
+            throw new Error("failed to generate inventory blueprints: ", e);
         }
+    }
+
+    private void generateEnemies(String path, MyXMLReader reader) {
+        FileHandle folder = Gdx.files.internal(path);
+
+        List<FileHandle> contents = Arrays.asList(folder.list("xml"));
+        try {
+            for (FileHandle f : contents) {
+                EnemyBlueprint.newBlueprint(reader.parseEnemy(f));
+            }
+        } catch (Exception e) {
+            throw new Error("failed to generate enemy blueprints: ", e);
+        }
+    }
+
+    private void generateEnemyGroups(String path, MyXMLReader reader) {
+        FileHandle folder = Gdx.files.internal(path);
+
+        List<FileHandle> contents = Arrays.asList(folder.list("xml"));
+        try {
+            for (FileHandle f : contents) {
+                EnemyGroup.addGroup(reader.parseEnemyGroup(f));
+            }
+        } catch (Exception e) {
+            throw new Error("failed to generate enemy blueprints: ", e);
+        }
+
     }
 
     private void generateBlueprint(FileHandle file) throws ClassNotFoundException, ParserConfigurationException, InstantiationException, IllegalAccessException, IOException {
