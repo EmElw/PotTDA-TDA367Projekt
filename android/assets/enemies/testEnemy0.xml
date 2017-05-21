@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<enemy>
+    <name>TestEnemy1</name>
+    <scorevalue>10</scorevalue>
+    <difficulty>1</difficulty>
+    <behaviour>DUMB</behaviour>
+    <inventory>playerStartInventory.xml</inventory>
+</enemy>
