@@ -155,9 +155,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
 
         // Generate XML-assets
         MyXMLReader reader = new MyXMLReader();
-        generateInventories();
-        generateEnemies("enemies", reader);
-        generateEnemyGroups("enemygroups", reader);
+        generateXMLAssets(reader);
 
         // Make a ControllerHookup and add PoTDA as a listener
         ControllerHookup controllerHookup = new ControllerHookup(gameStage);
@@ -555,6 +553,14 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
         controllerRemovalBuffer.add(controller);
     }
 
+    // XML-asset loading
+
+    private void generateXMLAssets(MyXMLReader reader) {
+        generateInventories("inventoryblueprint", reader);
+        generateEnemies("enemies", reader);
+        generateEnemyGroups("enemygroups", reader);
+    }
+
     private void generateInventories(String path, MyXMLReader reader) {
 
         FileHandle folder = Gdx.files.internal("inventoryblueprint");
@@ -562,7 +568,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
         List<FileHandle> contents = Arrays.asList(folder.list("xml"));
         try {
             for (FileHandle f : contents) {
-                generateBlueprint(f);
+                InventoryBlueprint.newBlueprint(reader.parseInventory(folder));
             }
         } catch (Exception e) {
             throw new Error("failed to generate inventory blueprints: ", e);
@@ -593,49 +599,5 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
         } catch (Exception e) {
             throw new Error("failed to generate enemy blueprints: ", e);
         }
-
     }
-
-    private void generateBlueprint(FileHandle file) throws ClassNotFoundException, ParserConfigurationException, InstantiationException, IllegalAccessException, IOException {
-        List<XMLItem> xmlItemList = new ArrayList<XMLItem>();
-        XmlReader xml = new XmlReader();
-        XmlReader.Element xml_element = null;
-        try {
-            // Read the file
-            xml_element = xml.parse(file);
-            // If the loaded file does not contain an inventory tag, throw exception
-            if (!xml_element.toString().split("\n")[0].contains("inventory")) {
-                throw new IOException("Couldn't find <inventory> tag");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        assert xml_element != null;
-        String secondLine = xml_element.toString().split("\n")[0];
-        // Get w and h from XML file
-        final int width = Integer.parseInt(secondLine.split("\"")[1]);
-        final int height = Integer.parseInt(secondLine.split("\"")[3]);
-
-        // Set the dimensions of the inventory
-        Inventory inventory = new Inventory();
-        inventory.setDimensions(width, height);
-
-        // Create the XMLItem list
-        for (String s : xml_element.toString().split("\n")) {
-            if (s.contains("<item ")) {
-                int orientation = Integer.parseInt(s.split("\"")[1]);
-                int x = Integer.parseInt(s.split("\"")[3]);
-                int y = Integer.parseInt(s.split("\"")[5]);
-                String name = s.split("\"")[7];
-                XMLItem xmlItem = new XMLItem(name, x, y, orientation);
-                xmlItemList.add(xmlItem);
-            }
-        }
-
-        InventoryBlueprint.createBlueprint(file.name(),
-                InventoryFactory.createFromXML(xmlItemList, inventory, file.name()));
-    }
-
-
 }

@@ -8,11 +8,13 @@ import java.util.List;
  */
 public class XMLInventory {
 
-    private final List<XMLItem> items;
-    private final int width;
-    private final int height;
+    public final String name;
+    public final List<XMLItem> items;
+    public final int width;
+    public final int height;
 
-    public XMLInventory(List<XMLItem> items, int width, int height) {
+    public XMLInventory(String name, List<XMLItem> items, int width, int height) {
+        this.name = name;
         this.items = items;
         this.width = width;
         this.height = height;

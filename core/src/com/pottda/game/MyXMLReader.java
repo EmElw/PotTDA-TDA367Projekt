@@ -18,6 +18,7 @@ public class MyXMLReader {
 
     /**
      * Parses a .xml-file containing data for an enemy
+     *
      * @param file a {@link FileHandle}
      * @return a {@link XMLEnemy}
      */
@@ -41,6 +42,7 @@ public class MyXMLReader {
 
     /**
      * Parses a .xml-file containing data for an enemygroup
+     *
      * @param file a {@link FileHandle}
      * @return a {@link XMLEnemyGroup}
      */
@@ -69,6 +71,7 @@ public class MyXMLReader {
 
     /**
      * Parses a .xml-file containing data for an inventory
+     *
      * @param file a {@link FileHandle}
      * @return a {@link XMLInventory}
      */
@@ -81,9 +84,10 @@ public class MyXMLReader {
                     items.add(parseItem(e));
                 }
                 return new XMLInventory(
+                        file.name(),
                         items,
-                        root.getIntAttribute("width"),
-                        root.getIntAttribute("height"));
+                        root.getIntAttribute("w"),
+                        root.getIntAttribute("h"));
 
             } else {
                 throw new IOException("no inventory in root");
@@ -95,13 +99,14 @@ public class MyXMLReader {
 
     /**
      * Parses an {@link Element} containing an item
+     *
      * @param e a {@link Element}
      * @return an {@link XMLItem}
      * @throws IOException if the root element in e is not equal to "item"
      */
     private XMLItem parseItem(Element e) throws IOException {
         if (e.getName().equals("item")) {
-            XMLItem item = new XMLItem(
+            return new XMLItem(
                     e.getAttribute("name"),
                     e.getIntAttribute("x"),
                     e.getIntAttribute("y"),
