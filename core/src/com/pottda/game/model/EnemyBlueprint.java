@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Magnus on 2017-05-21.
+ * Blueprint-type class for a single enemy ModelActor
  */
 public class EnemyBlueprint {
 
@@ -52,5 +52,13 @@ public class EnemyBlueprint {
                 setBehaviour(behaviour).
                 setInventory(InventoryBlueprint.getInventory(inventoryName)).
                 setSprite(sprite);
+    }
+
+    public static EnemyBlueprint getBlueprint(String s) {
+        if (blueprintsMap.containsKey(s)) {
+            return blueprintsMap.get(s);
+        } else {
+            throw new Error("no such enemy " + s);
+        }
     }
 }
