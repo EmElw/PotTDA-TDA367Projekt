@@ -3,9 +3,7 @@ package com.pottda.game;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.*;
-import com.pottda.game.model.EnemyBlueprint;
-import com.pottda.game.model.XMLEnemy;
-import com.pottda.game.model.XMLEnemyGroup;
+import com.pottda.game.model.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,17 +14,36 @@ import java.util.List;
  */
 public class MyXMLReader {
 
-    XmlReader xml = new XmlReader();
+    private XmlReader xml = new XmlReader();
 
+    /**
+     * Parses a .xml-file containing data for an enemy
+     * @param file a {@link FileHandle}
+     * @return a {@link XMLEnemy}
+     */
     public XMLEnemy parseEnemy(FileHandle file) {
         try {
             Element root = xml.parse(file);
-            return enemyFromElement(root);
+            if (root.getName().equals("enemy")) {
+                return new XMLEnemy(root.getChildByName("name").getText(),
+                        root.get("scorevalue"),
+                        root.get("difficulty"),
+                        root.get("behaviour"),
+                        root.get("inventoryname"),
+                        root.get("spriteenum"));
+            } else {
+                throw new IOException("no enemy in root");
+            }
         } catch (IOException e) {
             throw new Error("failure in trying to parse fileHandle: " + file.toString() + ":", e);
         }
     }
 
+    /**
+     * Parses a .xml-file containing data for an enemygroup
+     * @param file a {@link FileHandle}
+     * @return a {@link XMLEnemyGroup}
+     */
     public XMLEnemyGroup parseEnemyGroup(FileHandle file) {
         try {
 
@@ -50,17 +67,47 @@ public class MyXMLReader {
         }
     }
 
-    private XMLEnemy enemyFromElement(Element e) throws IOException {
-        if (e.getName().equals("enemy")) {
-            return new XMLEnemy(e.getChildByName("name").getText(),
-                    e.get("scorevalue"),
-                    e.get("difficulty"),
-                    e.get("behaviour"),
-                    e.get("inventoryname"),
-                    e.get("spriteenum"));
-        } else {
-            throw new IOException("no enemy in root");
+    /**
+     * Parses a .xml-file containing data for an inventory
+     * @param file a {@link FileHandle}
+     * @return a {@link XMLInventory}
+     */
+    public XMLInventory parseInventory(FileHandle file) {
+        try {
+            Element root = xml.parse(file);
+            if (root.getName().equals("inventory")) {
+                List<XMLItem> items = new ArrayList<XMLItem>();
+                for (Element e : root.getChildrenByName("item")) {
+                    items.add(parseItem(e));
+                }
+                return new XMLInventory(
+                        items,
+                        root.getIntAttribute("width"),
+                        root.getIntAttribute("height"));
+
+            } else {
+                throw new IOException("no inventory in root");
+            }
+        } catch (IOException e) {
+            throw new Error("failure in trying to parse fileHandle: " + file.toString() + ":", e);
         }
+    }
+
+    /**
+     * Parses an {@link Element} containing an item
+     * @param e a {@link Element}
+     * @return an {@link XMLItem}
+     * @throws IOException if the root element in e is not equal to "item"
+     */
+    private XMLItem parseItem(Element e) throws IOException {
+        if (e.getName().equals("item")) {
+            XMLItem item = new XMLItem(
+                    e.getAttribute("name"),
+                    e.getIntAttribute("x"),
+                    e.getIntAttribute("y"),
+                    e.getIntAttribute("orientation"));
+        }
+        throw new IOException("no item in root");
     }
 
 }
