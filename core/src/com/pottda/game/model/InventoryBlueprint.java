@@ -11,14 +11,28 @@ public class InventoryBlueprint {
 
     private static Map<String, InventoryBlueprint> blueprints = new HashMap<String, InventoryBlueprint>();
 
+    /**
+     * Returns an {@link Inventory} for the given name
+     * @param name a {@link String}
+     * @return an {@link Inventory}
+     */
     public static Inventory getInventory(String name) {
         return blueprints.get(name).newInventory();
     }
 
+    /**
+     * Returns true if there is a blueprint for the given name
+     * @param name a {@link String}
+     * @return true if there is a blueprint for the given name
+     */
     public static boolean contains(String name) {
         return blueprints.containsKey(name);
     }
 
+    /**
+     * Creates and adds a new blueprint from an {@link XMLInventory}
+     * @param inventory an {@link XMLInventory}
+     */
     public static void newBlueprint(XMLInventory inventory) {
         blueprints.put(inventory.name, new InventoryBlueprint(inventory));
     }

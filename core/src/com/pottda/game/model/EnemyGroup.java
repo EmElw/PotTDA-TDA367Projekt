@@ -7,10 +7,7 @@ import java.util.*;
  */
 public class EnemyGroup {
 
-    /**
-     * Stores all created groups
-     */
-    private static final SortedMap<Integer, List<EnemyGroup>> difficultyMap =
+    private static final SortedMap<Integer, List<EnemyGroup>> groups =
             new TreeMap<Integer, List<EnemyGroup>>() {
             };
 
@@ -19,15 +16,15 @@ public class EnemyGroup {
      *
      * @param xmlGroup a {@link XMLEnemyGroup}
      */
-    public static void addGroup(XMLEnemyGroup xmlGroup) {
+    public static void newGroup(XMLEnemyGroup xmlGroup) {
         int difficulty = xmlGroup.difficulty;
         EnemyGroup group = new EnemyGroup(xmlGroup);
 
-        if (difficultyMap.containsKey(difficulty)) {
-            difficultyMap.get(difficulty).add(group);
+        if (groups.containsKey(difficulty)) {
+            groups.get(difficulty).add(group);
         } else {
-            difficultyMap.put(difficulty, new ArrayList<EnemyGroup>());
-            difficultyMap.get(difficulty).add(group);
+            groups.put(difficulty, new ArrayList<EnemyGroup>());
+            groups.get(difficulty).add(group);
         }
     }
 
@@ -39,7 +36,7 @@ public class EnemyGroup {
      * @return true if there are one or more {@code EnemyGroup} with the given difficulty
      */
     public static boolean contains(int difficulty) {
-        return (difficultyMap.containsKey(difficulty));
+        return (groups.containsKey(difficulty));
     }
 
     /**
@@ -49,8 +46,8 @@ public class EnemyGroup {
      * @return a {@code List<EnemyGroup>}}
      */
     public static List<EnemyGroup> getGroupForDifficulty(int difficulty) {
-        if (difficultyMap.containsKey(difficulty)) {
-            return difficultyMap.get(difficulty);
+        if (groups.containsKey(difficulty)) {
+            return groups.get(difficulty);
         } else {
             return null;
         }
@@ -92,7 +89,7 @@ public class EnemyGroup {
     public static List<EnemyGroup> getAllBelowDifficulty(int difficulty) {
         List<EnemyGroup> returnList = new ArrayList<EnemyGroup>();
 
-        for (List<EnemyGroup> g : difficultyMap.headMap(difficulty + 1).values()) {
+        for (List<EnemyGroup> g : groups.headMap(difficulty + 1).values()) {
             returnList.addAll(g);
         }
 

@@ -3,10 +3,7 @@ package com.pottda.game.model;
 import com.pottda.game.model.builders.CharacterBuilder;
 import com.pottda.game.model.builders.IModelBuilder;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,29 +11,53 @@ import java.util.Map;
  */
 public class EnemyBlueprint {
 
-    private final static Map<String, EnemyBlueprint> blueprintsMap = new HashMap<String, EnemyBlueprint>();
+    private final static Map<String, EnemyBlueprint> blueprints = new HashMap<String, EnemyBlueprint>();
 
+    /**
+     * Returns a semi-built enemy
+     *
+     * @param name the name of the enemy to build
+     * @return a {@link IModelBuilder} with behaviour, inventory and sprite set
+     */
     public static IModelBuilder getEnemy(String name) {
-        return blueprintsMap.get(name).build();
+        return blueprints.get(name).build();
     }
 
+    /**
+     * Returns an {@link EnemyBlueprint} for the given name
+     * @param s a {@link String}
+     * @return an {@link EnemyBlueprint}
+     */
+    public static EnemyBlueprint getBlueprint(String s) {
+        if (blueprints.containsKey(s)) {
+            return blueprints.get(s);
+        } else {
+            throw new Error("no such enemy " + s);
+        }
+    }
+
+    /**
+     * Create and add a blueprint to the library from an {@link XMLEnemy}
+     *
+     * @param xml an {@link XMLEnemy}
+     */
     public static void newBlueprint(XMLEnemy xml) {
-        blueprintsMap.put(xml.name, new EnemyBlueprint(xml));
+        blueprints.put(xml.name, new EnemyBlueprint(xml));
     }
 
     // ---- meta
-
     private final String name;
+
     private final int difficulty;
 
     // ---- properties
-
     private final ModelActor.Behaviour behaviour;
     private final String inventoryName;
     private final Sprites sprite;
+
     private final int scoreValue;
 
-    public EnemyBlueprint(XMLEnemy xml) {
+    private EnemyBlueprint(XMLEnemy xml) {
         this.name = xml.name;
         this.scoreValue = xml.scoreValue;
         this.difficulty = xml.difficulty;
@@ -52,13 +73,5 @@ public class EnemyBlueprint {
                 setBehaviour(behaviour).
                 setInventory(InventoryBlueprint.getInventory(inventoryName)).
                 setSprite(sprite);
-    }
-
-    public static EnemyBlueprint getBlueprint(String s) {
-        if (blueprintsMap.containsKey(s)) {
-            return blueprintsMap.get(s);
-        } else {
-            throw new Error("no such enemy " + s);
-        }
     }
 }

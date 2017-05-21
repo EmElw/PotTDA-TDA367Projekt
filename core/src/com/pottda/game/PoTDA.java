@@ -11,7 +11,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.*;
 import com.pottda.game.model.*;
@@ -25,9 +24,7 @@ import com.pottda.game.physicsBox2D.CollisionListener;
 import com.pottda.game.view.*;
 
 import javax.vecmath.Vector2f;
-import javax.xml.parsers.ParserConfigurationException;
 
-import java.io.IOException;
 import java.util.*;
 
 import static com.pottda.game.PoTDA.GameState.*;
@@ -594,7 +591,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
         List<FileHandle> contents = Arrays.asList(folder.list("xml"));
         try {
             for (FileHandle f : contents) {
-                EnemyGroup.addGroup(reader.parseEnemyGroup(f));
+                EnemyGroup.newGroup(reader.parseEnemyGroup(f));
             }
         } catch (Exception e) {
             throw new Error("failed to generate enemy blueprints: ", e);
