@@ -99,6 +99,7 @@ public class MultiShot extends Item {
                     setVelocity(temporaryVector).
                     setListeners(p.getListeners(), p.getIgnored()).
                     setPosition(position).
+                    setSprite(p.sprite).
                     create();
 
             newProj.onAttack();
