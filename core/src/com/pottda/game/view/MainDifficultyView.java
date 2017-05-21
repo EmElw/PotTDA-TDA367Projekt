@@ -1,10 +1,12 @@
 package com.pottda.game.view;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.pottda.game.model.Sprites;
 
 /**
  * Created by Rikard Teodorsson on 2017-05-18.
@@ -44,14 +46,14 @@ public class MainDifficultyView {
     }
 
     private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos) {
-        Image image2 = getImage(texturePath.texture, image);
+        Image image2 = getImage(new Texture(Gdx.files.internal(texturePath.fileName)), image);
         image2.setX(xPos);
         image2.setY(yPos);
         stage.addActor(image2);
     }
 
     private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos, float width, float height) {
-        Image image2 = getImage(texturePath.texture, image);
+        Image image2 = getImage(new Texture(Gdx.files.internal(texturePath.fileName)), image);
         image2.setX(xPos);
         image2.setY(yPos);
         image2.setWidth(width);

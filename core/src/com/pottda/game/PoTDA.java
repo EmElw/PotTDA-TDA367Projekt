@@ -69,7 +69,6 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
     private MainDifficultyView mainDifficultyView;
     private SoundsAndMusic soundsAndMusic;
     private GameView gameView;
-    private Box2DActorFactory box2DActorFactory;
     private GameOverView gameOverView;
 
     private WaveController waveController;
