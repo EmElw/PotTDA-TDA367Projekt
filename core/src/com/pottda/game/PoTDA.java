@@ -79,7 +79,6 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
     public enum GameState {
         NONE,
         RUNNING,
-        WAITING,
         PAUSED,
         OPTIONS,
         MAIN_MENU,
@@ -163,8 +162,6 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
         AbstractModelBuilder.addListener(controllerHookup);
 
         createPlayer();
-
-        gameState = WAITING;
 
         createWorldBorders();
 
@@ -287,31 +284,11 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
                 doPhysicsStep(Gdx.graphics.getDeltaTime());
 
                 updateWorld(true);
-                if (!enemiesAlive()) {
-//                    if (waveController.finishedWaves()) {
-//                        // TODO Go to inventory
-//                        System.out.println("To inventory");
-//                        waveController.initNextLevel();
-//                        gameState = WAITING;
-//                    } else {
-//                        gameState = WAITING;
-//                        waveController.setStartTime(System.currentTimeMillis());
-//                    }
-                }
+
                 if (!playersIsAlive()) {
                     startWaitGameOver = System.currentTimeMillis();
                     gameState = GAME_OVER;
                 }
-                break;
-            case WAITING:
-                updateGame();
-                updateWorld(true);
-                // Check if user has waited 5 seconds
-//                if (waveController.waited()) {
-//                    gameState = RUNNING;
-//                    // Start next wave
-//                    waveController.startWave();
-//                }
                 break;
             case PAUSED:
                 // Draw the pause menu
@@ -386,12 +363,25 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
         }
     }
 
+    private void spawnEnemies() {
+        List<EnemyBlueprint> list = waveController.getToSpawn();
+        Vector2f playerPosition = Character.player.getPosition();
+        for (EnemyBlueprint bp : list) {
+            float xx = (float) (WIDTH_METERS * Math.random());
+            float yy = (float) (HEIGHT_METERS * Math.random());
+//            if (Math.abs(xx - playerPosition.x) < 8 &&
+//                    Math.abs(yy - playerPosition.y) < 6) {
+            bp.build().setPosition(new Vector2f(xx, yy)).create();
+//            }
+        }
+    }
+
     /**
      * Updates physics, health bar and renders views
      */
     private void updateWorld(boolean moveCamera) {
         // Update the physics world
-        doPhysicsStep(Gdx.graphics.getDeltaTime());
+//        doPhysicsStep(Gdx.graphics.getDeltaTime());
 
         // Set the health bar to player's current health
         hudView.setHealthbar(Character.player.getCurrentHealth());
@@ -429,12 +419,6 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
             Vector3 vector3 = hudStage.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
             switch (gameState) {
                 case RUNNING:
-                    if (hudView.checkIfTouchingPauseButton(vector3)) {
-                        // Touching pause button
-                        gameState = PAUSED;
-                    }
-                    break;
-                case WAITING:
                     if (hudView.checkIfTouchingPauseButton(vector3)) {
                         // Touching pause button
                         gameState = PAUSED;

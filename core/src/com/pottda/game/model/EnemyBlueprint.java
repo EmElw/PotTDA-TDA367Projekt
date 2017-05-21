@@ -66,7 +66,7 @@ public class EnemyBlueprint {
         this.sprite = xml.sprite;
     }
 
-    private IModelBuilder build() {
+    public IModelBuilder build() {
 
         // TODO implement death-listeners for score
         return new CharacterBuilder().
