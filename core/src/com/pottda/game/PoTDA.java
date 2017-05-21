@@ -132,7 +132,11 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
         mainControlsView = new MainControlsView(mainControlsStage);
         gameOverView = new GameOverView(gameOverStage);
 
-        waveController = new WaveController(WIDTH_METERS, HEIGHT_METERS, scaling);
+
+        EnemyBlueprint.newBlueprint(new MyXMLReader().parseEnemy(Gdx.files.internal("enemies/testEnemy0.xml")));
+        EnemyGroup.addGroup(new MyXMLReader().parseEnemyGroup(Gdx.files.internal("enemies/testEnemyGroup0.xml")));
+        waveController = new WaveController();
+        waveController.newLevel(20, (long) 3E4);
     }
 
     /**
@@ -171,7 +175,6 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
 
         createWorldBorders();
 
-        waveController.initNextLevel();
     }
 
     /**
@@ -207,6 +210,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
 
     /**
      * Checks if the player is alive
+     *
      * @return true if the player's health is above 0
      */
     private boolean playersIsAlive() {
@@ -291,15 +295,15 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
 
                 updateWorld(true);
                 if (!enemiesAlive()) {
-                    if (waveController.finishedWaves()) {
-                        // TODO Go to inventory
-                        System.out.println("To inventory");
-                        waveController.initNextLevel();
-                        gameState = WAITING;
-                    } else {
-                        gameState = WAITING;
-                        waveController.setStartTime(System.currentTimeMillis());
-                    }
+//                    if (waveController.finishedWaves()) {
+//                        // TODO Go to inventory
+//                        System.out.println("To inventory");
+//                        waveController.initNextLevel();
+//                        gameState = WAITING;
+//                    } else {
+//                        gameState = WAITING;
+//                        waveController.setStartTime(System.currentTimeMillis());
+//                    }
                 }
                 if (!playersIsAlive()) {
                     startWaitGameOver = System.currentTimeMillis();
@@ -310,11 +314,11 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
                 updateGame();
                 updateWorld(true);
                 // Check if user has waited 5 seconds
-                if (waveController.waited()) {
-                    gameState = RUNNING;
-                    // Start next wave
-                    waveController.startWave();
-                }
+//                if (waveController.waited()) {
+//                    gameState = RUNNING;
+//                    // Start next wave
+//                    waveController.startWave();
+//                }
                 break;
             case PAUSED:
                 // Draw the pause menu
