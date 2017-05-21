@@ -4,5 +4,5 @@
     <scorevalue>10</scorevalue>
     <difficulty>1</difficulty>
     <behaviour>DUMB</behaviour>
-    <inventory>playerStartInventory.xml</inventory>
+    <inventoryname>playerStartInventory.xml</inventoryname>
 </enemy>
