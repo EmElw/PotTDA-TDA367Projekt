@@ -59,11 +59,17 @@ public class InventoryView {
 
     public void renderInventory () {
         stage.act();
+        /*
+        if(Storage.isUpdate()){
+        storageTable.clearChildren();
+
+        }
+         */
         stage.draw();
     }
 
     private void createStorage() {
-        // Create storage & scroll for storage
+        // Create storage & scrollpane for storage
         storageTable = new Table();
         ScrollPane scroll = new ScrollPane(storageTable);
         scroll.layout();
@@ -110,7 +116,7 @@ public class InventoryView {
         SpriteBatch batch = new SpriteBatch();
         FrameBuffer fbo = new FrameBuffer(Pixmap.Format.RGBA8888, 125, 125, false);
 
-        Label pancakeName = new Label("Pancake", mySkin);
+        Label pancakeName = new Label(item.name, mySkin);
         Image pancakeImage = itemImage;
 
         // Add a label and image to the table and fit the image

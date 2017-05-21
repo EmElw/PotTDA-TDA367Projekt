@@ -9,7 +9,7 @@ import javax.vecmath.Vector2f;
 public class Box2DPhysicsActor extends PhysicsActor {
     Body body;
 
-    public Box2DPhysicsActor(Body body){
+    public Box2DPhysicsActor(Body body) {
         this.body = body;
     }
 
@@ -21,6 +21,7 @@ public class Box2DPhysicsActor extends PhysicsActor {
 
     /**
      * Should be overridden by bodies that can change their movement vector
+     *
      * @param movementVector
      */
     @Override
@@ -30,5 +31,10 @@ public class Box2DPhysicsActor extends PhysicsActor {
     @Override
     public void destroyBody() {
         body.getWorld().destroyBody(body);
+    }
+
+    @Override
+    public void setPosition(Vector2f position) {
+        body.setTransform(position.x, position.y, 0);
     }
 }

@@ -13,7 +13,7 @@ public class Character extends ModelActor {
      * Base maxHealth of any character, further modified by its Inventory
      */
     private static final int BASE_HEALTH = 100;
-    private static final float BASE_ACCEL = 5f;
+    private static final float BASE_ACCEL = 30f;
     /**
      * A reference to the character's inventory, should be effectively final
      */
@@ -29,8 +29,7 @@ public class Character extends ModelActor {
 
     // -- Constructors --
 
-    public Character(PhysicsActor physicsActor) {
-        super(physicsActor);
+    public Character() {
         this.inventory = new Inventory();
         this.isProjectile = false;
         this.movementVector = new Vector2f();
@@ -88,6 +87,7 @@ public class Character extends ModelActor {
 
     /**
      * Returns the current health of the actor
+     *
      * @return the health of the actor
      */
     public int getCurrentHealth() {

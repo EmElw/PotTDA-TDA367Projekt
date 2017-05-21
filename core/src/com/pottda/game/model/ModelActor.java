@@ -14,13 +14,16 @@ public abstract class ModelActor {
     //    public AbstractController controller;
     float angle = 0;
 
+    public Sprites sprite;
+
     public final static int PLAYER_TEAM = 0;
     public final static int ENEMY_TEAM = 1;
 
-    protected final PhysicsActor physicsActor;
+    protected PhysicsActor physicsActor;
+    public Behaviour behaviour;
 
-    public ModelActor(PhysicsActor physicsActor) {
-        this.physicsActor = physicsActor;
+    public ModelActor() {
+
     }
 
     /**
@@ -31,6 +34,14 @@ public abstract class ModelActor {
      */
     public void giveInput(Vector2f movementVector, Vector2f attackVector) {
 
+    }
+
+
+    public void setPosition(Vector2f position) {
+        physicsActor.setPosition(position);
+    }
+    public void setPosition(float x, float y) {
+        physicsActor.setPosition(new Vector2f(x, y));
     }
 
     /**
@@ -57,8 +68,16 @@ public abstract class ModelActor {
     public void handleCollisions() {
     }
 
-    public PhysicsActor getPhysicsActor(){
+    public void setPhysicsActor(PhysicsActor physicsActor) {
+        this.physicsActor = physicsActor;
+    }
+
+    public PhysicsActor getPhysicsActor() {
         return physicsActor;
     }
 
+    public enum Behaviour {
+        NONE,
+        DUMB
+    }
 }
