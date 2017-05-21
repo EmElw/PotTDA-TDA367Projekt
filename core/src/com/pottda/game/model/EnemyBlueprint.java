@@ -1,6 +1,7 @@
 package com.pottda.game.model;
 
 import com.pottda.game.model.builders.CharacterBuilder;
+import com.pottda.game.model.builders.IModelBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +13,7 @@ public class EnemyBlueprint {
 
     private final static Map<String, EnemyBlueprint> blueprintsMap = new HashMap<String, EnemyBlueprint>();
 
-    public static CharacterBuilder getEnemy(String name) {
+    public static IModelBuilder getEnemy(String name) {
         return blueprintsMap.get(name).build();
     }
 
@@ -26,7 +27,7 @@ public class EnemyBlueprint {
 
     private final ModelActor.Behaviour behaviour;
     private final String inventoryName;
-    private final String spriteName;
+    private final Sprites sprite;
     private final int scoreValue;
 
     public EnemyBlueprint(XMLEnemy xml) {
@@ -35,17 +36,15 @@ public class EnemyBlueprint {
         this.difficulty = xml.difficulty;
         this.behaviour = xml.behaviour;
         this.inventoryName = xml.inventoryName;
-        this.spriteName = xml.spriteName;
+        this.sprite = Sprites.forName(xml.spriteEnum);
     }
 
-    private CharacterBuilder build() {
+    private IModelBuilder build() {
 
         // TODO implement death-listeners for score
-
-
         return new CharacterBuilder().
                 setBehaviour(behaviour).
                 setInventory(InventoryBlueprint.getInventory(inventoryName)).
-                setSprite(Sprites.forName(spriteName));
+                setSprite(sprite);
     }
 }

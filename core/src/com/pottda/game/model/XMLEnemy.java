@@ -9,7 +9,7 @@ public class XMLEnemy {
     public final int difficulty;
     public final ModelActor.Behaviour behaviour;
     public final String inventoryName;
-    public final String spriteName;
+    public final String spriteEnum;
 
     public XMLEnemy(String name, int scoreValue, int difficulty, ModelActor.Behaviour behaviour, String inventoryName, String spriteName) {
         this.name = name;
@@ -17,6 +17,6 @@ public class XMLEnemy {
         this.difficulty = difficulty;
         this.behaviour = behaviour;
         this.inventoryName = inventoryName;
-        this.spriteName = spriteName;
+        this.spriteEnum = spriteName;
     }
 }
