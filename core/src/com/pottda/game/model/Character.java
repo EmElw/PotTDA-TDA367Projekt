@@ -6,9 +6,10 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import static com.pottda.game.model.Stat.ACCEL;
+import static com.pottda.game.model.Stat.HEALTH;
 
 
-public class Character extends ModelActor {
+public class Character extends ModelActor implements InventoryChangeListener {
     /**
      * Base maxHealth of any character, further modified by its Inventory
      */
@@ -21,7 +22,7 @@ public class Character extends ModelActor {
     /**
      * Current health of a character
      */
-    int currentHealth;
+    int currentHealth = 0;
     private static Map<Stat, Double> stats;
     private Vector2f movementVector;
 
@@ -40,14 +41,8 @@ public class Character extends ModelActor {
         for (Stat stat : Stat.values()) {
             stats.put(stat, 0 + inventory.getSumStat(stat));
         }
-        // Add base values
-        stats.put(Stat.HEALTH, stats.get(Stat.HEALTH) + (double) BASE_HEALTH);
-        stats.put(ACCEL, stats.get(ACCEL) + (double) BASE_ACCEL);
 
-        // Assign further as necessary
-        this.currentHealth = stats.get(Stat.HEALTH).intValue();
-
-
+        inventoryChanged();
     }
 
     @Override
@@ -92,5 +87,26 @@ public class Character extends ModelActor {
      */
     public int getCurrentHealth() {
         return currentHealth;
+    }
+
+    @Override
+    public void inventoryChanged() {
+        int missingHealth = 0;
+        // Check the missing health if currentHealth is bigger than zero
+        if (currentHealth > 0) {
+            missingHealth = (int) Math.round(stats.get(HEALTH)) - currentHealth;
+        }
+
+        // Fetch all the stats from the inventory
+        for (Stat stat : Stat.values()) {
+            stats.put(stat, 0 + inventory.getSumStat(stat));
+        }
+
+        // Add base values
+        stats.put(Stat.HEALTH, stats.get(Stat.HEALTH) + (double) BASE_HEALTH);
+        stats.put(ACCEL, stats.get(ACCEL) + (double) BASE_ACCEL);
+
+        // Assign further as necessary
+        currentHealth = stats.get(Stat.HEALTH).intValue() - missingHealth;
     }
 }
