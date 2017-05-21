@@ -3,7 +3,10 @@ package com.pottda.game.model;
 import com.pottda.game.model.builders.CharacterBuilder;
 import com.pottda.game.model.builders.IModelBuilder;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,6 +20,9 @@ public class EnemyBlueprint {
         return blueprintsMap.get(name).build();
     }
 
+    public static void newBlueprint(XMLEnemy xml) {
+        blueprintsMap.put(xml.name, new EnemyBlueprint(xml));
+    }
 
     // ---- meta
 
@@ -36,7 +42,7 @@ public class EnemyBlueprint {
         this.difficulty = xml.difficulty;
         this.behaviour = xml.behaviour;
         this.inventoryName = xml.inventoryName;
-        this.sprite = Sprites.forName(xml.spriteEnum);
+        this.sprite = xml.sprite;
     }
 
     private IModelBuilder build() {

@@ -9,14 +9,14 @@ public class XMLEnemy {
     public final int difficulty;
     public final ModelActor.Behaviour behaviour;
     public final String inventoryName;
-    public final String spriteEnum;
+    public final Sprites sprite;
 
-    public XMLEnemy(String name, int scoreValue, int difficulty, ModelActor.Behaviour behaviour, String inventoryName, String spriteName) {
+    public XMLEnemy(String name, String scoreValue, String difficulty, String behaviour, String inventoryName, String spriteName) {
         this.name = name;
-        this.scoreValue = scoreValue;
-        this.difficulty = difficulty;
-        this.behaviour = behaviour;
+        this.scoreValue = Integer.parseInt(scoreValue);
+        this.difficulty = Integer.parseInt(difficulty);
+        this.behaviour = ModelActor.Behaviour.valueOf(behaviour);
         this.inventoryName = inventoryName;
-        this.spriteEnum = spriteName;
+        this.sprite = Sprites.valueOf(spriteName);
     }
 }

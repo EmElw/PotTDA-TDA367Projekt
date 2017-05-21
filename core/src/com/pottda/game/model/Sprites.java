@@ -50,12 +50,4 @@ public enum Sprites {
         this.fileName = fileName;
     }
 
-    public static Sprites forName(String spriteEnum) {
-        for (Sprites s : values()) {
-            if (s.name().equals(spriteEnum)) {
-                return s;
-            }
-        }
-        throw new Error("No Sprite with that enum name");
-    }
 }
