@@ -68,4 +68,9 @@ public class CharacterBuilder extends AbstractModelBuilder implements ICharacter
         return this;
     }
 
+    @Override
+    public ICharacterBuilder setDeathListeners(List<DeathListener> deathListeners) {
+        this.deathListeners = deathListeners;
+        return this;
+    }
 }

@@ -4,7 +4,9 @@ import com.pottda.game.model.builders.CharacterBuilder;
 import com.pottda.game.model.builders.IModelBuilder;
 
 import java.lang.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -57,6 +59,8 @@ public class EnemyBlueprint {
     private final String inventoryName;
     private final Sprites sprite;
 
+    private List<DeathListener> deathListeners;
+
     private final int scoreValue;
 
     private EnemyBlueprint(XMLEnemy xml) {
@@ -75,10 +79,16 @@ public class EnemyBlueprint {
                 setTeam(Character.ENEMY_TEAM).
                 setBehaviour(behaviour).
                 setInventory(InventoryBlueprint.getInventory(inventoryName)).
+                setDeathListeners(deathListeners).
                 setSprite(sprite);
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setListeners(List<ScoreChangeListener> scoreChangeListeners, List<DeathListener> deathListeners) {
+        this.deathListeners = deathListeners;
+        deathListeners.add(new EnemyDeathListener(scoreValue, scoreChangeListeners));
     }
 }
