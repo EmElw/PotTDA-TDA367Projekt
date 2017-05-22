@@ -226,4 +226,8 @@ public class Inventory {
     public void setInventoryChangeListeners(List<InventoryChangeListener> inventoryChangeListeners) {
         this.inventoryChangeListeners = inventoryChangeListeners;
     }
+
+    public Set<Item> getItems() {
+        return items;
+    }
 }

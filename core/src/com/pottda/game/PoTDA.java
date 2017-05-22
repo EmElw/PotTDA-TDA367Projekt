@@ -139,6 +139,10 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     public void create() {
         createViewAtlas();
 
+        // Generate XML-assets
+        MyXMLReader reader = new MyXMLReader();
+        generateXMLAssets(reader);
+
         // TESTING
         storage.addItem(new SimpleCannon());
         storage.addItem(new SimpleCannon());
@@ -200,10 +204,6 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         label.setPosition(hudStage.getWidth() / 6, hudStage.getHeight() - 30);
         label.setFontScale(1.5f);
         hudStage.addActor(label);
-
-        // Generate XML-assets
-        MyXMLReader reader = new MyXMLReader();
-        generateXMLAssets(reader);
 
         // Make a ControllerHookup and add PoTDA as a listener
         ControllerHookup controllerHookup = new ControllerHookup(gameStage);
@@ -402,6 +402,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
                 // Draw the choose controller menu
                 inventoryView.render();
                 inventoryView.parseStorage(storage);
+                inventoryView.parseInventory(InventoryBlueprint.getInventory("multiShotTestInv.xml"));
                 break;
         }
 
