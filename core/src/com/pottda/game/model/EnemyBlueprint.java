@@ -31,7 +31,7 @@ public class EnemyBlueprint {
      * @param s a {@link String}
      * @return an {@link EnemyBlueprint}
      */
-    public static EnemyBlueprint getBlueprint(String s) {
+    static EnemyBlueprint getBlueprint(String s) {
         if (blueprints.containsKey(s)) {
             return blueprints.get(s);
         } else {

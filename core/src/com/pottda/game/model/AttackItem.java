@@ -42,12 +42,7 @@ public abstract class AttackItem extends Item {
         super.init();
     }
 
-    /**
-     * @param velocity
-     * @param origin
-     * @return
-     */
-    public List<ProjectileListener> attack(Vector2f velocity, Vector2f origin, int team) {
+    List<ProjectileListener> attack(Vector2f velocity, Vector2f origin, int team) {
         List<ProjectileListener> listeners = new ArrayList<ProjectileListener>();
 
         Item i = this;
@@ -93,7 +88,7 @@ public abstract class AttackItem extends Item {
 
     }
 
-    public void tryAttack(Vector2f direction, Vector2f origin, int team) {
+    void tryAttack(Vector2f direction, Vector2f origin, int team) {
         if (System.currentTimeMillis() - lastAttackTime > cooldown) {
             attack(direction, origin, team);
         }

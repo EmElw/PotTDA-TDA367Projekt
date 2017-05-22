@@ -5,9 +5,9 @@ import com.badlogic.gdx.physics.box2d.Body;
 
 import javax.vecmath.Vector2f;
 
-public class Box2DPhysicsCharacter extends Box2DPhysicsActor {
+class Box2DPhysicsCharacter extends Box2DPhysicsActor {
 
-    public Box2DPhysicsCharacter(Body body) {
+    Box2DPhysicsCharacter(Body body) {
         super(body);
     }
 

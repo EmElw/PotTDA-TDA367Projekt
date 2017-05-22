@@ -12,7 +12,7 @@ public class Projectile extends ModelActor {
     private final long timeOfConstructionMS;
     public long lifeTimeMS;
     public static final int DEFAULT_PROJECTILE_LIFETIME_MS = 10000;
-    public Vector2f movementVector;
+    private Vector2f movementVector;
     /**
      * Listeners that care about various game-oriented events
      */
