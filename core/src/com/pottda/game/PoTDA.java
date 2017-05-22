@@ -100,13 +100,15 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
 
     private static final String GAME_TITLE = "Panic on TDAncefloor";
 
-    public static final float WIDTH = 800;
-    public static final float HEIGHT = 480;
-    public static final float WIDTH_METERS = 30;
-    public static final float HEIGHT_METERS = 18;
-    public static final float HEIGHT_RATIO = WIDTH_METERS / WIDTH;
-    public static final float WIDTH_RATIO = HEIGHT_METERS / HEIGHT;
-    private static final float scaling = 1.2f;
+    // Scale the play area
+    private static final float SCALING = 2f;
+
+    private static final float WIDTH = 800;
+    private static final float HEIGHT = 480;
+    private static final float WIDTH_METERS = 30 * SCALING;
+    private static final float HEIGHT_METERS = 18 * SCALING;
+    public static final float HEIGHT_RATIO = WIDTH_METERS / WIDTH / SCALING;
+    public static final float WIDTH_RATIO = HEIGHT_METERS / HEIGHT / SCALING;
 
     private long startWaitGameOver = 0;
     private static final long WAITING_TIME_GAME_OVER_SECONDS = 3;
@@ -120,9 +122,9 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
 
         hudStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         joystickStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
-        gameStage = new Stage(new StretchViewport(WIDTH_METERS, HEIGHT_METERS));
-        gameStage.getCamera().position.x = WIDTH_METERS / 2;
-        gameStage.getCamera().position.y = HEIGHT_METERS / 2;
+        gameStage = new Stage(new StretchViewport(WIDTH_METERS / SCALING, HEIGHT_METERS / SCALING));
+        gameStage.getCamera().position.x = WIDTH_METERS / 2 / SCALING;
+        gameStage.getCamera().position.y = HEIGHT_METERS / 2 / SCALING;
         mainMenuStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         pausedStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         optionsStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
@@ -139,7 +141,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         mainControlsView = new MainControlsView(mainControlsStage);
         gameOverView = new GameOverView(gameOverStage);
 
-        waveController = new WaveController(WIDTH_METERS, HEIGHT_METERS, scaling);
+        waveController = new WaveController(WIDTH_METERS, HEIGHT_METERS);
     }
 
     /**
@@ -186,13 +188,11 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
      */
     private void createPlayer() {
         // Add player
-//        ActorFactory.get().buildPlayer(com.pottda.game.model.Sprites.NONE,
-//                new Vector2f(WIDTH_METERS * scaling / 2, HEIGHT_METERS * scaling / 2));
         new CharacterBuilder().
                 setTeam(Character.PLAYER_TEAM).
                 setInventoryFromFile("playerStartInventory.xml").
                 setBehaviour(ModelActor.Behaviour.NONE).
-                setPosition(new Vector2f(WIDTH_METERS * scaling / 2, HEIGHT_METERS * scaling / 2)).
+                setPosition(new Vector2f(WIDTH_METERS / 2, HEIGHT_METERS / 2)).
                 setSprite(Sprites.PLAYER).
                 create();
 
@@ -214,6 +214,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
 
     /**
      * Checks if the player is alive
+     *
      * @return true if the player's health is above 0
      */
     private boolean playersIsAlive() {
@@ -225,36 +226,25 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
      */
     private void createWorldBorders() {
         final float border_thickness = 0.25f;
-        // Scale the area bigger or smaller
-        final float area_scaling = 1.2f;
-        final float right_border_extra = 0.78f;
         // Bottom
-//        controllers.add(ActorFactory.get().buildObstacle(com.pottda.game.model.Sprites.BORDER,
-//                new Vector2f(0, 0), new Vector2f(WIDTH_METERS * area_scaling, border_thickness * HEIGHT_RATIO), true));
         new ObstacleBuilder().
                 setSize(WIDTH_METERS, border_thickness).
                 setPosition(new Vector2f(WIDTH_METERS / 2, -border_thickness / 2)).
                 setSprite(Sprites.BORDER).
                 create();
         // Left
-//        controllers.add(ActorFactory.get().buildObstacle(com.pottda.game.model.Sprites.BORDER,
-//                new Vector2f(0, 0), new Vector2f(border_thickness * WIDTH_RATIO, HEIGHT_METERS * area_scaling), true));
         new ObstacleBuilder().
                 setSize(border_thickness, HEIGHT_METERS).
                 setPosition(new Vector2f(-border_thickness / 2, HEIGHT_METERS / 2)).
                 setSprite(Sprites.BORDER).
                 create();
         // Top
-//        controllers.add(ActorFactory.get().buildObstacle(com.pottda.game.model.Sprites.BORDER,
-//                new Vector2f(0, HEIGHT_METERS * area_scaling), new Vector2f(WIDTH_METERS * area_scaling, border_thickness * HEIGHT_RATIO), true));
         new ObstacleBuilder().
                 setSize(WIDTH_METERS, border_thickness).
                 setPosition(new Vector2f(WIDTH_METERS / 2, border_thickness / 2 + HEIGHT_METERS)).
                 setSprite(Sprites.BORDER).
                 create();
         // Right
-//        controllers.add(ActorFactory.get().buildObstacle(com.pottda.game.model.Sprites.BORDER,
-//                new Vector2f(WIDTH_METERS * area_scaling, 0), new Vector2f(border_thickness * WIDTH_RATIO, (HEIGHT_METERS + right_border_extra) * area_scaling), true));
         new ObstacleBuilder().
                 setSize(border_thickness, HEIGHT_METERS).
                 setPosition(new Vector2f(border_thickness / 2 + WIDTH_METERS, HEIGHT_METERS / 2)).
