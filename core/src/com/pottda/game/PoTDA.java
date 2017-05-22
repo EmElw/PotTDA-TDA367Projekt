@@ -11,7 +11,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.*;
 import com.pottda.game.model.*;
@@ -25,9 +24,7 @@ import com.pottda.game.physicsBox2D.CollisionListener;
 import com.pottda.game.view.*;
 
 import javax.vecmath.Vector2f;
-import javax.xml.parsers.ParserConfigurationException;
 
-import java.io.IOException;
 import java.util.*;
 
 import static com.pottda.game.PoTDA.GameState.*;
@@ -72,6 +69,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     private GameOverView gameOverView;
 
     private WaveController waveController;
+    private long startWaitInventory;
 
     @Override
     public void onNewController(AbstractController c) {
@@ -87,13 +85,12 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     public enum GameState {
         NONE,
         RUNNING,
-        WAITING,
         PAUSED,
         OPTIONS,
         MAIN_MENU,
         MAIN_CHOOSE,
         MAIN_CONTROLS,
-        GAME_OVER
+        WAITING_FOR_INVENTORY, GAME_OVER
     }
 
     private static GameState gameState = NONE;
@@ -140,8 +137,6 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         mainDifficultyView = new MainDifficultyView(mainDifficultyStage);
         mainControlsView = new MainControlsView(mainControlsStage);
         gameOverView = new GameOverView(gameOverStage);
-
-        waveController = new WaveController(WIDTH_METERS, HEIGHT_METERS);
     }
 
     /**
@@ -164,7 +159,9 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         soundsAndMusic = new SoundsAndMusic();
         startMusic();
 
-        generateInventoryBlueprints();
+        // Generate XML-assets
+        MyXMLReader reader = new MyXMLReader();
+        generateXMLAssets(reader);
 
         // Make a ControllerHookup and add PoTDA as a listener
         ControllerHookup controllerHookup = new ControllerHookup(gameStage);
@@ -174,13 +171,13 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         AbstractModelBuilder.setPhysiscActorFactory(new Box2DPhysicsActorFactory(world));
         AbstractModelBuilder.addListener(controllerHookup);
 
-        createPlayer();
+        // Create WaveController
+        waveController = new WaveController();
 
-        gameState = WAITING;
+        createPlayer();
 
         createWorldBorders();
 
-        waveController.initNextLevel();
     }
 
     /**
@@ -280,6 +277,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
             case NONE:
                 break;
             case RUNNING:
+            case WAITING_FOR_INVENTORY:
                 // Update the model
                 updateGame();
 
@@ -287,30 +285,30 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
                 doPhysicsStep(Gdx.graphics.getDeltaTime());
 
                 updateWorld(true);
+
+                spawnEnemies();
+
                 if (!enemiesAlive()) {
-                    if (waveController.finishedWaves()) {
-                        // TODO Go to inventory
-                        System.out.println("To inventory");
-                        waveController.initNextLevel();
-                        gameState = WAITING;
+                    if (waveController.levelFinished() && gameState != WAITING_FOR_INVENTORY) {
+                        startWaitInventory = System.currentTimeMillis();
+                        gameState = WAITING_FOR_INVENTORY;
                     } else {
-                        gameState = WAITING;
-                        waveController.setStartTime(System.currentTimeMillis());
+                        waveController.quicken(9);  //Passes 10 ms / ms in the level's internal time frame
                     }
                 }
+                if (gameState.equals(WAITING_FOR_INVENTORY)) {
+                    System.out.println("waiting");
+                    if ((System.currentTimeMillis() - startWaitInventory) / 1000 < WAITING_TIME_GAME_OVER_SECONDS) {
+                        // TODO switch to inventory
+                        System.out.println("To inventory");
+                        gameState = RUNNING;
+                        levelStart();
+                    }
+                }
+
                 if (!playersIsAlive()) {
                     startWaitGameOver = System.currentTimeMillis();
                     gameState = GAME_OVER;
-                }
-                break;
-            case WAITING:
-                updateGame();
-                updateWorld(true);
-                // Check if user has waited 5 seconds
-                if (waveController.waited()) {
-                    gameState = RUNNING;
-                    // Start next wave
-                    waveController.startWave();
                 }
                 break;
             case PAUSED:
@@ -360,6 +358,10 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
 
     }
 
+    private void levelStart() {
+        waveController.newLevel();
+    }
+
     /**
      * Restarts the game by recreating everything
      */
@@ -386,12 +388,30 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         }
     }
 
+    private void spawnEnemies() {
+        List<EnemyBlueprint> list = waveController.getToSpawn();
+        Vector2f playerPosition = Character.player.getPosition();
+        for (EnemyBlueprint bp : list) {
+            float xx, yy;
+            do {
+                xx = (float) (WIDTH_METERS * Math.random());
+            } while (Math.abs(xx - playerPosition.x) < WIDTH_METERS / (2 * SCALING));
+
+            do {
+                yy = (float) (HEIGHT_METERS * Math.random());
+            } while (Math.abs(yy - playerPosition.y) < HEIGHT_METERS / (2 * SCALING));
+
+            bp.build().setPosition(new Vector2f(xx, yy)).create();
+        }
+    }
+
     /**
      * Updates physics, health bar and renders views
      */
+
     private void updateWorld(boolean moveCamera) {
         // Update the physics world
-        doPhysicsStep(Gdx.graphics.getDeltaTime());
+//        doPhysicsStep(Gdx.graphics.getDeltaTime());
 
         // Set the health bar to player's current health
         hudView.setHealthbar(Character.player.getCurrentHealth());
@@ -429,12 +449,6 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
             Vector3 vector3 = hudStage.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
             switch (gameState) {
                 case RUNNING:
-                    if (hudView.checkIfTouchingPauseButton(vector3)) {
-                        // Touching pause button
-                        gameState = PAUSED;
-                    }
-                    break;
-                case WAITING:
                     if (hudView.checkIfTouchingPauseButton(vector3)) {
                         // Touching pause button
                         gameState = PAUSED;
@@ -550,60 +564,51 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         controllerRemovalBuffer.add(controller);
     }
 
-    private void generateInventoryBlueprints() {
+    // XML-asset loading
+
+    private void generateXMLAssets(MyXMLReader reader) {
+        generateInventories("inventoryblueprint", reader);
+        generateEnemies("enemies", reader);
+        generateEnemyGroups("enemygroups", reader);
+    }
+
+    private void generateInventories(String path, MyXMLReader reader) {
 
         FileHandle folder = Gdx.files.internal("inventoryblueprint");
 
         List<FileHandle> contents = Arrays.asList(folder.list("xml"));
         try {
             for (FileHandle f : contents) {
-                generateBlueprint(f);
+                InventoryBlueprint.newBlueprint(reader.parseInventory(f));
             }
         } catch (Exception e) {
-            throw new Error();
+            throw new Error("failed to generate inventory blueprints: ", e);
         }
     }
 
-    private void generateBlueprint(FileHandle file) throws ClassNotFoundException, ParserConfigurationException, InstantiationException, IllegalAccessException, IOException {
-        List<XMLItem> xmlItemList = new ArrayList<XMLItem>();
-        XmlReader xml = new XmlReader();
-        XmlReader.Element xml_element = null;
+    private void generateEnemies(String path, MyXMLReader reader) {
+        FileHandle folder = Gdx.files.internal(path);
+
+        List<FileHandle> contents = Arrays.asList(folder.list("xml"));
         try {
-            // Read the file
-            xml_element = xml.parse(file);
-            // If the loaded file does not contain an inventory tag, throw exception
-            if (!xml_element.toString().split("\n")[0].contains("inventory")) {
-                throw new IOException("Couldn't find <inventory> tag");
+            for (FileHandle f : contents) {
+                EnemyBlueprint.newBlueprint(reader.parseEnemy(f));
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new Error("failed to generate enemy blueprints: ", e);
         }
-
-        assert xml_element != null;
-        String secondLine = xml_element.toString().split("\n")[0];
-        // Get w and h from XML file
-        final int width = Integer.parseInt(secondLine.split("\"")[1]);
-        final int height = Integer.parseInt(secondLine.split("\"")[3]);
-
-        // Set the dimensions of the inventory
-        Inventory inventory = new Inventory();
-        inventory.setDimensions(width, height);
-
-        // Create the XMLItem list
-        for (String s : xml_element.toString().split("\n")) {
-            if (s.contains("<item ")) {
-                int orientation = Integer.parseInt(s.split("\"")[1]);
-                int x = Integer.parseInt(s.split("\"")[3]);
-                int y = Integer.parseInt(s.split("\"")[5]);
-                String name = s.split("\"")[7];
-                XMLItem xmlItem = new XMLItem(name, x, y, orientation);
-                xmlItemList.add(xmlItem);
-            }
-        }
-
-        InventoryBlueprint.createBlueprint(file.name(),
-                InventoryFactory.createFromXML(xmlItemList, inventory, file.name()));
     }
 
+    private void generateEnemyGroups(String path, MyXMLReader reader) {
+        FileHandle folder = Gdx.files.internal(path);
 
+        List<FileHandle> contents = Arrays.asList(folder.list("xml"));
+        try {
+            for (FileHandle f : contents) {
+                EnemyGroup.newGroup(reader.parseEnemyGroup(f));
+            }
+        } catch (Exception e) {
+            throw new Error("failed to generate enemy blueprints: ", e);
+        }
+    }
 }

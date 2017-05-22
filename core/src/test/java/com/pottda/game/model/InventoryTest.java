@@ -1,8 +1,9 @@
 package com.pottda.game.model;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.XmlReader;
-import com.pottda.game.controller.*;
+import com.pottda.game.MyXMLReader;
 import com.pottda.game.model.builders.AbstractModelBuilder;
 import com.pottda.game.model.items.ChainAttack;
 import com.pottda.game.model.items.MultiShot;
@@ -11,17 +12,20 @@ import com.pottda.game.model.items.Switcher;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 
-import javax.vecmath.Tuple2f;
 import javax.vecmath.Vector2f;
 import javax.xml.parsers.ParserConfigurationException;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import static com.pottda.game.model.InventoryBlueprint.getInventory;
 
 /**
  * Test some items and Inventory.compile()
@@ -30,10 +34,20 @@ import java.util.List;
 public class InventoryTest {
     Inventory testInv2;
     AttackItem cannon;
+    static MyXMLReader reader = new MyXMLReader();
     private Inventory inventory;
 
-    @Before
-    public void setUp() {
+    @BeforeClass
+    public static void setUpUp(){
+
+        String basePath = new File("").getAbsolutePath();
+        String filePath = basePath.
+                replace("\\core", "").  // No one must know of this blasphemy
+                concat("\\android\\assets\\inventoryblueprint");
+
+        FileHandle file = new FileHandle(filePath);
+        generateInventories(file,reader);
+
 
         AbstractModelBuilder.setPhysiscActorFactory(new PhysicsActorFactory() {
 
@@ -74,6 +88,11 @@ public class InventoryTest {
                 return pa;
             }
         });
+    }
+
+    @Before
+    public void setUp() {
+
 
         try {
             testInv2 = getInventory("testInv2.xml");
@@ -155,53 +174,17 @@ public class InventoryTest {
         }
     }
 
-    private Inventory getInventory(String fileName) throws ClassNotFoundException, ParserConfigurationException, InstantiationException, IllegalAccessException, IOException {
-        List<XMLItem> xmlItemList = new ArrayList<XMLItem>();
 
-        String basePath = new File("").getAbsolutePath();
-        String filePath = basePath.
-                replace("\\core", "").  // No one must know of this blasphemy
-                concat("\\android\\assets\\inventoryblueprint\\" + fileName);
+    private static void generateInventories(FileHandle folder, MyXMLReader reader) {
 
-        FileHandle file = new FileHandle(filePath);
-        // Create the inventory to return
-        XmlReader xml = new XmlReader();
-        XmlReader.Element xml_element = null;
+        List<FileHandle> contents = Arrays.asList(folder.list("xml"));
         try {
-            // Read the file
-            xml_element = xml.parse(file);
-            // If the loaded file does not contain an inventory tag, throw exception
-            if (!xml_element.toString().split("\n")[0].contains("inventory")) {
-                throw new IOException("Couldn't find <inventory> tag");
+            for (FileHandle f : contents) {
+                InventoryBlueprint.newBlueprint(reader.parseInventory(f));
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new Error("failed to generate inventory blueprints: ", e);
         }
-
-
-        assert xml_element != null;
-        String secondLine = xml_element.toString().split("\n")[0];
-        // Get w and h from XML file
-        final int width = Integer.parseInt(secondLine.split("\"")[1]);
-        final int height = Integer.parseInt(secondLine.split("\"")[3]);
-
-        // Set the dimensions of the inventory
-        Inventory inventory = new Inventory();
-        inventory.setDimensions(width, height);
-
-        // Create the XMLItem list
-        for (String s : xml_element.toString().split("\n")) {
-            if (s.contains("<item ")) {
-                int orientation = Integer.parseInt(s.split("\"")[1]);
-                int x = Integer.parseInt(s.split("\"")[3]);
-                int y = Integer.parseInt(s.split("\"")[5]);
-                String name = s.split("\"")[7];
-                XMLItem xmlItem = new XMLItem(name, x, y, orientation);
-                xmlItemList.add(xmlItem);
-            }
-        }
-
-        return InventoryFactory.createFromXML(xmlItemList, inventory, file.name());
     }
 
 }

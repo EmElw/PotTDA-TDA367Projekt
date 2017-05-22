@@ -49,4 +49,5 @@ public enum Sprites {
     Sprites(String fileName) {
         this.fileName = fileName;
     }
+
 }

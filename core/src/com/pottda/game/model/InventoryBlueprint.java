@@ -1,5 +1,6 @@
 package com.pottda.game.model;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,36 +9,39 @@ import java.util.Map;
  */
 public class InventoryBlueprint {
 
+    private static Map<String, InventoryBlueprint> blueprints = new HashMap<String, InventoryBlueprint>();
+
     /**
-     * Returns a new instance of an {@link Inventory} that corresponds to the given name.
-     *
-     * @param name a {@link String} with the name of the Inventory
-     * @return a new {@link Inventory}
+     * Returns an {@link Inventory} for the given name
+     * @param name a {@link String}
+     * @return an {@link Inventory}
      */
-    public static Inventory getInventory(String name)  {
+    public static Inventory getInventory(String name) {
         return blueprints.get(name).newInventory();
     }
 
-    public static boolean hasInventory(String name) {
+    /**
+     * Returns true if there is a blueprint for the given name
+     * @param name a {@link String}
+     * @return true if there is a blueprint for the given name
+     */
+    public static boolean contains(String name) {
         return blueprints.containsKey(name);
     }
 
     /**
-     * Create a new blueprint and assign it to the given name
-     *
-     * @param name
-     * @param i
-     * @throws Exception
+     * Creates and adds a new blueprint from an {@link XMLInventory}
+     * @param inventory an {@link XMLInventory}
      */
-    public static void createBlueprint(String name, Inventory i) {
-        blueprints.put(name, new InventoryBlueprint(i));
+    public static void newBlueprint(XMLInventory inventory) {
+        blueprints.put(inventory.name, new InventoryBlueprint(inventory));
     }
-
-    private static Map<String, InventoryBlueprint> blueprints = new HashMap<String, InventoryBlueprint>();
 
     // ----------------------------------------------
 
     private final int width;
+
+
     private final int height;
 
     /**
@@ -45,21 +49,20 @@ public class InventoryBlueprint {
      */
     private final Map<PointAndOrientation, Class<? extends Item>> itemMap;
 
-
-    /**
-     * Creates a blueprint from a given {@link Inventory}.
-     * <p>
-     * Does not actually copy items, but maps a position/orientation to a class
-     *
-     * @param inventory a {@link Inventory}
-     */
-    private InventoryBlueprint(Inventory inventory) {
+    public InventoryBlueprint(XMLInventory inventory) {
         itemMap = new HashMap<PointAndOrientation, Class<? extends Item>>();
-        width = inventory.getWidth();
-        height = inventory.getHeight();
+        width = inventory.width;
+        height = inventory.height;
 
-        for (Item i : inventory.items) {
-            addItemClass(i.getClass(), i.x, i.y, i.orientation);
+        try {
+            for (XMLItem i : inventory.items) {
+                addItemClass(ItemClassLoader.getItemClass(i.getClassName()),
+                        i.getX(),
+                        i.getY(),
+                        i.getOrientation());
+            }
+        } catch (Exception e) {
+            throw new Error("could not instantiate items :", e);
         }
     }
 
