@@ -72,6 +72,7 @@ public class WaveController {
      */
 
     private void newLevel(int difficulty, long length) {
+        System.out.println("d: " + difficulty + " , l: " + length);
         double variance = 1 + (difficultyVariance - Math.random() * 2 * difficultyVariance);
         long currentTime = System.currentTimeMillis() + SPAWN_DELAY;
         int remainingDifficulty = (int) Math.round(difficulty * variance);
