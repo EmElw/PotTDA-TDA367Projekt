@@ -1,11 +1,15 @@
 package com.pottda.game.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Scaling;
 import com.pottda.game.model.Inventory;
+import com.pottda.game.model.Item;
 import com.pottda.game.model.Storage;
+
+import javax.vecmath.Point2i;
 
 import static com.pottda.game.view.AtlasCreator.atlas;
 
@@ -28,19 +32,14 @@ public class InventoryView {
     public void create() {
         Gdx.input.setInputProcessor(stage);
 
-        // See Scene2D.ui github page for instructions to design the page
-        Label storageLabel = new Label("Storage", mySkin);
-        Label inventoryLabel = new Label("Inventory", mySkin);
-
-        // Create table to hold storage section
-        storageTable = new Table();
-
         table = new Table();
         table.setFillParent(true);
         stage.addActor(table);
 
         table.setDebug(true);
 
+        // Create table to hold storage section
+        storageTable = new Table();
         // Create storage & scrollpane for storage
         ScrollPane scroll = new ScrollPane(storageTable);
         scroll.layout();
@@ -49,11 +48,19 @@ public class InventoryView {
         Table storage = new Table();
         storage.add(scroll).height(stage.getHeight()-25);
 
+        // Create group to hold inventory section
+        inventoryTable = new Table();
+
+        // Create labels for storage and inventory
+        Label storageLabel = new Label("Storage", mySkin);
+        Label inventoryLabel = new Label("Inventory", mySkin);
+
         // Add labels and storage/inventory table
         table.add(storageLabel);
         table.add(inventoryLabel);
         table.row();
         table.add(storage).fill();
+        table.add(inventoryTable).fill();
      }
 
     public void parseStorage(Storage storageMap) {
@@ -86,6 +93,25 @@ public class InventoryView {
 
     private void createInventoryView(Inventory inventory) {
         // Create inventory
+        Group inventoryGroup = new Group();
+        for (Item i : inventory.getItems()) {
+            Image itemImage = new Image(atlas.findRegion(i.getName()));
+            inventoryGroup.addActor(itemImage);
+
+            int xLow = 0, yLow = 0;
+            for (Point2i point : i.getBasePositions()) {
+                xLow = Math.min(point.getX(), xLow);
+                yLow = Math.min(point.getY(), yLow);
+            }
+            for (Point2i point : i.getBaseOutputs()) {
+                xLow = Math.min(point.getX(), xLow);
+                yLow = Math.min(point.getY(), yLow);
+            }
+
+            itemImage.setOrigin(-xLow, -yLow);
+            itemImage.setPosition(i.getX()*AtlasCreator.SIZE, i.getY()*AtlasCreator.SIZE);
+        }
+        inventoryTable.add(inventoryGroup);
     }
 
     public void dispose() {

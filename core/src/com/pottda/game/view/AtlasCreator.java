@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class AtlasCreator {
     public static TextureAtlas atlas = new TextureAtlas();
-    private final static int SIZE = 25;
+    public final static int SIZE = 25;
     private static int xLow;
     private static int yLow;
 
