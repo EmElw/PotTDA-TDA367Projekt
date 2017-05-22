@@ -394,12 +394,12 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
 
     private void spawnEnemies() {
         List<EnemyBlueprint> list = waveController.getToSpawn();
-        Vector2f playerPosition = Character.player.getPosition();
+//        Vector2f playerPosition = Character.player.getPosition();
         for (EnemyBlueprint bp : list) {
-            float xx = (float) (WIDTH_METERS * Math.random());
-            float yy = (float) (HEIGHT_METERS * Math.random());
-//            if (Math.abs(xx - playerPosition.x) < 8 &&
-//                    Math.abs(yy - playerPosition.y) < 6) {
+            float xx = (float) (WIDTH_METERS * /*SCALING **/ Math.random());
+            float yy = (float) (HEIGHT_METERS * /*SCALING **/ Math.random());
+//            while (Math.abs(xx - playerPosition.x) < WIDTH_METERS / 2||
+//                    Math.abs(yy - playerPosition.y) < HEIGHT_METERS / 2) {
             bp.build().setPosition(new Vector2f(xx, yy)).create();
 //            }
         }
