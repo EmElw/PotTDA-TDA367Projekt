@@ -78,6 +78,7 @@ public abstract class ModelActor {
 
     public enum Behaviour {
         NONE,
-        DUMB
+        DUMB,
+        STATIONARY
     }
 }
