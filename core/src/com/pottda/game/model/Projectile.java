@@ -12,6 +12,7 @@ public class Projectile extends ModelActor {
     public final long timeOfConstructionMS;
     public long lifeTimeMS;
     public static final int DEFAULT_PROJECTILE_LIFETIME_MS = 10000;
+    public Vector2f movementVector;
     /**
      * Listeners that care about various game-oriented events
      */
@@ -107,7 +108,12 @@ public class Projectile extends ModelActor {
         this.angle = (float) Math.toDegrees(Math.atan2(
                 movementVector.getY(),
                 movementVector.getX()));
+        this.movementVector = movementVector;
+    }
 
+    public void changeSpeed(float multiplier){
+        movementVector.scale(multiplier);
+        giveInput(movementVector, null);
     }
 
     @Override
