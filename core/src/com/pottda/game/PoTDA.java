@@ -219,38 +219,37 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
     private void createWorldBorders() {
         final float border_thickness = 0.25f;
         // Scale the area bigger or smaller
-        final float area_scaling = 1.2f;
-        final float right_border_extra = 0.78f;
+        final float area_scaling = 2.5f;
         // Bottom
 //        controllers.add(ActorFactory.get().buildObstacle(com.pottda.game.model.Sprites.BORDER,
 //                new Vector2f(0, 0), new Vector2f(WIDTH_METERS * area_scaling, border_thickness * HEIGHT_RATIO), true));
         new ObstacleBuilder().
-                setSize(WIDTH_METERS, border_thickness).
-                setPosition(new Vector2f(WIDTH_METERS / 2, -border_thickness / 2)).
+                setSize(WIDTH_METERS * area_scaling, border_thickness).
+                setPosition(new Vector2f((WIDTH_METERS * area_scaling) / 2, -border_thickness / 2)).
                 setSprite(Sprites.BORDER).
                 create();
         // Left
 //        controllers.add(ActorFactory.get().buildObstacle(com.pottda.game.model.Sprites.BORDER,
 //                new Vector2f(0, 0), new Vector2f(border_thickness * WIDTH_RATIO, HEIGHT_METERS * area_scaling), true));
         new ObstacleBuilder().
-                setSize(border_thickness, HEIGHT_METERS).
-                setPosition(new Vector2f(-border_thickness / 2, HEIGHT_METERS / 2)).
+                setSize(border_thickness, HEIGHT_METERS * area_scaling).
+                setPosition(new Vector2f(-border_thickness / 2, (HEIGHT_METERS * area_scaling) / 2)).
                 setSprite(Sprites.BORDER).
                 create();
         // Top
 //        controllers.add(ActorFactory.get().buildObstacle(com.pottda.game.model.Sprites.BORDER,
 //                new Vector2f(0, HEIGHT_METERS * area_scaling), new Vector2f(WIDTH_METERS * area_scaling, border_thickness * HEIGHT_RATIO), true));
         new ObstacleBuilder().
-                setSize(WIDTH_METERS, border_thickness).
-                setPosition(new Vector2f(WIDTH_METERS / 2, border_thickness / 2 + HEIGHT_METERS)).
+                setSize(WIDTH_METERS * area_scaling, border_thickness).
+                setPosition(new Vector2f((WIDTH_METERS * area_scaling) / 2, border_thickness / 2 + (HEIGHT_METERS * area_scaling))).
                 setSprite(Sprites.BORDER).
                 create();
         // Right
 //        controllers.add(ActorFactory.get().buildObstacle(com.pottda.game.model.Sprites.BORDER,
 //                new Vector2f(WIDTH_METERS * area_scaling, 0), new Vector2f(border_thickness * WIDTH_RATIO, (HEIGHT_METERS + right_border_extra) * area_scaling), true));
         new ObstacleBuilder().
-                setSize(border_thickness, HEIGHT_METERS).
-                setPosition(new Vector2f(border_thickness / 2 + WIDTH_METERS, HEIGHT_METERS / 2)).
+                setSize(border_thickness, HEIGHT_METERS * area_scaling).
+                setPosition(new Vector2f(border_thickness / 2 + (WIDTH_METERS * area_scaling), (HEIGHT_METERS * area_scaling) / 2)).
                 setSprite(Sprites.BORDER).
                 create();
     }
