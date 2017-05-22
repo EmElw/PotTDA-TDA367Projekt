@@ -325,6 +325,8 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
                 if (!playersIsAlive()) {
                     startWaitGameOver = System.currentTimeMillis();
                     gameState = GAME_OVER;
+                    label.setPosition(gameOverStage.getWidth() / 2 - label.getWidth(), gameOverStage.getHeight() * 11 / 16);
+                    gameOverStage.addActor(label);
                 }
                 break;
             case PAUSED:
