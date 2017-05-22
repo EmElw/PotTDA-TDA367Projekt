@@ -4,13 +4,16 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.*;
 import com.pottda.game.model.*;
@@ -120,6 +123,9 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     public static int score = 0;
     private int enemyAmount = 0;
 
+    private Label label;
+    private static String scoreLabelText = "Score: ";
+
     @Override
     public void create() {
         Gdx.graphics.setTitle(GAME_TITLE);
@@ -166,6 +172,13 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
 
         soundsAndMusic = new SoundsAndMusic();
         startMusic();
+
+        BitmapFont bf = new BitmapFont();
+        Label.LabelStyle style = new Label.LabelStyle(bf, Color.WHITE);
+        label = new Label(scoreLabelText, style);
+        label.setPosition(hudStage.getWidth() / 6, hudStage.getHeight() - 30);
+        label.setFontScale(1.5f);
+        hudStage.addActor(label);
 
         // Generate XML-assets
         MyXMLReader reader = new MyXMLReader();
@@ -341,6 +354,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
                 } else {
                     updateGame();
                     updateWorld(false);
+                    doPhysicsStep(Gdx.graphics.getDeltaTime());
                 }
                 break;
         }
@@ -421,8 +435,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
      */
 
     private void updateWorld(boolean moveCamera) {
-        // Update the physics world
-//        doPhysicsStep(Gdx.graphics.getDeltaTime());
+        label.setText(scoreLabelText + score);
 
         // Set the health bar to player's current health
         hudView.setHealthbar(Character.player.getCurrentHealth());
