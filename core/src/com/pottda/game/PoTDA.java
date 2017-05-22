@@ -33,7 +33,7 @@ import java.util.*;
 import static com.pottda.game.PoTDA.GameState.*;
 import static com.pottda.game.controller.ControllerOptions.ControllerMode.*;
 
-public class PoTDA extends ApplicationAdapter implements NewControllerListener, ScoreChangeListener {
+public class PoTDA extends ApplicationAdapter implements NewControllerListener, ScoreChangeListener, DeathListener {
     private Stage hudStage;
     private Stage joystickStage;
     private Stage gameStage;
@@ -83,6 +83,11 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         score += points;
     }
 
+    @Override
+    public void onDeath() {
+        enemyAmount--;
+    }
+
 
     public enum GameState {
         NONE,
@@ -114,6 +119,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     private static final long WAITING_TIME_GAME_OVER_SECONDS = 3;
 
     public static int score = 0;
+    private int enemyAmount = 0;
 
     @Override
     public void create() {
