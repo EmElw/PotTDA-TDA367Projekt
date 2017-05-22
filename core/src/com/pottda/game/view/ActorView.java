@@ -15,6 +15,7 @@ import javax.vecmath.Vector2f;
  */
 public class ActorView extends Image {
     private final Texture texture;
+    private Vector2f size;
 
     /**
      * calls super class to set image for actor
@@ -37,9 +38,10 @@ public class ActorView extends Image {
      */
     private ActorView(Texture texture, Vector2f size) {
         super(new TextureRegionDrawable(new TextureRegion(texture)));
+        this.size = size;
         this.texture = texture;
         this.setOrigin(-(texture.getWidth() * PoTDA.WIDTH_RATIO) / 2, -(texture.getHeight() * PoTDA.HEIGHT_RATIO) / 2);
-        this.setSize(size.x, size.y); // Resize to make in meters instead of pixels
+        this.setSize(size.x, size.y);
 
     }
 
@@ -57,8 +59,17 @@ public class ActorView extends Image {
      * @param xPosition The x position of the actor
      * @param yPosition The y position of the actor
      */
-    public void setPoint(float xPosition, float yPosition) {
-        this.setPosition(xPosition - (texture.getWidth() * PoTDA.WIDTH_RATIO) / 2, yPosition - (texture.getHeight() * PoTDA.HEIGHT_RATIO) / 2);
+    public void setPoint(float xPosition, float yPosition, boolean isObstacle) {
+        if (!isObstacle) {
+            this.setPosition(xPosition - (texture.getWidth() * PoTDA.WIDTH_RATIO) / 2, yPosition - (texture.getHeight() * PoTDA.HEIGHT_RATIO) / 2);
+        } else {
+            // Set the correct positions
+            if (size.x > size.y) {
+                this.setPosition(xPosition - size.x / 2, yPosition);
+            } else {
+                this.setPosition(xPosition, yPosition - size.y / 2);
+            }
+        }
     }
 
     /**

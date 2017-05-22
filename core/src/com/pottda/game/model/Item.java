@@ -50,7 +50,7 @@ public abstract class Item extends ProjectileListenerAdapter {
     /**
      * Data structure containing values mapped to enums
      */
-    private Map<Stat, Double> statMap;
+    protected Map<Stat, Double> statMap;
     /**
      * Direction of the item in terms of number pi/2 rotations
      */

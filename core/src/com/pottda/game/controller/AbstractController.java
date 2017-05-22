@@ -1,6 +1,7 @@
 package com.pottda.game.controller;
 
 import com.pottda.game.model.ModelActor;
+import com.pottda.game.model.Obstacle;
 import com.pottda.game.view.ActorView;
 
 import javax.vecmath.Vector2f;
@@ -68,7 +69,11 @@ public abstract class AbstractController {
         Vector2f position = modelActor.getPosition();
 //        float degrees = modelActor.getAngle();
 
-        actorView.setPoint(position.x, position.y);
+        if (modelActor instanceof Obstacle) {
+            actorView.setPoint(position.x, position.y, true);
+        } else {
+            actorView.setPoint(position.x, position.y, false);
+        }
         actorView.setAngle(modelActor.getAngle());
     }
 

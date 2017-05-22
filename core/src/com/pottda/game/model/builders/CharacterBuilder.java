@@ -3,6 +3,9 @@ package com.pottda.game.model.builders;
 import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Concrete implementation of a Character Builder pattern
  */
@@ -21,6 +24,10 @@ public class CharacterBuilder extends AbstractModelBuilder implements ICharacter
         }
         character.inventory = inventory;
         inventory.compile();
+
+        List<InventoryChangeListener> inventoryChangeListeners = new ArrayList<InventoryChangeListener>(1);
+        inventoryChangeListeners.add(character);
+        inventory.setInventoryChangeListeners(inventoryChangeListeners);
 
         character.setPhysicsActor(physiscActorFactory.getCharacterPhysicsActor(character));
 
