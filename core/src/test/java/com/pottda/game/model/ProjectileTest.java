@@ -5,15 +5,12 @@ import com.pottda.game.model.Character;
 import com.pottda.game.model.builders.AbstractModelBuilder;
 import com.pottda.game.model.builders.CharacterBuilder;
 import com.pottda.game.model.builders.ProjectileBuilder;
-import com.pottda.game.physicsBox2D.Box2DPhysicsActorFactory;
-import org.junit.After;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.vecmath.Vector2f;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
@@ -65,7 +62,7 @@ public class ProjectileTest {
         projectile = (Projectile) new ProjectileBuilder().
                 setTeam(Character.PLAYER_TEAM).
                 setPosition(new Vector2f()).
-                setSprite(Sprites.PROJECTILE1).
+                setSprite(Sprites.ENEMYPROJECTILE).
                 create();
     }
 

@@ -3,6 +3,7 @@ package com.pottda.game.model;
 import com.pottda.game.model.builders.ProjectileBuilder;
 
 import javax.vecmath.Vector2f;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +66,15 @@ public abstract class AttackItem extends Item {
         temporaryVector.scale(CHARACTER_RADIUS);
         origin.add(temporaryVector);
 
+        Sprites sprite;
+
+        // Set sprite depending on team
+        if (team == Character.PLAYER_TEAM) {
+            sprite = Sprites.PLAYERPROJECTILE;
+        } else {
+            sprite = Sprites.ENEMYPROJECTILE;
+        }
+
         Projectile proj = (Projectile) new ProjectileBuilder().
                 setTeam(team).
                 setBouncy(bounces).
@@ -73,7 +83,7 @@ public abstract class AttackItem extends Item {
                 setVelocity(velocity).
                 setListeners(listeners).
                 setPosition(origin).
-                setSprite(Sprites.PROJECTILE1).
+                setSprite(sprite).
                 create();
 
         // Call the event

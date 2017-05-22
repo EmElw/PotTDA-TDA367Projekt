@@ -7,7 +7,8 @@ import com.badlogic.gdx.graphics.Texture;
 public enum Sprites {
     PLAYER("circletest.png"),
     ENEMY("circletestred.png"),
-    PROJECTILE1("game/projectile1.png"),
+    ENEMYPROJECTILE("game/projectile1.png"),
+    PLAYERPROJECTILE("game/projectile2.png"),
     BORDER("game/border.png"),
     QUITBUTTON("gameover/quit.png"),
     MAINMENUBG("menu/bg.png"),
