@@ -15,8 +15,12 @@ public class Box2DPhysicsActor extends PhysicsActor {
 
     @Override
     public Vector2f getPosition() {
-        Vector2 bodyPos = body.getPosition();
-        return new Vector2f(bodyPos.x, bodyPos.y);
+        if (body != null) {
+            Vector2 bodyPos = body.getPosition();
+            return new Vector2f(bodyPos.x, bodyPos.y);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -30,7 +34,11 @@ public class Box2DPhysicsActor extends PhysicsActor {
 
     @Override
     public void destroyBody() {
-        body.getWorld().destroyBody(body);
+        if (body != null) {
+            body.setUserData(null);
+            body.getWorld().destroyBody(body);
+            body = null;
+        }
     }
 
     @Override

@@ -3,6 +3,9 @@ package com.pottda.game.model.builders;
 import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Concrete implementation of a Character Builder pattern
  */
@@ -10,6 +13,7 @@ public class CharacterBuilder extends AbstractModelBuilder implements ICharacter
     private int team = 0;
     private Inventory inventory;
     private ModelActor.Behaviour behaviour = null;
+    private List<DeathListener> deathListeners;
 
     @Override
     public ModelActor create() {
@@ -22,9 +26,17 @@ public class CharacterBuilder extends AbstractModelBuilder implements ICharacter
         character.inventory = inventory;
         inventory.compile();
 
+        List<InventoryChangeListener> inventoryChangeListeners = new ArrayList<InventoryChangeListener>(1);
+        inventoryChangeListeners.add(character);
+        inventory.setInventoryChangeListeners(inventoryChangeListeners);
+
         character.setPhysicsActor(physiscActorFactory.getCharacterPhysicsActor(character));
 
         character.behaviour = behaviour;
+
+        if(deathListeners != null) {
+            character.setDeathListeners(deathListeners);
+        }
 
         setCommonAndNotify(character);
         return character;
@@ -56,4 +68,9 @@ public class CharacterBuilder extends AbstractModelBuilder implements ICharacter
         return this;
     }
 
+    @Override
+    public ICharacterBuilder setDeathListeners(List<DeathListener> deathListeners) {
+        this.deathListeners = deathListeners;
+        return this;
+    }
 }

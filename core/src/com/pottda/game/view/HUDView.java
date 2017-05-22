@@ -84,6 +84,9 @@ public class HUDView {
      * @param health new health. A value between 0 and 100
      */
     public void setHealthbar(float health) {
+        if (health < 0) {
+            health = 0;
+        }
         healthbarRed.setWidth(health);
     }
 

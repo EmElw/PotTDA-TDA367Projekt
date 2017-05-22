@@ -5,7 +5,6 @@ import com.pottda.game.model.Character;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.vecmath.Tuple2f;
 import javax.vecmath.Vector2f;
 
 import java.util.ArrayList;
@@ -87,12 +86,12 @@ public class BuilderTest {
                 setPiercing().
                 setDamage(10).
                 setLifetime(50).
-                setSprite(PROJECTILE1).
+                setSprite(ENEMYPROJECTILE).
                 create();
 
         // Create a projectile that is mostly default parameters
         Projectile projB = (Projectile) new ProjectileBuilder().
-                setSprite(PROJECTILE1).
+                setSprite(ENEMYPROJECTILE).
                 create();
 
         // Test the fiddled projectile
@@ -100,12 +99,12 @@ public class BuilderTest {
         assertEquals(true, projA.isPiercing);
         assertEquals(10, projA.damage);
         assertEquals(50, projA.lifeTimeMS);
-        assertEquals(PROJECTILE1, projA.sprite);
+        assertEquals(ENEMYPROJECTILE, projA.sprite);
         assertEquals(0, projA.getListeners().size());
 
         // Test the mostly default projectile
         assertEquals(0, projB.damage);
-        assertEquals(PROJECTILE1, projB.sprite);
+        assertEquals(ENEMYPROJECTILE, projB.sprite);
         assertEquals(0, projB.getListeners().size());
 
 
