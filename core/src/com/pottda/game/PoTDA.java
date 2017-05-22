@@ -30,7 +30,7 @@ import java.util.*;
 import static com.pottda.game.PoTDA.GameState.*;
 import static com.pottda.game.controller.ControllerOptions.ControllerMode.*;
 
-public class PoTDA extends ApplicationAdapter implements NewControllerListener, ScoreChangeListener {
+public class PoTDA extends ApplicationAdapter implements NewControllerListener, ScoreChangeListener, DeathListener {
     private Stage hudStage;
     private Stage joystickStage;
     private Stage gameStage;
@@ -79,6 +79,13 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     @Override
     public void scoreChanged(int points) {
         score += points;
+        System.out.println("Score: " + score);
+    }
+
+    @Override
+    public void onDeath() {
+        enemyAmount--;
+        System.out.println("Enemies alive: " + enemyAmount);
     }
 
 
@@ -111,6 +118,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     private static final long WAITING_TIME_GAME_OVER_SECONDS = 3;
 
     public static int score = 0;
+    private int enemyAmount = 0;
 
     @Override
     public void create() {
@@ -201,12 +209,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
      * @return true if at least one enemy is alive
      */
     private boolean enemiesAlive() {
-        for (AbstractController a : controllers) {
-            if (a instanceof AIController) {
-                return true;
-            }
-        }
-        return false;
+        return enemyAmount > 0;
     }
 
     /**
@@ -389,6 +392,8 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     }
 
     private void spawnEnemies() {
+        List<ScoreChangeListener> scoreChangeListeners = new ArrayList<ScoreChangeListener>();
+        scoreChangeListeners.add(this);
         List<EnemyBlueprint> list = waveController.getToSpawn();
         Vector2f playerPosition = Character.player.getPosition();
         for (EnemyBlueprint bp : list) {
@@ -401,7 +406,13 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
                 yy = (float) (HEIGHT_METERS * Math.random());
             } while (Math.abs(yy - playerPosition.y) < HEIGHT_METERS / (2 * SCALING));
 
+            List<DeathListener> deathListeners = new ArrayList<DeathListener>();
+            deathListeners.add(this);
+            bp.setListeners(scoreChangeListeners, deathListeners);
             bp.build().setPosition(new Vector2f(xx, yy)).create();
+
+
+            enemyAmount++;
         }
     }
 
