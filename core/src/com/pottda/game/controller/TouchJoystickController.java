@@ -5,14 +5,12 @@ import com.pottda.game.model.ModelActor;
 import com.pottda.game.view.JoysticksView;
 import com.pottda.game.view.ActorView;
 
-/**
- * Created by Rikard Teodorsson on 2017-04-07.
- */
+import javax.vecmath.Vector2f;
 
-public class TouchJoystickController extends AbstractController {
+class TouchJoystickController extends AbstractController {
     private final JoysticksView joysticksView;
 
-    public TouchJoystickController(ModelActor modelActor, ActorView actorView, Stage stage) {
+    TouchJoystickController(ModelActor modelActor, ActorView actorView, Stage stage) {
         super(modelActor, actorView);
         joysticksView = new JoysticksView(stage);
     }
@@ -25,7 +23,12 @@ public class TouchJoystickController extends AbstractController {
         movementVector.set(joysticksView.getMovementKnobX(),
                 joysticksView.getMovementKnobY());
 
-        attackVector.set(joysticksView.getAttackKnobX(),
-                joysticksView.getAttackKnobY());
+        Vector2f v = new Vector2f(joysticksView.getAttackKnobX(), joysticksView.getAttackKnobY());
+        if (v.length() > 0) {
+            v.normalize();
+            attackVector.set(v.x, v.y);
+        } else {
+            attackVector.set(0, 0);
+        }
     }
 }
