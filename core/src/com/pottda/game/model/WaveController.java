@@ -72,12 +72,24 @@ public class WaveController {
      * @param nrOfEnemies the number of enemies to spawn
      */
     private void spawnEnemies(int nrOfEnemies) {
+        final Vector2f playerPos = new Vector2f(Character.player.getPosition().x, Character.player.getPosition().y);
+        final float x1 = playerPos.x - WIDTH_METERS / 2;
+        final float x2 = playerPos.x + WIDTH_METERS / 2;
+        final float y1 = playerPos.y - HEIGHT_METERS / 2;
+        final float y2 = playerPos.y + HEIGHT_METERS / 2;
+
         // Add some enemies
         for (int i = 0; i < nrOfEnemies; i++) {
             float xx = (float) (Math.random() * WIDTH_METERS);
             float yy = (float) (Math.random() * HEIGHT_METERS);
+
+            // If the spawn location is inside the user's camera view
+            while (xx >= x1 && xx <= x2 && yy >= y1 && yy <= y2) {
+                xx = (float) (Math.random() * WIDTH_METERS);
+                yy = (float) (Math.random() * HEIGHT_METERS);
+            }
+
             try {
-//                ActorFactory.get().buildEnemy(Sprites.ENEMY, new Vector2f(xx, yy), "inventoryblueprint/playerStartInventory.xml");
                 new CharacterBuilder().
                         setTeam(Character.ENEMY_TEAM).
                         setInventoryFromFile("playerStartInventory.xml").
