@@ -6,6 +6,7 @@ import com.pottda.game.model.PhysicsActorFactory;
 import com.pottda.game.model.Sprites;
 
 import javax.vecmath.Vector2f;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public abstract class AbstractModelBuilder implements IModelBuilder {
         physiscActorFactory = paf;
     }
 
-    private Sprites sprite;
+    Sprites sprite;
     private Vector2f postion;
 
     AbstractModelBuilder() {
@@ -53,11 +54,11 @@ public abstract class AbstractModelBuilder implements IModelBuilder {
         }
     }
 
-    public static void addListener(NewModelListener nml){
+    public static void addListener(NewModelListener nml) {
         listenerList.add(nml);
     }
 
-    public static void clear(){
+    public static void clear() {
         listenerList.clear();
     }
 }
