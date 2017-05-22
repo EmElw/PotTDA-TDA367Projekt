@@ -1,6 +1,7 @@
 package com.pottda.game.application;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
@@ -32,18 +33,24 @@ import java.util.*;
 import static com.pottda.game.application.PoTDAGame.GameState.*;
 import static com.pottda.game.controller.ControllerOptions.ControllerMode.*;
 
-public class PoTDAGame extends ApplicationAdapter implements NewControllerListener, ScoreChangeListener, DeathListener {
+public class PoTDAGame extends Game implements NewControllerListener, ScoreChangeListener, DeathListener {
     private Stage hudStage;
     private Stage joystickStage;
     private Stage gameStage;
+
     private Stage pausedStage;
     private Stage optionsStage;
+
     private Stage mainMenuStage;
     private Stage mainControlsStage;
     private Stage mainDifficultyStage;
+
     private Stage gameOverStage;
     private Stage bgStage;
+
     private OrthographicCamera camera;
+
+
 
     /*
     A List of controllers to iterate through every game-update
