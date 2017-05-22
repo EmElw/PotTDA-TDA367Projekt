@@ -38,7 +38,7 @@ public class Character extends ModelActor implements InventoryChangeListener {
         this.isProjectile = false;
         this.movementVector = new Vector2f();
 
-        stats = new EnumMap<>(Stat.class);
+        stats = new EnumMap<Stat, Double>(Stat.class);
 
         // Sum all simple stats
         for (Stat stat : Stat.values()) {

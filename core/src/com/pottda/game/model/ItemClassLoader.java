@@ -10,7 +10,7 @@ class ItemClassLoader {
     /**
      * Map to save String->Class for quicker access (probably)
      */
-    private static final Map<String, Class> stringClassMap = new HashMap<>();
+    private static final Map<String, Class> stringClassMap = new HashMap<String, Class>();
 
     /**
      * Retrieve the @{code Class} corresponding to the given {@code string} from the map

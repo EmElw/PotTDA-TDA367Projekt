@@ -35,7 +35,7 @@ public class Projectile extends ModelActor {
 
     private void setListeners(List<ProjectileListener> listeners) {
         this.listeners = listeners;
-        this.ignored = new ArrayList<>(listeners.size());
+        this.ignored = new ArrayList<Boolean>(listeners.size());
         for (int i = 0; i < listeners.size(); i++) {
             ignored.add(false);
         }

@@ -17,7 +17,7 @@ public class ProjectileBuilder extends AbstractModelBuilder implements IProjecti
     private int team = 0;
     private Boolean bouncy = false;
     private Boolean piercing = false;
-    private List<ProjectileListener> listeners = new ArrayList<>();
+    private List<ProjectileListener> listeners = new ArrayList<ProjectileListener>();
     private List<Boolean> ignored = null;
     private int damage = 0;
     private long lifetime = Projectile.DEFAULT_PROJECTILE_LIFETIME_MS;

@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class EnemyBlueprint {
 
-    private final static Map<String, EnemyBlueprint> blueprints = new HashMap<>();
+    private final static Map<String, EnemyBlueprint> blueprints = new HashMap<String, EnemyBlueprint>();
 
     /**
      * Returns a semi-built enemy

@@ -156,9 +156,9 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
      * Inits the game world and player
      */
     private void doOnStartGame() {
-        controllers = new HashSet<>();
-        controllerBuffer = new Stack<>();
-        controllerRemovalBuffer = new Stack<>();
+        controllers = new HashSet<AbstractController>();
+        controllerBuffer = new Stack<AbstractController>();
+        controllerRemovalBuffer = new Stack<AbstractController>();
 
         hudView = new HUDView(hudStage);
         pausedView = new PausedView(pausedStage);
@@ -407,7 +407,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     }
 
     private void spawnEnemies() {
-        List<ScoreChangeListener> scoreChangeListeners = new ArrayList<>();
+        List<ScoreChangeListener> scoreChangeListeners = new ArrayList<ScoreChangeListener>();
         scoreChangeListeners.add(this);
         List<EnemyBlueprint> list = waveController.getToSpawn();
         Vector2f playerPosition = Character.player.getPosition();
@@ -421,7 +421,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
                 yy = (float) (HEIGHT_METERS * Math.random());
             } while (Math.abs(yy - playerPosition.y) < HEIGHT_METERS / (2 * SCALING));
 
-            List<DeathListener> deathListeners = new ArrayList<>();
+            List<DeathListener> deathListeners = new ArrayList<DeathListener>();
             deathListeners.add(this);
             bp.setListeners(scoreChangeListeners, deathListeners);
             bp.build().setPosition(new Vector2f(xx, yy)).create();

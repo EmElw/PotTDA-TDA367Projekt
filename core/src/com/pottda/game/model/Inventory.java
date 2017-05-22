@@ -41,9 +41,9 @@ public class Inventory {
      */
     Inventory() {
         overlap = false;
-        attackItems = new HashSet<>();
-        items = new HashSet<>();
-        positionMap = new TreeMap<>();
+        attackItems = new HashSet<AttackItem>();
+        items = new HashSet<Item>();
+        positionMap = new TreeMap<Integer, Item>();
     }
 
     /**
@@ -105,7 +105,7 @@ public class Inventory {
 
         // Check for infinite loops (e.g. two items outputting to the other)
         for (Item i : this.attackItems) {
-            if (isLooping(i, new HashSet<>())) {
+            if (isLooping(i, new HashSet<Item>())) {
                 return false;
             }
         }
@@ -141,7 +141,7 @@ public class Inventory {
             if (isLooping(op,
                     i == item.outputItems.size() ?              // If it is the last output:
                             checkedItems :                      // - reuse the input set
-                            new HashSet<>(checkedItems))) { // - otherwise, create a copy
+                            new HashSet<Item>(checkedItems))) { // - otherwise, create a copy
                 return true;
             }
         }
@@ -206,7 +206,7 @@ public class Inventory {
     }
 
     private Set<Item> getItemDropList(float dropRateFactor) {
-        Set<Item> returnSet = new HashSet<>();
+        Set<Item> returnSet = new HashSet<Item>();
         for (Item i : items) {
             if (i.drop(dropRateFactor)) {
                 returnSet.add(i);

@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class InventoryBlueprint {
 
-    private static final Map<String, InventoryBlueprint> blueprints = new HashMap<>();
+    private static final Map<String, InventoryBlueprint> blueprints = new HashMap<String, InventoryBlueprint>();
 
     /**
      * Returns an {@link Inventory} for the given name
@@ -49,7 +49,7 @@ public class InventoryBlueprint {
     private final Map<PointAndOrientation, Class<? extends Item>> itemMap;
 
     private InventoryBlueprint(XMLInventory inventory) {
-        itemMap = new HashMap<>();
+        itemMap = new HashMap<PointAndOrientation, Class<? extends Item>>();
         width = inventory.width;
         height = inventory.height;
 

@@ -14,7 +14,7 @@ import java.util.List;
  */
 public abstract class AbstractModelBuilder implements IModelBuilder {
 
-    private final static List<NewModelListener> listenerList = new ArrayList<>();
+    private final static List<NewModelListener> listenerList = new ArrayList<NewModelListener>();
 
     static PhysicsActorFactory physiscActorFactory;
 

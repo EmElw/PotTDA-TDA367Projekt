@@ -48,7 +48,7 @@ public abstract class AttackItem extends Item {
      * @return
      */
     public List<ProjectileListener> attack(Vector2f velocity, Vector2f origin, int team) {
-        List<ProjectileListener> listeners = new ArrayList<>();
+        List<ProjectileListener> listeners = new ArrayList<ProjectileListener>();
 
         Item i = this;
 

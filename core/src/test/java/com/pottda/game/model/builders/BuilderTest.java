@@ -118,7 +118,7 @@ public class BuilderTest {
 
         int calls = 0;
 
-        private final List<ModelActor> modelActors = new ArrayList<>();
+        private final List<ModelActor> modelActors = new ArrayList<ModelActor>();
 
         @Override
         public void onNewModel(ModelActor m) {

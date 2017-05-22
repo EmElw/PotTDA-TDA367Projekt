@@ -53,7 +53,7 @@ public class MyXMLReader {
 
 
             if (root.getName().equals("enemygroup")) {
-                List<String> list = new ArrayList<>();
+                List<String> list = new ArrayList<String>();
                 int difficulty = root.getInt("difficulty");
 
                 String name = root.getAttribute("name");
@@ -79,7 +79,7 @@ public class MyXMLReader {
         try {
             Element root = xml.parse(file);
             if (root.getName().equals("inventory")) {
-                List<XMLItem> items = new ArrayList<>();
+                List<XMLItem> items = new ArrayList<XMLItem>();
                 for (Element e : root.getChildrenByName("item")) {
                     items.add(parseItem(e));
                 }

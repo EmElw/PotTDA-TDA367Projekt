@@ -14,7 +14,7 @@ import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
 
 class GdxTestRunner extends BlockJUnit4ClassRunner implements ApplicationListener {
 
-    private final Map<FrameworkMethod, RunNotifier> invokeInRender = new HashMap<>();
+    private final Map<FrameworkMethod, RunNotifier> invokeInRender = new HashMap<FrameworkMethod, RunNotifier>();
 
     public GdxTestRunner(Class<?> klass) throws InitializationError {
         super(klass);

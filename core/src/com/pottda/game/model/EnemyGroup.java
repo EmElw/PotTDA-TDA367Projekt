@@ -24,7 +24,7 @@ public class EnemyGroup {
         if (groups.containsKey(difficulty)) {
             groups.get(difficulty).add(group);
         } else {
-            groups.put(difficulty, new ArrayList<>());
+            groups.put(difficulty, new ArrayList<EnemyGroup>());
             groups.get(difficulty).add(group);
         }
     }
@@ -73,7 +73,7 @@ public class EnemyGroup {
      */
     private EnemyGroup(XMLEnemyGroup xmlEnemyGroup) {
         this.difficulty = xmlEnemyGroup.difficulty;
-        this.enemies = new ArrayList<>();
+        this.enemies = new ArrayList<EnemyBlueprint>();
 
         for (String s : xmlEnemyGroup.enemies) {
             enemies.add(EnemyBlueprint.getBlueprint(s));
@@ -89,7 +89,7 @@ public class EnemyGroup {
      * @return a {@code List<EnemyGrop>}
      */
     public static List<EnemyGroup> getAllBelowDifficulty(int difficulty) {
-        List<EnemyGroup> returnList = new ArrayList<>();
+        List<EnemyGroup> returnList = new ArrayList<EnemyGroup>();
 
         for (List<EnemyGroup> g : groups.headMap(difficulty + 1).values()) {
             returnList.addAll(g);

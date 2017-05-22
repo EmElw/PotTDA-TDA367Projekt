@@ -71,10 +71,10 @@ public abstract class Item extends ProjectileListenerAdapter {
      * Pseudo-constructor, called if instantiated without constructor (probably really bad practice)
      */
     public void init() {
-        basePositions = new ArrayList<>();
-        baseOutputs = new ArrayList<>();
-        statMap = new EnumMap<>(Stat.class);
-        outputItems = new ArrayList<>();
+        basePositions = new ArrayList<Point2i>();
+        baseOutputs = new ArrayList<Point2i>();
+        statMap = new EnumMap<Stat, Double>(Stat.class);
+        outputItems = new ArrayList<Item>();
         // Set default properties
         isPrimaryAttack = false;
         isProjectileModifier = false;
@@ -95,7 +95,7 @@ public abstract class Item extends ProjectileListenerAdapter {
      * @return a {@code List<Integer>}
      */
     List<Integer> getPositionsAsIntegers(int w) {
-        List<Integer> list = new ArrayList<>();
+        List<Integer> list = new ArrayList<Integer>();
 
         for (Point2i p : basePositions) {
             Point2i rotatedPoint = rotate(p.x, p.y, orientation);
@@ -118,7 +118,7 @@ public abstract class Item extends ProjectileListenerAdapter {
      * @return a {@code List<Integer>}
      */
     List<Integer> getOutputAsInteger(int w) {
-        List<Integer> list = new ArrayList<>();
+        List<Integer> list = new ArrayList<Integer>();
 
         for (Point2i p : baseOutputs) {
             Point2i rotatedPoint = rotate(p.x, p.y, orientation);

@@ -144,9 +144,9 @@ public class WaveController {
         private final List<EnemyBlueprint> returnList;
 
         private Level() {
-            spawnEvents = new ArrayList<>();
-            toRemove = new ArrayList<>();
-            returnList = new ArrayList<>();
+            spawnEvents = new ArrayList<SpawnEvent>();
+            toRemove = new ArrayList<SpawnEvent>();
+            returnList = new ArrayList<EnemyBlueprint>();
         }
 
         private List<EnemyBlueprint> getToSpawn() {
