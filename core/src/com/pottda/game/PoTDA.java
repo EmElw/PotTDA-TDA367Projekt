@@ -18,7 +18,6 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.*;
 import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
-import com.pottda.game.model.Sprites;
 import com.pottda.game.model.builders.AbstractModelBuilder;
 import com.pottda.game.model.builders.CharacterBuilder;
 import com.pottda.game.model.builders.ObstacleBuilder;
@@ -92,7 +91,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     }
 
 
-    public enum GameState {
+    enum GameState {
         NONE,
         RUNNING,
         PAUSED,
@@ -120,11 +119,11 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     private long startWaitGameOver = 0;
     private static final long WAITING_TIME_GAME_OVER_SECONDS = 3;
 
-    public static int score = 0;
+    private static int score = 0;
     private int enemyAmount = 0;
 
     private Label label;
-    private static String scoreLabelText = "Score: ";
+    private static final String scoreLabelText = "Score: ";
 
     @Override
     public void create() {
@@ -157,9 +156,9 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
      * Inits the game world and player
      */
     private void doOnStartGame() {
-        controllers = new HashSet<AbstractController>();
-        controllerBuffer = new Stack<AbstractController>();
-        controllerRemovalBuffer = new Stack<AbstractController>();
+        controllers = new HashSet<>();
+        controllerBuffer = new Stack<>();
+        controllerRemovalBuffer = new Stack<>();
 
         hudView = new HUDView(hudStage);
         pausedView = new PausedView(pausedStage);
@@ -408,7 +407,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     }
 
     private void spawnEnemies() {
-        List<ScoreChangeListener> scoreChangeListeners = new ArrayList<ScoreChangeListener>();
+        List<ScoreChangeListener> scoreChangeListeners = new ArrayList<>();
         scoreChangeListeners.add(this);
         List<EnemyBlueprint> list = waveController.getToSpawn();
         Vector2f playerPosition = Character.player.getPosition();
@@ -422,7 +421,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
                 yy = (float) (HEIGHT_METERS * Math.random());
             } while (Math.abs(yy - playerPosition.y) < HEIGHT_METERS / (2 * SCALING));
 
-            List<DeathListener> deathListeners = new ArrayList<DeathListener>();
+            List<DeathListener> deathListeners = new ArrayList<>();
             deathListeners.add(this);
             bp.setListeners(scoreChangeListeners, deathListeners);
             bp.build().setPosition(new Vector2f(xx, yy)).create();
@@ -593,12 +592,12 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     // XML-asset loading
 
     private void generateXMLAssets(MyXMLReader reader) {
-        generateInventories("inventoryblueprint", reader);
-        generateEnemies("enemies", reader);
-        generateEnemyGroups("enemygroups", reader);
+        generateInventories(reader);
+        generateEnemies(reader);
+        generateEnemyGroups(reader);
     }
 
-    private void generateInventories(String path, MyXMLReader reader) {
+    private void generateInventories(MyXMLReader reader) {
 
         FileHandle folder = Gdx.files.internal("inventoryblueprint");
 
@@ -612,8 +611,8 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         }
     }
 
-    private void generateEnemies(String path, MyXMLReader reader) {
-        FileHandle folder = Gdx.files.internal(path);
+    private void generateEnemies(MyXMLReader reader) {
+        FileHandle folder = Gdx.files.internal("enemies");
 
         List<FileHandle> contents = Arrays.asList(folder.list("xml"));
         try {
@@ -625,8 +624,8 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         }
     }
 
-    private void generateEnemyGroups(String path, MyXMLReader reader) {
-        FileHandle folder = Gdx.files.internal(path);
+    private void generateEnemyGroups(MyXMLReader reader) {
+        FileHandle folder = Gdx.files.internal("enemygroups");
 
         List<FileHandle> contents = Arrays.asList(folder.list("xml"));
         try {

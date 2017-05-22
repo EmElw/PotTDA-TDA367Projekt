@@ -9,7 +9,7 @@ import javax.vecmath.Vector2f;
 
 public abstract class ModelActor {
     public boolean shouldBeRemoved = false;
-    public boolean isProjectile;
+    boolean isProjectile;
     public int team;
     //    public AbstractController controller;
     float angle = 0;
@@ -19,10 +19,10 @@ public abstract class ModelActor {
     public final static int PLAYER_TEAM = 0;
     public final static int ENEMY_TEAM = 1;
 
-    protected PhysicsActor physicsActor;
+    PhysicsActor physicsActor;
     public Behaviour behaviour;
 
-    public ModelActor() {
+    ModelActor() {
 
     }
 
@@ -60,12 +60,6 @@ public abstract class ModelActor {
      */
     public float getAngle() {
         return angle;
-    }
-
-    /**
-     * Called by the controller every frame to handle any collisions that have occurred
-     */
-    public void handleCollisions() {
     }
 
     public void setPhysicsActor(PhysicsActor physicsActor) {

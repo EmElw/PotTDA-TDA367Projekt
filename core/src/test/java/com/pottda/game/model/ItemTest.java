@@ -48,11 +48,11 @@ public class ItemTest {
         Collections.sort(positionsB);
 
         // Create the expected values
-        List<Integer> rotatedA = new ArrayList<Integer>();
+        List<Integer> rotatedA = new ArrayList<>();
         rotatedA.addAll(Arrays.asList(51, 52, 41, 42));
         Collections.sort(rotatedA);
 
-        List<Integer> rotatedB = new ArrayList<Integer>();
+        List<Integer> rotatedB = new ArrayList<>();
         rotatedB.addAll(Arrays.asList(48, 38, 39, 29));
         Collections.sort(rotatedB);
 

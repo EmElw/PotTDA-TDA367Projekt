@@ -2,7 +2,6 @@ package com.pottda.game.model;
 
 import javax.vecmath.Vector2f;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,7 @@ public class Character extends ModelActor implements InventoryChangeListener {
      */
     int currentHealth = 0;
     private static Map<Stat, Double> stats;
-    private Vector2f movementVector;
+    private final Vector2f movementVector;
 
     public static Character player;
 
@@ -39,7 +38,7 @@ public class Character extends ModelActor implements InventoryChangeListener {
         this.isProjectile = false;
         this.movementVector = new Vector2f();
 
-        stats = new EnumMap<Stat, Double>(Stat.class);
+        stats = new EnumMap<>(Stat.class);
 
         // Sum all simple stats
         for (Stat stat : Stat.values()) {
@@ -65,11 +64,6 @@ public class Character extends ModelActor implements InventoryChangeListener {
 
     private void attack(Vector2f direction) {
         inventory.attack(direction, getPosition(), team);
-    }
-
-    @Override
-    public float getAngle() {
-        return super.getAngle();
     }
 
     /**

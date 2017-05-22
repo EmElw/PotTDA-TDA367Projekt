@@ -18,14 +18,14 @@ import static org.junit.Assert.*;
  */
 public class BuilderTest {
 
-    DummyListener myDummyListener;
+    private DummyListener myDummyListener;
 
     @Before
     public void setUp() {
         // Set concrete PhysicsActorFactory implementation
         AbstractModelBuilder.setPhysiscActorFactory(new PhysicsActorFactory() {
 
-            private PhysicsActor pa = new PhysicsActor() {
+            private final PhysicsActor pa = new PhysicsActor() {
 
                 @Override
                 public Vector2f getPosition() {
@@ -118,7 +118,7 @@ public class BuilderTest {
 
         int calls = 0;
 
-        private List<ModelActor> modelActors = new ArrayList<ModelActor>();
+        private final List<ModelActor> modelActors = new ArrayList<>();
 
         @Override
         public void onNewModel(ModelActor m) {

@@ -10,17 +10,17 @@ public abstract class ProjectileListenerAdapter implements ProjectileListener {
     }
 
     @Override
-    public void onHit(Projectile projectile) {
+    public void onHit() {
 
     }
 
     @Override
-    public void onDestruction(Projectile p) {
+    public void onDestruction() {
 
     }
 
     @Override
-    public void onTimer(Projectile p) {
+    public void onTimer() {
 
     }
 }

@@ -122,7 +122,7 @@ public class CharacterTest {
 
         inventory.addItem(item);
 
-        List<InventoryChangeListener> icl = new ArrayList<InventoryChangeListener>(1);
+        List<InventoryChangeListener> icl = new ArrayList<>(1);
         icl.add(character);
         inventory.setInventoryChangeListeners(icl);
 

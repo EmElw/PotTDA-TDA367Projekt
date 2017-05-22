@@ -4,14 +4,14 @@ import com.pottda.game.model.Item;
 
 import javax.vecmath.Point2i;
 
-public abstract class SupportItem extends Item {
+abstract class SupportItem extends Item {
     ItemSize itemSize = ItemSize.NORMAL;
 
     public void setSize(ItemSize itemSize){
         this.itemSize = itemSize;
     }
 
-    protected void setBasePositions(){
+    void setBasePositions(){
         switch (itemSize){
             case BIG:
                 baseOutputs.add(new Point2i(1, 1));

@@ -12,9 +12,9 @@ import com.pottda.game.view.ActorView;
  * It stops moving towards its goal when within a set distance but
  * will remain attacking
  */
-public class DumbAIController extends AIController {
+class DumbAIController extends AIController {
     private static final int DEFAULT_SAFE_DISTANCE = 4;
-    private int localSafeDistance;
+    private final int localSafeDistance;
 
 
     /**

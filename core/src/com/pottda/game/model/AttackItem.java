@@ -29,8 +29,6 @@ public abstract class AttackItem extends Item {
     protected boolean bounces;
     protected boolean piercing;
 
-    private Vector2f temporaryVector;
-
     @Override
     public void init() {
         damage = 0;
@@ -50,7 +48,7 @@ public abstract class AttackItem extends Item {
      * @return
      */
     public List<ProjectileListener> attack(Vector2f velocity, Vector2f origin, int team) {
-        List<ProjectileListener> listeners = new ArrayList<ProjectileListener>();
+        List<ProjectileListener> listeners = new ArrayList<>();
 
         Item i = this;
 
@@ -61,6 +59,7 @@ public abstract class AttackItem extends Item {
             }
         }
 
+        Vector2f temporaryVector;
         temporaryVector = new Vector2f(velocity);
         temporaryVector.normalize();
         temporaryVector.scale(CHARACTER_RADIUS);

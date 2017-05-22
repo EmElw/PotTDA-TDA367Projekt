@@ -4,7 +4,6 @@ import com.pottda.game.model.builders.CharacterBuilder;
 import com.pottda.game.model.builders.IModelBuilder;
 
 import java.lang.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,7 @@ import java.util.Map;
  */
 public class EnemyBlueprint {
 
-    private final static Map<String, EnemyBlueprint> blueprints = new HashMap<String, EnemyBlueprint>();
+    private final static Map<String, EnemyBlueprint> blueprints = new HashMap<>();
 
     /**
      * Returns a semi-built enemy

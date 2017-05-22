@@ -14,22 +14,22 @@ import java.util.List;
  */
 public abstract class AbstractModelBuilder implements IModelBuilder {
 
-    private static List<NewModelListener> listenerList = new ArrayList<NewModelListener>();
+    private final static List<NewModelListener> listenerList = new ArrayList<>();
 
-    protected static PhysicsActorFactory physiscActorFactory;
+    static PhysicsActorFactory physiscActorFactory;
 
     public static void setPhysiscActorFactory(PhysicsActorFactory paf) {
         physiscActorFactory = paf;
     }
 
-    protected Sprites sprite;
-    protected Vector2f postion;
+    private Sprites sprite;
+    private Vector2f postion;
 
-    public AbstractModelBuilder() {
+    AbstractModelBuilder() {
 
     }
 
-    protected void setCommonAndNotify(ModelActor modelActor) {
+    void setCommonAndNotify(ModelActor modelActor) {
         modelActor.sprite = sprite;
         modelActor.setPosition(postion);
         notifyListeners(modelActor);

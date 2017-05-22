@@ -9,7 +9,7 @@ public class Projectile extends ModelActor {
     public int damage;
     public boolean isBouncy = false;
     public boolean isPiercing = false;
-    public final long timeOfConstructionMS;
+    private final long timeOfConstructionMS;
     public long lifeTimeMS;
     public static final int DEFAULT_PROJECTILE_LIFETIME_MS = 10000;
     /**
@@ -33,9 +33,9 @@ public class Projectile extends ModelActor {
         ignored.add(false);
     }
 
-    public void setListeners(List<ProjectileListener> listeners) {
+    private void setListeners(List<ProjectileListener> listeners) {
         this.listeners = listeners;
-        this.ignored = new ArrayList<Boolean>(listeners.size());
+        this.ignored = new ArrayList<>(listeners.size());
         for (int i = 0; i < listeners.size(); i++) {
             ignored.add(false);
         }
@@ -119,7 +119,7 @@ public class Projectile extends ModelActor {
         target.takeDamage(damage);
         for (int i = 0; i < listeners.size(); i++) {
             if (!ignored.get(i)) {
-                listeners.get(i).onHit(this);
+                listeners.get(i).onHit();
             }
         }
         if (!isPiercing) {
@@ -157,7 +157,7 @@ public class Projectile extends ModelActor {
     private void onDestruction() {
         for (int i = 0; i < listeners.size(); i++) {
             if (!ignored.get(i)) {
-                listeners.get(i).onDestruction(this);
+                listeners.get(i).onDestruction();
             }
         }
     }

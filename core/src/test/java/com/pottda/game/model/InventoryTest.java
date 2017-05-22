@@ -1,8 +1,6 @@
 package com.pottda.game.model;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.XmlReader;
 import com.pottda.game.MyXMLReader;
 import com.pottda.game.model.builders.AbstractModelBuilder;
 import com.pottda.game.model.items.ChainAttack;
@@ -17,11 +15,8 @@ import org.junit.Test;
 
 
 import javax.vecmath.Vector2f;
-import javax.xml.parsers.ParserConfigurationException;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,13 +27,12 @@ import static com.pottda.game.model.InventoryBlueprint.getInventory;
  */
 //@RunWith(GdxTestRunner.class)
 public class InventoryTest {
-    Inventory testInv2;
-    AttackItem cannon;
-    static MyXMLReader reader = new MyXMLReader();
-    private Inventory inventory;
+    private Inventory testInv2;
+    private AttackItem cannon;
+    private static final MyXMLReader reader = new MyXMLReader();
 
     @BeforeClass
-    public static void setUpUp(){
+    public static void setUpUp() {
 
         String basePath = new File("").getAbsolutePath();
         String filePath = basePath.
@@ -46,12 +40,12 @@ public class InventoryTest {
                 concat("\\android\\assets\\inventoryblueprint");
 
         FileHandle file = new FileHandle(filePath);
-        generateInventories(file,reader);
+        generateInventories(file, reader);
 
 
         AbstractModelBuilder.setPhysiscActorFactory(new PhysicsActorFactory() {
 
-            PhysicsActor pa = new PhysicsActor() {
+            final PhysicsActor pa = new PhysicsActor() {
                 @Override
                 public Vector2f getPosition() {
                     return null;
