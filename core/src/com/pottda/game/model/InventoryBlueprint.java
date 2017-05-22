@@ -19,7 +19,7 @@ public class InventoryBlueprint {
     public static Inventory getInventory(String name) {
         return blueprints.get(name).newInventory();
     }
-x
+
     /**
      * Returns true if there is a blueprint for the given name
      * @param name a {@link String}

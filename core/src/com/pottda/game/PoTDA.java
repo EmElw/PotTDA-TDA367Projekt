@@ -69,6 +69,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
     private GameOverView gameOverView;
 
     private WaveController waveController;
+    private long startWaitInventory;
 
     @Override
     public void onNewController(AbstractController c) {
@@ -84,7 +85,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
         MAIN_MENU,
         MAIN_CHOOSE,
         MAIN_CONTROLS,
-        GAME_OVER
+        WAITING_FOR_INVENTORY, GAME_OVER
     }
 
     private static GameState gameState = NONE;
@@ -160,6 +161,9 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
         // Set up ModelBuilder with PhysicsActorFactory and ControllerHookup
         AbstractModelBuilder.setPhysiscActorFactory(new Box2DPhysicsActorFactory(world));
         AbstractModelBuilder.addListener(controllerHookup);
+
+        // Create WaveController
+        waveController = new WaveController();
 
         createPlayer();
 
@@ -277,6 +281,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
             case NONE:
                 break;
             case RUNNING:
+            case WAITING_FOR_INVENTORY:
                 // Update the model
                 updateGame();
 
@@ -284,6 +289,26 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
                 doPhysicsStep(Gdx.graphics.getDeltaTime());
 
                 updateWorld(true);
+
+                spawnEnemies();
+
+                if (!enemiesAlive()) {
+                    if (waveController.levelFinished() && gameState != WAITING_FOR_INVENTORY) {
+                        startWaitInventory = System.currentTimeMillis();
+                        gameState = WAITING_FOR_INVENTORY;
+                    } else {
+                        waveController.quicken(9);  //Passes 10 ms / ms in the level's internal time frame
+                    }
+                }
+                if (gameState.equals(WAITING_FOR_INVENTORY)) {
+                    System.out.println("waiting");
+                    if ((System.currentTimeMillis() - startWaitInventory) / 1000 < WAITING_TIME_GAME_OVER_SECONDS) {
+                        // TODO switch to inventory
+                        System.out.println("To inventory");
+                        gameState = RUNNING;
+                        levelStart();
+                    }
+                }
 
                 if (!playersIsAlive()) {
                     startWaitGameOver = System.currentTimeMillis();
@@ -335,6 +360,10 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
             }
         }
 
+    }
+
+    private void levelStart() {
+        waveController.newLevel();
     }
 
     /**

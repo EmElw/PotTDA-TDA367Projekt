@@ -3,6 +3,7 @@ package com.pottda.game.model;
 import com.pottda.game.model.builders.CharacterBuilder;
 import com.pottda.game.model.builders.IModelBuilder;
 
+import java.lang.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ public class EnemyBlueprint {
 
     /**
      * Returns an {@link EnemyBlueprint} for the given name
+     *
      * @param s a {@link String}
      * @return an {@link EnemyBlueprint}
      */
@@ -70,8 +72,13 @@ public class EnemyBlueprint {
 
         // TODO implement death-listeners for score
         return new CharacterBuilder().
+                setTeam(Character.ENEMY_TEAM).
                 setBehaviour(behaviour).
                 setInventory(InventoryBlueprint.getInventory(inventoryName)).
                 setSprite(sprite);
+    }
+
+    public String getName() {
+        return name;
     }
 }

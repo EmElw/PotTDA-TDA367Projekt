@@ -10,6 +10,7 @@ public class EnemyGroup {
     private static final SortedMap<Integer, List<EnemyGroup>> groups =
             new TreeMap<Integer, List<EnemyGroup>>() {
             };
+    public final String name;
 
     /**
      * Adds a new group to the library
@@ -77,6 +78,7 @@ public class EnemyGroup {
         for (String s : xmlEnemyGroup.enemies) {
             enemies.add(EnemyBlueprint.getBlueprint(s));
         }
+        name = xmlEnemyGroup.name;
     }
 
     /**

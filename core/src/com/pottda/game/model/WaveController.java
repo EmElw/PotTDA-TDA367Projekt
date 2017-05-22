@@ -30,9 +30,15 @@ public class WaveController {
 //    private long timePerWave = TIME_PER_WAVE;
 
     /**
-     * The current level
+     * The current levelData
      */
-    private Level level;
+    private Level levelData;
+
+    private int level = 0;
+
+    public WaveController() {
+        newLevel();
+    }
 
     /**
      * Call to retrieve a list of {@code EnemyBlueprint} that should spawn at the current time
@@ -40,7 +46,23 @@ public class WaveController {
      * @return a {@code List<EnemyBlueprint>}
      */
     public List<EnemyBlueprint> getToSpawn() {
-        return level.getToSpawn();
+        return levelData.getToSpawn();
+    }
+
+    /**
+     * Returns true if there is nothing more to spawn
+     *
+     * @return
+     */
+    public boolean levelFinished() {
+        return levelData.spawnEvents.size() == 0;
+    }
+
+
+    public void newLevel() {
+        level++;
+        System.out.println("Starting level" + level);
+        newLevel((6 * level + 9), (level + 30) * 1000); // TODO handle this better
     }
 
     /**
@@ -48,33 +70,35 @@ public class WaveController {
      *
      * @param difficulty an int for the alloted difficulty
      */
-    public void newLevel(int difficulty, long length) {
+
+    private void newLevel(int difficulty, long length) {
         double variance = 1 + (difficultyVariance - Math.random() * 2 * difficultyVariance);
         long currentTime = System.currentTimeMillis() + SPAWN_DELAY;
         int remainingDifficulty = (int) Math.round(difficulty * variance);
         long groupTime;
 
         List<EnemyGroup> pool = EnemyGroup.getAllBelowDifficulty(remainingDifficulty);
-        level = new Level();
+        levelData = new Level();
 
         while (remainingDifficulty > difficulty * (1 - minDifficultyUsage)
                 && pool.size() > 0) {
 
             // Get a random group from the pool
             EnemyGroup group = pool.get((int) Math.floor(Math.random() * pool.size()));
+            System.out.println("spawngroup: " + group.name);
 
             // The first spawn spawns immediatly
-            if (level.spawnEvents.isEmpty()) {
+            if (levelData.spawnEvents.isEmpty()) {
                 groupTime = currentTime + SPAWN_DELAY;
             } else {    // Consecutive groups spawn afterwards
                 groupTime = (long) (currentTime + SPAWN_DELAY + length * Math.random());
             }
 
 
-            // Create the level's SpawnEvents
+            // Create the levelData's SpawnEvents
             for (EnemyBlueprint bp : group.getEnemies()) {
                 long timestamp = (long) (groupTime - TIME_VARIANCE + 2 * Math.random() * TIME_VARIANCE);
-                level.spawnEvents.add(new SpawnEvent(timestamp, bp));
+                levelData.spawnEvents.add(new SpawnEvent(timestamp, bp));
             }
 
             // Reduce the remaining diffulty
@@ -91,13 +115,13 @@ public class WaveController {
      * @param delta a float in milliseconds
      */
     public void quicken(long delta) {
-        for (SpawnEvent evt : level.spawnEvents) {
+        for (SpawnEvent evt : levelData.spawnEvents) {
             evt.quicken(delta);
         }
     }
 
     /**
-     * Internal class for abstracting a level
+     * Internal class for abstracting a levelData
      */
     private class Level {
         private List<SpawnEvent> spawnEvents;
@@ -117,12 +141,13 @@ public class WaveController {
 
             for (SpawnEvent evt : spawnEvents) {
                 if (evt.shouldSpawn()) {
+                    System.out.println("spawn enemy: " + evt.enemyBlueprint.getName());
                     returnList.add(evt.enemyBlueprint);
                     toRemove.add(evt);
                 }
             }
             if (!toRemove.isEmpty()) {
-                spawnEvents.remove(toRemove);
+                spawnEvents.removeAll(toRemove);
             }
             return returnList;
         }
@@ -182,14 +207,14 @@ public class WaveController {
 //    /**
 //     * Checks if all waves are completed
 //     *
-//     * @return true if all waves in a level is completed
+//     * @return true if all waves in a levelData is completed
 //     */
 //    public boolean finishedWaves() {
 //        return levels.finishedWaves();
 //    }
 //
 //    /**
-//     * Prepares the next level
+//     * Prepares the next levelData
 //     */
 //    public void initNextLevel() {
 //        levels.initNextLevel();

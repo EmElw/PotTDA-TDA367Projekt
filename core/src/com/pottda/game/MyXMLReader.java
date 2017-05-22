@@ -51,19 +51,19 @@ public class MyXMLReader {
 
             Element root = xml.parse(file);
 
-            List<String> list = new ArrayList<String>();
-            int difficulty;
 
             if (root.getName().equals("enemygroup")) {
-                difficulty = root.getInt("difficulty");
+                List<String> list = new ArrayList<String>();
+                int difficulty = root.getInt("difficulty");
 
+                String name = root.getAttribute("name");
                 for (Element e : root.getChildrenByName("enemy")) {
                     list.add(e.getText());
                 }
+                return new XMLEnemyGroup(name, list, difficulty);
             } else {
                 throw new IOException("no enemygroup in root");
             }
-            return new XMLEnemyGroup(list, difficulty);
         } catch (IOException e) {
             throw new Error("failure in trying to parse fileHandle: " + file.toString() + ":", e);
         }
