@@ -4,6 +4,13 @@ import java.lang.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * A class for abstracting enemy creation.
+ * <p>
+ * Generate a level with newLevel(), then poll
+ * getToSpawn() for enemies that should be spawned
+ */
 public class WaveController {
 
 
@@ -13,21 +20,31 @@ public class WaveController {
     // Maximum difference in time between an enemy group
     private static final int TIME_VARIANCE = 1500;
 
-    // Default settings
+    //  ---- Default settings
     private static final float MAX_OF_DIFFICULTY_PER_SPAWN = 0.6f;
-    private static final float MAX_DIFFICULTY_PER_WAVE = 0.3f;
-
-
     private static final float MIN_DIFFICULTY_USAGE = 0.9f;
     private static final float DIFFICULTY_VARIANCE = 0.1f;
-//    private static final long TIME_PER_WAVE = 15000;
+    private static final float MIN_TIME_BETWEEN_SPAWN_GROUPS = 5000;
 
-    //The largest % of the total alloted difficulty allowed per spawn
+    /**
+     * The largest difficulty for a single spawn in terms of allocated difficulty
+     * (i.e. no spawns with a difficulty above difficulty * maxDifficultyPerSpawn can be spawned)
+     */
     private float maxDifficultyPerSpawn = MAX_OF_DIFFICULTY_PER_SPAWN;
-    private float maxDifficultyPerWave = MAX_DIFFICULTY_PER_WAVE;
+    /**
+     * One of two conditions to determine if a level-generation is completed
+     * <p>
+     * Sort of prevents small clutter
+     */
     private float minDifficultyUsage = MIN_DIFFICULTY_USAGE;
+    /**
+     * max variance in difficulty when generating a level
+     */
     private float difficultyVariance = DIFFICULTY_VARIANCE;
-//    private long timePerWave = TIME_PER_WAVE;
+    /**
+     * Ensures that no groups are within n milliseconds
+     */
+    private float minTimeBetweenSpawnGroups = MIN_TIME_BETWEEN_SPAWN_GROUPS;
 
     /**
      * The current levelData
@@ -58,18 +75,14 @@ public class WaveController {
         return levelData.spawnEvents.size() == 0;
     }
 
-
+    /**
+     * Call to generate a new internal {@code Level}
+     */
     public void newLevel() {
         level++;
-        System.out.println("Starting level" + level);
+        System.out.println("Starting level " + level);
         newLevel((6 * level + 9), (level + 30) * 1000); // TODO handle this better
     }
-
-    /**
-     * Generates a new Level based on the given difficulty
-     *
-     * @param difficulty an int for the alloted difficulty
-     */
 
     private void newLevel(int difficulty, long length) {
         System.out.println("d: " + difficulty + " , l: " + length);
@@ -182,94 +195,4 @@ public class WaveController {
             return (System.currentTimeMillis() > timestamp);
         }
     }
-
-//
-//
-//    private final float WIDTH_METERS;
-//    private final float HEIGHT_METERS;
-//    private final float scaling;
-//
-//    private Levels levels;
-//
-//    /**
-//     * Creates the controller
-//     *
-//     * @param widthMeters  the game stage width
-//     * @param heightMeters the game stage height
-//     * @param scale        scale with this value
-//     */
-//    public WaveController(float widthMeters, float heightMeters, float scale) {
-//        WIDTH_METERS = widthMeters;
-//        HEIGHT_METERS = heightMeters;
-//        scaling = scale;
-//        levels = new Levels();
-//    }
-//
-//    /**
-//     * Checks if all waves are completed
-//     *
-//     * @return true if all waves in a levelData is completed
-//     */
-//    public boolean finishedWaves() {
-//        return levels.finishedWaves();
-//    }
-//
-//    /**
-//     * Prepares the next levelData
-//     */
-//    public void initNextLevel() {
-//        levels.initNextLevel();
-//    }
-//
-//    /**
-//     * Sets the start time of the timer that checks waiting time
-//     *
-//     * @param startTime current time
-//     */
-//    public void setStartTime(long startTime) {
-//        levels.setStartTime(startTime);
-//    }
-//
-//    /**
-//     * Checks if the user has waited at least five seconds
-//     *
-//     * @return true if waiting time is more than five seconds
-//     */
-//    public boolean waited() {
-//        return levels.waited();
-//    }
-//
-//    /**
-//     * Starts the next wave and spawns more enemies
-//     */
-//    public void startWave() {
-//        levels.startWave();
-//        spawnEnemies(levels.getEnemiesToSpawn());
-//    }
-//
-//    /**
-//     * Spawns more enemies in the game
-//     *
-//     * @param nrOfEnemies the number of enemies to spawn
-//     */
-//    private void spawnEnemies(int nrOfEnemies) {
-//        // Add some enemies
-//        for (int i = 0; i < nrOfEnemies; i++) {
-//            float xx = (float) (Math.random() * WIDTH_METERS);
-//            float yy = (float) (Math.random() * HEIGHT_METERS);
-//            try {
-////                ActorFactory.get().buildEnemy(Sprites.ENEMY, new Vector2f(xx, yy), "inventoryblueprint/playerStartInventory.xml");
-//                new CharacterBuilder().
-//                        setTeam(Character.ENEMY_TEAM).
-//                        setInventoryFromFile("playerStartInventory.xml").
-//                        setBehaviour(Character.Behaviour.DUMB).
-//                        setPosition(new Vector2f(xx, yy)).
-//                        setSprite(Sprites.ENEMY).
-//                        create();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-
 }
