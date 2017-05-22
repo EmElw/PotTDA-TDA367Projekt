@@ -75,6 +75,8 @@ public class ControllerHookup implements NewModelListener {
                 break;
             case DUMB:
                 return new DumbAIController(m, view);
+            case STATIONARY:
+                return new StationaryAIController(m, view);
         }
         throw new Error("Missing controller setup for behaviour: " + m.behaviour.toString());
     }
