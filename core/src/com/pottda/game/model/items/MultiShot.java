@@ -2,7 +2,6 @@ package com.pottda.game.model.items;
 
 import com.pottda.game.model.Item;
 import com.pottda.game.model.Projectile;
-import com.pottda.game.model.Sprites;
 import com.pottda.game.model.builders.ProjectileBuilder;
 
 import javax.vecmath.Point2i;
@@ -19,7 +18,7 @@ public class MultiShot extends Item {
     The spread between each projectile, expressed as radians?
      */
     private final static float SPREAD = 0.3f;
-    private Vector2f temporaryVector = new Vector2f();
+    private final Vector2f temporaryVector = new Vector2f();
 
     /*
     Shaped like

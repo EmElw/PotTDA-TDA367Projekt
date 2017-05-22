@@ -16,10 +16,8 @@ public class GameOverView {
 
     private final Stage stage;
 
-    private Image title;
     private Image restartButton;
     private Image quitButton;
-    private Image bg;
 
     private enum imageEnum {
         TITLE,
@@ -33,9 +31,9 @@ public class GameOverView {
         create();
     }
 
-    public void create() {
+    private void create() {
         // Add background
-        addToStage(Sprites.MAINMENUBG, imageEnum.TITLE, 0, 0, stage.getWidth(), stage.getHeight());
+        addToStage(stage.getWidth(), stage.getHeight());
 
         // Add title
         addToStage(Sprites.TITLE, imageEnum.TITLE, stage.getWidth() / 2 - 256, stage.getHeight() * 6 / 8);
@@ -53,15 +51,17 @@ public class GameOverView {
 
     private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos) {
         Image image2 = getImage(new Texture(Gdx.files.internal(texturePath.fileName)), image);
+        assert image2 != null;
         image2.setX(xPos);
         image2.setY(yPos);
         stage.addActor(image2);
     }
 
-    private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos, float width, float height) {
-        Image image2 = getImage(new Texture(Gdx.files.internal(texturePath.fileName)), image);
-        image2.setX(xPos);
-        image2.setY(yPos);
+    private void addToStage(float width, float height) {
+        Image image2 = getImage(new Texture(Gdx.files.internal(Sprites.MAINMENUBG.fileName)), imageEnum.TITLE);
+        assert image2 != null;
+        image2.setX(0f);
+        image2.setY(0f);
         image2.setWidth(width);
         image2.setHeight(height);
         stage.addActor(image2);
@@ -70,9 +70,9 @@ public class GameOverView {
     private Image getImage(Texture texturePath, imageEnum image) {
         switch (image) {
             case BG:
-                return bg = new Image(texturePath);
+                return new Image(texturePath);
             case TITLE:
-                return title = new Image(texturePath);
+                return new Image(texturePath);
             case QUITBUTTON:
                 return quitButton = new Image(texturePath);
             case RESTARTBUTTON:

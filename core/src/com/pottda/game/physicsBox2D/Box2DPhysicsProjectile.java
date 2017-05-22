@@ -5,10 +5,10 @@ import com.badlogic.gdx.physics.box2d.Body;
 
 import javax.vecmath.Vector2f;
 
-public class Box2DPhysicsProjectile extends Box2DPhysicsActor {
-    public final static float PROJECTILE_SPEED = 1;
+class Box2DPhysicsProjectile extends Box2DPhysicsActor {
+    private final static float PROJECTILE_SPEED = 1;
 
-    public Box2DPhysicsProjectile(Body body) {
+    Box2DPhysicsProjectile(Body body) {
         super(body);
     }
 

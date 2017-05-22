@@ -4,7 +4,6 @@ import com.pottda.game.model.builders.CharacterBuilder;
 import com.pottda.game.model.builders.IModelBuilder;
 
 import java.lang.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,7 @@ public class EnemyBlueprint {
      * @param s a {@link String}
      * @return an {@link EnemyBlueprint}
      */
-    public static EnemyBlueprint getBlueprint(String s) {
+    static EnemyBlueprint getBlueprint(String s) {
         if (blueprints.containsKey(s)) {
             return blueprints.get(s);
         } else {

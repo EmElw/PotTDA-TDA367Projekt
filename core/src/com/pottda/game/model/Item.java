@@ -118,7 +118,7 @@ public abstract class Item extends ProjectileListenerAdapter {
      * @param w the width of the grid
      * @return a {@code List<Integer>}
      */
-    public List<Integer> getPositionsAsIntegers(int w) {
+    List<Integer> getPositionsAsIntegers(int w) {
         List<Integer> list = new ArrayList<Integer>();
 
         for (Point2i p : basePositions) {
@@ -141,7 +141,7 @@ public abstract class Item extends ProjectileListenerAdapter {
      * @param w the width of the grid
      * @return a {@code List<Integer>}
      */
-    public List<Integer> getOutputAsInteger(int w) {
+    List<Integer> getOutputAsInteger(int w) {
         List<Integer> list = new ArrayList<Integer>();
 
         for (Point2i p : baseOutputs) {
@@ -154,7 +154,7 @@ public abstract class Item extends ProjectileListenerAdapter {
         return list;
     }
 
-    public double getStat(Stat stat) {
+    double getStat(Stat stat) {
         return statMap.containsKey(stat) ? statMap.get(stat) : 0;
     }
 
@@ -186,7 +186,8 @@ public abstract class Item extends ProjectileListenerAdapter {
      * @param rateMultiplier a factor that alters the dropRate
      * @return true if the item should be dropped
      */
-    public boolean drop(float rateMultiplier) {
+    boolean drop(float rateMultiplier) {
+        // TODO rateMultiplier is not used
         return Math.random() < dropRate;
     }
 
@@ -200,7 +201,7 @@ public abstract class Item extends ProjectileListenerAdapter {
      * @param n the rotation, expressed as n multiples of pi/2 rad
      * @return {@code int[]} of size 2
      */
-    public static Point2i rotate(int x, int y, int n) {
+    private static Point2i rotate(int x, int y, int n) {
         Point2i returnValue = new Point2i(x, y);
         returnValue.x = a[n] * x + b[n] * y;
         returnValue.y = c[n] * x + a[n] * y;

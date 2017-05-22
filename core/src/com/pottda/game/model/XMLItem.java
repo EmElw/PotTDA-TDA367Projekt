@@ -17,7 +17,7 @@ public class XMLItem {
         this.orientation = orientation;
     }
 
-    public String getClassName() {
+    String getClassName() {
         return className;
     }
 
