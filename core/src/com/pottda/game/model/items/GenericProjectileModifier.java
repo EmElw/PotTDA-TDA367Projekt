@@ -5,7 +5,7 @@ import com.pottda.game.model.Item;
 
 import javax.vecmath.Point2i;
 
-public abstract class GenericProjectileModifyer extends Item {
+public abstract class GenericProjectileModifier extends Item {
     ItemSize itemSize = ItemSize.NORMAL;
 
     public void setSize(ItemSize itemSize) {

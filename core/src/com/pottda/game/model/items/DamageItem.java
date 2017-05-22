@@ -3,7 +3,7 @@ package com.pottda.game.model.items;
 import com.pottda.game.model.Projectile;
 import com.pottda.game.model.ProjectileListener;
 
-public class DamageItem extends GenericProjectileModifyer implements ProjectileListener {
+public class DamageItem extends GenericProjectileModifier implements ProjectileListener {
     int damage;
 
     @Override
