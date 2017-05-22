@@ -24,6 +24,9 @@ public class Inventory {
      */
     private final Map<Integer, Item> positionMap;
 
+
+    private List<InventoryChangeListener> inventoryChangeListeners;
+
     private int height;
     private int width;
 
@@ -73,6 +76,13 @@ public class Inventory {
             for (Integer i : outputs) {
                 item.outputItems.add(
                         positionMap.get(i));
+            }
+        }
+
+        // Calls all the InventoryChangeListeners
+        if (inventoryChangeListeners != null) {
+            for (InventoryChangeListener icl : inventoryChangeListeners) {
+                icl.inventoryChanged();
             }
         }
     }
@@ -211,5 +221,9 @@ public class Inventory {
 
     public int getHeight() {
         return height;
+    }
+
+    public void setInventoryChangeListeners(List<InventoryChangeListener> inventoryChangeListeners) {
+        this.inventoryChangeListeners = inventoryChangeListeners;
     }
 }

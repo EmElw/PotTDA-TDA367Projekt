@@ -4,8 +4,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.vecmath.Point2i;
 import javax.vecmath.Vector2f;
-import java.util.Random;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -77,4 +78,58 @@ public class CharacterTest {
         assertEquals(character.currentHealth, startHealth - damage);
     }
 
+    @Test
+    public void stats() throws Exception{
+        final int BASE_HEALTH = 100;
+        Inventory inventory = setUpInventory();
+
+        Item item = new Item() {
+            @Override
+            protected void initDynamic() {
+                statMap.put(Stat.HEALTH, -50.0);
+                statMap.put(Stat.ACCEL, 100.0);
+                x = 1;
+                y = 0;
+                basePositions.add(new Point2i(0, 0));
+            }
+        };
+
+        item.init();
+
+        assertEquals(Math.round(inventory.getSumStat(Stat.HEALTH)) + BASE_HEALTH, character.currentHealth);
+
+        inventory.addItem(item);
+        inventory.compile();
+
+        assertEquals(Math.round(inventory.getSumStat(Stat.HEALTH)) + BASE_HEALTH, character.currentHealth);
+    }
+
+    private Inventory setUpInventory(){
+        Inventory inventory = new Inventory();
+        inventory.setDimensions(10, 10);
+
+        Item item = new Item() {
+            @Override
+            protected void initDynamic() {
+                statMap.put(Stat.HEALTH, 100.0);
+                x = 0;
+                y = 0;
+                basePositions.add(new Point2i(0, 0));
+            }
+        };
+
+        item.init();
+
+        inventory.addItem(item);
+
+        List<InventoryChangeListener> icl = new ArrayList<InventoryChangeListener>(1);
+        icl.add(character);
+        inventory.setInventoryChangeListeners(icl);
+
+        character.inventory = inventory;
+
+        inventory.compile();
+
+        return inventory;
+    }
 }
