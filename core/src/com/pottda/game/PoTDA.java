@@ -42,6 +42,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     private Stage mainControlsStage;
     private Stage mainDifficultyStage;
     private Stage gameOverStage;
+    private Stage bgStage;
     private OrthographicCamera camera;
 
     /*
@@ -69,6 +70,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     private SoundsAndMusic soundsAndMusic;
     private GameView gameView;
     private GameOverView gameOverView;
+    private BackgroundView backgroundView;
 
     private WaveController waveController;
     private long startWaitInventory;
@@ -141,6 +143,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         mainControlsStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         mainDifficultyStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         gameOverStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
+        bgStage = new Stage(new StretchViewport(WIDTH_METERS, HEIGHT_METERS));
 
         gameState = MAIN_MENU;
         Gdx.input.setInputProcessor(mainMenuStage);
@@ -164,6 +167,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         pausedView = new PausedView(pausedStage);
         optionsView = new OptionsView(optionsStage);
         gameView = new GameView(gameStage, joystickStage);
+        backgroundView = new BackgroundView(bgStage);
 
         world = new World(new Vector2(0, 0), false);
         world.setContactListener(new CollisionListener());
@@ -278,6 +282,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         mainControlsStage.getViewport().update(width, height, false);
         mainDifficultyStage.getViewport().update(width, height, false);
         gameOverStage.getViewport().update(width, height, false);
+        bgStage.getViewport().update(width, height, false);
     }
 
     @Override
@@ -443,6 +448,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         hudView.setHealthbar(Character.player.getCurrentHealth());
 
         // Draw the game
+        backgroundView.render(gameStage.getCamera());
         gameView.render(moveCamera);
         hudStage.draw();
         hudView.render();
