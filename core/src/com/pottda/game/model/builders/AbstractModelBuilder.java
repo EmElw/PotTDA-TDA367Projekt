@@ -56,4 +56,8 @@ public abstract class AbstractModelBuilder implements IModelBuilder {
     public static void addListener(NewModelListener nml){
         listenerList.add(nml);
     }
+
+    public static void clear(){
+        listenerList.clear();
+    }
 }

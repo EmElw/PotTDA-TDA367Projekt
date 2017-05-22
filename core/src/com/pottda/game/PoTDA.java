@@ -10,10 +10,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.*;
 import com.pottda.game.model.*;
@@ -104,7 +106,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         WAITING_FOR_INVENTORY, GAME_OVER
     }
 
-    private static GameState gameState = NONE;
+    private static GameState gameState;
 
     private static final String GAME_TITLE = "Panic on TDAncefloor";
 
@@ -118,11 +120,11 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     public static final float HEIGHT_RATIO = WIDTH_METERS / WIDTH / SCALING;
     public static final float WIDTH_RATIO = HEIGHT_METERS / HEIGHT / SCALING;
 
-    private long startWaitGameOver = 0;
+    private long startWaitGameOver;
     private static final long WAITING_TIME_GAME_OVER_SECONDS = 3;
 
-    private static int score = 0;
-    private int enemyAmount = 0;
+    private static int score;
+    private int enemyAmount;
 
     private Label label;
     private static final String scoreLabelText = "Score: ";
@@ -159,6 +161,8 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
      * Inits the game world and player
      */
     private void doOnStartGame() {
+        gameState = NONE;
+
         controllers = new HashSet<AbstractController>();
         controllerBuffer = new Stack<AbstractController>();
         controllerRemovalBuffer = new Stack<AbstractController>();
@@ -172,6 +176,11 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         world = new World(new Vector2(0, 0), false);
         world.setContactListener(new CollisionListener());
         accumulator = 0;
+
+        score = 0;
+        enemyAmount = 0;
+
+        startWaitGameOver = 0;
 
         soundsAndMusic = new SoundsAndMusic();
         startMusic();
@@ -391,6 +400,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
      */
     private void doOnRestartGame() {
         dispose();
+        AbstractModelBuilder.clear();
         create();
     }
 

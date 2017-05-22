@@ -24,16 +24,16 @@ public class ItemTest {
         a = new DemoItemA() {
         };
         a.init();
-        a.orientation = 2;
-        a.x = 2;
-        a.y = 5;
+        a.setOrientation(2);
+        a.setX(2);
+        a.setY(5);
 
         b = new DemoItemB() {
         };
         b.init();
-        b.orientation = 3;
-        b.x = 8;
-        b.y = 4;
+        b.setOrientation(3);
+        b.setX(8);
+        b.setY(4);
     }
 
     @Test
