@@ -2,7 +2,9 @@ package com.pottda.game.model;
 
 import javax.vecmath.Vector2f;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.pottda.game.model.Stat.ACCEL;
@@ -27,6 +29,8 @@ public class Character extends ModelActor implements InventoryChangeListener {
     private Vector2f movementVector;
 
     public static Character player;
+
+    private List<DeathListener> deathListeners;
 
     // -- Constructors --
 
@@ -77,6 +81,11 @@ public class Character extends ModelActor implements InventoryChangeListener {
         currentHealth -= incomingDamage;
         if (currentHealth <= 0) {
             shouldBeRemoved = true;
+            if (deathListeners != null) {
+                for (DeathListener dl : deathListeners) {
+                    dl.onDeath();
+                }
+            }
         }
     }
 
@@ -108,5 +117,9 @@ public class Character extends ModelActor implements InventoryChangeListener {
 
         // Assign further as necessary
         currentHealth = (int) Math.max(Math.round(stats.get(Stat.HEALTH) * healthFraction), 1);
+    }
+
+    public void setDeathListeners(List<DeathListener> deathListeners) {
+        this.deathListeners = deathListeners;
     }
 }
