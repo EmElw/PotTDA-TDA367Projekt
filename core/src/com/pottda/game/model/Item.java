@@ -45,6 +45,8 @@ public abstract class Item extends ProjectileListenerAdapter {
      */
     protected float dropRate;
 
+    protected String name;
+
     // -------------------------------------------------
 
     /**
