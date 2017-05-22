@@ -60,6 +60,7 @@ public class ProjectileBuilder extends AbstractModelBuilder implements IProjecti
         piercing = p.isPiercing;
         damage = p.damage;
         lifetime = p.lifeTimeMS;
+        sprite = p.sprite;
         return this;
     }
 
