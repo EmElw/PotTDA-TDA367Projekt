@@ -1,7 +1,7 @@
 package com.pottda.game.model;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.pottda.game.MyXMLReader;
+import com.pottda.game.application.MyXMLReader;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;

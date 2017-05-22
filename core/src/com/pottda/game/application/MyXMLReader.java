@@ -1,4 +1,4 @@
-package com.pottda.game;
+package com.pottda.game.application;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.XmlReader;

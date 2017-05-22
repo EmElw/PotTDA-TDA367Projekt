@@ -1,7 +1,7 @@
 package com.pottda.game.model;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.pottda.game.MyXMLReader;
+import com.pottda.game.application.MyXMLReader;
 import com.pottda.game.model.builders.AbstractModelBuilder;
 import com.pottda.game.model.items.ChainAttack;
 import com.pottda.game.model.items.MultiShot;

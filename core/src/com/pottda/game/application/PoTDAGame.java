@@ -1,4 +1,4 @@
-package com.pottda.game;
+package com.pottda.game.application;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -29,10 +29,10 @@ import javax.vecmath.Vector2f;
 
 import java.util.*;
 
-import static com.pottda.game.PoTDA.GameState.*;
+import static com.pottda.game.application.PoTDAGame.GameState.*;
 import static com.pottda.game.controller.ControllerOptions.ControllerMode.*;
 
-public class PoTDA extends ApplicationAdapter implements NewControllerListener, ScoreChangeListener, DeathListener {
+public class PoTDAGame extends ApplicationAdapter implements NewControllerListener, ScoreChangeListener, DeathListener {
     private Stage hudStage;
     private Stage joystickStage;
     private Stage gameStage;
@@ -195,7 +195,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         MyXMLReader reader = new MyXMLReader();
         generateXMLAssets(reader);
 
-        // Make a ControllerHookup and add PoTDA as a listener
+        // Make a ControllerHookup and add PoTDAGame as a listener
         ControllerHookup controllerHookup = new ControllerHookup(gameStage);
         controllerHookup.addListener(this);
 
