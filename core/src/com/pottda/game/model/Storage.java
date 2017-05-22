@@ -34,10 +34,10 @@ public class Storage {
      * @param item
      */
     public void addItem(Item item) {
-        if(storageMap.containsKey(item.name)) {
-            storageMap.get(item.name).items.add(item);
+        if(storageMap.containsKey(item.getName())) {
+            storageMap.get(item.getName()).items.add(item);
         } else {
-            storageMap.put(item.name, new ItemStorage(item));
+            storageMap.put(item.getName(), new ItemStorage(item));
         }
         updated = true;
     }
@@ -126,7 +126,7 @@ public class Storage {
          */
         public ItemStorage(Item item) {
             items.add(item);
-            type = item.name;
+            type = item.getName();
             isNew = true;
         }
 

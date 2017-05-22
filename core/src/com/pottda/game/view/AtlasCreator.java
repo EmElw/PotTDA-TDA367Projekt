@@ -21,7 +21,7 @@ public class AtlasCreator {
 
     public static void createAtlas(LinkedList<Item> itemList) {
         for (Item i: itemList) {
-            atlas.addRegion(i.name, new TextureRegion(createTextureForItem(i)));
+            atlas.addRegion(i.getName(), new TextureRegion(createTextureForItem(i)));
         }
     }
 

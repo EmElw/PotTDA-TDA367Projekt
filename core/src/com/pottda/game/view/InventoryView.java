@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Scaling;
+import com.pottda.game.model.Inventory;
 import com.pottda.game.model.Storage;
 
 import static com.pottda.game.view.AtlasCreator.atlas;
@@ -64,8 +65,8 @@ public class InventoryView {
 
     }
 
-    public void parseInventory() {
-
+    public void parseInventory(Inventory inventory) {
+        createInventoryView(inventory);
     }
 
     public void resize (int width, int height) {
@@ -83,12 +84,8 @@ public class InventoryView {
         }
     }
 
-    private void createInventoryView() {
+    private void createInventoryView(Inventory inventory) {
         // Create inventory
-        inventoryTable = new Table();
-        Container inventory = new Container(inventoryTable);
-
-        table.add(inventory).expand().fill();
     }
 
     public void dispose() {

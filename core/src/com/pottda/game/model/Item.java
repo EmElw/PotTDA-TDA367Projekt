@@ -70,10 +70,6 @@ public abstract class Item extends ProjectileListenerAdapter {
      */
     public int y;
     /**
-     * The name of the item
-     */
-    public String name;
-    /**
      *
      */
     public String itemImageLocation;
@@ -167,6 +163,10 @@ public abstract class Item extends ProjectileListenerAdapter {
 
     public List<Point2i> getBaseOutputs() {
         return baseOutputs;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
