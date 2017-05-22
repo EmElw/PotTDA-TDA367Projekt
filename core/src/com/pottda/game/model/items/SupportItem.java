@@ -14,12 +14,12 @@ public abstract class SupportItem extends Item {
     protected void setBasePositions(){
         switch (itemSize){
             case BIG:
-                baseOutputs.add(new Point2i(1, 1));
-                baseOutputs.add(new Point2i(0, 1));
+                basePositions.add(new Point2i(1, 1));
+                basePositions.add(new Point2i(0, 1));
             case NORMAL:
-                baseOutputs.add(new Point2i(1, 0));
+                basePositions.add(new Point2i(1, 0));
             case MINOR:
-                baseOutputs.add(new Point2i(0, 0));
+                basePositions.add(new Point2i(0, 0));
         }
     }
 }
