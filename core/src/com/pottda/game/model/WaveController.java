@@ -1,16 +1,14 @@
 package com.pottda.game.model;
 
-import com.pottda.game.model.Levels;
-import com.pottda.game.model.Sprites;
 import com.pottda.game.model.builders.CharacterBuilder;
 
 import javax.vecmath.Vector2f;
+
 import java.lang.*;
 
 public class WaveController {
     private final float WIDTH_METERS;
     private final float HEIGHT_METERS;
-    private final float scaling;
 
     private Levels levels;
 
@@ -19,12 +17,10 @@ public class WaveController {
      *
      * @param widthMeters  the game stage width
      * @param heightMeters the game stage height
-     * @param scale        scale with this value
      */
-    public WaveController(float widthMeters, float heightMeters, float scale) {
+    public WaveController(float widthMeters, float heightMeters) {
         WIDTH_METERS = widthMeters;
         HEIGHT_METERS = heightMeters;
-        scaling = scale;
         levels = new Levels();
     }
 
@@ -76,12 +72,24 @@ public class WaveController {
      * @param nrOfEnemies the number of enemies to spawn
      */
     private void spawnEnemies(int nrOfEnemies) {
+        final Vector2f playerPos = new Vector2f(Character.player.getPosition().x, Character.player.getPosition().y);
+        final float x1 = playerPos.x - WIDTH_METERS / 2;
+        final float x2 = playerPos.x + WIDTH_METERS / 2;
+        final float y1 = playerPos.y - HEIGHT_METERS / 2;
+        final float y2 = playerPos.y + HEIGHT_METERS / 2;
+
         // Add some enemies
         for (int i = 0; i < nrOfEnemies; i++) {
             float xx = (float) (Math.random() * WIDTH_METERS);
             float yy = (float) (Math.random() * HEIGHT_METERS);
+
+            // If the spawn location is inside the user's camera view
+            while (xx >= x1 && xx <= x2 && yy >= y1 && yy <= y2) {
+                xx = (float) (Math.random() * WIDTH_METERS);
+                yy = (float) (Math.random() * HEIGHT_METERS);
+            }
+
             try {
-//                ActorFactory.get().buildEnemy(Sprites.ENEMY, new Vector2f(xx, yy), "inventoryblueprint/playerStartInventory.xml");
                 new CharacterBuilder().
                         setTeam(Character.ENEMY_TEAM).
                         setInventoryFromFile("playerStartInventory.xml").

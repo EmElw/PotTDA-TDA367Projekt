@@ -132,7 +132,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
         mainControlsView = new MainControlsView(mainControlsStage);
         gameOverView = new GameOverView(gameOverStage);
 
-        waveController = new WaveController(WIDTH_METERS, HEIGHT_METERS, scaling);
+        waveController = new WaveController(WIDTH_METERS, HEIGHT_METERS);
     }
 
     /**
