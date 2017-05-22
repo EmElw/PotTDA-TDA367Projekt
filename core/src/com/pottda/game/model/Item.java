@@ -56,16 +56,40 @@ public abstract class Item extends ProjectileListenerAdapter {
     /**
      * Direction of the item in terms of number pi/2 rotations
      */
-    public int orientation;
+    private int orientation;
     /**
      * X-orientation within its inventory
      */
-    public int x;
+    private int x;
+
+    public int getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(int orientation) {
+        this.orientation = orientation;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
 
     /**
      * Y-orientation within its inventory
      */
-    public int y;
+    private int y;
 
     /**
      * Pseudo-constructor, called if instantiated without constructor (probably really bad practice)
