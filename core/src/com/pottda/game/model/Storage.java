@@ -51,6 +51,10 @@ public class Storage {
         return storageMap.get(itemName).items.size();
     }
 
+    public Map<String, ItemStorage> getMap() {
+        return storageMap;
+    }
+
     /**
      * Gets an item from storage, does not remove items, use popItem for that
      *
@@ -86,13 +90,25 @@ public class Storage {
     }
 
     /**
+     * Checks if the storage has been updated since last time
+     * @return a boolean saying if the storage has been updated
+     */
+    public boolean isUpdate() {
+        return updated;
+    }
+
+    public void setUpdate(boolean updated) {
+        this.updated = updated;
+    }
+
+    /**
      * ItemStorage holds one specific item and keeps additional statistics of it
      */
     public class ItemStorage {
         /**
          * A list to store items of a certain name
          */
-        private List<Item> items;
+        private List<Item> items = new ArrayList<Item>();
 
         /**
          * Boolean used to check if the item is a new addition to storage
@@ -104,17 +120,29 @@ public class Storage {
          */
         private String type;
 
+        /**
+         * Constructor, creates an ItemStorage from an item
+         * @param item
+         */
         public ItemStorage(Item item) {
             items.add(item);
             type = item.name;
             isNew = true;
         }
 
+        /**
+         * After a new item has been seen by the user, make it so that it doesn't stand out again.
+         * @param isNew
+         */
         // TODO change the isNew variable after exiting the Inventory in-game
         public void setNew(boolean isNew) {
             this.isNew = isNew;
         }
 
+        /**
+         * Gets, and removes an item from the item list
+         * @return
+         */
         private Item pop() {
             Item stuff = items.get(0);
             items.remove(0);

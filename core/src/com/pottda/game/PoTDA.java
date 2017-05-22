@@ -113,9 +113,18 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
     private long startWaitGameOver = 0;
     private static final long WAITING_TIME_GAME_OVER_SECONDS = 3;
 
+    private Storage storage = new Storage();
+
     @Override
     public void create() {
         createViewAtlas();
+
+        // TESTING
+        storage.addItem(new SimpleCannon());
+        storage.addItem(new SimpleCannon());
+        storage.addItem(new MultiShot());
+        storage.addItem(new Switcher());
+
         Gdx.graphics.setTitle(GAME_TITLE);
         camera = new OrthographicCamera();
 
@@ -138,13 +147,6 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
 
         mainMenuView = new MainMenuView(mainMenuStage);
         inventoryView = new InventoryView(inventoryStage);
-
-        //TESTING
-        inventoryView.addToStorageView(new SimpleCannon());
-        inventoryView.addToStorageView(new MultiShot());
-        inventoryView.addToStorageView(new BouncingBallCannon());
-        inventoryView.addToStorageView(new ChainAttack());
-        inventoryView.addToStorageView(new Switcher());
 
 
         mainDifficultyView = new MainDifficultyView(mainDifficultyStage);
@@ -382,7 +384,8 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
                 break;
             case INVENTORY_VIEW:
                 // Draw the choose controller menu
-                inventoryView.renderInventory();
+                inventoryView.render();
+                inventoryView.parseStorage(storage);
                 break;
         }
 
