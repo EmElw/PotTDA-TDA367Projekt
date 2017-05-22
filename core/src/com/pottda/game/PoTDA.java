@@ -172,6 +172,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         soundsAndMusic = new SoundsAndMusic();
         startMusic();
 
+        score = 0;
         BitmapFont bf = new BitmapFont();
         Label.LabelStyle style = new Label.LabelStyle(bf, Color.WHITE);
         label = new Label(scoreLabelText, style);
