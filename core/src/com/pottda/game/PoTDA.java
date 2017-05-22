@@ -120,8 +120,8 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     private long startWaitGameOver = 0;
     private static final long WAITING_TIME_GAME_OVER_SECONDS = 3;
 
-    public static int score = 0;
-    private int enemyAmount = 0;
+    public static int score;
+    private int enemyAmount;
 
     private Label label;
     private static String scoreLabelText = "Score: ";
@@ -169,6 +169,9 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         world = new World(new Vector2(0, 0), false);
         world.setContactListener(new CollisionListener());
         accumulator = 0;
+
+        score = 0;
+        enemyAmount = 0;
 
         soundsAndMusic = new SoundsAndMusic();
         startMusic();
