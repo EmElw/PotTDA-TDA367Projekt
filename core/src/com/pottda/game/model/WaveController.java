@@ -1,16 +1,14 @@
 package com.pottda.game.model;
 
-import com.pottda.game.model.Levels;
-import com.pottda.game.model.Sprites;
 import com.pottda.game.model.builders.CharacterBuilder;
 
 import javax.vecmath.Vector2f;
+
 import java.lang.*;
 
 public class WaveController {
     private final float WIDTH_METERS;
     private final float HEIGHT_METERS;
-    private final float scaling;
 
     private Levels levels;
 
@@ -19,12 +17,10 @@ public class WaveController {
      *
      * @param widthMeters  the game stage width
      * @param heightMeters the game stage height
-     * @param scale        scale with this value
      */
-    public WaveController(float widthMeters, float heightMeters, float scale) {
+    public WaveController(float widthMeters, float heightMeters) {
         WIDTH_METERS = widthMeters;
         HEIGHT_METERS = heightMeters;
-        scaling = scale;
         levels = new Levels();
     }
 
@@ -78,8 +74,8 @@ public class WaveController {
     private void spawnEnemies(int nrOfEnemies) {
         // Add some enemies
         for (int i = 0; i < nrOfEnemies; i++) {
-            float xx = (float) (Math.random() * WIDTH_METERS * scaling);
-            float yy = (float) (Math.random() * HEIGHT_METERS * scaling);
+            float xx = (float) (Math.random() * WIDTH_METERS);
+            float yy = (float) (Math.random() * HEIGHT_METERS);
             try {
 //                ActorFactory.get().buildEnemy(Sprites.ENEMY, new Vector2f(xx, yy), "inventoryblueprint/playerStartInventory.xml");
                 new CharacterBuilder().
