@@ -5,15 +5,15 @@ import com.pottda.game.model.Item;
 
 import javax.vecmath.Point2i;
 
-public abstract class GenericProjectileModifyer extends AttackItem {
+public abstract class GenericProjectileModifyer extends Item {
     ItemSize itemSize = ItemSize.NORMAL;
 
-    public void setSize(ItemSize itemSize){
+    public void setSize(ItemSize itemSize) {
         this.itemSize = itemSize;
     }
 
-    protected void setBasePositions(){
-        switch (itemSize){
+    protected void setBasePositions() {
+        switch (itemSize) {
             case BIG:
                 basePositions.add(new Point2i(-1, -1));
                 basePositions.add(new Point2i(-1, 1));
