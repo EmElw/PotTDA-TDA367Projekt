@@ -78,8 +78,8 @@ public class WaveController {
     private void spawnEnemies(int nrOfEnemies) {
         // Add some enemies
         for (int i = 0; i < nrOfEnemies; i++) {
-            float xx = (float) (Math.random() * WIDTH_METERS);
-            float yy = (float) (Math.random() * HEIGHT_METERS);
+            float xx = (float) (Math.random() * WIDTH_METERS * scaling);
+            float yy = (float) (Math.random() * HEIGHT_METERS * scaling);
             try {
 //                ActorFactory.get().buildEnemy(Sprites.ENEMY, new Vector2f(xx, yy), "inventoryblueprint/playerStartInventory.xml");
                 new CharacterBuilder().

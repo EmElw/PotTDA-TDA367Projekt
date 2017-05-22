@@ -101,7 +101,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
     public static final float HEIGHT_METERS = 18;
     public static final float HEIGHT_RATIO = WIDTH_METERS / WIDTH;
     public static final float WIDTH_RATIO = HEIGHT_METERS / HEIGHT;
-    private static final float scaling = 1.2f;
+    private static final float scaling = 2.0f;
 
     private long startWaitGameOver = 0;
     private static final long WAITING_TIME_GAME_OVER_SECONDS = 3;
@@ -220,29 +220,28 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener {
     private void createWorldBorders() {
         final float border_thickness = 0.25f;
         // Scale the area bigger or smaller
-        final float area_scaling = 2.5f;
         // Bottom
         new ObstacleBuilder().
-                setSize(WIDTH_METERS * area_scaling, border_thickness).
-                setPosition(new Vector2f((WIDTH_METERS * area_scaling) / 2, -border_thickness / 2)).
+                setSize(WIDTH_METERS * scaling, border_thickness).
+                setPosition(new Vector2f((WIDTH_METERS * scaling) / 2, -border_thickness / 2)).
                 setSprite(Sprites.BORDER).
                 create();
         // Left
         new ObstacleBuilder().
-                setSize(border_thickness, HEIGHT_METERS * area_scaling).
-                setPosition(new Vector2f(-border_thickness / 2, (HEIGHT_METERS * area_scaling) / 2)).
+                setSize(border_thickness, HEIGHT_METERS * scaling).
+                setPosition(new Vector2f(-border_thickness / 2, (HEIGHT_METERS * scaling) / 2)).
                 setSprite(Sprites.BORDER).
                 create();
         // Top
         new ObstacleBuilder().
-                setSize(WIDTH_METERS * area_scaling, border_thickness).
-                setPosition(new Vector2f((WIDTH_METERS * area_scaling) / 2, border_thickness / 2 + (HEIGHT_METERS * area_scaling))).
+                setSize(WIDTH_METERS * scaling, border_thickness).
+                setPosition(new Vector2f((WIDTH_METERS * scaling) / 2, border_thickness / 2 + (HEIGHT_METERS * scaling))).
                 setSprite(Sprites.BORDER).
                 create();
         // Right
         new ObstacleBuilder().
-                setSize(border_thickness, HEIGHT_METERS * area_scaling).
-                setPosition(new Vector2f(border_thickness / 2 + (WIDTH_METERS * area_scaling), (HEIGHT_METERS * area_scaling) / 2)).
+                setSize(border_thickness, HEIGHT_METERS * scaling).
+                setPosition(new Vector2f(border_thickness / 2 + (WIDTH_METERS * scaling), (HEIGHT_METERS * scaling) / 2)).
                 setSprite(Sprites.BORDER).
                 create();
     }
