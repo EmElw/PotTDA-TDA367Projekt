@@ -13,6 +13,7 @@ public class InventoryBlueprint {
 
     /**
      * Returns an {@link Inventory} for the given name
+     *
      * @param name a {@link String}
      * @return an {@link Inventory}
      */
@@ -22,6 +23,7 @@ public class InventoryBlueprint {
 
     /**
      * Returns true if there is a blueprint for the given name
+     *
      * @param name a {@link String}
      * @return true if there is a blueprint for the given name
      */
@@ -31,6 +33,7 @@ public class InventoryBlueprint {
 
     /**
      * Creates and adds a new blueprint from an {@link XMLInventory}
+     *
      * @param inventory an {@link XMLInventory}
      */
     public static void newBlueprint(XMLInventory inventory) {
@@ -91,9 +94,9 @@ public class InventoryBlueprint {
             try {
                 item = entry.getValue().newInstance();
                 item.init();
-                item.x = entry.getKey().x;
-                item.y = entry.getKey().y;
-                item.orientation = entry.getKey().orientation;
+                item.setX(entry.getKey().x);
+                item.setY(entry.getKey().y);
+                item.setOrientation(entry.getKey().orientation);
                 inventory.addItem(item);
             } catch (InstantiationException e) {
                 throw new InstantiationError("Could not create instance of: " + entry.getValue().toString());
