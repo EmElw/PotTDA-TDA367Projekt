@@ -390,20 +390,25 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
 
     private void spawnEnemies() {
         List<EnemyBlueprint> list = waveController.getToSpawn();
-//        Vector2f playerPosition = Character.player.getPosition();
+        Vector2f playerPosition = Character.player.getPosition();
         for (EnemyBlueprint bp : list) {
-            float xx = (float) (WIDTH_METERS * /*SCALING **/ Math.random());
-            float yy = (float) (HEIGHT_METERS * /*SCALING **/ Math.random());
-//            while (Math.abs(xx - playerPosition.x) < WIDTH_METERS / 2||
-//                    Math.abs(yy - playerPosition.y) < HEIGHT_METERS / 2) {
+            float xx, yy;
+            do {
+                xx = (float) (WIDTH_METERS * Math.random());
+            } while (Math.abs(xx - playerPosition.x) < WIDTH_METERS / (2 * SCALING));
+
+            do {
+                yy = (float) (HEIGHT_METERS * Math.random());
+            } while (Math.abs(yy - playerPosition.y) < HEIGHT_METERS / (2 * SCALING));
+
             bp.build().setPosition(new Vector2f(xx, yy)).create();
-//            }
         }
     }
 
     /**
      * Updates physics, health bar and renders views
      */
+
     private void updateWorld(boolean moveCamera) {
         // Update the physics world
 //        doPhysicsStep(Gdx.graphics.getDeltaTime());
