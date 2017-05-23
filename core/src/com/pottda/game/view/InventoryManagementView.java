@@ -68,19 +68,6 @@ public class InventoryManagementView {
         table.add(inventoryTable).fill().expand();
     }
 
-    public void parseStorage(Storage storageMap) {
-        storageTable.clearChildren();
-        updateStorageTable(storageMap);
-    }
-
-    public void parseInventory(Inventory inventory) {
-        if (inventory.isUpdated()) {
-            inventoryTable.clearChildren();
-            inventory.setUpdated(false);
-            updateInventoryGroup(inventory);
-        }
-    }
-
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
     }
@@ -90,13 +77,13 @@ public class InventoryManagementView {
         stage.draw();
     }
 
-    private void updateStorageTable(Storage storage) {
+    public void updateStorageTable(Storage storage) {
         for (String s : storage.getItems()) {
             addToStorageTable(s, storage.getNrOf(s));
         }
     }
 
-    private void updateInventoryGroup(Inventory inventory) {
+    public void updateInventoryGroup(Inventory inventory) {
         // Create inventory
         WidgetGroup inventoryGroup = new WidgetGroup();
 
@@ -181,8 +168,4 @@ public class InventoryManagementView {
         storageTable.row();
     }
 
-    /**
-     * Converts an image to a texture to be used
-     * @param item item containing the image you want converted
-     */
 }

@@ -44,11 +44,11 @@ public class InventoryManagementController implements InventoryChangeListener, S
 
     @Override
     public void inventoryChanged() {
-        view.parseInventory(inventory);
+        view.updateInventoryGroup(inventory);
     }
 
     @Override
     public void storageChanged() {
-        view.parseStorage(storage);
+        view.updateStorageTable(storage);
     }
 }
