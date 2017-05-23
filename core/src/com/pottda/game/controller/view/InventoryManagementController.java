@@ -4,6 +4,7 @@ import com.pottda.game.model.Inventory;
 import com.pottda.game.model.InventoryChangeListener;
 import com.pottda.game.model.Storage;
 import com.pottda.game.model.StorageChangeListener;
+import com.pottda.game.view.InventoryManagementListener;
 import com.pottda.game.view.InventoryView;
 
 /**
@@ -11,11 +12,13 @@ import com.pottda.game.view.InventoryView;
  * an {@link com.pottda.game.model.Inventory} and a
  * {@link com.pottda.game.model.Storage}.
  */
-public class InventoryManagementController implements InventoryChangeListener, StorageChangeListener {
+public class InventoryManagementController implements InventoryChangeListener, StorageChangeListener, InventoryManagementListener {
 
+    // Model data
     private Inventory inventory;
     private Storage storage;
 
+    // View data
     private InventoryView view;
 
     public InventoryManagementController(Inventory inventory, Storage storage, InventoryView view) {
@@ -27,12 +30,16 @@ public class InventoryManagementController implements InventoryChangeListener, S
         this.storage.addStorageChangeListener(this);
     }
 
-    public void setInventory(Inventory inventory) {
-        this.inventory = inventory;
+    public Inventory getInventory() {
+        return inventory;
     }
 
-    public void setStorage(Storage storage) {
-        this.storage = storage;
+    public Storage getStorage() {
+        return storage;
+    }
+
+    public InventoryView getView() {
+        return view;
     }
 
     @Override
