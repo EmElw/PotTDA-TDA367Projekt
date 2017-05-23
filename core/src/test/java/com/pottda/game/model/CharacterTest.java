@@ -58,7 +58,7 @@ public class CharacterTest {
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
                 movementVector.set((float) (Math.random() * i), (float) (Math.random() * j));
-                if(movementVector.x == 0 && movementVector.y == 0){
+                if (movementVector.x == 0 && movementVector.y == 0) {
                     break;
                 }
                 movementVector.normalize();
@@ -79,7 +79,7 @@ public class CharacterTest {
     }
 
     @Test
-    public void stats() throws Exception{
+    public void stats() throws Exception {
         final int BASE_HEALTH = 100;
         Inventory inventory = setUpInventory();
 
@@ -98,13 +98,13 @@ public class CharacterTest {
 
         assertEquals(Math.round(inventory.getSumStat(Stat.HEALTH)) + BASE_HEALTH, character.currentHealth);
 
-        inventory.addItems(item);
+        inventory.addItem(item);
         inventory.compile();
 
         assertEquals(Math.round(inventory.getSumStat(Stat.HEALTH)) + BASE_HEALTH, character.currentHealth);
     }
 
-    private Inventory setUpInventory(){
+    private Inventory setUpInventory() {
         Inventory inventory = new Inventory();
         inventory.setDimensions(10, 10);
 
@@ -120,13 +120,8 @@ public class CharacterTest {
 
         item.init();
 
-        inventory.addItems(item);
-
-        inventory.addInventoryChangeListener(character);
-
         character.inventory = inventory;
-
-        inventory.compile();
+        inventory.addInventoryChangeListener(character);
 
         return inventory;
     }

@@ -37,16 +37,14 @@ public class Inventory {
      */
     private boolean overlap;
 
-    // TODO testing only
-    private boolean updated;
 
     /**
      * Initiate data structures
      */
     Inventory() {
         overlap = false;
-        updated = true;
         attackItems = new HashSet<AttackItem>();
+        inventoryChangeListeners = new ArrayList<InventoryChangeListener>();
         items = new HashSet<Item>();
         positionMap = new TreeMap<Integer, Item>();
     }
@@ -85,10 +83,8 @@ public class Inventory {
 
     private void notifyListeners() {
         // Calls all the InventoryChangeListeners
-        if (inventoryChangeListeners != null) {
-            for (InventoryChangeListener icl : inventoryChangeListeners) {
-                icl.inventoryChanged();
-            }
+        for (InventoryChangeListener icl : inventoryChangeListeners) {
+            icl.inventoryChanged();
         }
     }
 
@@ -209,6 +205,12 @@ public class Inventory {
         notifyListeners();
     }
 
+    void addItem(Item item) {
+        items.add(item);
+        compile();
+        notifyListeners();
+    }
+
     public Set<Item> getItemDropList() {
         return getItemDropList(1);
     }
@@ -237,16 +239,6 @@ public class Inventory {
 
     public void removeInventoryChangeListener(InventoryChangeListener inventoryChangeListener) {
         this.inventoryChangeListeners.remove(inventoryChangeListener);
-    }
-
-    // TODO testing only
-    public boolean isUpdated() {
-        return updated;
-    }
-
-    // TODO testing only
-    public void setUpdated(boolean updated) {
-        this.updated = updated;
     }
 
     public Set<Item> getItems() {

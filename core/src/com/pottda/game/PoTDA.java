@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.*;
+import com.pottda.game.controller.view.InventoryManagementController;
 import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
 import com.pottda.game.model.Item;
@@ -75,12 +76,13 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     private SoundsAndMusic soundsAndMusic;
     private GameView gameView;
     private MainMenuView mainMenuView;
-    private InventoryManagementView inventoryManagementView;
     private GameOverView gameOverView;
     private BackgroundView backgroundView;
 
     private WaveController waveController;
     private long startWaitInventory;
+
+    private InventoryManagementController inventoryManagementController;
 
     @Override
     public void onNewController(AbstractController c) {
@@ -147,8 +149,6 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         MyXMLReader reader = new MyXMLReader();
         generateXMLAssets(reader);
 
-        testInventory = InventoryBlueprint.getInventory("testInv2.xml");
-        testInventory.compile();
 
         // TESTING
         testStorage.addItem(new SimpleCannon());
@@ -178,7 +178,21 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         Box2D.init();
 
         mainMenuView = new MainMenuView(mainMenuStage);
-        inventoryManagementView = new InventoryManagementView(inventoryStage);
+
+        // TODO test only
+        testInventory = InventoryBlueprint.getInventory("testInv2.xml");
+        testInventory.compile();
+
+        // TODO test only
+        inventoryManagementController = new InventoryManagementController(
+                testInventory,
+                testStorage,
+                new InventoryManagementView(inventoryStage)
+        );
+
+        // TODO test only
+        inventoryManagementController.getView().updateStorageTable(testStorage);
+        inventoryManagementController.getView().updateInventoryGroup(testInventory);
 
 
         mainDifficultyView = new MainDifficultyView(mainDifficultyStage);
@@ -418,9 +432,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
                 break;
             case INVENTORY_VIEW:
                 // Draw the choose controller menu
-                inventoryManagementView.render();
-                inventoryManagementView.parseStorage(testStorage);
-                inventoryManagementView.parseInventory(testInventory);
+                inventoryManagementController.getView().render();
                 break;
         }
 
@@ -638,7 +650,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         soundsAndMusic.dispose();
         gameView.dispose();
         mainMenuView.dispose();
-        inventoryManagementView.dispose();
+        inventoryManagementController.getView().dispose();
         mainMenuView.dispose();
         if (hudView != null) {
             hudView.dispose();
