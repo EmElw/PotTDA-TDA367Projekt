@@ -75,7 +75,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     private SoundsAndMusic soundsAndMusic;
     private GameView gameView;
     private MainMenuView mainMenuView;
-    private InventoryView inventoryView;
+    private InventoryManagementView inventoryManagementView;
     private GameOverView gameOverView;
     private BackgroundView backgroundView;
 
@@ -178,7 +178,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         Box2D.init();
 
         mainMenuView = new MainMenuView(mainMenuStage);
-        inventoryView = new InventoryView(inventoryStage);
+        inventoryManagementView = new InventoryManagementView(inventoryStage);
 
 
         mainDifficultyView = new MainDifficultyView(mainDifficultyStage);
@@ -418,9 +418,9 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
                 break;
             case INVENTORY_VIEW:
                 // Draw the choose controller menu
-                inventoryView.render();
-                inventoryView.parseStorage(testStorage);
-                inventoryView.parseInventory(testInventory);
+                inventoryManagementView.render();
+                inventoryManagementView.parseStorage(testStorage);
+                inventoryManagementView.parseInventory(testInventory);
                 break;
         }
 
@@ -638,7 +638,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         soundsAndMusic.dispose();
         gameView.dispose();
         mainMenuView.dispose();
-        inventoryView.dispose();
+        inventoryManagementView.dispose();
         mainMenuView.dispose();
         if (hudView != null) {
             hudView.dispose();

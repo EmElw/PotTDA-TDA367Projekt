@@ -21,7 +21,7 @@ import static com.pottda.game.view.AtlasCreator.atlas;
 /**
  * Created by Mr Cornholio on 15/05/2017.
  */
-public class InventoryView {
+public class InventoryManagementView {
     private Stage stage;
     private Table table;
     private Table storageTable;
@@ -29,7 +29,7 @@ public class InventoryView {
     private Skin mySkin = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
     private Image itemImage;
 
-    public InventoryView(Stage inventoryStage) {
+    public InventoryManagementView(Stage inventoryStage) {
         this.stage = inventoryStage;
         create();
     }

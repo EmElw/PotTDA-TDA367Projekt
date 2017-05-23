@@ -5,7 +5,7 @@ import com.pottda.game.model.InventoryChangeListener;
 import com.pottda.game.model.Storage;
 import com.pottda.game.model.StorageChangeListener;
 import com.pottda.game.view.InventoryManagementListener;
-import com.pottda.game.view.InventoryView;
+import com.pottda.game.view.InventoryManagementView;
 
 /**
  * Class that acts as a controller and bridge between
@@ -19,9 +19,9 @@ public class InventoryManagementController implements InventoryChangeListener, S
     private Storage storage;
 
     // View data
-    private InventoryView view;
+    private InventoryManagementView view;
 
-    public InventoryManagementController(Inventory inventory, Storage storage, InventoryView view) {
+    public InventoryManagementController(Inventory inventory, Storage storage, InventoryManagementView view) {
         this.inventory = inventory;
         this.view = view;
         this.storage = storage;
@@ -38,7 +38,7 @@ public class InventoryManagementController implements InventoryChangeListener, S
         return storage;
     }
 
-    public InventoryView getView() {
+    public InventoryManagementView getView() {
         return view;
     }
 
