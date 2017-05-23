@@ -127,7 +127,9 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     private long startWaitGameOver = 0;
     private static final long WAITING_TIME_GAME_OVER_SECONDS = 3;
 
-    private Storage storage = new Storage();
+    //  TODO testing only
+    private Storage testStorage = new Storage();
+    private Inventory testInventory;
 
     public static int score = 0;
     private int enemyAmount = 0;
@@ -143,11 +145,13 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         MyXMLReader reader = new MyXMLReader();
         generateXMLAssets(reader);
 
+        testInventory = InventoryBlueprint.getInventory("testInv2.xml");
+
         // TESTING
-        storage.addItem(new SimpleCannon());
-        storage.addItem(new SimpleCannon());
-        storage.addItem(new MultiShot());
-        storage.addItem(new Switcher());
+        testStorage.addItem(new SimpleCannon());
+        testStorage.addItem(new SimpleCannon());
+        testStorage.addItem(new MultiShot());
+        testStorage.addItem(new Switcher());
 
         Gdx.graphics.setTitle(GAME_TITLE);
         camera = new OrthographicCamera();
@@ -401,8 +405,8 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
             case INVENTORY_VIEW:
                 // Draw the choose controller menu
                 inventoryView.render();
-                inventoryView.parseStorage(storage);
-                inventoryView.parseInventory(InventoryBlueprint.getInventory("multiShotTestInv.xml"));
+                inventoryView.parseStorage(testStorage);
+                inventoryView.parseInventory(testInventory);
                 break;
         }
 

@@ -1,5 +1,6 @@
 package com.pottda.game.model;
 
+import javax.vecmath.Point2i;
 import javax.vecmath.Vector2f;
 import java.util.*;
 
@@ -36,11 +37,15 @@ public class Inventory {
      */
     private boolean overlap;
 
+    // TODO testing only
+    private boolean updated;
+
     /**
      * Initiate data structures
      */
     public Inventory() {
         overlap = false;
+        updated = true;
         attackItems = new HashSet<AttackItem>();
         items = new HashSet<Item>();
         positionMap = new TreeMap<Integer, Item>();
@@ -227,7 +232,25 @@ public class Inventory {
         this.inventoryChangeListeners = inventoryChangeListeners;
     }
 
+    // TODO testing only
+    public boolean isUpdated() {
+        return updated;
+    }
+
+    // TODO testing only
+    public void setUpdated(boolean updated) {
+        this.updated = updated;
+    }
+
     public Set<Item> getItems() {
         return items;
+    }
+
+    public Item itemAt(Point2i point) {
+        if (point.x < width && point.y < height) {
+            return positionMap.get(point.x + point.y * width);
+        } else {
+            throw new IllegalArgumentException("point out of bounds");
+        }
     }
 }

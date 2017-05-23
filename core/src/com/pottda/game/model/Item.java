@@ -10,9 +10,11 @@ import java.util.Map;
  * A basic Item, heavily modifiable based on properties
  */
 public abstract class Item extends ProjectileListenerAdapter {
+
     public Item() {
         init();
     }
+
     /**
      * An AttackItem is a starting point and cannot be chained into
      */
@@ -230,4 +232,67 @@ public abstract class Item extends ProjectileListenerAdapter {
     private static final int[] b = {0, -1, 0, 1};
     private static final int[] c = {0, 1, 0, -1};
 
+    public Iterable<? extends Point2i> getRotatedOutputs() {
+
+        List<Point2i> rotatedOutputs = new ArrayList<Point2i>();
+
+        for (Point2i p : baseOutputs) {
+            rotatedOutputs.add(rotate(p.x, p.y, orientation));
+        }
+
+        return rotatedOutputs;
+    }
+
+    public Iterable<? extends Point2i> getRotatedPositions() {
+
+        List<Point2i> rotatedPositions = new ArrayList<Point2i>();
+
+        for (Point2i p : baseOutputs) {
+            rotatedPositions.add(rotate(p.x, p.y, orientation));
+        }
+
+        return rotatedPositions;
+    }
+
+    private Point2i bottomLeft;
+
+    public Point2i getBaseBottomLeft() {
+        if (bottomLeft != null) {
+            return new Point2i(bottomLeft);
+        }
+        int lx = 0, ly = 0;
+        for (Point2i p : baseOutputs) {
+            lx = Math.min(p.x, lx);
+            ly = Math.min(p.y, ly);
+        }
+        for (Point2i p : basePositions) {
+            lx = Math.min(p.x, lx);
+            ly = Math.min(p.y, ly);
+        }
+
+        bottomLeft = new Point2i(lx, ly);
+
+        return getBaseBottomLeft();
+    }
+
+    private Point2i upperRight;
+
+    public Point2i getBaseUpperRight() {
+        if (upperRight != null) {
+            return new Point2i(upperRight);
+        }
+        int hx = 0, hy = 0;
+        for (Point2i p : baseOutputs) {
+            hx = Math.max(p.x, hx);
+            hy = Math.max(p.y, hy);
+        }
+        for (Point2i p : basePositions) {
+            hx = Math.max(p.x, hx);
+            hy = Math.max(p.y, hy);
+        }
+
+        upperRight = new Point2i(hx, hy);
+
+        return getBaseUpperRight();
+    }
 }

@@ -1,8 +1,10 @@
 package com.pottda.game.view;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Scaling;
 import com.pottda.game.model.Inventory;
@@ -11,6 +13,10 @@ import com.pottda.game.model.Storage;
 
 import javax.vecmath.Point2i;
 
+import java.util.*;
+import java.util.List;
+
+import static com.pottda.game.view.AtlasCreator.SIZE;
 import static com.pottda.game.view.AtlasCreator.atlas;
 
 /**
@@ -46,7 +52,7 @@ public class InventoryView {
         scroll.setForceScroll(false, true);
         scroll.setOverscroll(false, true);
         Table storage = new Table();
-        storage.add(scroll).height(stage.getHeight()-25);
+        storage.add(scroll).height(stage.getHeight() - 25);
 
         // Create group to hold inventory section
         inventoryTable = new Table();
@@ -61,10 +67,10 @@ public class InventoryView {
         table.row();
         table.add(storage).fill();
         table.add(inventoryTable).fill();
-     }
+    }
 
     public void parseStorage(Storage storageMap) {
-        if(storageMap.isUpdate()) {
+        if (storageMap.isUpdate()) {
             storageTable.clearChildren();
             storageMap.setUpdate(false);
             createStorageView(storageMap);
@@ -73,10 +79,14 @@ public class InventoryView {
     }
 
     public void parseInventory(Inventory inventory) {
-        createInventoryView(inventory);
+        if (inventory.isUpdated()) {
+            inventoryTable.clearChildren();
+            inventory.setUpdated(false);
+            createInventoryView(inventory);
+        }
     }
 
-    public void resize (int width, int height) {
+    public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
     }
 
@@ -86,31 +96,56 @@ public class InventoryView {
     }
 
     private void createStorageView(Storage storageMap) {
-        for (String s: storageMap.getMap().keySet()) {
-            addToStorageView(s,storageMap.getNrOf(s));
+        for (String s : storageMap.getMap().keySet()) {
+            addToStorageView(s, storageMap.getNrOf(s));
         }
     }
 
     private void createInventoryView(Inventory inventory) {
         // Create inventory
-        Group inventoryGroup = new Group();
+        WidgetGroup inventoryGroup = new WidgetGroup();
+        inventoryGroup.setFillParent(true);
+
+
+        List<Point2i> connections = new ArrayList<Point2i>();
+
         for (Item i : inventory.getItems()) {
             Image itemImage = new Image(atlas.findRegion(i.getName()));
+            itemImage.addListener(new InputListener() {
+                @Override
+                public boolean handle(Event event) {
+                    return false;
+                }
+            });
             inventoryGroup.addActor(itemImage);
 
-            int xLow = 0, yLow = 0;
-            for (Point2i point : i.getBasePositions()) {
-                xLow = Math.min(point.getX(), xLow);
-                yLow = Math.min(point.getY(), yLow);
-            }
-            for (Point2i point : i.getBaseOutputs()) {
-                xLow = Math.min(point.getX(), xLow);
-                yLow = Math.min(point.getY(), yLow);
-            }
 
+            int xLow = 0, yLow = 0;
+            for (Point2i point : i.getRotatedPositions()) {
+                xLow = Math.min(point.getX(), xLow);
+                yLow = Math.min(point.getY(), yLow);
+            }
+            for (Point2i point : i.getRotatedOutputs()) {
+                xLow = Math.min(point.getX(), xLow);
+                yLow = Math.min(point.getY(), yLow);
+                // Check if the point is a connecting point
+                if (inventory.itemAt(point) != i) {
+                    connections.add(new Point2i(point));
+                }
+            }
             itemImage.setOrigin(-xLow, -yLow);
-            itemImage.setPosition(i.getX()*AtlasCreator.SIZE, i.getY()*AtlasCreator.SIZE);
+            itemImage.setPosition(i.getX() * SIZE, i.getY() * SIZE);
         }
+
+        // Add images for connections
+        Texture tx = new Texture(Gdx.files.internal("testconnection.png"));
+        for (Point2i p : connections) {
+            Image connectionImage = new Image(tx);
+            connectionImage.setPosition(p.x * SIZE, p.y * SIZE);
+            connectionImage.setTouchable(Touchable.disabled);
+            inventoryGroup.addActor(connectionImage);
+        }
+
         inventoryTable.add(inventoryGroup);
     }
 
@@ -120,7 +155,7 @@ public class InventoryView {
 
     /**
      * Takes an item and shows it on the storage display
-     *
+     * <p>
      * //@param item item to show up in storage
      */
     public void addToStorageView(String itemName, int itemCount) {
@@ -136,7 +171,7 @@ public class InventoryView {
         internalItemGroupTable.row();
 
         // Label holds item count
-        Label itemCountLabel = new Label("#"+Integer.toString(itemCount), mySkin);
+        Label itemCountLabel = new Label("#" + Integer.toString(itemCount), mySkin);
         itemCountLabel.setFontScale(0.5f, 0.5f);
         internalItemGroupTable.add(itemCountLabel).right();
 

@@ -1,5 +1,6 @@
 package com.pottda.game.view;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -19,8 +20,13 @@ public class AtlasCreator {
     private static int xLow;
     private static int yLow;
 
+    private static Pixmap pmPosition;
+    private static Pixmap pmOut;
+
     public static void createAtlas(LinkedList<Item> itemList) {
-        for (Item i: itemList) {
+        pmPosition = new Pixmap(Gdx.files.internal("positionTest.png"));
+        pmOut = new Pixmap(Gdx.files.internal("outputTest.png"));
+        for (Item i : itemList) {
             atlas.addRegion(i.getName(), new TextureRegion(createTextureForItem(i)));
         }
     }
@@ -30,47 +36,44 @@ public class AtlasCreator {
         List<Point2i> baseOut = item.getBaseOutputs();
 
         Pixmap itemPix;
-        itemPix = getBoundingBox(basePos, baseOut);
+        itemPix = createPixmap(item);
 
-        itemPix.setColor(255, 0, 0, 0.2f);
+        Point2i negativeOffset = item.getBaseBottomLeft();
+
+//        itemPix.setColor(255, 0, 0, 1);
         for (Point2i i : basePos) {
-            itemPix.fillRectangle((i.getX()-xLow)*25, (i.getY()-yLow)*25, SIZE, SIZE);
+            itemPix.drawPixmap(pmPosition,
+                    (i.getX() - negativeOffset.x) * SIZE,
+                    (i.getY() - negativeOffset.y) * SIZE);
+//            itemPix.fillRectangle((i.getX() - xLow) * 25, (i.getY() - yLow) * 25, SIZE, SIZE);
         }
 
-        itemPix.setColor(0, 0, 255, 0.2f);
+//        itemPix.setColor(0, 0, 255, 1);
         for (Point2i i : baseOut) {
-            itemPix.fillRectangle((i.getX()-xLow)*25, (i.getY()-yLow)*25, SIZE, SIZE);
+            itemPix.drawPixmap(pmOut,
+                    (i.getX() - negativeOffset.x) * SIZE,
+                    (i.getY() - negativeOffset.y) * SIZE);
+//            itemPix.fillRectangle((i.getX() - xLow) * 25, (i.getY() - yLow) * 25, SIZE, SIZE);
         }
 
-        Texture itemTex = new Texture(itemPix);
-        return itemTex;
+        return new Texture(itemPix);
     }
 
-    private static Pixmap getBoundingBox(List<Point2i> basePos, List<Point2i> baseOut) {
-        int xHigh = 0, yHigh = 0, boundingX = 0, boundingY = 0;
-        for (Point2i i: basePos) {
-            xLow = Math.min(xLow, i.getX());
-            xHigh = Math.max(xHigh, i.getX());
+    private static Pixmap createPixmap(Item i) {
+        int boundingX, boundingY;
+        Point2i bottomLeft, topRight;
 
-            yLow = Math.min(yLow, i.getY());
-            yHigh = Math.max(yHigh, i.getY());
-        }
+        // Get outlier points
+        bottomLeft = i.getBaseBottomLeft();
+        topRight = i.getBaseUpperRight();
 
+        // Shift to positive points only
+        boundingX = topRight.x - bottomLeft.x;
+        boundingY = topRight.y - bottomLeft.y;
 
+        int width = (boundingX + 1) * SIZE;
+        int height = (boundingY + 1) * SIZE;
 
-        for (Point2i i: baseOut) {
-            xLow = Math.min(xLow, i.getX());
-            xHigh = Math.max(xHigh, i.getX());
-
-            yLow = Math.min(yLow, i.getY());
-            yHigh = Math.max(yHigh, i.getY());
-        }
-
-        xHigh -= xLow;
-        yHigh -= yLow;
-
-        boundingX = (xHigh+1)*25;
-        boundingY = (yHigh+1)*25;
-        return new Pixmap(boundingX, boundingY, Pixmap.Format.RGBA8888);
+        return new Pixmap(width, height, Pixmap.Format.RGBA8888);
     }
 }
