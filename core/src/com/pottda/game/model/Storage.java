@@ -1,5 +1,7 @@
 package com.pottda.game.model;
 
+import com.pottda.game.controller.view.InventoryManagementController;
+
 import java.util.*;
 
 /**
@@ -91,6 +93,14 @@ public class Storage {
         for (StorageChangeListener scl : listeners) {
             scl.storageChanged();
         }
+    }
+
+    public void addStorageChangeListener(StorageChangeListener storageChangeListener) {
+        listeners.add(storageChangeListener);
+    }
+
+    public void removeStorageChangeListener(StorageChangeListener storageChangeListener){
+        listeners.remove(storageChangeListener);
     }
 
     /**

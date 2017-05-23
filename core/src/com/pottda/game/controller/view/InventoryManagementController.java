@@ -18,11 +18,13 @@ public class InventoryManagementController implements InventoryChangeListener, S
 
     private InventoryView view;
 
-    public InventoryManagementController(Inventory inventory, Storage storage) {
+    public InventoryManagementController(Inventory inventory, Storage storage, InventoryView view) {
         this.inventory = inventory;
-        this.inventory.addInventoryChangeListener(this);
-
+        this.view = view;
         this.storage = storage;
+
+        this.inventory.addInventoryChangeListener(this);
+        this.storage.addStorageChangeListener(this);
     }
 
     public void setInventory(Inventory inventory) {
