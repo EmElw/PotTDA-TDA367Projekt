@@ -37,19 +37,7 @@ public class Storage {
         } else {
             storageMap.put(item.getName(), new ItemStorage(item));
         }
-        updated = true;
-    }
-
-    public Map<String, ItemStorage> getMap() {
-        return storageMap;
-    }
-
-    /**
-     * @param itemName
-     * @return return the amount of items with the same name as itemName that is currently in storage
-     */
-    public int getNrOf(String itemName) {
-        return storageMap.get(itemName).items.size();
+        notifyListeners();
     }
 
     /**
@@ -87,11 +75,24 @@ public class Storage {
         throw new Exception("Tried to retrieve an item from an empty storage");
     }
 
+    public Set<String> getItems() {
+        return storageMap.keySet();
+    }
+
+    /**
+     * @param itemName
+     * @return return the amount of items with the same name as itemName that is currently in storage
+     */
+    public int getNrOf(String itemName) {
+        return storageMap.get(itemName).items.size();
+    }
+
     private void notifyListeners() {
         for (StorageChangeListener scl : listeners) {
             scl.storageChanged();
         }
     }
+
     /**
      * ItemStorage holds one specific item and keeps additional statistics of it
      */

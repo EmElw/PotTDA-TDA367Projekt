@@ -91,7 +91,7 @@ public class InventoryView {
     }
 
     private void updateStorageTable(Storage storage) {
-        for (String s : storage.getMap().keySet()) {
+        for (String s : storage.getItems()) {
             addToStorageTable(s, storage.getNrOf(s));
         }
     }
