@@ -65,8 +65,8 @@ public class InventoryView {
         table.add(inventoryLabel);
         table.row();
         table.add(storage).fill();
-        table.add(inventoryTable).fill();
-    }
+        table.add(inventoryTable).fill().expand();
+     }
 
     public void parseStorage(Storage storageMap) {
         if (storageMap.isUpdate()) {
@@ -142,6 +142,7 @@ public class InventoryView {
         }
         inventoryGroup.validate();
         inventoryTable.add(inventoryGroup);
+        inventoryTable.setDebug(true);
     }
 
     public void dispose() {
