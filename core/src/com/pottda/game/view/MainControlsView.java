@@ -35,7 +35,7 @@ public class MainControlsView {
 
     private void create() {
         // Add background
-        addToStage(Sprites.MAINMENUBG, imageEnum.BGIMAGE, 0, 0, stage.getWidth(), stage.getHeight());
+        addToStage(stage.getWidth(), stage.getHeight());
 
         // Add choose controls title
         addToStage(Sprites.CONTROLSTITLE, imageEnum.TITLE, stage.getWidth() / 2 - 256, stage.getHeight() * 6.5f / 8);
@@ -52,15 +52,17 @@ public class MainControlsView {
 
     private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos) {
         Image image2 = getImage(new Texture(Gdx.files.internal(texturePath.fileName)), image);
+        assert image2 != null;
         image2.setX(xPos);
         image2.setY(yPos);
         stage.addActor(image2);
     }
 
-    private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos, float width, float height) {
-        Image image2 = getImage(new Texture(Gdx.files.internal(texturePath.fileName)), image);
-        image2.setX(xPos);
-        image2.setY(yPos);
+    private void addToStage(float width, float height) {
+        Image image2 = getImage(new Texture(Gdx.files.internal(Sprites.MAINMENUBG.fileName)), imageEnum.BGIMAGE);
+        assert image2 != null;
+        image2.setX(0f);
+        image2.setY(0f);
         image2.setWidth(width);
         image2.setHeight(height);
         stage.addActor(image2);

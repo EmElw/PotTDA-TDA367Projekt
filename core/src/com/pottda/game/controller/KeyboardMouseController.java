@@ -11,7 +11,7 @@ import com.pottda.game.view.ActorView;
  * Created by Rikard on 2017-04-05.
  */
 
-public class KeyboardMouseController extends AbstractController {
+class KeyboardMouseController extends AbstractController {
 
     // Uses this to get the cursor's position
     private final Stage stage;

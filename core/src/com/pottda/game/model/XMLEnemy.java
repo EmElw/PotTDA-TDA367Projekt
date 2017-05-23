@@ -5,11 +5,11 @@ package com.pottda.game.model;
  */
 public class XMLEnemy {
     public final String name;
-    public final int scoreValue;
+    final int scoreValue;
     public final int difficulty;
-    public final ModelActor.Behaviour behaviour;
-    public final String inventoryName;
-    public final Sprites sprite;
+    final ModelActor.Behaviour behaviour;
+    final String inventoryName;
+    final Sprites sprite;
 
     public XMLEnemy(String name, String scoreValue, String difficulty, String behaviour, String inventoryName, String spriteName) {
         this.name = name;

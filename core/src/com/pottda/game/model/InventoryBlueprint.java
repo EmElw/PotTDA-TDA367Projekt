@@ -1,6 +1,5 @@
 package com.pottda.game.model;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +8,7 @@ import java.util.Map;
  */
 public class InventoryBlueprint {
 
-    private static Map<String, InventoryBlueprint> blueprints = new HashMap<String, InventoryBlueprint>();
+    private static final Map<String, InventoryBlueprint> blueprints = new HashMap<String, InventoryBlueprint>();
 
     /**
      * Returns an {@link Inventory} for the given name
@@ -52,7 +51,7 @@ public class InventoryBlueprint {
      */
     private final Map<PointAndOrientation, Class<? extends Item>> itemMap;
 
-    public InventoryBlueprint(XMLInventory inventory) {
+    private InventoryBlueprint(XMLInventory inventory) {
         itemMap = new HashMap<PointAndOrientation, Class<? extends Item>>();
         width = inventory.width;
         height = inventory.height;
@@ -79,7 +78,7 @@ public class InventoryBlueprint {
         private final int x;
         private final int y;
 
-        public PointAndOrientation(int orientation, int x, int y) {
+        PointAndOrientation(int orientation, int x, int y) {
             this.orientation = orientation;
             this.x = x;
             this.y = y;

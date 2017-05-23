@@ -30,7 +30,7 @@ public class WaveControllerTest {
         generateGroups(new FileHandle(groupPath), new MyXMLReader());
     }
 
-    WaveController waveController;
+    private WaveController waveController;
 
     @Before
     public void instantiating() {

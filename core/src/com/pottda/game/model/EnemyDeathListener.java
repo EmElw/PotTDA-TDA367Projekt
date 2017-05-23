@@ -2,11 +2,11 @@ package com.pottda.game.model;
 
 import java.util.List;
 
-public class EnemyDeathListener implements DeathListener{
-    private int points;
-    private List<ScoreChangeListener> scoreChangeListenerList;
+class EnemyDeathListener implements DeathListener{
+    private final int points;
+    private final List<ScoreChangeListener> scoreChangeListenerList;
 
-    public EnemyDeathListener(int points, List<ScoreChangeListener> scoreChangeListenerList){
+    EnemyDeathListener(int points, List<ScoreChangeListener> scoreChangeListenerList){
         this.points = points;
         this.scoreChangeListenerList = scoreChangeListenerList;
     }

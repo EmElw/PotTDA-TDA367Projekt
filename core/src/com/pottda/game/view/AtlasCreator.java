@@ -1,6 +1,7 @@
 package com.pottda.game.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -17,6 +18,7 @@ import java.util.List;
 public class AtlasCreator {
     public static TextureAtlas atlas = new TextureAtlas();
     public final static int SIZE = 25;
+    private final static int SIZE_I = SIZE - 1; // For drawing pixels within SIZE
     private static int xLow;
     private static int yLow;
 
@@ -40,7 +42,7 @@ public class AtlasCreator {
 
         Point2i negativeOffset = item.getBaseBottomLeft();
 
-//        itemPix.setColor(255, 0, 0, 1);
+        itemPix.setColor(Color.BLACK);
         for (Point2i i : basePos) {
             itemPix.drawPixmap(pmPosition,
                     (i.getX() - negativeOffset.x) * SIZE,

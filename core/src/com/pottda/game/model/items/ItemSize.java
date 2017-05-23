@@ -1,7 +1,7 @@
 package com.pottda.game.model.items;
 
 
-public enum ItemSize {
+enum ItemSize {
     MINOR ("Minor ", 0.5f, 1f),
     NORMAL ("", 0.25f, 2f),
     BIG ("Greater ", 0.1f, 4.5f);
