@@ -4,7 +4,7 @@ import com.pottda.game.model.Projectile;
 import com.pottda.game.model.ProjectileListener;
 
 public class DamageItem extends GenericProjectileModifier implements ProjectileListener {
-    int damage;
+    private int damage;
 
     @Override
     protected void initDynamic() {

@@ -1,7 +1,5 @@
-package test.java.com.pottda.game.model;
+package com.pottda.game.model;
 
-import com.pottda.game.model.*;
-import com.pottda.game.model.Character;
 import com.pottda.game.model.builders.AbstractModelBuilder;
 import com.pottda.game.model.builders.CharacterBuilder;
 import com.pottda.game.model.builders.ProjectileBuilder;
@@ -16,8 +14,8 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.*;
 
 public class ProjectileTest {
-    PhysicsActorFactory paf = new PhysicsActorFactory() {
-        PhysicsActor pa = new PhysicsActor() {
+    private final PhysicsActorFactory paf = new PhysicsActorFactory() {
+        final PhysicsActor pa = new PhysicsActor() {
             Vector2f position = new Vector2f();
             @Override
             public Vector2f getPosition() {
@@ -54,7 +52,7 @@ public class ProjectileTest {
             return pa;
         }
     };
-    Projectile projectile;
+    private Projectile projectile;
     @Before
     public void setUp() throws Exception {
         AbstractModelBuilder.setPhysiscActorFactory(paf);

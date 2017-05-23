@@ -1,6 +1,5 @@
 package com.pottda.game.model.items;
 
-import com.pottda.game.model.Item;
 import com.pottda.game.model.Stat;
 
 public class HealthItem extends SupportItem{

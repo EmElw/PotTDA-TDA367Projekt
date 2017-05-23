@@ -32,7 +32,7 @@ public class HUDView {
         create();
     }
 
-    public void create() {
+    private void create() {
         // Add health bar
         addToStage(Sprites.HEALTHBAR, imageEnum.HEALTHBAR, 10, stage.getHeight() - 30);
 
@@ -49,6 +49,7 @@ public class HUDView {
 
     private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos) {
         Image image2 = getImage(new Texture(Gdx.files.internal(texturePath.fileName)), image);
+        assert image2 != null;
         image2.setX(xPos);
         image2.setY(yPos);
         stage.addActor(image2);

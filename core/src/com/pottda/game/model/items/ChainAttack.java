@@ -2,7 +2,6 @@ package com.pottda.game.model.items;
 
 import com.pottda.game.model.AttackItem;
 import com.pottda.game.model.Item;
-import com.pottda.game.model.Projectile;
 
 import javax.vecmath.Point2i;
 
@@ -43,7 +42,7 @@ public class ChainAttack extends AttackItem {
     }
 
     @Override
-    public void onDestruction(Projectile p) {
+    public void onDestruction() {
         /* TODO implement ChainAttack
         Executes an attack much like an invetory in the direction
         of the closest enemy.

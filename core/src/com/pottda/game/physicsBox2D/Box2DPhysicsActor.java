@@ -6,10 +6,10 @@ import com.pottda.game.model.PhysicsActor;
 
 import javax.vecmath.Vector2f;
 
-public class Box2DPhysicsActor extends PhysicsActor {
+class Box2DPhysicsActor extends PhysicsActor {
     Body body;
 
-    public Box2DPhysicsActor(Body body) {
+    Box2DPhysicsActor(Body body) {
         this.body = body;
     }
 

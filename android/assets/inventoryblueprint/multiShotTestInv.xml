@@ -1,11 +1,7 @@
 <?xml version="1.0"?>
 <inventory w="8" h="10">
-    <item name="SimpleCannon" x="0" y="0" orientation="0">
-    </item>
-    <item name="MultiShot" x="2" y="1" orientation="2">
-    </item>
-    <item name="MultiShot" x="4" y="1" orientation="0">
-    </item>
-    <item name="MultiShot" x="6" y="1" orientation="3">
-    </item>
+    <item name="SimpleCannon" x="0" y="0" orientation="0"/>
+    <item name="MultiShot" x="2" y="1" orientation="2"/>
+    <item name="MultiShot" x="4" y="1" orientation="0"/>
+    <item name="MultiShot" x="6" y="1" orientation="3"/>
 </inventory>

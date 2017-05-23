@@ -14,7 +14,7 @@ public class Inventory {
     /*
     Starting points, set when compile() is called
      */
-    public final Set<AttackItem> attackItems;
+    final Set<AttackItem> attackItems;
     /*
     A list of the Items in this Inventory
      */
@@ -39,7 +39,7 @@ public class Inventory {
     /**
      * Initiate data structures
      */
-    public Inventory() {
+    Inventory() {
         overlap = false;
         attackItems = new HashSet<AttackItem>();
         items = new HashSet<Item>();
@@ -96,7 +96,7 @@ public class Inventory {
      *
      * @return true if the above conditions are fulfilled
      */
-    public boolean isLegal() {
+    boolean isLegal() {
 
         // Check for overlapping items
         if (overlap) {
@@ -124,7 +124,7 @@ public class Inventory {
      * @param checkedItems a {@link Set} of Items already in the chain
      * @return true if no loops are found
      */
-    public boolean isLooping(Item item, Set<Item> checkedItems) {
+    private boolean isLooping(Item item, Set<Item> checkedItems) {
         if (checkedItems.contains(item)) {
             return true;        // Base fail case
         }
@@ -154,7 +154,7 @@ public class Inventory {
      *
      * @param direction a {@link Vector2f} in the wanted direction
      */
-    public void attack(Vector2f direction, Vector2f origin, int team) {
+    void attack(Vector2f direction, Vector2f origin, int team) {
 
         // Iterate through all attack items and do stuff
         for (AttackItem a : attackItems) {
@@ -170,7 +170,7 @@ public class Inventory {
      * @param w an integer width
      * @param h an integer height
      */
-    public void setDimensions(int w, int h) {
+    void setDimensions(int w, int h) {
         this.width = w;
         this.height = h;
     }
@@ -182,7 +182,7 @@ public class Inventory {
      * @param stat a {@link Stat}
      * @return a double
      */
-    public double getSumStat(Stat stat) {
+    double getSumStat(Stat stat) {
 
         double sum = 0;
         for (Item i : items) {
@@ -197,7 +197,7 @@ public class Inventory {
      *
      * @param items
      */
-    public void addItem(Item... items) {
+    void addItem(Item... items) {
         this.items.addAll(Arrays.asList(items));
     }
 
@@ -205,7 +205,7 @@ public class Inventory {
         return getItemDropList(1);
     }
 
-    public Set<Item> getItemDropList(float dropRateFactor) {
+    private Set<Item> getItemDropList(float dropRateFactor) {
         Set<Item> returnSet = new HashSet<Item>();
         for (Item i : items) {
             if (i.drop(dropRateFactor)) {

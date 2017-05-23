@@ -13,8 +13,8 @@ import javax.vecmath.Vector2f;
  */
 
 public abstract class AbstractController {
-    Vector2f movementVector;
-    Vector2f attackVector;
+    final Vector2f movementVector;
+    final Vector2f attackVector;
 //    final boolean isAI;
 
     final ModelActor modelActor;
@@ -27,7 +27,7 @@ public abstract class AbstractController {
      * @param modelActor a {@link ModelActor}
      * @param actorView  a {@link ActorView}
      */
-    public AbstractController(ModelActor modelActor, ActorView actorView) {
+    AbstractController(ModelActor modelActor, ActorView actorView) {
         this.modelActor = modelActor;
         this.actorView = actorView;
         movementVector = new Vector2f(0, 0);
@@ -64,7 +64,7 @@ public abstract class AbstractController {
     /**
      * Updates the ActorView so everything can be drawn out later
      */
-    protected void updateView() {
+    private void updateView() {
         // TODO extend with other modifications such as rotation and stuff
         Vector2f position = modelActor.getPosition();
 //        float degrees = modelActor.getAngle();

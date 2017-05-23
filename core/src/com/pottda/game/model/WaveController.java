@@ -36,11 +36,11 @@ public class WaveController {
      * <p>
      * Sort of prevents small clutter
      */
-    private float minDifficultyUsage = MIN_DIFFICULTY_USAGE;
+    private final float minDifficultyUsage = MIN_DIFFICULTY_USAGE;
     /**
      * max variance in difficulty when generating a level
      */
-    private float difficultyVariance = DIFFICULTY_VARIANCE;
+    private final float difficultyVariance = DIFFICULTY_VARIANCE;
     /**
      * Ensures that no groups are within n milliseconds
      */
@@ -138,10 +138,10 @@ public class WaveController {
      * Internal class for abstracting a levelData
      */
     private class Level {
-        private List<SpawnEvent> spawnEvents;
-        private List<SpawnEvent> toRemove;
+        private final List<SpawnEvent> spawnEvents;
+        private final List<SpawnEvent> toRemove;
 
-        private List<EnemyBlueprint> returnList;
+        private final List<EnemyBlueprint> returnList;
 
         private Level() {
             spawnEvents = new ArrayList<SpawnEvent>();

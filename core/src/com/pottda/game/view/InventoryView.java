@@ -60,7 +60,7 @@ public class InventoryView {
         table.add(inventoryLabel);
         table.row();
         table.add(storage).fill();
-        table.add(inventoryTable).fill();
+        table.add(inventoryTable).fill().expand();
      }
 
     public void parseStorage(Storage storageMap) {
@@ -110,8 +110,10 @@ public class InventoryView {
 
             itemImage.setOrigin(-xLow, -yLow);
             itemImage.setPosition(i.getX()*AtlasCreator.SIZE, i.getY()*AtlasCreator.SIZE);
+            itemImage.setRotation(90*i.getOrientation());
         }
         inventoryTable.add(inventoryGroup);
+        inventoryTable.setDebug(true);
     }
 
     public void dispose() {

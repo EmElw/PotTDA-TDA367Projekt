@@ -32,12 +32,12 @@ public class AtlasCreator {
         Pixmap itemPix;
         itemPix = getBoundingBox(basePos, baseOut);
 
-        itemPix.setColor(255, 0, 0, 0.2f);
+        itemPix.setColor(1, 0, 0, 1);
         for (Point2i i : basePos) {
             itemPix.fillRectangle((i.getX()-xLow)*25, (i.getY()-yLow)*25, SIZE, SIZE);
         }
 
-        itemPix.setColor(0, 0, 255, 0.2f);
+        itemPix.setColor(0, 0, 1, 1);
         for (Point2i i : baseOut) {
             itemPix.fillRectangle((i.getX()-xLow)*25, (i.getY()-yLow)*25, SIZE, SIZE);
         }
