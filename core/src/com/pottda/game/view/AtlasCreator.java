@@ -24,44 +24,71 @@ public class AtlasCreator {
 
     private static Pixmap pmPosition;
     private static Pixmap pmOut;
+    private static Pixmap pmLeftPointer;
+    private static Pixmap pmRightPointer;
+    private static Pixmap pmDownPointer;
+    private static Pixmap pmUpPointer;
 
     public static void createAtlas(LinkedList<Item> itemList) {
         pmPosition = new Pixmap(Gdx.files.internal("positionTest.png"));
         pmOut = new Pixmap(Gdx.files.internal("outputTest.png"));
+
+        pmLeftPointer = new Pixmap(Gdx.files.internal("leftArrow.png"));
+        pmRightPointer = new Pixmap(Gdx.files.internal("rightArrow.png"));
+        pmDownPointer = new Pixmap(Gdx.files.internal("downArrow.png"));
+        pmUpPointer = new Pixmap(Gdx.files.internal("upArrow.png"));
+
         for (Item i : itemList) {
             atlas.addRegion(i.getName(), new TextureRegion(createTextureForItem(i)));
         }
+        pmPosition.dispose();
+        pmOut.dispose();
     }
 
     private static Texture createTextureForItem(Item item) {
         List<Point2i> basePos = item.getBasePositions();
         List<Point2i> baseOut = item.getBaseOutputs();
 
-        Pixmap itemPix;
-        itemPix = createPixmap(item);
+        Pixmap itemPix = createPixmap(item);
 
         Point2i negativeOffset = item.getBaseBottomLeft();
 
         itemPix.setColor(Color.BLACK);
-        for (Point2i i : basePos) {
-            int bx = (i.getX() - negativeOffset.x) * SIZE;
-            int by = (i.getY() - negativeOffset.y) * SIZE;
+        for (Point2i p : basePos) {
+            int bx = (p.x - negativeOffset.x) * SIZE; // The bottom left X-coordinate (in pixels)
+            int by = (p.y - negativeOffset.y) * SIZE; // THe bottom left Y-coordinate (in pixels)
 
             itemPix.drawPixmap(pmPosition, bx, by);
 
             // Draw outlines to spaces where there are no neighbouring positions
-            if (!basePos.contains(new Point2i(i.x - 1, i.y))) {
+            if (!basePos.contains(new Point2i(p.x - 1, p.y))) {
                 itemPix.drawLine(bx, by, bx, by + SIZE_I);
             }
-            if (!basePos.contains(new Point2i(i.x + 1, i.y))) {
+            if (!basePos.contains(new Point2i(p.x + 1, p.y))) {
                 itemPix.drawLine(bx + SIZE_I, by, bx + SIZE_I, by + SIZE_I);
             }
-            if (!basePos.contains(new Point2i(i.x, i.y - 1))) {
+            if (!basePos.contains(new Point2i(p.x, p.y - 1))) {
                 itemPix.drawLine(bx, by, bx + SIZE_I, by);
             }
-            if (!basePos.contains(new Point2i(i.x, i.y + 1))) {
+            if (!basePos.contains(new Point2i(p.x, p.y + 1))) {
                 itemPix.drawLine(bx, by + SIZE_I, bx + SIZE_I, by + SIZE_I);
             }
+
+            // Draw output arrows in spaces adjacent to outputs
+            if (baseOut.contains(new Point2i(p.x - 1, p.y))) {
+                itemPix.drawPixmap(pmLeftPointer, bx, by);
+            }
+            if (baseOut.contains(new Point2i(p.x + 1, p.y))) {
+                itemPix.drawPixmap(pmRightPointer, bx, by);
+            }
+            if (baseOut.contains(new Point2i(p.x, p.y - 1))) {
+                itemPix.drawPixmap(pmDownPointer, bx, by);
+            }
+            if (baseOut.contains(new Point2i(p.x, p.y + 1))) {
+                itemPix.drawPixmap(pmUpPointer, bx, by);
+            }
+
+
 //            itemPix.fillRectangle((i.getX() - xLow) * 25, (i.getY() - yLow) * 25, SIZE, SIZE);
         }
 
