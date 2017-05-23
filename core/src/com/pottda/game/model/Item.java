@@ -233,23 +233,34 @@ public abstract class Item extends ProjectileListenerAdapter {
     private static final int[] b = {0, -1, 0, 1};
     private static final int[] c = {0, 1, 0, -1};
 
-    public Iterable<? extends Point2i> getRotatedOutputs() {
+    public List<Point2i> getTransformedRotatedOutputs() {
 
         List<Point2i> rotatedOutputs = new ArrayList<Point2i>();
 
         for (Point2i p : baseOutputs) {
-            rotatedOutputs.add(rotate(p.x, p.y, orientation));
+            Point2i newPoint = rotate(p.x, p.y, orientation);
+            newPoint.x += x;
+            newPoint.y += y;
+            rotatedOutputs.add(newPoint);
         }
 
         return rotatedOutputs;
     }
 
-    public Iterable<? extends Point2i> getRotatedPositions() {
+    /**
+     * Returns a list of the item's positions as they are in the inventory
+     *
+     * @return
+     */
+    public List<? extends Point2i> getTransformedRotatedPositions() {
 
         List<Point2i> rotatedPositions = new ArrayList<Point2i>();
 
         for (Point2i p : baseOutputs) {
-            rotatedPositions.add(rotate(p.x, p.y, orientation));
+            Point2i newPoint = rotate(p.x, p.y, orientation);
+            newPoint.x += x;
+            newPoint.y += y;
+            basePositions.add(newPoint);
         }
 
         return rotatedPositions;

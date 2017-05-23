@@ -44,19 +44,34 @@ public class AtlasCreator {
 
         itemPix.setColor(Color.BLACK);
         for (Point2i i : basePos) {
-            itemPix.drawPixmap(pmPosition,
-                    (i.getX() - negativeOffset.x) * SIZE,
-                    (i.getY() - negativeOffset.y) * SIZE);
+            int bx = (i.getX() - negativeOffset.x) * SIZE;
+            int by = (i.getY() - negativeOffset.y) * SIZE;
+
+            itemPix.drawPixmap(pmPosition, bx, by);
+
+            // Draw outlines to spaces where there are no neighbouring positions
+            if (!basePos.contains(new Point2i(i.x - 1, i.y))) {
+                itemPix.drawLine(bx, by, bx, by + SIZE_I);
+            }
+            if (!basePos.contains(new Point2i(i.x + 1, i.y))) {
+                itemPix.drawLine(bx + SIZE_I, by, bx + SIZE_I, by + SIZE_I);
+            }
+            if (!basePos.contains(new Point2i(i.x, i.y - 1))) {
+                itemPix.drawLine(bx, by, bx + SIZE_I, by);
+            }
+            if (!basePos.contains(new Point2i(i.x, i.y + 1))) {
+                itemPix.drawLine(bx, by + SIZE_I, bx + SIZE_I, by + SIZE_I);
+            }
 //            itemPix.fillRectangle((i.getX() - xLow) * 25, (i.getY() - yLow) * 25, SIZE, SIZE);
         }
 
 //        itemPix.setColor(0, 0, 255, 1);
-        for (Point2i i : baseOut) {
-            itemPix.drawPixmap(pmOut,
-                    (i.getX() - negativeOffset.x) * SIZE,
-                    (i.getY() - negativeOffset.y) * SIZE);
-//            itemPix.fillRectangle((i.getX() - xLow) * 25, (i.getY() - yLow) * 25, SIZE, SIZE);
-        }
+//        for (Point2i i : baseOut) {
+//            itemPix.drawPixmap(pmOut,
+//                    (i.getX() - negativeOffset.x) * SIZE,
+//                    (i.getY() - negativeOffset.y) * SIZE);
+////            itemPix.fillRectangle((i.getX() - xLow) * 25, (i.getY() - yLow) * 25, SIZE, SIZE);
+//        }
 
         return new Texture(itemPix);
     }

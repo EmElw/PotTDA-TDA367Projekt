@@ -148,6 +148,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         generateXMLAssets(reader);
 
         testInventory = InventoryBlueprint.getInventory("testInv2.xml");
+        testInventory.compile();
 
         // TESTING
         testStorage.addItem(new SimpleCannon());

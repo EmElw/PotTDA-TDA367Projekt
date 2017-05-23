@@ -247,10 +247,10 @@ public class Inventory {
     }
 
     public Item itemAt(Point2i point) {
-        if (point.x < width && point.y < height) {
+        if (point.x >= 0 && point.x < width && point.y >= 0 && point.y < height) {
             return positionMap.get(point.x + point.y * width);
         } else {
-            throw new IllegalArgumentException("point out of bounds");
+            return null;
         }
     }
 }

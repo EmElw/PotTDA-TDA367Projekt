@@ -1,10 +1,9 @@
 package com.pottda.game.view;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Scaling;
 import com.pottda.game.model.Inventory;
@@ -73,7 +72,7 @@ public class InventoryView {
         if (storageMap.isUpdate()) {
             storageTable.clearChildren();
             storageMap.setUpdate(false);
-            createStorageView(storageMap);
+            updateStorageTable(storageMap);
         }
 
     }
@@ -82,7 +81,7 @@ public class InventoryView {
         if (inventory.isUpdated()) {
             inventoryTable.clearChildren();
             inventory.setUpdated(false);
-            createInventoryView(inventory);
+            updateInventoryGroup(inventory);
         }
     }
 
@@ -95,57 +94,53 @@ public class InventoryView {
         stage.draw();
     }
 
-    private void createStorageView(Storage storageMap) {
-        for (String s : storageMap.getMap().keySet()) {
-            addToStorageView(s, storageMap.getNrOf(s));
+    private void updateStorageTable(Storage storage) {
+        for (String s : storage.getMap().keySet()) {
+            addToStorageTable(s, storage.getNrOf(s));
         }
     }
 
-    private void createInventoryView(Inventory inventory) {
+    private void updateInventoryGroup(Inventory inventory) {
         // Create inventory
         WidgetGroup inventoryGroup = new WidgetGroup();
-        inventoryGroup.setFillParent(true);
 
 
         List<Point2i> connections = new ArrayList<Point2i>();
 
         for (Item i : inventory.getItems()) {
-            Image itemImage = new Image(atlas.findRegion(i.getName()));
-            itemImage.addListener(new InputListener() {
-                @Override
-                public boolean handle(Event event) {
-                    return false;
-                }
-            });
+            TextureAtlas.AtlasRegion region = atlas.findRegion(i.getName());
+            region.flip(false, true);
+            Image itemImage = new Image(region);
+
+            // TODO listener
+
+            Point2i negativeOffset = i.getBaseBottomLeft();
+
+            connections.addAll(i.getTransformedRotatedOutputs());
+
+            itemImage.setOrigin(
+                    (float) ((0.5 - negativeOffset.x) * SIZE),
+                    (float) ((0.5 - negativeOffset.y) * SIZE));
+            itemImage.setRotation(i.getOrientation() * 90);
+            itemImage.setPosition(
+                    (i.getX() + negativeOffset.x) * SIZE,
+                    (i.getY() + negativeOffset.y) * SIZE);
             inventoryGroup.addActor(itemImage);
-
-
-            int xLow = 0, yLow = 0;
-            for (Point2i point : i.getRotatedPositions()) {
-                xLow = Math.min(point.getX(), xLow);
-                yLow = Math.min(point.getY(), yLow);
-            }
-            for (Point2i point : i.getRotatedOutputs()) {
-                xLow = Math.min(point.getX(), xLow);
-                yLow = Math.min(point.getY(), yLow);
-                // Check if the point is a connecting point
-                if (inventory.itemAt(point) != i) {
-                    connections.add(new Point2i(point));
-                }
-            }
-            itemImage.setOrigin(-xLow, -yLow);
-            itemImage.setPosition(i.getX() * SIZE, i.getY() * SIZE);
         }
 
         // Add images for connections
-        Texture tx = new Texture(Gdx.files.internal("testconnection.png"));
+        // TODO test only use proper resource handling
+        Texture connection = new Texture(Gdx.files.internal("testconnection.png"));
+        Texture notConnection = new Texture(Gdx.files.internal("outputTest.png"));
         for (Point2i p : connections) {
-            Image connectionImage = new Image(tx);
+            Image connectionImage = new Image(
+                    inventory.itemAt(p) == null ? notConnection : connection);
+
             connectionImage.setPosition(p.x * SIZE, p.y * SIZE);
             connectionImage.setTouchable(Touchable.disabled);
             inventoryGroup.addActor(connectionImage);
         }
-
+        inventoryGroup.validate();
         inventoryTable.add(inventoryGroup);
     }
 
@@ -158,7 +153,7 @@ public class InventoryView {
      * <p>
      * //@param item item to show up in storage
      */
-    public void addToStorageView(String itemName, int itemCount) {
+    public void addToStorageTable(String itemName, int itemCount) {
         // Create a table to hold name + image
         Button itemGroupTable = new Button(mySkin);
         Table internalItemGroupTable = new Table();
