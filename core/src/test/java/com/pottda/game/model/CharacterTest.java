@@ -98,7 +98,7 @@ public class CharacterTest {
 
         assertEquals(Math.round(inventory.getSumStat(Stat.HEALTH)) + BASE_HEALTH, character.currentHealth);
 
-        inventory.addItem(item);
+        inventory.addItems(item);
         inventory.compile();
 
         assertEquals(Math.round(inventory.getSumStat(Stat.HEALTH)) + BASE_HEALTH, character.currentHealth);
@@ -120,11 +120,9 @@ public class CharacterTest {
 
         item.init();
 
-        inventory.addItem(item);
+        inventory.addItems(item);
 
-        List<InventoryChangeListener> icl = new ArrayList<InventoryChangeListener>(1);
-        icl.add(character);
-        inventory.setInventoryChangeListeners(icl);
+        inventory.addInventoryChangeListener(character);
 
         character.inventory = inventory;
 

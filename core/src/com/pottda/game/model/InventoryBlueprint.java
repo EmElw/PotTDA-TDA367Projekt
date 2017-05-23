@@ -1,7 +1,9 @@
 package com.pottda.game.model;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Class used to cache inventories to speed up instantiating
@@ -88,6 +90,8 @@ public class InventoryBlueprint {
     private Inventory newInventory() {
         Inventory inventory = new Inventory();
         inventory.setDimensions(width, height);
+        Set<Item> itemSet = new HashSet<Item>();
+
         Item item;
         for (Map.Entry<PointAndOrientation, Class<? extends Item>> entry : itemMap.entrySet()) {
             try {
@@ -96,13 +100,15 @@ public class InventoryBlueprint {
                 item.setX(entry.getKey().x);
                 item.setY(entry.getKey().y);
                 item.setOrientation(entry.getKey().orientation);
-                inventory.addItem(item);
+                itemSet.add(item);
             } catch (InstantiationException e) {
                 throw new InstantiationError("Could not create instance of: " + entry.getValue().toString());
             } catch (IllegalAccessException e) {
                 throw new Error("Access failure in blueprint", e);
             }
         }
+
+        inventory.addItems(itemSet);
 
         return inventory;
     }

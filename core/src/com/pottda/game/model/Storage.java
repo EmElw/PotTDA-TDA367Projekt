@@ -6,6 +6,9 @@ import java.util.*;
  * Created by Mr Cornholio on 21/05/2017.
  */
 public class Storage {
+
+    private List<StorageChangeListener> listeners;
+
     /**
      * A map with a String key (for the name of the item to be added) and an ItemStorage
      */
@@ -22,6 +25,7 @@ public class Storage {
      */
     public Storage() {
         storageMap = new HashMap<String, ItemStorage>();
+        listeners = new ArrayList<StorageChangeListener>();
         updated = false;
     }
 
@@ -34,7 +38,7 @@ public class Storage {
      * @param item
      */
     public void addItem(Item item) {
-        if(storageMap.containsKey(item.getName())) {
+        if (storageMap.containsKey(item.getName())) {
             storageMap.get(item.getName()).items.add(item);
         } else {
             storageMap.put(item.getName(), new ItemStorage(item));
@@ -42,17 +46,16 @@ public class Storage {
         updated = true;
     }
 
+    public Map<String, ItemStorage> getMap() {
+        return storageMap;
+    }
+
     /**
-     *
      * @param itemName
      * @return return the amount of items with the same name as itemName that is currently in storage
      */
     public int getNrOf(String itemName) {
         return storageMap.get(itemName).items.size();
-    }
-
-    public Map<String, ItemStorage> getMap() {
-        return storageMap;
     }
 
     /**
@@ -62,9 +65,9 @@ public class Storage {
      * @return an item with the same name as the param
      * @throws Exception
      */
-    public Item getItem(String name) throws Exception{
+    public Item getItem(String name) throws Exception {
         ItemStorage storage;
-        if((storage = storageMap.get(name)) != null) {
+        if ((storage = storageMap.get(name)) != null) {
             return storage.items.get(0);
         }
         throw new Exception("Tried to get an item from an empty storage");
@@ -77,11 +80,11 @@ public class Storage {
      * @return an item with the same name as the param
      * @throws Exception
      */
-    public Item popItem(String name) throws Exception{
+    public Item popItem(String name) throws Exception {
         ItemStorage storage;
-        if((storage = storageMap.get(name)) != null) {
+        if ((storage = storageMap.get(name)) != null) {
             Item i = storage.items.get(0);
-            if (storage.items.size() == 0){
+            if (storage.items.size() == 0) {
                 storageMap.remove(name);
             }
             return i;
@@ -91,6 +94,7 @@ public class Storage {
 
     /**
      * Checks if the storage has been updated since last time
+     *
      * @return a boolean saying if the storage has been updated
      */
     public boolean isUpdate() {
@@ -99,6 +103,12 @@ public class Storage {
 
     public void setUpdate(boolean updated) {
         this.updated = updated;
+    }
+
+    private void notifyListeners() {
+        for (StorageChangeListener scl : listeners) {
+            scl.storageChanged();
+        }
     }
 
     /**
@@ -122,6 +132,7 @@ public class Storage {
 
         /**
          * Constructor, creates an ItemStorage from an item
+         *
          * @param item
          */
         public ItemStorage(Item item) {
@@ -132,6 +143,7 @@ public class Storage {
 
         /**
          * After a new item has been seen by the user, make it so that it doesn't stand out again.
+         *
          * @param isNew
          */
         // TODO change the isNew variable after exiting the Inventory in-game
@@ -141,6 +153,7 @@ public class Storage {
 
         /**
          * Gets, and removes an item from the item list
+         *
          * @return
          */
         private Item pop() {

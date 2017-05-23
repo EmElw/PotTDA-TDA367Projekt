@@ -59,12 +59,10 @@ public class Inventory {
         // Map out all the positions of the items
         positionMap.clear();
         overlap = false;
-//        Item oldItem;
         for (Item item : items) {
             for (Integer n : item.getPositionsAsIntegers(width)) {
-                if ((/*oldItem = */positionMap.put(n, item)) != null) {
+                if ((positionMap.put(n, item)) != null) {
                     overlap = true;
-//                    throw new Exception("Illegal inventory: " + item + " overlaps with " + oldItem + " at " + n);
                 }
             }
         }
@@ -83,7 +81,9 @@ public class Inventory {
                         positionMap.get(i));
             }
         }
+    }
 
+    private void notifyListeners() {
         // Calls all the InventoryChangeListeners
         if (inventoryChangeListeners != null) {
             for (InventoryChangeListener icl : inventoryChangeListeners) {
@@ -198,12 +198,15 @@ public class Inventory {
 
     /**
      * Adds any number of Items to the Inventory
-     * NOTE that the item's position within the inventory is for the Item to handle
+     * <p>
+     * This notifies listeners and updates the items internal state
      *
-     * @param items
+     * @param items a {@link Collection<Item>}
      */
-    void addItem(Item... items) {
-        this.items.addAll(Arrays.asList(items));
+    void addItems(Collection<Item> items) {
+        this.items.addAll(items);
+        compile();
+        notifyListeners();
     }
 
     public Set<Item> getItemDropList() {
@@ -228,8 +231,12 @@ public class Inventory {
         return height;
     }
 
-    public void setInventoryChangeListeners(List<InventoryChangeListener> inventoryChangeListeners) {
-        this.inventoryChangeListeners = inventoryChangeListeners;
+    public void addInventoryChangeListener(InventoryChangeListener inventoryChangeListener) {
+        this.inventoryChangeListeners.add(inventoryChangeListener);
+    }
+
+    public void removeInventoryChangeListener(InventoryChangeListener inventoryChangeListener) {
+        this.inventoryChangeListeners.remove(inventoryChangeListener);
     }
 
     // TODO testing only
