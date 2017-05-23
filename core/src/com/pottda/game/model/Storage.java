@@ -14,11 +14,6 @@ public class Storage {
      */
     private Map<String, ItemStorage> storageMap;
 
-    /**
-     * A boolean to keep track if the storage has changed since the last time it was accessed (usually from InventoryView
-     * when it's meant to draw the storage)
-     */
-    private boolean updated;
 
     /**
      * Create a new storage
@@ -26,7 +21,6 @@ public class Storage {
     public Storage() {
         storageMap = new HashMap<String, ItemStorage>();
         listeners = new ArrayList<StorageChangeListener>();
-        updated = false;
     }
 
     /**
@@ -87,22 +81,10 @@ public class Storage {
             if (storage.items.size() == 0) {
                 storageMap.remove(name);
             }
+            notifyListeners();
             return i;
         }
         throw new Exception("Tried to retrieve an item from an empty storage");
-    }
-
-    /**
-     * Checks if the storage has been updated since last time
-     *
-     * @return a boolean saying if the storage has been updated
-     */
-    public boolean isUpdate() {
-        return updated;
-    }
-
-    public void setUpdate(boolean updated) {
-        this.updated = updated;
     }
 
     private void notifyListeners() {
@@ -110,7 +92,6 @@ public class Storage {
             scl.storageChanged();
         }
     }
-
     /**
      * ItemStorage holds one specific item and keeps additional statistics of it
      */

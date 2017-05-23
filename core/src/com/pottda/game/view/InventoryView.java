@@ -66,15 +66,11 @@ public class InventoryView {
         table.row();
         table.add(storage).fill();
         table.add(inventoryTable).fill().expand();
-     }
+    }
 
     public void parseStorage(Storage storageMap) {
-        if (storageMap.isUpdate()) {
-            storageTable.clearChildren();
-            storageMap.setUpdate(false);
-            updateStorageTable(storageMap);
-        }
-
+        storageTable.clearChildren();
+        updateStorageTable(storageMap);
     }
 
     public void parseInventory(Inventory inventory) {
