@@ -3,10 +3,6 @@ package com.pottda.game.controller;
 import com.pottda.game.model.ModelActor;
 import com.pottda.game.view.ActorView;
 
-/**
- *
- */
-
 abstract class AIController extends AbstractController {
     /**
      * {@inheritDoc}
@@ -16,8 +12,4 @@ abstract class AIController extends AbstractController {
     AIController(ModelActor modelActor, ActorView actorView) {
         super(modelActor, actorView);
     }
-
-
-    // https://github.com/libgdx/gdx-ai/wiki
-
 }

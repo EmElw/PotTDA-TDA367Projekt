@@ -16,9 +16,6 @@ import java.util.List;
  */
 public class ControllerHookup implements NewModelListener {
 
-    /**
-     * The stage onto which the ViewActors are put
-     */
     private final Stage stage;
 
     public ControllerHookup(Stage stage) {
@@ -33,10 +30,8 @@ public class ControllerHookup implements NewModelListener {
 
     @Override
     public void onNewModel(ModelActor m) {
-
         ActorView view = null;
 
-        // Determine what kind of controller
         AbstractController controller = null;
         if (m instanceof Projectile) {
             view = new ActorView(m.sprite);
@@ -45,7 +40,6 @@ public class ControllerHookup implements NewModelListener {
             view = new ActorView(m.sprite);
             if (m.team == Character.PLAYER_TEAM) {
                 controller = createInputController(m, view);
-
             } else if (m.team == Character.ENEMY_TEAM) {
                 controller = createController(m, view);
             }
