@@ -24,11 +24,12 @@ public class CharacterBuilder extends AbstractModelBuilder implements ICharacter
             Character.player = character;
         }
         character.inventory = inventory;
-        inventory.compile();
 
         List<InventoryChangeListener> inventoryChangeListeners = new ArrayList<InventoryChangeListener>(1);
         inventoryChangeListeners.add(character);
         inventory.setInventoryChangeListeners(inventoryChangeListeners);
+
+        inventory.compile();
 
         character.setPhysicsActor(physiscActorFactory.getCharacterPhysicsActor(character));
 
