@@ -10,17 +10,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.*;
 import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
-import com.pottda.game.model.Sprites;
 import com.pottda.game.model.builders.AbstractModelBuilder;
 import com.pottda.game.model.builders.CharacterBuilder;
 import com.pottda.game.model.builders.ObstacleBuilder;
@@ -45,6 +42,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     private Stage mainControlsStage;
     private Stage mainDifficultyStage;
     private Stage gameOverStage;
+    private Stage bgStage;
     private OrthographicCamera camera;
 
     /*
@@ -72,6 +70,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     private SoundsAndMusic soundsAndMusic;
     private GameView gameView;
     private GameOverView gameOverView;
+    private BackgroundView backgroundView;
 
     private WaveController waveController;
     private long startWaitInventory;
@@ -94,7 +93,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     }
 
 
-    public enum GameState {
+    enum GameState {
         NONE,
         RUNNING,
         PAUSED,
@@ -122,11 +121,11 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     private long startWaitGameOver;
     private static final long WAITING_TIME_GAME_OVER_SECONDS = 3;
 
-    public static int score;
+    private static int score;
     private int enemyAmount;
 
     private Label label;
-    private static String scoreLabelText = "Score: ";
+    private static final String scoreLabelText = "Score: ";
 
     @Override
     public void create() {
@@ -144,6 +143,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         mainControlsStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         mainDifficultyStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         gameOverStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
+        bgStage = new Stage(new StretchViewport(WIDTH_METERS, HEIGHT_METERS));
 
         gameState = MAIN_MENU;
         Gdx.input.setInputProcessor(mainMenuStage);
@@ -169,6 +169,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         pausedView = new PausedView(pausedStage);
         optionsView = new OptionsView(optionsStage);
         gameView = new GameView(gameStage, joystickStage);
+        backgroundView = new BackgroundView(bgStage);
 
         world = new World(new Vector2(0, 0), false);
         world.setContactListener(new CollisionListener());
@@ -182,6 +183,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         soundsAndMusic = new SoundsAndMusic();
         startMusic();
 
+        score = 0;
         BitmapFont bf = new BitmapFont();
         Label.LabelStyle style = new Label.LabelStyle(bf, Color.WHITE);
         label = new Label(scoreLabelText, style);
@@ -287,6 +289,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         mainControlsStage.getViewport().update(width, height, false);
         mainDifficultyStage.getViewport().update(width, height, false);
         gameOverStage.getViewport().update(width, height, false);
+        bgStage.getViewport().update(width, height, false);
     }
 
     @Override
@@ -453,6 +456,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         hudView.setHealthbar(Character.player.getCurrentHealth());
 
         // Draw the game
+        backgroundView.render(gameStage.getCamera());
         gameView.render(moveCamera);
         hudStage.draw();
         hudView.render();
@@ -603,12 +607,12 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
     // XML-asset loading
 
     private void generateXMLAssets(MyXMLReader reader) {
-        generateInventories("inventoryblueprint", reader);
-        generateEnemies("enemies", reader);
-        generateEnemyGroups("enemygroups", reader);
+        generateInventories(reader);
+        generateEnemies(reader);
+        generateEnemyGroups(reader);
     }
 
-    private void generateInventories(String path, MyXMLReader reader) {
+    private void generateInventories(MyXMLReader reader) {
 
         FileHandle folder = Gdx.files.internal("inventoryblueprint");
 
@@ -622,8 +626,8 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         }
     }
 
-    private void generateEnemies(String path, MyXMLReader reader) {
-        FileHandle folder = Gdx.files.internal(path);
+    private void generateEnemies(MyXMLReader reader) {
+        FileHandle folder = Gdx.files.internal("enemies");
 
         List<FileHandle> contents = Arrays.asList(folder.list("xml"));
         try {
@@ -635,8 +639,8 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         }
     }
 
-    private void generateEnemyGroups(String path, MyXMLReader reader) {
-        FileHandle folder = Gdx.files.internal(path);
+    private void generateEnemyGroups(MyXMLReader reader) {
+        FileHandle folder = Gdx.files.internal("enemygroups");
 
         List<FileHandle> contents = Arrays.asList(folder.list("xml"));
         try {

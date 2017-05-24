@@ -11,7 +11,7 @@ import javax.vecmath.Vector2f;
  */
 public class ObstacleBuilder extends AbstractModelBuilder implements IObstacleBuilder {
 
-    private Tuple2f size = new Vector2f(0, 0);
+    private final Tuple2f size = new Vector2f(0, 0);
 
     @Override
     public ModelActor create() {

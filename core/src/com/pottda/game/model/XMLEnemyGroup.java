@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class XMLEnemyGroup {
 
-    public final List<String> enemies;
+    final List<String> enemies;
     public final int difficulty;
     public final String name;
 

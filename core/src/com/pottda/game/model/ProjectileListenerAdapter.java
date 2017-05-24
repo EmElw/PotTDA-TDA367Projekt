@@ -3,24 +3,24 @@ package com.pottda.game.model;
 /**
  * Created by Magnus on 2017-05-06.
  */
-public abstract class ProjectileListenerAdapter implements ProjectileListener {
+abstract class ProjectileListenerAdapter implements ProjectileListener {
     @Override
     public void onAttack(Projectile projectile) {
 
     }
 
     @Override
-    public void onHit(Projectile projectile) {
+    public void onHit() {
 
     }
 
     @Override
-    public void onDestruction(Projectile p) {
+    public void onDestruction() {
 
     }
 
     @Override
-    public void onTimer(Projectile p) {
+    public void onTimer() {
 
     }
 }

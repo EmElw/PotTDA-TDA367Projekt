@@ -1,6 +1,5 @@
 package com.pottda.game.model.items;
 
-import com.pottda.game.model.AttackItem;
 import com.pottda.game.model.Item;
 
 import javax.vecmath.Point2i;

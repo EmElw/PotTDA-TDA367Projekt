@@ -5,16 +5,15 @@ import com.pottda.game.model.items.SizedItem;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
-public class ItemClassLoader {
+class ItemClassLoader {
 
     /**
      * Map to save String->Class for quicker access (probably)
      */
-    private static Map<String, Class> stringClassMap = new HashMap<String, Class>();
+    private static final Map<String, Class> stringClassMap = new HashMap<String, Class>();
 
     /**
      * Retrieve the @{code Class} corresponding to the given {@code string} from the map
@@ -24,7 +23,7 @@ public class ItemClassLoader {
      * @throws ClassNotFoundException if the name-tag doesn't correspond to a class
      * @throws IOException            if the name-tag doesn't correspond to a class that is a subclass of Item
      */
-    public static Class<? extends Item> getItemClass(String className) throws ClassNotFoundException, IOException {
+    static Class getItemClass(String className) throws ClassNotFoundException, IOException {
         if (stringClassMap.containsKey(className)) {
             return stringClassMap.get(className);
         } else {

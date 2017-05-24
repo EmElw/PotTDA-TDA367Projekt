@@ -39,7 +39,9 @@ public enum Sprites {
 
     PAUSERESUME("hud/pauseResume.png"),
     PAUSEOPTIONS("hud/pauseOptions.png"),
-    PAUSEQUIT("hud/pauseQuit.png");
+    PAUSEQUIT("hud/pauseQuit.png"),
+
+    MAINBACKGROUND("bg/bg.png");
 
     public final String fileName;
 

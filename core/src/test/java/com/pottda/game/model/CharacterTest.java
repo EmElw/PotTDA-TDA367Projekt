@@ -88,8 +88,8 @@ public class CharacterTest {
             protected void initDynamic() {
                 statMap.put(Stat.HEALTH, -50.0);
                 statMap.put(Stat.ACCEL, 100.0);
-                x = 1;
-                y = 0;
+                setX(1);
+                setY(0);
                 basePositions.add(new Point2i(0, 0));
             }
         };
@@ -112,8 +112,8 @@ public class CharacterTest {
             @Override
             protected void initDynamic() {
                 statMap.put(Stat.HEALTH, 100.0);
-                x = 0;
-                y = 0;
+                setX(0);
+                setY(0);
                 basePositions.add(new Point2i(0, 0));
             }
         };

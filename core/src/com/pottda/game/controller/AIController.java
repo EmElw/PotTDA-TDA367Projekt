@@ -7,7 +7,7 @@ import com.pottda.game.view.ActorView;
  *
  */
 
-public abstract class AIController extends AbstractController {
+abstract class AIController extends AbstractController {
     /**
      * {@inheritDoc}
      * @param modelActor

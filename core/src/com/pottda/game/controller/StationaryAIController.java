@@ -4,8 +4,8 @@ import com.pottda.game.model.Character;
 import com.pottda.game.model.ModelActor;
 import com.pottda.game.view.ActorView;
 
-public class StationaryAIController extends AIController{
-    public StationaryAIController(ModelActor modelActor, ActorView actorView) {
+class StationaryAIController extends AIController{
+    StationaryAIController(ModelActor modelActor, ActorView actorView) {
         super(modelActor, actorView);
     }
 
