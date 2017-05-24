@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.pottda.game.model.Inventory;
@@ -57,6 +58,11 @@ public class InventoryManagementView {
                     return false;
                 }
                 return false;
+            }
+
+            @Override
+            public void touchDragged(InputEvent evt, float x, float y, int index){
+
             }
 
             @Override
@@ -158,10 +164,12 @@ public class InventoryManagementView {
 
     private void addToStorageTable(final String itemName, int itemCount) {
         // Create a table to hold name + image
-        final StorageImage itemButton = new StorageImage(mySkin, itemName);
-        itemButton.setColor(0.03f, 0.69f, 0.73f, 1);  // TODO test only
+        Table storageTable = new Table();
+        final StorageImage storageImage = new StorageImage(itemName);
+        Stack storageStack = new Stack();
+        //storageImage.setColor(0.03f, 0.69f, 0.73f, 1);  // TODO test only
 
-//        itemButton.addListener(
+//        storageImage.addListener(
 //                new InputListener() {
 //
 //                    @Override
@@ -195,14 +203,16 @@ public class InventoryManagementView {
         Image itemImage = this.itemImage;
 
         // Add a label and image to the table and fit the image
-        itemButton.add(internalItemGroupTable).left().spaceRight(10);
-        itemButton.add(itemImage).width(100).height(100);
-        itemButton.row();
+        storageTable.add(internalItemGroupTable).left().spaceRight(10);
+        storageTable.add(itemImage).width(100).height(100);
+        storageTable.setTouchable(Touchable.disabled);
         itemImage.setScaling(Scaling.fit);
+        storageStack.add(storageImage);
+        storageStack.add(storageTable);
 
         // Add the table to our main storage table
-        storageTable.add(itemButton).fill();
-        storageTable.row();
+        this.storageTable.add(storageStack).fill();
+        this.storageTable.row();
     }
 
     public void updateInventoryGroup(Inventory inventory) {
@@ -277,7 +287,7 @@ public class InventoryManagementView {
         private String itemName;    // The external item name associated with this button
 
         private StorageImage(String itemName) {
-            
+            super(new Texture(Gdx.files.internal("menu/storageButtonBackground.png")));
             this.itemName = itemName;
         }
     }
