@@ -36,6 +36,7 @@ public class InventoryManagementView {
 
     public InventoryManagementView(Stage stage) {
         this.stage = stage;
+        stage.setDebugAll(true);
         this.stage.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
@@ -89,7 +90,6 @@ public class InventoryManagementView {
         table.setFillParent(true);
         stage.addActor(table);
 
-        table.setDebug(true);
 
         // Create table to hold storage section
         storageTable = new Table();
@@ -97,7 +97,7 @@ public class InventoryManagementView {
         ScrollPane scroll = new ScrollPane(storageTable);
         scroll.layout();
         scroll.setForceScroll(false, true);
-        scroll.setOverscroll(false, true);
+        scroll.setOverscroll(false, false);
         Table storage = new Table();
         storage.add(scroll).height(stage.getHeight() - 25);
 
@@ -198,7 +198,6 @@ public class InventoryManagementView {
         itemButton.add(itemImage).width(100).height(100);
         itemButton.row();
         itemImage.setScaling(Scaling.fit);
-        itemButton.setDebug(false);
 
         // Add the table to our main storage table
         storageTable.add(itemButton).fill();
@@ -258,7 +257,6 @@ public class InventoryManagementView {
         }
         inventoryGroup.validate();
         inventoryTable.add(inventoryGroup);
-        inventoryTable.setDebug(true);
     }
 
     // Boring stuff
