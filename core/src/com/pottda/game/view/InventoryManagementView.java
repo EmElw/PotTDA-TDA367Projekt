@@ -3,10 +3,13 @@ package com.pottda.game.view;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.pottda.game.model.Inventory;
 import com.pottda.game.model.Item;
@@ -303,21 +306,28 @@ public class InventoryManagementView {
 
     private class WorkingImageGroup extends Group {
 
-        /*private final Button.ButtonStyle rotateRightButtonStyle;
-        private final Button.ButtonStyle rotateLeftButtonStyle;
-        private final Button.ButtonStyle acceptButton;
-        private final Button.ButtonStyle discardButton;
+        private final Drawable rotateRightButtonDrawable = new TextureRegionDrawable(
+                new TextureRegion(new Texture(Gdx.files.internal("rotateRightButton.png"))));
+        private final Drawable rotateLeftButtonDrawable = new TextureRegionDrawable(
+                new TextureRegion(new Texture(Gdx.files.internal("rotateLeftButton.png"))));
+        private final Drawable acceptButtonDrawable = new TextureRegionDrawable(
+                new TextureRegion(new Texture(Gdx.files.internal("acceptButton.png"))));
+        private final Drawable discardButtonDrawable = new TextureRegionDrawable(
+                new TextureRegion(new Texture(Gdx.files.internal("discardButton.png"))));
 
         private ImageButton rotateRightButton;
         private ImageButton rotateLeftButton;
-        private ImageButton finalizeButton; // Switches between discard and accept
+        private ImageButton acceptButton;
+        private ImageButton discardButton;
 
 
 
         private WorkingImageGroup(){
-            rotateRightButton = new ImageButton(rotateRightButtonStyle);
-            rotateLeftButton = new ImageButton(rotateLeftButtonStyle);
-        }*/
+            rotateRightButton = new ImageButton(rotateRightButtonDrawable);
+            rotateLeftButton = new ImageButton(rotateLeftButtonDrawable);
+            acceptButton = new ImageButton(acceptButtonDrawable);
+            discardButton = new ImageButton(discardButtonDrawable);
+        }
 
     }
 }
