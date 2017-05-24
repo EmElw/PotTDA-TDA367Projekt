@@ -38,15 +38,23 @@ class ItemClassLoader {
         }
     }
 
-    public static Class<? extends SizedItem> getSizedItemClass(String classname) throws ClassNotFoundException, IOException {
-        if(stringClassMap.containsKey(classname)){
-            return stringClassMap.get(classname);
+    /**
+     * Retrieve the @{code Class} corresponding to the given {@code string} from the map
+     *
+     * @param className the name of the {@code Class} to load
+     * @return a Class
+     * @throws ClassNotFoundException if the name-tag doesn't correspond to a class
+     * @throws IOException            if the name-tag doesn't correspond to a class that is a subclass of Item
+     */
+    static Class getSizedItemClass(String className) throws ClassNotFoundException, IOException {
+        if(stringClassMap.containsKey(className)){
+            return stringClassMap.get(className);
         } else {
             Class c;
-            c = Class.forName("com.pottda.game.model.items." + classname);
+            c = Class.forName("com.pottda.game.model.items." + className);
             if (isSizedItemSubclass(c)) {
-                stringClassMap.put(classname, c);
-                return stringClassMap.get(classname);
+                stringClassMap.put(className, c);
+                return stringClassMap.get(className);
             } else {
                 throw new IOException("name-tag doesn't correspond to a SizedItem");
             }
@@ -73,6 +81,12 @@ class ItemClassLoader {
         return false;
     }
 
+    /**
+     * Returns true if the given {@code Class} is a subclass of {@code SizedItem}
+     *
+     * @param c the {@code Class} to check
+     * @return boolean
+     */
     private static boolean isSizedItemSubclass(Class c) {
         Class temp = c;
         while (!c.equals(Object.class)) {
