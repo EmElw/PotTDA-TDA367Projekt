@@ -1,10 +1,23 @@
 package com.pottda.game.model.items;
 
 import com.pottda.game.model.Item;
+import com.pottda.game.model.ProjectileListener;
 
 import javax.vecmath.Point2i;
 
-public abstract class GenericProjectileModifier extends SizedItem {
+public abstract class GenericProjectileModifier extends SizedItem implements ProjectileListener {
+    /**
+     * Size for minot:
+     * [X]O
+     *
+     * Size for normal:
+     * X[X]O
+     *
+     * Size for big:
+     * X
+     * X[X]O
+     * X
+     */
 
     @Override
     protected void setBasePositions() {
