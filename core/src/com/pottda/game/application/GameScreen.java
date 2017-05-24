@@ -245,7 +245,7 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
 
         // Generate XML-assets
         MyXMLReader reader = new MyXMLReader();
-        generateXMLAssets(reader);
+        reader.generateXMLAssets();
 
         // Make a ControllerHookup and add PoTDAGame as a listener
         ControllerHookup controllerHookup = new ControllerHookup(gameStage);
@@ -282,6 +282,22 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
         }
     }
 
+    /**
+     * Updates physics, health bar and renders views
+     */
+    private void updateWorld(boolean moveCamera) {
+        label.setText(scoreLabelText + score);
+
+        // Set the health bar to player's current health
+        hudView.setHealthbar(Character.player.getCurrentHealth());
+
+        // Draw the game
+        backgroundView.render(gameStage.getCamera());
+        gameView.render(moveCamera);
+        hudStage.draw();
+        hudView.render();
+    }
+
     private void spawnEnemies() {
         List<ScoreChangeListener> scoreChangeListeners = new ArrayList<ScoreChangeListener>();
         scoreChangeListeners.add(this);
@@ -311,22 +327,6 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
         controller.getModel().getPhysicsActor().destroyBody();
         controller.getView().remove();
         controllerRemovalBuffer.add(controller);
-    }
-
-    /**
-     * Updates physics, health bar and renders views
-     */
-    private void updateWorld(boolean moveCamera) {
-        label.setText(scoreLabelText + score);
-
-        // Set the health bar to player's current health
-        hudView.setHealthbar(Character.player.getCurrentHealth());
-
-        // Draw the game
-        backgroundView.render(gameStage.getCamera());
-        gameView.render(moveCamera);
-        hudStage.draw();
-        hudView.render();
     }
 
     /**
@@ -482,52 +482,6 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
                 setPosition(new Vector2f(border_thickness / 2 + WIDTH_METERS, HEIGHT_METERS / 2)).
                 setSprite(Sprites.BORDER).
                 create();
-    }
-
-    private void generateXMLAssets(MyXMLReader reader) {
-        generateInventories(reader);
-        generateEnemies(reader);
-        generateEnemyGroups(reader);
-    }
-
-    private void generateInventories(MyXMLReader reader) {
-
-        FileHandle folder = Gdx.files.internal("inventoryblueprint");
-
-        List<FileHandle> contents = Arrays.asList(folder.list("xml"));
-        try {
-            for (FileHandle f : contents) {
-                InventoryBlueprint.newBlueprint(reader.parseInventory(f));
-            }
-        } catch (Exception e) {
-            throw new Error("failed to generate inventory blueprints: ", e);
-        }
-    }
-
-    private void generateEnemies(MyXMLReader reader) {
-        FileHandle folder = Gdx.files.internal("enemies");
-
-        List<FileHandle> contents = Arrays.asList(folder.list("xml"));
-        try {
-            for (FileHandle f : contents) {
-                EnemyBlueprint.newBlueprint(reader.parseEnemy(f));
-            }
-        } catch (Exception e) {
-            throw new Error("failed to generate enemy blueprints: ", e);
-        }
-    }
-
-    private void generateEnemyGroups(MyXMLReader reader) {
-        FileHandle folder = Gdx.files.internal("enemygroups");
-
-        List<FileHandle> contents = Arrays.asList(folder.list("xml"));
-        try {
-            for (FileHandle f : contents) {
-                EnemyGroup.newGroup(reader.parseEnemyGroup(f));
-            }
-        } catch (Exception e) {
-            throw new Error("failed to generate enemy blueprints: ", e);
-        }
     }
 
     Stage getJoystickStage() {

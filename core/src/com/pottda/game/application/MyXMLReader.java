@@ -1,5 +1,6 @@
 package com.pottda.game.application;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.*;
@@ -7,11 +8,9 @@ import com.pottda.game.model.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by Magnus on 2017-05-21.
- */
 public class MyXMLReader {
 
     private final XmlReader xml = new XmlReader();
@@ -113,6 +112,52 @@ public class MyXMLReader {
                     e.getIntAttribute("orientation"));
         }
         throw new IOException("no item in root");
+    }
+
+    void generateXMLAssets() {
+        generateInventories(this);
+        generateEnemies(this);
+        generateEnemyGroups(this);
+    }
+
+    private void generateInventories(MyXMLReader reader) {
+
+        FileHandle folder = Gdx.files.internal("inventoryblueprint");
+
+        List<FileHandle> contents = Arrays.asList(folder.list("xml"));
+        try {
+            for (FileHandle f : contents) {
+                InventoryBlueprint.newBlueprint(reader.parseInventory(f));
+            }
+        } catch (Exception e) {
+            throw new Error("failed to generate inventory blueprints: ", e);
+        }
+    }
+
+    private void generateEnemies(MyXMLReader reader) {
+        FileHandle folder = Gdx.files.internal("enemies");
+
+        List<FileHandle> contents = Arrays.asList(folder.list("xml"));
+        try {
+            for (FileHandle f : contents) {
+                EnemyBlueprint.newBlueprint(reader.parseEnemy(f));
+            }
+        } catch (Exception e) {
+            throw new Error("failed to generate enemy blueprints: ", e);
+        }
+    }
+
+    private void generateEnemyGroups(MyXMLReader reader) {
+        FileHandle folder = Gdx.files.internal("enemygroups");
+
+        List<FileHandle> contents = Arrays.asList(folder.list("xml"));
+        try {
+            for (FileHandle f : contents) {
+                EnemyGroup.newGroup(reader.parseEnemyGroup(f));
+            }
+        } catch (Exception e) {
+            throw new Error("failed to generate enemy blueprints: ", e);
+        }
     }
 
 }

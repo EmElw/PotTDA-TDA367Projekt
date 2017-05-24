@@ -1,6 +1,6 @@
 package com.pottda.game.application;
 
-public enum GameState {
+enum GameState {
     NONE,
     RUNNING,
     PAUSED,
