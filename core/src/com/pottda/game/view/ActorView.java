@@ -10,9 +10,6 @@ import com.pottda.game.model.Sprites;
 
 import javax.vecmath.Vector2f;
 
-/**
- *
- */
 public class ActorView extends Image {
     private final Texture texture;
     private Vector2f size;
