@@ -1,5 +1,8 @@
 package com.pottda.game.model;
 
+import com.pottda.game.model.items.SizedItem;
+
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +32,24 @@ class ItemClassLoader {
             if (isItemSubclass(c)) {
                 stringClassMap.put(className, c);
                 return stringClassMap.get(className);
-            } else throw new IOException("name-tag doesn't correspond to an Item");
+            } else {
+                throw new IOException("name-tag doesn't correspond to an Item");
+            }
+        }
+    }
+
+    public static Class<? extends SizedItem> getSizedItemClass(String classname) throws ClassNotFoundException, IOException {
+        if(stringClassMap.containsKey(classname)){
+            return stringClassMap.get(classname);
+        } else {
+            Class c;
+            c = Class.forName("com.pottda.game.model.items." + classname);
+            if (isSizedItemSubclass(c)) {
+                stringClassMap.put(classname, c);
+                return stringClassMap.get(classname);
+            } else {
+                throw new IOException("name-tag doesn't correspond to a SizedItem");
+            }
         }
     }
 
@@ -53,4 +73,17 @@ class ItemClassLoader {
         return false;
     }
 
+    private static boolean isSizedItemSubclass(Class c) {
+        Class temp = c;
+        while (!c.equals(Object.class)) {
+            try {
+                if ((temp = temp.getSuperclass()) == SizedItem.class) {
+                    return true;
+                }
+            } catch (NullPointerException e){
+                throw new NullPointerException("Failed when searching: " + c.toString());
+            }
+        }
+        return false;
+    }
 }

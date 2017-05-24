@@ -79,6 +79,9 @@ public class MyXMLReader {
             Element root = xml.parse(file);
             if (root.getName().equals("inventory")) {
                 List<XMLItem> items = new ArrayList<XMLItem>();
+                for (Element e : root.getChildrenByName("sizedItem")){
+                    items.add(parseSizedItem(e));
+                }
                 for (Element e : root.getChildrenByName("item")) {
                     items.add(parseItem(e));
                 }
@@ -160,4 +163,15 @@ public class MyXMLReader {
         }
     }
 
+    private XMLItem parseSizedItem(Element e) throws IOException {
+        if (e.getName().equals("sizedItem")) {
+            return new XMLSizedItem(
+                    e.getAttribute("name"),
+                    e.getIntAttribute("x"),
+                    e.getIntAttribute("y"),
+                    e.getIntAttribute("orientation"),
+                    e.getIntAttribute("size"));
+        }
+        throw new IOException("no sizedItem in root");
+    }
 }

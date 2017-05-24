@@ -120,6 +120,152 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
     }
 
     public void render(float delta) {
+    /**
+     * Inits the game world and player
+     */
+    private void doOnStartGame() {
+        gameState = NONE;
+
+        controllers = new HashSet<AbstractController>();
+        controllerBuffer = new Stack<AbstractController>();
+        controllerRemovalBuffer = new Stack<AbstractController>();
+
+        hudView = new HUDView(hudStage);
+        pausedView = new PausedView(pausedStage);
+        optionsView = new OptionsView(optionsStage);
+        gameView = new GameView(gameStage, joystickStage);
+        backgroundView = new BackgroundView(bgStage);
+
+        world = new World(new Vector2(0, 0), false);
+        world.setContactListener(new CollisionListener());
+        accumulator = 0;
+
+        score = 0;
+        enemyAmount = 0;
+
+        startWaitGameOver = 0;
+
+        soundsAndMusic = new SoundsAndMusic();
+        startMusic();
+
+        score = 0;
+        BitmapFont bf = new BitmapFont();
+        Label.LabelStyle style = new Label.LabelStyle(bf, Color.WHITE);
+        label = new Label(scoreLabelText, style);
+        label.setPosition(hudStage.getWidth() / 6, hudStage.getHeight() - 30);
+        label.setFontScale(1.5f);
+        hudStage.addActor(label);
+
+        // Generate XML-assets
+        MyXMLReader reader = new MyXMLReader();
+        generateXMLAssets(reader);
+
+        // Make a ControllerHookup and add PoTDA as a listener
+        ControllerHookup controllerHookup = new ControllerHookup(gameStage);
+        controllerHookup.addListener(this);
+
+        // Set up ModelBuilder with PhysicsActorFactory and ControllerHookup
+        AbstractModelBuilder.setPhysiscActorFactory(new Box2DPhysicsActorFactory(world));
+        AbstractModelBuilder.addListener(controllerHookup);
+
+        // Create WaveController
+        waveController = new WaveController();
+
+        createPlayer();
+
+        createWorldBorders();
+
+    }
+
+    /**
+     * Creates the player
+     */
+    private void createPlayer() {
+        // Add player
+        new CharacterBuilder().
+                setTeam(Character.PLAYER_TEAM).
+                setInventoryFromFile("sizedItemTestInv.xml").
+                setBehaviour(ModelActor.Behaviour.NONE).
+                setPosition(new Vector2f(WIDTH_METERS / 2, HEIGHT_METERS / 2)).
+                setSprite(Sprites.PLAYER).
+                create();
+
+    }
+
+    /**
+     * Checks if any enemies are alive
+     *
+     * @return true if at least one enemy is alive
+     */
+    private boolean enemiesAlive() {
+        return enemyAmount > 0;
+    }
+
+    /**
+     * Checks if the player is alive
+     *
+     * @return true if the player's health is above 0
+     */
+    private boolean playersIsAlive() {
+        return hudView.getHealth() > 0;
+    }
+
+    /**
+     * Creates four obstacles around the playing area
+     */
+    private void createWorldBorders() {
+        final float border_thickness = 0.25f;
+        // Bottom
+        new ObstacleBuilder().
+                setSize(WIDTH_METERS, border_thickness).
+                setPosition(new Vector2f(WIDTH_METERS / 2, -border_thickness / 2)).
+                setSprite(Sprites.BORDER).
+                create();
+        // Left
+        new ObstacleBuilder().
+                setSize(border_thickness, HEIGHT_METERS).
+                setPosition(new Vector2f(-border_thickness / 2, HEIGHT_METERS / 2)).
+                setSprite(Sprites.BORDER).
+                create();
+        // Top
+        new ObstacleBuilder().
+                setSize(WIDTH_METERS, border_thickness).
+                setPosition(new Vector2f(WIDTH_METERS / 2, border_thickness / 2 + HEIGHT_METERS)).
+                setSprite(Sprites.BORDER).
+                create();
+        // Right
+        new ObstacleBuilder().
+                setSize(border_thickness, HEIGHT_METERS).
+                setPosition(new Vector2f(border_thickness / 2 + WIDTH_METERS, HEIGHT_METERS / 2)).
+                setSprite(Sprites.BORDER).
+                create();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        camera.setToOrtho(false, HEIGHT * width / (float) height, HEIGHT);
+
+        hudStage.getViewport().update(width, height, false);
+        gameStage.getViewport().update(width, height, false);
+        joystickStage.getViewport().update(width, height, false);
+        mainMenuStage.getViewport().update(width, height, false);
+        optionsStage.getViewport().update(width, height, false);
+        pausedStage.getViewport().update(width, height, false);
+        mainControlsStage.getViewport().update(width, height, false);
+        mainDifficultyStage.getViewport().update(width, height, false);
+        gameOverStage.getViewport().update(width, height, false);
+        bgStage.getViewport().update(width, height, false);
+    }
+
+    @Override
+    public void render() {
+        Gdx.gl.glClearColor(0, 0.5f, 0.5f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        camera.update();
+
+        checkTouch();
+
+
         switch (gameState) {
             case RUNNING:
             case WAITING_FOR_INVENTORY:
