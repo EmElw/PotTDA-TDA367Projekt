@@ -54,6 +54,10 @@ import static com.pottda.game.application.GameState.RESTARTING;
 import static com.pottda.game.application.GameState.RUNNING;
 import static com.pottda.game.application.GameState.WAITING_FOR_INVENTORY;
 import static com.pottda.game.application.GameState.gameState;
+import static com.pottda.game.model.Constants.HEIGHT;
+import static com.pottda.game.model.Constants.HEIGHT_METERS;
+import static com.pottda.game.model.Constants.WIDTH;
+import static com.pottda.game.model.Constants.WIDTH_METERS;
 
 /**
  * Screen that acts as the top-level for the running game
@@ -97,14 +101,7 @@ class GameScreen implements Screen, NewControllerListener, ScoreChangeListener, 
 
     private static final float SCALING = 2f;
 
-    private final float WIDTH;
-    private final float HEIGHT;
-    private final float WIDTH_METERS = 30 * SCALING;
-    private final float HEIGHT_METERS = 18 * SCALING;
-
-    GameScreen(float WIDTH, float HEIGHT) {
-        this.WIDTH = WIDTH;
-        this.HEIGHT = HEIGHT;
+    GameScreen() {
         create();
     }
 

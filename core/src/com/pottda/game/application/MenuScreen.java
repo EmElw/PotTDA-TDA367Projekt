@@ -20,6 +20,8 @@ import static com.pottda.game.controller.ControllerOptions.ControllerMode.KEYBOA
 import static com.pottda.game.controller.ControllerOptions.ControllerMode.KEYBOARD_ONLY;
 import static com.pottda.game.controller.ControllerOptions.ControllerMode.TOUCH_JOYSTICK;
 import static com.pottda.game.controller.ControllerOptions.joystickStage;
+import static com.pottda.game.model.Constants.HEIGHT;
+import static com.pottda.game.model.Constants.WIDTH;
 
 /**
  * Screen that acts as top level for menu-navigation
@@ -35,12 +37,8 @@ class MenuScreen implements Screen {
 
     private final GameScreen gameScreen;
 
-    private final float WIDTH, HEIGHT;
-
-    MenuScreen(GameScreen gameScreen, float WIDTH, float HEIGHT) {
+    MenuScreen(GameScreen gameScreen) {
         this.gameScreen = gameScreen;
-        this.WIDTH = WIDTH;
-        this.HEIGHT = HEIGHT;
         create();
     }
 

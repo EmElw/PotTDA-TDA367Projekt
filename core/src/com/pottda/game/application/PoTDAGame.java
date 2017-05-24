@@ -7,9 +7,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.pottda.game.model.Constants;
 import com.pottda.game.model.builders.AbstractModelBuilder;
 
+import static com.pottda.game.application.GameState.MAIN_CHOOSE;
+import static com.pottda.game.application.GameState.MAIN_CONTROLS;
+import static com.pottda.game.application.GameState.MAIN_MENU;
+import static com.pottda.game.application.GameState.RESTARTING;
 import static com.pottda.game.application.GameState.gameState;
 import static com.pottda.game.model.Constants.HEIGHT;
-import static com.pottda.game.model.Constants.WIDTH;
 
 public class PoTDAGame extends Game {
     private OrthographicCamera camera;
@@ -21,8 +24,8 @@ public class PoTDAGame extends Game {
     public void create() {
         Gdx.graphics.setTitle(Constants.GAME_TITLE);
         camera = new OrthographicCamera();
-        gameScreen = new GameScreen(WIDTH, HEIGHT);
-        menuScreen = new MenuScreen(gameScreen, WIDTH, HEIGHT);
+        gameScreen = new GameScreen();
+        menuScreen = new MenuScreen(gameScreen);
     }
 
     @Override
@@ -38,26 +41,13 @@ public class PoTDAGame extends Game {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
 
-        switch (gameState) {
-            case NONE:
-                break;
-            case MAIN_MENU:
-            case MAIN_CONTROLS:
-            case MAIN_CHOOSE:
-                menuScreen.render(Gdx.graphics.getDeltaTime());
-                break;
-            case PAUSED:
-            case OPTIONS:
-            case GAME_OVER:
-            case WAITING_FOR_INVENTORY:
-            case RUNNING:
-                gameScreen.render(Gdx.graphics.getDeltaTime());
-                break;
-            case RESTARTING:
-                doOnRestartGame();
-                break;
+        if (gameState == MAIN_MENU || gameState == MAIN_CONTROLS || gameState == MAIN_CHOOSE) {
+            menuScreen.render(Gdx.graphics.getDeltaTime());
+        } else if (gameState == RESTARTING){
+            doOnRestartGame();
+        } else {
+            gameScreen.render(Gdx.graphics.getDeltaTime());
         }
-
     }
 
     /**
