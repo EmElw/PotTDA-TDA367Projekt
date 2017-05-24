@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.pottda.game.model.Inventory;
 import com.pottda.game.model.Item;
@@ -41,9 +42,9 @@ public class InventoryManagementView {
             @Override
             public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
                 try {
-                    if (evt.getTarget() instanceof StorageButton) {
+                    if (evt.getTarget() instanceof StorageImage) {
                         for (InventoryManagementListener iml : listeners) {
-                            iml.storageItemTouched(((StorageButton) evt.getTarget()).itemName);
+                            iml.storageItemTouched(((StorageImage) evt.getTarget()).itemName);
                         }
                         return true;
                     } else if (evt.getTarget() instanceof ItemImage) {
@@ -60,8 +61,8 @@ public class InventoryManagementView {
 
             @Override
             public void touchUp(InputEvent evt, float x, float y, int index, int button) {
-                if (evt.getTarget() instanceof StorageButton) {
-                    StorageButton actor = (StorageButton) evt.getTarget();
+                if (evt.getTarget() instanceof StorageImage) {
+                    StorageImage actor = (StorageImage) evt.getTarget();
                 } else if (evt.getTarget() instanceof ItemImage) {
                     ItemImage actor = (ItemImage) evt.getTarget();
                 }
@@ -157,7 +158,7 @@ public class InventoryManagementView {
 
     private void addToStorageTable(final String itemName, int itemCount) {
         // Create a table to hold name + image
-        final StorageButton itemButton = new StorageButton(mySkin, itemName);
+        final StorageImage itemButton = new StorageImage(mySkin, itemName);
         itemButton.setColor(0.03f, 0.69f, 0.73f, 1);  // TODO test only
 
 //        itemButton.addListener(
@@ -256,7 +257,7 @@ public class InventoryManagementView {
             inventoryGroup.addActor(connectionImage);
         }
         inventoryGroup.validate();
-        inventoryTable.add(inventoryGroup);
+        inventoryTable.add(inventoryGroup).expand().bottom().left().pad(2*SIZE);
     }
 
     // Boring stuff
@@ -271,12 +272,12 @@ public class InventoryManagementView {
 
     // Inner classes
 
-    private class StorageButton extends Button {
+    private class StorageImage extends Image {
 
         private String itemName;    // The external item name associated with this button
 
-        private StorageButton(Skin skin, String itemName) {
-            super(skin);
+        private StorageImage(String itemName) {
+            
             this.itemName = itemName;
         }
     }
@@ -292,10 +293,10 @@ public class InventoryManagementView {
 
     private class WorkingImageGroup extends Group {
 
-        private final static Button.ButtonStyle rotateRightButtonStyle;
-        private final static Button.ButtonStyle rotateLeftButtonStyle;
-        private final static Button.ButtonStyle acceptButton;
-        private final static Button.ButtonStyle discardButton;
+        /*private final Button.ButtonStyle rotateRightButtonStyle;
+        private final Button.ButtonStyle rotateLeftButtonStyle;
+        private final Button.ButtonStyle acceptButton;
+        private final Button.ButtonStyle discardButton;
 
         private ImageButton rotateRightButton;
         private ImageButton rotateLeftButton;
@@ -306,7 +307,7 @@ public class InventoryManagementView {
         private WorkingImageGroup(){
             rotateRightButton = new ImageButton(rotateRightButtonStyle);
             rotateLeftButton = new ImageButton(rotateLeftButtonStyle);
-        }
+        }*/
 
     }
 }

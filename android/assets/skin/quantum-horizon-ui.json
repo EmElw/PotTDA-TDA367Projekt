@@ -282,6 +282,20 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 		checkedOver: button-over-pressed-c
 	}
 }
+	com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
+		default: {
+			up: button-c
+			down: button-over-pressed-c
+			over: button-over-c
+		}
+		toggle: {
+			up: button-c
+			down: button-pressed-c
+			over: button-over-c
+			checked: button-pressed-c
+			checkedOver: button-over-pressed-c
+		}
+	}
 com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 	default: {
 		checkboxOn: radio-button-c
