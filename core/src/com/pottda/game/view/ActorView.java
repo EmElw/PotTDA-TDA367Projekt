@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.pottda.game.application.PoTDAGame;
+import com.pottda.game.model.Constants;
 import com.pottda.game.model.Sprites;
 
 import javax.vecmath.Vector2f;
@@ -26,8 +26,8 @@ public class ActorView extends Image {
         super(new TextureRegionDrawable(new TextureRegion(texture)));
         this.texture = texture;
         // set the rotation point to middle of image
-        this.setOrigin((texture.getWidth() * PoTDAGame.WIDTH_RATIO) / 2, (texture.getHeight() * PoTDAGame.HEIGHT_RATIO) / 2);
-        this.setSize(this.getWidth() * PoTDAGame.WIDTH_RATIO, this.getHeight() * PoTDAGame.HEIGHT_RATIO); // Resize to make in meters instead of pixels
+        this.setOrigin((texture.getWidth() * Constants.WIDTH_RATIO) / 2, (texture.getHeight() * Constants.HEIGHT_RATIO) / 2);
+        this.setSize(this.getWidth() * Constants.WIDTH_RATIO, this.getHeight() * Constants.HEIGHT_RATIO); // Resize to make in meters instead of pixels
     }
 
     /**
@@ -40,7 +40,7 @@ public class ActorView extends Image {
         super(new TextureRegionDrawable(new TextureRegion(texture)));
         this.size = size;
         this.texture = texture;
-        this.setOrigin(-(texture.getWidth() * PoTDAGame.WIDTH_RATIO) / 2, -(texture.getHeight() * PoTDAGame.HEIGHT_RATIO) / 2);
+        this.setOrigin(-(texture.getWidth() * Constants.WIDTH_RATIO) / 2, -(texture.getHeight() * Constants.HEIGHT_RATIO) / 2);
         this.setSize(size.x, size.y);
 
     }
@@ -61,7 +61,7 @@ public class ActorView extends Image {
      */
     public void setPoint(float xPosition, float yPosition, boolean isObstacle) {
         if (!isObstacle) {
-            this.setPosition(xPosition - (texture.getWidth() * PoTDAGame.WIDTH_RATIO) / 2, yPosition - (texture.getHeight() * PoTDAGame.HEIGHT_RATIO) / 2);
+            this.setPosition(xPosition - (texture.getWidth() * Constants.WIDTH_RATIO) / 2, yPosition - (texture.getHeight() * Constants.HEIGHT_RATIO) / 2);
         } else {
             // Set the correct positions
             if (size.x > size.y) {
