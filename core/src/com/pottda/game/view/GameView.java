@@ -2,10 +2,6 @@ package com.pottda.game.view;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-/**
- * Created by Rikard Teodorsson on 2017-05-08.
- */
-
 public class GameView {
     private final Stage joystickStage;
     private final Stage gameStage;
@@ -17,6 +13,7 @@ public class GameView {
 
     public void render(boolean moveCamera) {
         if (moveCamera) {
+            // TODO change to depend on a variable that can only be the player instead of the first child in an stage
             // center camera to player each frame
             gameStage.getCamera().position.set(gameStage.getActors().get(0).getX(), gameStage.getActors().get(0).getY(), 0);
         }

@@ -8,13 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.pottda.game.model.Sprites;
 
-/**
- * Created by Rikard Teodorsson on 2017-05-18.
- */
 
 public class MainDifficultyView {
 
-    private final Stage stage;
+    private final Stage mainDifficultyStage;
 
     private Image easyImage;
     private Image hardImage;
@@ -26,41 +23,50 @@ public class MainDifficultyView {
         BGIMAGE
     }
 
-    public MainDifficultyView(final Stage stage) {
-        this.stage = stage;
+    public MainDifficultyView(final Stage mainDifficultyStage) {
+        this.mainDifficultyStage = mainDifficultyStage;
         create();
     }
 
     private void create() {
         // Add background
-        addToStage(stage.getWidth(), stage.getHeight());
+        addToStage(mainDifficultyStage.getWidth(),
+                mainDifficultyStage.getHeight());
 
-        // Add choose difficulty title
-        addToStage(Sprites.CHOOSETITLE, imageEnum.CHOOSEDIFFIMAGE, stage.getWidth() / 2 - 256, stage.getHeight() * 3 / 4);
+        addToStage(Sprites.CHOOSETITLE,
+                imageEnum.CHOOSEDIFFIMAGE,
+                mainDifficultyStage.getWidth() / 2 - 256,
+                mainDifficultyStage.getHeight() * 3 / 4);
 
-        // Add easy button
-        addToStage(Sprites.CHOOSEEASY, imageEnum.EASYIMAGE, stage.getWidth() / 2 - 256, stage.getHeight() * 2 / 4);
+        addToStage(Sprites.CHOOSEEASY,
+                imageEnum.EASYIMAGE,
+                mainDifficultyStage.getWidth() / 2 - 256,
+                mainDifficultyStage.getHeight() * 2 / 4);
 
-        // Add hard button
-        addToStage(Sprites.CHOOSEHARD, imageEnum.HARDIMAGE, stage.getWidth() / 2 - 256, stage.getHeight() * 1 / 4);
+        addToStage(Sprites.CHOOSEHARD,
+                imageEnum.HARDIMAGE,
+                mainDifficultyStage.getWidth() / 2 - 256,
+                mainDifficultyStage.getHeight() * 1 / 4);
     }
 
     private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos) {
+        // TODO generalise views with an abstract class
         Image image2 = getImage(new Texture(Gdx.files.internal(texturePath.fileName)), image);
         assert image2 != null;
         image2.setX(xPos);
         image2.setY(yPos);
-        stage.addActor(image2);
+        mainDifficultyStage.addActor(image2);
     }
 
     private void addToStage(float width, float height) {
+        // TODO generalise views with an abstract class
         Image image2 = getImage(new Texture(Gdx.files.internal(Sprites.MAINMENUBG.fileName)), imageEnum.BGIMAGE);
         assert image2 != null;
         image2.setX(0f);
         image2.setY(0f);
         image2.setWidth(width);
         image2.setHeight(height);
-        stage.addActor(image2);
+        mainDifficultyStage.addActor(image2);
     }
 
     private Image getImage(Texture texturePath, imageEnum image) {
@@ -78,7 +84,7 @@ public class MainDifficultyView {
     }
 
     public void render() {
-        stage.draw();
+        mainDifficultyStage.draw();
     }
 
     /**
