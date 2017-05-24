@@ -42,11 +42,11 @@ public class PoTDAGame extends Game {
         camera.update();
 
         if (gameState == MAIN_MENU || gameState == MAIN_CONTROLS || gameState == MAIN_CHOOSE) {
-            menuScreen.render(Gdx.graphics.getDeltaTime());
+            menuScreen.render();
         } else if (gameState == RESTARTING) {
             doOnRestartGame();
         } else {
-            gameScreen.render(Gdx.graphics.getDeltaTime());
+            gameScreen.render();
         }
     }
 

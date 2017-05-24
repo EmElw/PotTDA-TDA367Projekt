@@ -54,7 +54,7 @@ class MenuScreen {
         gameState = MAIN_MENU;
     }
 
-    public void render(float delta) {
+    public void render() {
         switch (gameState) {
             case MAIN_MENU:
                 // Draw the main menu
