@@ -10,6 +10,7 @@ public enum ItemSize {
     private final float dropRate;
     private final float statMultiplier;
     private final int identifier;
+
     ItemSize(String name, float dropRate, float statMultiplier, int identifier){
         this.name = name;
         this.dropRate = dropRate;

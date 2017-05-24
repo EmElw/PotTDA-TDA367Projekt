@@ -11,20 +11,11 @@ import java.util.List;
 public abstract class AttackItem extends Item {
     private final static float CHARACTER_RADIUS = 0.5f;
 
-    /**
-     * The base damage of any {@link Projectile} created by this Item
-     */
     protected int damage;
 
-    /**
-     * The cool down, measured in milliseconds, before this Item can fire
-     */
-    protected int cooldown;
+    protected int cooldownMS;
 
-    /**
-     * The last time an item attacked, measured in milliseconds.
-     */
-    private long lastAttackTime;
+    private long lastAttackTimeMS;
 
     protected boolean bounces;
     protected boolean piercing;
@@ -32,8 +23,8 @@ public abstract class AttackItem extends Item {
     @Override
     public void init() {
         damage = 0;
-        cooldown = 100;
-        lastAttackTime = 0;
+        cooldownMS = 100;
+        lastAttackTimeMS = 0;
         bounces = false;
         piercing = false;
         isPrimaryAttack = false;
@@ -47,7 +38,6 @@ public abstract class AttackItem extends Item {
 
         Item i = this;
 
-        // Add listeners
         while ((i = i.getNext()) != null) {
             if (i.isProjectileModifier) {
                 listeners.add(i);
@@ -62,7 +52,6 @@ public abstract class AttackItem extends Item {
 
         Sprites sprite;
 
-        // Set sprite depending on team
         if (team == Character.PLAYER_TEAM) {
             sprite = Sprites.PLAYERPROJECTILE;
         } else {
@@ -80,16 +69,15 @@ public abstract class AttackItem extends Item {
                 setSprite(sprite).
                 create();
 
-        // Call the event
         proj.onAttack();
 
-        lastAttackTime = System.currentTimeMillis();
+        lastAttackTimeMS = System.currentTimeMillis();
         return listeners;
 
     }
 
     void tryAttack(Vector2f direction, Vector2f origin, int team) {
-        if (System.currentTimeMillis() - lastAttackTime > cooldown) {
+        if (System.currentTimeMillis() - lastAttackTimeMS > cooldownMS) {
             attack(direction, origin, team);
         }
     }
