@@ -23,13 +23,14 @@ import static com.pottda.game.view.AtlasCreator.atlas;
  */
 public class InventoryManagementView {
     private Stage stage;
-    private Table table;
     private Table storageTable;
     private Table inventoryTable;
     private Skin mySkin = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
+
+    private Table table;
     private Image itemImage;
 
-    private Image workingItemImage;
+    private WorkingImageGroup workingItemGroup;
 
     private List<InventoryManagementListener> listeners;
 
@@ -67,7 +68,7 @@ public class InventoryManagementView {
 
             @Override
             public boolean mouseMoved(InputEvent event, float x, float y) {
-                workingItemImage.setPosition(x, y);
+                workingItemGroup.setPosition(x, y);
                 return true;
             }
 
@@ -77,30 +78,12 @@ public class InventoryManagementView {
         create();
     }
 
-    /**
-     * Transforms a coordinate in the top-level stage into a discreet coordinate inside the inventory
-     * <p>
-     * (i.e. the same as those used internally by items)
-     *
-     * @param x
-     * @param y
-     * @return a {@link Point2i}
-     */
-    private Point2i inventoryCoordinate(float x, float y) {
-
-        // Convert to coordinate relative to the inventory group
-
-        // Convert to coordinate in inventory
-
-        return null;
-    }
-
     public void create() {
         Gdx.input.setInputProcessor(stage);
 
-        workingItemImage = new Image();
-        workingItemImage.setZIndex(1000);
-        stage.addActor(workingItemImage);
+        workingItemGroup = new WorkingImageGroup();
+        workingItemGroup.setZIndex(1000);
+        stage.addActor(workingItemGroup);
 
         table = new Table();
         table.setFillParent(true);
@@ -148,18 +131,30 @@ public class InventoryManagementView {
 
     // Interesting stuff
 
+    /**
+     * Transforms a coordinate in the top-level stage into a discreet coordinate inside the inventory
+     * <p>
+     * (i.e. the same as those used internally by items)
+     *
+     * @param x
+     * @param y
+     * @return a {@link Point2i}
+     */
+    private Point2i toInventoryCoordinate(float x, float y) {
+
+        // Convert to coordinate relative to the inventory group
+
+        // Convert to coordinate in inventory
+
+        return null;
+    }
+
     public void updateStorageTable(Storage storage) {
         for (String s : storage.getItems()) {
             addToStorageTable(s, storage.getNrOf(s));
         }
     }
 
-    /**
-     * Takes an item and shows it on the storage display
-     * <p>
-     *
-     * @param itemName a {@link String} with the external item name
-     */
     private void addToStorageTable(final String itemName, int itemCount) {
         // Create a table to hold name + image
         final StorageButton itemButton = new StorageButton(mySkin, itemName);
@@ -295,5 +290,25 @@ public class InventoryManagementView {
             super(region);
             this.item = item;
         }
+    }
+
+    private class WorkingImageGroup extends Group {
+
+        private final static Button.ButtonStyle rotateRightButtonStyle;
+        private final static Button.ButtonStyle rotateLeftButtonStyle;
+        private final static Button.ButtonStyle acceptButton;
+        private final static Button.ButtonStyle discardButton;
+
+        private ImageButton rotateRightButton;
+        private ImageButton rotateLeftButton;
+        private ImageButton finalizeButton; // Switches between discard and accept
+
+
+
+        private WorkingImageGroup(){
+            rotateRightButton = new ImageButton(rotateRightButtonStyle);
+            rotateLeftButton = new ImageButton(rotateLeftButtonStyle);
+        }
+
     }
 }
