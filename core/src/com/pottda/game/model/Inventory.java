@@ -199,13 +199,13 @@ public class Inventory {
      *
      * @param items a {@link Collection<Item>}
      */
-    void addItems(Collection<Item> items) {
+    public void addItems(Collection<Item> items) {
         this.items.addAll(items);
         compile();
         notifyListeners();
     }
 
-    void addItem(Item item) {
+    public void addItem(Item item) {
         items.add(item);
         compile();
         notifyListeners();

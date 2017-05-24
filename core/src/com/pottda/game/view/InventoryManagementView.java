@@ -58,7 +58,11 @@ public class InventoryManagementView {
 
             @Override
             public void touchUp(InputEvent evt, float x, float y, int index, int button) {
-                Actor a = evt.getTarget();
+                if (evt.getTarget() instanceof StorageButton) {
+                    StorageButton actor = (StorageButton) evt.getTarget();
+                } else if (evt.getTarget() instanceof ItemImage) {
+                    ItemImage actor = (ItemImage) evt.getTarget();
+                }
             }
 
             @Override
@@ -71,6 +75,24 @@ public class InventoryManagementView {
         });
         this.listeners = new ArrayList<InventoryManagementListener>();
         create();
+    }
+
+    /**
+     * Transforms a coordinate in the top-level stage into a discreet coordinate inside the inventory
+     * <p>
+     * (i.e. the same as those used internally by items)
+     *
+     * @param x
+     * @param y
+     * @return a {@link Point2i}
+     */
+    private Point2i inventoryCoordinate(float x, float y) {
+
+        // Convert to coordinate relative to the inventory group
+
+        // Convert to coordinate in inventory
+
+        return null;
     }
 
     public void create() {
