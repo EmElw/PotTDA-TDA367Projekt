@@ -25,7 +25,7 @@ public class ControllerHookup implements NewModelListener {
         this.stage = stage;
     }
 
-    private List<NewControllerListener> listenerList = new ArrayList<NewControllerListener>();
+    private final List<NewControllerListener> listenerList = new ArrayList<NewControllerListener>();
 
     public void addListener(NewControllerListener ncl) {
         listenerList.add(ncl);

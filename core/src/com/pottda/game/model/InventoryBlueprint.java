@@ -12,10 +12,11 @@ import java.util.Map;
  */
 public class InventoryBlueprint {
 
-    private static Map<String, InventoryBlueprint> blueprints = new HashMap<String, InventoryBlueprint>();
+    private static final Map<String, InventoryBlueprint> blueprints = new HashMap<String, InventoryBlueprint>();
 
     /**
      * Returns an {@link Inventory} for the given name
+     *
      * @param name a {@link String}
      * @return an {@link Inventory}
      */
@@ -25,6 +26,7 @@ public class InventoryBlueprint {
 
     /**
      * Returns true if there is a blueprint for the given name
+     *
      * @param name a {@link String}
      * @return true if there is a blueprint for the given name
      */
@@ -34,6 +36,7 @@ public class InventoryBlueprint {
 
     /**
      * Creates and adds a new blueprint from an {@link XMLInventory}
+     *
      * @param inventory an {@link XMLInventory}
      */
     public static void newBlueprint(XMLInventory inventory) {
@@ -95,7 +98,7 @@ public class InventoryBlueprint {
         private final int x;
         private final int y;
 
-        public PointAndOrientation(int orientation, int x, int y) {
+        PointAndOrientation(int orientation, int x, int y) {
             this.orientation = orientation;
             this.x = x;
             this.y = y;
@@ -116,7 +119,6 @@ public class InventoryBlueprint {
                 item.x = entry.getKey().x;
                 item.y = entry.getKey().y;
                 item.orientation = entry.getKey().orientation;
-
                 inventory.addItem(item);
             } catch (InstantiationException e) {
                 throw new InstantiationError("Could not create instance of: " + entry.getValue().toString());

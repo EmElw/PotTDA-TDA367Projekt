@@ -2,7 +2,6 @@ package com.pottda.game.model;
 
 import javax.vecmath.Vector2f;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -66,11 +65,6 @@ public class Character extends ModelActor implements InventoryChangeListener {
 
     private void attack(Vector2f direction) {
         inventory.attack(direction, getPosition(), team);
-    }
-
-    @Override
-    public float getAngle() {
-        return super.getAngle();
     }
 
     /**

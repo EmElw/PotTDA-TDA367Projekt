@@ -88,7 +88,7 @@ public class EnemyGroup {
      * @param difficulty an integer
      * @return a {@code List<EnemyGrop>}
      */
-    public static List<EnemyGroup> getAllBelowDifficulty(int difficulty) {
+    static List<EnemyGroup> getAllBelowDifficulty(int difficulty) {
         List<EnemyGroup> returnList = new ArrayList<EnemyGroup>();
 
         for (List<EnemyGroup> g : groups.headMap(difficulty + 1).values()) {

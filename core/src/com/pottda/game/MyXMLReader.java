@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class MyXMLReader {
 
-    private XmlReader xml = new XmlReader();
+    private final XmlReader xml = new XmlReader();
 
     /**
      * Parses a .xml-file containing data for an enemy

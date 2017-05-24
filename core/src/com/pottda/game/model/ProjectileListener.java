@@ -8,9 +8,9 @@ public interface ProjectileListener {
 
     void onAttack(Projectile projectile);
 
-    void onHit(Projectile projectile);
+    void onHit();
 
-    void onDestruction(Projectile p);
+    void onDestruction();
 
-    void onTimer(Projectile p);
+    void onTimer();
 }

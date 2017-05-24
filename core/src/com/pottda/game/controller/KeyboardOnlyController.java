@@ -9,7 +9,7 @@ import com.pottda.game.view.ActorView;
  * Created by Rikard Teodorsson on 2017-04-07.
  */
 
-public class KeyboardOnlyController extends AbstractController {
+class KeyboardOnlyController extends AbstractController {
 
     KeyboardOnlyController(ModelActor modelActor, ActorView actorView) {
         super(modelActor, actorView);
