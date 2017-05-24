@@ -2,7 +2,6 @@ package com.pottda.game.application;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -62,7 +61,7 @@ import static com.pottda.game.model.Constants.WIDTH_METERS;
 /**
  * Screen that acts as the top-level for the running game
  */
-class GameScreen implements Screen, NewControllerListener, ScoreChangeListener, DeathListener {
+class GameScreen implements NewControllerListener, ScoreChangeListener, DeathListener {
     private Stage hudStage;
     private Stage joystickStage;
     private Stage gameStage;
@@ -120,12 +119,6 @@ class GameScreen implements Screen, NewControllerListener, ScoreChangeListener, 
         gameOverView = new GameOverView(gameOverStage);
     }
 
-    @Override
-    public void show() {
-
-    }
-
-    @Override
     public void render(float delta) {
         switch (gameState) {
             case RUNNING:
@@ -188,8 +181,7 @@ class GameScreen implements Screen, NewControllerListener, ScoreChangeListener, 
         checkTouch();
     }
 
-    @Override
-    public void resize(int width, int height) {
+    void resize(int width, int height) {
         hudStage.getViewport().update(width, height, false);
         gameStage.getViewport().update(width, height, false);
         joystickStage.getViewport().update(width, height, false);
@@ -199,17 +191,7 @@ class GameScreen implements Screen, NewControllerListener, ScoreChangeListener, 
         bgStage.getViewport().update(width, height, false);
     }
 
-    @Override
-    public void pause() {}
-
-    @Override
-    public void resume() {}
-
-    @Override
-    public void hide() {}
-
-    @Override
-    public void dispose() {
+    void dispose() {
         hudStage.dispose();
         pausedStage.dispose();
         optionsStage.dispose();

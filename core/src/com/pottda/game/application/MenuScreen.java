@@ -1,7 +1,6 @@
 package com.pottda.game.application;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -26,7 +25,7 @@ import static com.pottda.game.model.Constants.WIDTH;
 /**
  * Screen that acts as top level for menu-navigation
  */
-class MenuScreen implements Screen {
+class MenuScreen {
     private Stage mainMenuStage;
     private Stage mainControlsStage;
     private Stage mainDifficultyStage;
@@ -55,10 +54,6 @@ class MenuScreen implements Screen {
         gameState = MAIN_MENU;
     }
 
-    @Override
-    public void show() {}
-
-    @Override
     public void render(float delta) {
         switch (gameState) {
             case MAIN_MENU:
@@ -77,24 +72,13 @@ class MenuScreen implements Screen {
         checkTouch();
     }
 
-    @Override
-    public void resize(int width, int height) {
+    void resize(int width, int height) {
         mainMenuStage.getViewport().update(width, height, false);
         mainControlsStage.getViewport().update(width, height, false);
         mainDifficultyStage.getViewport().update(width, height, false);
     }
 
-    @Override
-    public void pause() {}
-
-    @Override
-    public void resume() {}
-
-    @Override
-    public void hide() {}
-
-    @Override
-    public void dispose() {
+    void dispose() {
         mainControlsStage.dispose();
         mainDifficultyStage.dispose();
         mainMenuStage.dispose();

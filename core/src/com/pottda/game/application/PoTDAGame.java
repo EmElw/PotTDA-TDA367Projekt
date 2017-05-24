@@ -43,7 +43,7 @@ public class PoTDAGame extends Game {
 
         if (gameState == MAIN_MENU || gameState == MAIN_CONTROLS || gameState == MAIN_CHOOSE) {
             menuScreen.render(Gdx.graphics.getDeltaTime());
-        } else if (gameState == RESTARTING){
+        } else if (gameState == RESTARTING) {
             doOnRestartGame();
         } else {
             gameScreen.render(Gdx.graphics.getDeltaTime());
