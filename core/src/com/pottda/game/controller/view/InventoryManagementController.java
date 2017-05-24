@@ -57,13 +57,10 @@ public class InventoryManagementController implements InventoryChangeListener, S
 
     @Override
     public void storageItemTouched(String itemName) {
-        view.setWorkingItemDrawable(
-                new TextureRegionDrawable(AtlasCreator.atlas.findRegion(itemName)));
     }
 
     @Override
     public void inventoryItemTouched(Item item) {
-        view.setWorkingItemDrawable(new TextureRegionDrawable(AtlasCreator.atlas.findRegion(item.getName())));
 
     }
 

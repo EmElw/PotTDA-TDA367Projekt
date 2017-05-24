@@ -1,12 +1,10 @@
 package com.pottda.game.view;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.pottda.game.model.Inventory;
 import com.pottda.game.model.Item;
@@ -39,10 +37,37 @@ public class InventoryManagementView {
         this.stage = stage;
         this.stage.addListener(new InputListener() {
             @Override
+            public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
+                try {
+                    if (evt.getTarget() instanceof StorageButton) {
+                        for (InventoryManagementListener iml : listeners) {
+                            iml.storageItemTouched(((StorageButton) evt.getTarget()).itemName);
+                        }
+                        return true;
+                    } else if (evt.getTarget() instanceof ItemImage) {
+                        for (InventoryManagementListener iml : listeners) {
+                            iml.inventoryItemTouched(((ItemImage) evt.getTarget()).item);
+                        }
+                        return true;
+                    }
+                } catch (ClassCastException e) {
+                    return false;
+                }
+                return false;
+            }
+
+            @Override
+            public void touchUp(InputEvent evt, float x, float y, int index, int button) {
+                Actor a = evt.getTarget();
+            }
+
+            @Override
             public boolean mouseMoved(InputEvent event, float x, float y) {
                 workingItemImage.setPosition(x, y);
                 return true;
             }
+
+
         });
         this.listeners = new ArrayList<InventoryManagementListener>();
         create();
@@ -95,6 +120,12 @@ public class InventoryManagementView {
         stage.draw();
     }
 
+    public void dispose() {
+        stage.dispose();
+    }
+
+    // Interesting stuff
+
     public void updateStorageTable(Storage storage) {
         for (String s : storage.getItems()) {
             addToStorageTable(s, storage.getNrOf(s));
@@ -109,25 +140,25 @@ public class InventoryManagementView {
      */
     private void addToStorageTable(final String itemName, int itemCount) {
         // Create a table to hold name + image
-        final Button itemButton = new Button(mySkin);
+        final StorageButton itemButton = new StorageButton(mySkin, itemName);
         itemButton.setColor(0.03f, 0.69f, 0.73f, 1);  // TODO test only
 
-        itemButton.addListener(
-                new InputListener() {
-
-                    @Override
-                    public boolean touchDown(InputEvent evt, float x, float y, int pointer, int button) {
-                        for (InventoryManagementListener iml : listeners) {
-                            iml.storageItemTouched(itemName);
-                        }
-                        return true;
-                    }
-
-                    @Override
-                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-
-                    }
-                });
+//        itemButton.addListener(
+//                new InputListener() {
+//
+//                    @Override
+//                    public boolean touchDown(InputEvent evt, float x, float y, int pointer, int button) {
+//                        for (InventoryManagementListener iml : listeners) {
+//                            iml.storageItemTouched(itemName);
+//                        }
+//                        return true;
+//                    }
+//
+//                    @Override
+//                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+//
+//                    }
+//                });
 
         Table internalItemGroupTable = new Table();
         itemImage = new Image(atlas.findRegion(itemName));
@@ -166,7 +197,7 @@ public class InventoryManagementView {
         for (Item i : inventory.getItems()) {
             TextureAtlas.AtlasRegion region = atlas.findRegion(i.getName());
             region.flip(false, true);
-            Image itemImage = new Image(region);
+            ItemImage itemImage = new ItemImage(region, i);
 
             // TODO listener
 
@@ -183,17 +214,17 @@ public class InventoryManagementView {
                     (i.getY() + negativeOffset.y) * SIZE);
             inventoryGroup.addActor(itemImage);
 
-            itemImage.addListener(new InputListener() {
-                Item item;
-
-                @Override
-                public boolean touchDown(InputEvent evt, float x, float y, int pointer, int button) {
-                    for (InventoryManagementListener iml : listeners) {
-                        iml.inventoryItemTouched(item);
-                    }
-                    return true;
-                }
-            });
+//            itemImage.addListener(new InputListener() {
+//                Item item;
+//
+//                @Override
+//                public boolean touchDown(InputEvent evt, float x, float y, int pointer, int button) {
+//                    for (InventoryManagementListener iml : listeners) {
+//                        iml.inventoryItemTouched(item);
+//                    }
+//                    return true;
+//                }
+//            });
         }
 
         // Add images for connections
@@ -213,9 +244,7 @@ public class InventoryManagementView {
         inventoryTable.setDebug(true);
     }
 
-    public void dispose() {
-        stage.dispose();
-    }
+    // Boring stuff
 
     public void addListener(InventoryManagementListener listener) {
         listeners.add(listener);
@@ -225,7 +254,24 @@ public class InventoryManagementView {
         listeners.remove(listener);
     }
 
-    public void setWorkingItemDrawable(Drawable d) {
-        this.workingItemImage.setDrawable(d);
+    // Inner classes
+
+    private class StorageButton extends Button {
+
+        private String itemName;    // The external item name associated with this button
+
+        private StorageButton(Skin skin, String itemName) {
+            super(skin);
+            this.itemName = itemName;
+        }
+    }
+
+    private class ItemImage extends Image {
+        private Item item;
+
+        private ItemImage(TextureAtlas.AtlasRegion region, Item item) {
+            super(region);
+            this.item = item;
+        }
     }
 }
