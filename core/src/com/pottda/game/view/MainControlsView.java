@@ -8,13 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.pottda.game.model.Sprites;
 
-/**
- * Created by Rikard Teodorsson on 2017-05-18.
- */
-
 public class MainControlsView {
 
-    private final Stage stage;
+    private final Stage mainControlsStage;
 
     private Image controlsTouchImage;
     private Image controlsKeyOnlyImage;
@@ -28,44 +24,55 @@ public class MainControlsView {
         BGIMAGE
     }
 
-    public MainControlsView(final Stage stage) {
-        this.stage = stage;
+    public MainControlsView(final Stage mainControlsStage) {
+        this.mainControlsStage = mainControlsStage;
         create();
     }
 
     private void create() {
         // Add background
-        addToStage(stage.getWidth(), stage.getHeight());
+        addToStage(mainControlsStage.getWidth(),
+                mainControlsStage.getHeight());
 
-        // Add choose controls title
-        addToStage(Sprites.CONTROLSTITLE, imageEnum.TITLE, stage.getWidth() / 2 - 256, stage.getHeight() * 6.5f / 8);
+        addToStage(Sprites.CONTROLSTITLE,
+                imageEnum.TITLE,
+                mainControlsStage.getWidth() / 2 - 256,
+                mainControlsStage.getHeight() * 6.5f / 8);
 
-        // Add touch button
-        addToStage(Sprites.CONTROLSTOUCH, imageEnum.TOUCH, stage.getWidth() / 2 - 256, stage.getHeight() * 3 / 8);
+        addToStage(Sprites.CONTROLSTOUCH,
+                imageEnum.TOUCH,
+                mainControlsStage.getWidth() / 2 - 256,
+                mainControlsStage.getHeight() * 3 / 8);
 
-        // Add keyboard only button
-        addToStage(Sprites.CONTROLSKEYBOARDONLY, imageEnum.KEYONLY, stage.getWidth() / 2 - 256, stage.getHeight() * 5 / 8);
+        addToStage(Sprites.CONTROLSKEYBOARDONLY,
+                imageEnum.KEYONLY,
+                mainControlsStage.getWidth() / 2 - 256,
+                mainControlsStage.getHeight() * 5 / 8);
 
-        // Add keyboard mouse button
-        addToStage(Sprites.CONTROLSKEYBOARDMOUSE, imageEnum.KEYMOUSE, stage.getWidth() / 2 - 256, stage.getHeight() * 1 / 8);
+        addToStage(Sprites.CONTROLSKEYBOARDMOUSE,
+                imageEnum.KEYMOUSE,
+                mainControlsStage.getWidth() / 2 - 256,
+                mainControlsStage.getHeight() * 1 / 8);
     }
 
     private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos) {
+        // TODO generalise views with an abstract class
         Image image2 = getImage(new Texture(Gdx.files.internal(texturePath.fileName)), image);
         assert image2 != null;
         image2.setX(xPos);
         image2.setY(yPos);
-        stage.addActor(image2);
+        mainControlsStage.addActor(image2);
     }
 
     private void addToStage(float width, float height) {
+        // TODO generalise views with an abstract class
         Image image2 = getImage(new Texture(Gdx.files.internal(Sprites.MAINMENUBG.fileName)), imageEnum.BGIMAGE);
         assert image2 != null;
         image2.setX(0f);
         image2.setY(0f);
         image2.setWidth(width);
         image2.setHeight(height);
-        stage.addActor(image2);
+        mainControlsStage.addActor(image2);
     }
 
     private Image getImage(Texture texturePath, imageEnum image) {
@@ -85,7 +92,7 @@ public class MainControlsView {
     }
 
     public void render() {
-        stage.draw();
+        mainControlsStage.draw();
     }
 
     /**

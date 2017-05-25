@@ -3,7 +3,7 @@ package com.pottda.game.model.items;
 import com.pottda.game.model.Projectile;
 import com.pottda.game.model.ProjectileListener;
 
-public class ProjectileSpeedItem extends GenericProjectileModifier implements ProjectileListener {
+public class ProjectileSpeedItem extends GenericProjectileModifier {
     private float projectileSpeedMultiplier;
 
     @Override
@@ -12,8 +12,10 @@ public class ProjectileSpeedItem extends GenericProjectileModifier implements Pr
         dropRate = 0.5f * itemSize.getDropRate();
         name = itemSize.getName() + "Projectile Speed Module";
         setBasePositions();
+        isProjectileModifier = true;
     }
 
+    @Override
     public void onAttack(Projectile p) {
         p.changeSpeed(projectileSpeedMultiplier);
     }

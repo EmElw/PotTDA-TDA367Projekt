@@ -8,13 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.pottda.game.model.Sprites;
 
-/**
- * Created by Rikard Teodorsson on 2017-05-11.
- */
-
 public class MainMenuView {
 
-    private final Stage stage;
+    private final Stage mainMenuStage;
 
     private Image startImage;
     private Image quitImage;
@@ -26,41 +22,50 @@ public class MainMenuView {
         QUITIMAGE
     }
 
-    public MainMenuView(final Stage stage) {
-        this.stage = stage;
+    public MainMenuView(final Stage mainMenuStage) {
+        this.mainMenuStage = mainMenuStage;
         create();
     }
 
     private void create() {
         // Add background
-        addToStage(stage.getWidth(), stage.getHeight());
+        addToStage(mainMenuStage.getWidth(),
+                mainMenuStage.getHeight());
 
-        // Add title
-        addToStage(Sprites.MAINMENUTITLE, imageEnum.TITLEIMAGE, stage.getWidth() / 2 - 512 / 2, stage.getHeight() * 3 / 4);
+        addToStage(Sprites.MAINMENUTITLE,
+                imageEnum.TITLEIMAGE,
+                mainMenuStage.getWidth() / 2 - 512 / 2,
+                mainMenuStage.getHeight() * 3 / 4);
 
-        // Add start button
-        addToStage(Sprites.MAINMENUSTART, imageEnum.STARTIMAGE, stage.getWidth() * 1 / 4 - 128 / 2, stage.getHeight() * 1 / 4);
+        addToStage(Sprites.MAINMENUSTART,
+                imageEnum.STARTIMAGE,
+                mainMenuStage.getWidth() * 1 / 4 - 128 / 2,
+                mainMenuStage.getHeight() * 1 / 4);
 
-        // Add quit button
-        addToStage(Sprites.MAINMENUQUIT, imageEnum.QUITIMAGE, stage.getWidth() * 3 / 4 - 128 / 2, stage.getHeight() * 1 / 4);
+        addToStage(Sprites.MAINMENUQUIT,
+                imageEnum.QUITIMAGE,
+                mainMenuStage.getWidth() * 3 / 4 - 128 / 2,
+                mainMenuStage.getHeight() * 1 / 4);
     }
 
     private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos) {
+        // TODO generalise views with an abstract class
         Image image2 = getImage(new Texture(Gdx.files.internal(texturePath.fileName)), image);
         assert image2 != null;
         image2.setX(xPos);
         image2.setY(yPos);
-        stage.addActor(image2);
+        mainMenuStage.addActor(image2);
     }
 
     private void addToStage(float width, float height) {
+        // TODO generalise views with an abstract class
         Image image2 = getImage(new Texture(Gdx.files.internal(Sprites.MAINMENUBG.fileName)), imageEnum.BGIMAGE);
         assert image2 != null;
         image2.setX(0f);
         image2.setY(0f);
         image2.setWidth(width);
         image2.setHeight(height);
-        stage.addActor(image2);
+        mainMenuStage.addActor(image2);
     }
 
     private Image getImage(Texture texturePath, imageEnum image) {
@@ -78,7 +83,7 @@ public class MainMenuView {
     }
 
     public void render() {
-        stage.draw();
+        mainMenuStage.draw();
     }
 
     /**

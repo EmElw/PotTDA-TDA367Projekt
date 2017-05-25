@@ -49,18 +49,14 @@ public abstract class Item extends ProjectileListenerAdapter {
 
     // -------------------------------------------------
 
-    /**
-     * Data structure containing values mapped to enums
-     */
+
     protected Map<Stat, Double> statMap;
-    /**
-     * Direction of the item in terms of number pi/2 rotations
-     */
+
+    // Direction of the item in terms of number pi/2 rotations
     private int orientation;
-    /**
-     * X-orientation within its inventory
-     */
+
     private int x;
+    private int y;
 
     public int getOrientation() {
         return orientation;
@@ -87,11 +83,6 @@ public abstract class Item extends ProjectileListenerAdapter {
     }
 
     /**
-     * Y-orientation within its inventory
-     */
-    private int y;
-
-    /**
      * Pseudo-constructor, called if instantiated without constructor (probably really bad practice)
      */
     public void init() {
@@ -99,6 +90,7 @@ public abstract class Item extends ProjectileListenerAdapter {
         baseOutputs = new ArrayList<Point2i>();
         statMap = new EnumMap<Stat, Double>(Stat.class);
         outputItems = new ArrayList<Item>();
+
         // Set default properties
         isPrimaryAttack = false;
         isProjectileModifier = false;
@@ -166,7 +158,7 @@ public abstract class Item extends ProjectileListenerAdapter {
 
     /**
      * Basic iteration implementation, can be changed to
-     * accomodate different behaviours such as toggling
+     * accommodate different behaviours such as toggling
      * outputs, no output, conditional outputs etc.
      *
      * @return an {@code Item}
@@ -194,7 +186,7 @@ public abstract class Item extends ProjectileListenerAdapter {
     /**
      * Returns a copy of a rotated 2D point by n * pi/2 rad or n * 90 degrees around (0,0)
      * <p>
-     * Home-brew rotation function (because vecmath doesn't support 2D matrices?)
+     * Home-brew rotation function because VecMath doesn't appear to support 2D matrices
      *
      * @param x the x-coordinate of the point
      * @param y the y-coordinate of the point

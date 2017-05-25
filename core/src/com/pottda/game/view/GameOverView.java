@@ -14,7 +14,7 @@ import com.pottda.game.model.Sprites;
 
 public class GameOverView {
 
-    private final Stage stage;
+    private final Stage gameOverStage;
 
     private Image restartButton;
     private Image quitButton;
@@ -26,35 +26,43 @@ public class GameOverView {
         BG
     }
 
-    public GameOverView(final Stage stage) {
-        this.stage = stage;
+    public GameOverView(final Stage gameOverStage) {
+        this.gameOverStage = gameOverStage;
         create();
     }
 
     private void create() {
         // Add background
-        addToStage(stage.getWidth(), stage.getHeight());
+        addToStage(gameOverStage.getWidth(),
+                gameOverStage.getHeight());
 
-        // Add title
-        addToStage(Sprites.TITLE, imageEnum.TITLE, stage.getWidth() / 2 - 256, stage.getHeight() * 6 / 8);
+        addToStage(Sprites.TITLE,
+                imageEnum.TITLE,
+                gameOverStage.getWidth() / 2 - 256,
+                gameOverStage.getHeight() * 6 / 8);
 
-        // Add restart button
-        addToStage(Sprites.RESTARTBUTTON, imageEnum.RESTARTBUTTON, stage.getWidth() / 2 - 256, stage.getHeight() * 4 / 8);
+        addToStage(Sprites.RESTARTBUTTON,
+                imageEnum.RESTARTBUTTON,
+                gameOverStage.getWidth() / 2 - 256,
+                gameOverStage.getHeight() * 4 / 8);
 
-        // Add quit button
-        addToStage(Sprites.QUITBUTTON, imageEnum.QUITBUTTON, stage.getWidth() / 2 - 256, stage.getHeight() * 2 / 8);
+        addToStage(Sprites.QUITBUTTON,
+                imageEnum.QUITBUTTON,
+                gameOverStage.getWidth() / 2 - 256,
+                gameOverStage.getHeight() * 2 / 8);
     }
 
     public void render() {
-        stage.draw();
+        gameOverStage.draw();
     }
 
     private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos) {
+        // TODO generalise views with an abstract class
         Image image2 = getImage(new Texture(Gdx.files.internal(texturePath.fileName)), image);
         assert image2 != null;
         image2.setX(xPos);
         image2.setY(yPos);
-        stage.addActor(image2);
+        gameOverStage.addActor(image2);
     }
 
     private void addToStage(float width, float height) {
@@ -64,7 +72,7 @@ public class GameOverView {
         image2.setY(0f);
         image2.setWidth(width);
         image2.setHeight(height);
-        stage.addActor(image2);
+        gameOverStage.addActor(image2);
     }
 
     private Image getImage(Texture texturePath, imageEnum image) {

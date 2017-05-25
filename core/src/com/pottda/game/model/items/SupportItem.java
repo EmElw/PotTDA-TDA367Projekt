@@ -5,6 +5,17 @@ import com.pottda.game.model.Item;
 import javax.vecmath.Point2i;
 
 public abstract class SupportItem extends SizedItem {
+    /**
+     * Size for minor:
+     * [X]
+     *
+     * Size for normal:
+     * [X]X
+     *
+     * Size for big:
+     *  X X
+     * [X]X
+     */
 
     @Override
     protected void setBasePositions(){
