@@ -29,8 +29,6 @@ import com.pottda.game.view.BackgroundView;
 import com.pottda.game.view.GameOverView;
 import com.pottda.game.view.GameView;
 import com.pottda.game.view.HUDView;
-import com.pottda.game.view.OptionsView;
-import com.pottda.game.view.PausedView;
 import com.pottda.game.view.SoundsAndMusic;
 
 import java.util.ArrayList;
@@ -43,7 +41,6 @@ import javax.vecmath.Vector2f;
 
 import static com.pottda.game.application.GameState.GAME_OVER;
 import static com.pottda.game.application.GameState.NONE;
-import static com.pottda.game.application.GameState.OPTIONS;
 import static com.pottda.game.application.GameState.PAUSED;
 import static com.pottda.game.application.GameState.RESTARTING;
 import static com.pottda.game.application.GameState.RUNNING;
@@ -54,15 +51,10 @@ import static com.pottda.game.model.Constants.HEIGHT_METERS;
 import static com.pottda.game.model.Constants.WIDTH;
 import static com.pottda.game.model.Constants.WIDTH_METERS;
 
-/**
- * Screen that acts as the top-level for the running game
- */
 class GameScreen implements NewControllerListener, ScoreChangeListener, DeathListener {
     private Stage hudStage;
     private Stage joystickStage;
     private Stage gameStage;
-    private Stage pausedStage;
-    private Stage optionsStage;
     private Stage gameOverStage;
     private Stage bgStage;
 
@@ -71,8 +63,6 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
     private float accumulator;
 
     private HUDView hudView;
-    private PausedView pausedView;
-    private OptionsView optionsView;
     private SoundsAndMusic soundsAndMusic;
     private GameView gameView;
     private BackgroundView backgroundView;
@@ -102,20 +92,20 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
 
     private long startWaitInventory;
 
-    public void create() {
+    private void create() {
         hudStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         joystickStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         gameStage = new Stage(new StretchViewport(WIDTH_METERS / SCALING, HEIGHT_METERS / SCALING));
         gameStage.getCamera().position.x = WIDTH_METERS / 2 / SCALING;
         gameStage.getCamera().position.y = HEIGHT_METERS / 2 / SCALING;
-        pausedStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
-        optionsStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         gameOverStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
         bgStage = new Stage(new StretchViewport(WIDTH_METERS, HEIGHT_METERS));
         gameOverView = new GameOverView(gameOverStage);
+
+        soundsAndMusic = new SoundsAndMusic();
     }
 
-    public void render() {
+    void render() {
         switch (gameState) {
             case RUNNING:
             case WAITING_FOR_INVENTORY:
@@ -154,14 +144,6 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
                     gameOverStage.addActor(label);
                 }
                 break;
-            case PAUSED:
-                // Draw the pause menu
-                pausedView.render();
-                break;
-            case OPTIONS:
-                // Draw the options menu
-                optionsView.render();
-                break;
             case GAME_OVER:
                 final long currentTime = System.currentTimeMillis();
                 if ((currentTime - startWaitGameOver) / 1000 >= WAITING_TIME_GAME_OVER_SECONDS) {
@@ -181,16 +163,12 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
         hudStage.getViewport().update(width, height, false);
         gameStage.getViewport().update(width, height, false);
         joystickStage.getViewport().update(width, height, false);
-        optionsStage.getViewport().update(width, height, false);
-        pausedStage.getViewport().update(width, height, false);
         gameOverStage.getViewport().update(width, height, false);
         bgStage.getViewport().update(width, height, false);
     }
 
     void dispose() {
         hudStage.dispose();
-        pausedStage.dispose();
-        optionsStage.dispose();
         gameOverStage.dispose();
         if (world != null) {
             world.dispose();
@@ -214,8 +192,6 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
         controllerRemovalBuffer = new Stack<AbstractController>();
 
         hudView = new HUDView(hudStage);
-        pausedView = new PausedView(pausedStage);
-        optionsView = new OptionsView(optionsStage);
         gameView = new GameView(gameStage, joystickStage);
         backgroundView = new BackgroundView(bgStage);
 
@@ -228,7 +204,6 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
 
         startWaitGameOver = 0;
 
-        soundsAndMusic = new SoundsAndMusic();
         startMusic();
 
         score = 0;
@@ -356,7 +331,6 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
         soundsAndMusic.play();
     }
 
-
     @Override
     public void onNewController(AbstractController c) {
         controllerBuffer.add(c);
@@ -385,28 +359,6 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
                         gameState = PAUSED;
                     }
                     break;
-                case PAUSED:
-                    if (pausedView.checkIfTouchingPauseResume(vector3)) {
-                        // Touching pause resume
-                        gameState = RUNNING;
-                    } else if (pausedView.checkIfTouchingPauseOptions(vector3)) {
-                        // Touching pause options
-                        gameState = OPTIONS;
-                    } else if (pausedView.checkIfTouchingPauseQuit(vector3)) {
-                        // Touching pause quit
-                        Gdx.app.exit();
-                    }
-                    break;
-                case OPTIONS:
-                    if (optionsView.checkIfTouchingOptionsReturn(vector3)) {
-                        // Touched
-                        gameState = PAUSED;
-                    } else if (optionsView.checkIfTouchingOptionsMusic(vector3)) {
-                        soundsAndMusic.setMusicVolume(optionsView.getNewMusicVolume(vector3));
-                    } else if (optionsView.checkIfTouchingOptionsSFX(vector3)) {
-                        soundsAndMusic.setSFXVolume(optionsView.getNewSFXVolume(vector3));
-                    }
-                    break;
                 case GAME_OVER:
                     if (gameOverView.checkIfTouchingRestartButton(vector3)) {
                         // Restart the game
@@ -420,12 +372,6 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             switch (gameState) {
                 case RUNNING:
-                    gameState = PAUSED;
-                    break;
-                case PAUSED:
-                    gameState = RUNNING;
-                    break;
-                case OPTIONS:
                     gameState = PAUSED;
                     break;
             }
@@ -482,5 +428,9 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
 
     Stage getJoystickStage() {
         return joystickStage;
+    }
+
+    SoundsAndMusic getSoundsAndMusic() {
+        return soundsAndMusic;
     }
 }

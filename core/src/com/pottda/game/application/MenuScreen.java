@@ -22,9 +22,6 @@ import static com.pottda.game.controller.ControllerOptions.joystickStage;
 import static com.pottda.game.model.Constants.HEIGHT;
 import static com.pottda.game.model.Constants.WIDTH;
 
-/**
- * Screen that acts as top level for menu-navigation
- */
 class MenuScreen {
     private Stage mainMenuStage;
     private Stage mainControlsStage;
@@ -35,9 +32,11 @@ class MenuScreen {
     private MainDifficultyView mainDifficultyView;
 
     private final GameScreen gameScreen;
+    private final PausedScreen pausedScreen;
 
-    MenuScreen(GameScreen gameScreen) {
+    MenuScreen(GameScreen gameScreen, PausedScreen pausedScreen) {
         this.gameScreen = gameScreen;
+        this.pausedScreen = pausedScreen;
         create();
     }
 
@@ -100,11 +99,13 @@ class MenuScreen {
                     if (mainDifficultyView.checkIfTouchingEasy(vector3)) {
                         // TODO Set easy mode
                         gameScreen.doOnStartGame();
+                        pausedScreen.doOnStartGame();
                         gameState = RUNNING;
                         Gdx.input.setInputProcessor(joystickStage);
                     } else if (mainDifficultyView.checkIfTouchingHard(vector3)) {
                         // TODO Set hard mode
                         gameScreen.doOnStartGame();
+                        pausedScreen.doOnStartGame();
                         gameState = RUNNING;
                         Gdx.input.setInputProcessor(joystickStage);
                     }
