@@ -52,6 +52,9 @@ import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 import static com.pottda.game.model.Constants.WIDTH_METERS;
 
 class GameScreen implements NewControllerListener, ScoreChangeListener, DeathListener {
+    private static final int OBSTACLE_AMOUNT = 10;
+    private static final float OBSTACLE_MAX_RADIUS = 3f;
+    private static final float OBSTACLE_MIN_RADIUS = 0.5f;
     private Stage hudStage;
     private Stage joystickStage;
     private Stage gameStage;
@@ -109,10 +112,8 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
         switch (gameState) {
             case RUNNING:
             case WAITING_FOR_INVENTORY:
-                // Update the model
                 updateGame();
 
-                // Update the physics world
                 doPhysicsStep(Gdx.graphics.getDeltaTime());
 
                 updateWorld(true);
@@ -124,7 +125,7 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
                         startWaitInventory = System.currentTimeMillis();
                         gameState = WAITING_FOR_INVENTORY;
                     } else {
-                        waveController.quicken(9);  //Passes 10 ms / ms in the level's internal time frame
+                        waveController.quicken(9);
                     }
                 }
                 if (gameState.equals(WAITING_FOR_INVENTORY)) {
@@ -181,9 +182,6 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
         }
     }
 
-    /**
-     * Inits the game world and player
-     */
     void doOnStartGame() {
         gameState = NONE;
 
@@ -214,24 +212,37 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
         label.setFontScale(1.5f);
         hudStage.addActor(label);
 
-        // Generate XML-assets
         MyXMLReader reader = new MyXMLReader();
         reader.generateXMLAssets();
 
-        // Make a ControllerHookup and add PoTDAGame as a listener
         ControllerHookup controllerHookup = new ControllerHookup(gameStage);
         controllerHookup.addListener(this);
 
-        // Set up ModelBuilder with PhysicsActorFactory and ControllerHookup
         AbstractModelBuilder.setPhysiscActorFactory(new Box2DPhysicsActorFactory(world));
         AbstractModelBuilder.addListener(controllerHookup);
 
-        // Create WaveController
         waveController = new WaveController();
 
         createPlayer();
 
         createWorldBorders();
+    }
+
+    private void createObstacles() {
+        float xx;
+        float yy;
+        float r;
+        for (int i = 0; i < OBSTACLE_AMOUNT; i++){
+            xx = (float) Math.random() * WIDTH_METERS;
+            yy = (float) Math.random() * HEIGHT_METERS;
+            r = (float) (Math.random() * (OBSTACLE_MAX_RADIUS - OBSTACLE_MIN_RADIUS)) + OBSTACLE_MIN_RADIUS;
+
+            new ObstacleBuilder().
+                    setRadius(r).
+                    setPosition(new Vector2f(xx, yy)).
+                    setSprite(Sprites.BORDER).
+                    create();
+        }
     }
 
     private void levelStart() {
@@ -240,29 +251,22 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
 
     private void updateGame() {
         if (controllers != null) {
-            bringOutYourDead();
+            removeDeadActors();
 
-            // Update all controllers, causing the model to update
             for (AbstractController c : controllers) {
                 c.onNewFrame();
             }
-            // Add created during the cycle to the list
             // TODO could potentially do some juggling to also execute the onFrame for all o these
             controllers.addAll(controllerBuffer);
             controllerBuffer.clear();
         }
     }
 
-    /**
-     * Updates physics, health bar and renders views
-     */
     private void updateWorld(boolean moveCamera) {
         label.setText(scoreLabelText + score);
 
-        // Set the health bar to player's current health
         hudView.setHealthbar(Character.player.getCurrentHealth(), Character.player.getMaxHealth());
 
-        // Draw the game
         backgroundView.render(gameStage.getCamera());
         gameView.render(moveCamera);
         hudStage.draw();
@@ -289,7 +293,6 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
             bp.setListeners(scoreChangeListeners, deathListeners);
             bp.build().setPosition(new Vector2f(xx, yy)).create();
 
-
             enemyAmount++;
         }
     }
@@ -300,18 +303,13 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
         controllerRemovalBuffer.add(controller);
     }
 
-    /**
-     * Removes actors that have flagged themselvs as dead
-     */
-    private void bringOutYourDead() {
-        // Prepare removal of "dead" actors
+    private void removeDeadActors() {
         for (AbstractController c : controllers) {
             if (c.shouldBeRemoved()) {
                 prepareForRemoval(c);
             }
         }
 
-        // Remove "dead" actors
         if (controllerRemovalBuffer.size() > 0) {
             controllers.removeAll(controllerRemovalBuffer);
             controllerRemovalBuffer.clear();
@@ -348,20 +346,19 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
         System.out.println("Enemies alive: " + enemyAmount);
     }
 
-    private void checkTouch() { // TODO move to a controller class
-        if (Gdx.input.justTouched()) { // Only check first touch
-            // Get hudStage camera and unproject to get correct coordinates!
+    // TODO move to a controller class
+    private void checkTouch() {
+        // Only check first touch
+        if (Gdx.input.justTouched()) {
             Vector3 vector3 = hudStage.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
             switch (gameState) {
                 case RUNNING:
                     if (hudView.checkIfTouchingPauseButton(vector3)) {
-                        // Touching pause button
                         gameState = PAUSED;
                     }
                     break;
                 case GAME_OVER:
                     if (gameOverView.checkIfTouchingRestartButton(vector3)) {
-                        // Restart the game
                         gameState = RESTARTING;
                     } else if (gameOverView.checkIfTouchingQuitButton(vector3)) {
                         Gdx.app.exit();
@@ -387,7 +384,6 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
     }
 
     private void createPlayer() {
-        // Add player
         new CharacterBuilder().
                 setTeam(Character.PLAYER_TEAM).
                 setInventoryFromFile("playerStartInventory.xml").
@@ -395,30 +391,29 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
                 setPosition(new Vector2f(WIDTH_METERS / 2, HEIGHT_METERS / 2)).
                 setSprite(Sprites.PLAYER).
                 create();
-
     }
 
     private void createWorldBorders() {
         final float border_thickness = 0.25f;
-        // Bottom
+        // Bottom border
         new ObstacleBuilder().
                 setSize(WIDTH_METERS, border_thickness).
                 setPosition(new Vector2f(WIDTH_METERS / 2, -border_thickness / 2)).
                 setSprite(Sprites.BORDER).
                 create();
-        // Left
+        // Left border
         new ObstacleBuilder().
                 setSize(border_thickness, HEIGHT_METERS).
                 setPosition(new Vector2f(-border_thickness / 2, HEIGHT_METERS / 2)).
                 setSprite(Sprites.BORDER).
                 create();
-        // Top
+        // Top border
         new ObstacleBuilder().
                 setSize(WIDTH_METERS, border_thickness).
                 setPosition(new Vector2f(WIDTH_METERS / 2, border_thickness / 2 + HEIGHT_METERS)).
                 setSprite(Sprites.BORDER).
                 create();
-        // Right
+        // Right border
         new ObstacleBuilder().
                 setSize(border_thickness, HEIGHT_METERS).
                 setPosition(new Vector2f(border_thickness / 2 + WIDTH_METERS, HEIGHT_METERS / 2)).
