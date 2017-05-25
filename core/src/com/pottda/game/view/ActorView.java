@@ -33,7 +33,7 @@ public class ActorView extends Image {
      * @param texture the texture to set as image
      * @param size    vector with width and height of image
      */
-    private ActorView(Texture texture, Vector2f size) {
+    public ActorView(Texture texture, Vector2f size) {
         super(new TextureRegionDrawable(new TextureRegion(texture)));
         this.size = size;
         this.texture = texture;
@@ -60,12 +60,7 @@ public class ActorView extends Image {
         if (!isObstacle) {
             this.setPosition(xPosition - (texture.getWidth() * Constants.WIDTH_RATIO) / 2, yPosition - (texture.getHeight() * Constants.HEIGHT_RATIO) / 2);
         } else {
-            // Set the correct positions
-            if (size.x > size.y) {
-                this.setPosition(xPosition - size.x / 2, yPosition);
-            } else {
-                this.setPosition(xPosition, yPosition - size.y / 2);
-            }
+            this.setPosition(xPosition - size.x / 2, yPosition - size.y / 2);
         }
     }
 

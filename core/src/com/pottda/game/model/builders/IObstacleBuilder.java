@@ -17,4 +17,5 @@ public interface IObstacleBuilder extends IModelBuilder {
 
     IObstacleBuilder setSize(Tuple2f dimensions);
 
+    IObstacleBuilder setRadius(float radius);
 }
