@@ -74,7 +74,7 @@ public class Character extends ModelActor implements InventoryChangeListener {
      */
     void takeDamage(int incomingDamage) {
         currentHealth -= incomingDamage;
-        if (currentHealth <= 0) {
+        if (currentHealth <= 0 && !shouldBeRemoved) {
             shouldBeRemoved = true;
             if (deathListeners != null) {
                 for (DeathListener dl : deathListeners) {
