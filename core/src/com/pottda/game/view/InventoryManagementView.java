@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
@@ -35,11 +34,11 @@ public class InventoryManagementView {
     private Table table;
     private Image itemImage;
 
-    private WorkingImageGroup workingItemGroup;
+    private WorkingImageTable workingItemTable;
 
     private List<InventoryManagementListener> listeners;
 
-    public InventoryManagementView(Stage stage) {
+    public InventoryManagementView(final Stage stage) {
         this.stage = stage;
         stage.setDebugAll(true);
         this.stage.addListener(new InputListener() {
@@ -47,16 +46,16 @@ public class InventoryManagementView {
             public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
                 try {
                     if (evt.getTarget() instanceof StorageImage) {
-                        for (InventoryManagementListener iml : listeners) {
-                            iml.storageItemTouched(((StorageImage) evt.getTarget()).itemName);
-                        }
-                        return true;
+                        if (workingItemTable != null)
+                            workingItemTable.clearChildren();
+                        workingItemTable = new WorkingImageTable(((StorageImage) evt.getTarget()).itemName);
                     } else if (evt.getTarget() instanceof ItemImage) {
                         for (InventoryManagementListener iml : listeners) {
                             iml.inventoryItemTouched(((ItemImage) evt.getTarget()).item);
                         }
                         return true;
-                    }
+                    } else if (evt.getTarget() instanceof WorkingImageTable)
+                        return true;
                 } catch (ClassCastException e) {
                     return false;
                 }
@@ -65,7 +64,9 @@ public class InventoryManagementView {
 
             @Override
             public void touchDragged(InputEvent evt, float x, float y, int index){
-
+                if (evt.getTarget() instanceof WorkingImageTable) {
+                    workingItemTable.setPosition(x, y);
+                }
             }
 
             @Override
@@ -77,13 +78,11 @@ public class InventoryManagementView {
                 }
             }
 
-            @Override
+            /*@Override
             public boolean mouseMoved(InputEvent event, float x, float y) {
                 workingItemGroup.setPosition(x, y);
                 return true;
-            }
-
-
+            }*/
         });
         this.listeners = new ArrayList<InventoryManagementListener>();
         create();
@@ -91,10 +90,6 @@ public class InventoryManagementView {
 
     public void create() {
         Gdx.input.setInputProcessor(stage);
-
-        workingItemGroup = new WorkingImageGroup();
-        workingItemGroup.setZIndex(1000);
-        stage.addActor(workingItemGroup);
 
         table = new Table();
         table.setFillParent(true);
@@ -207,7 +202,7 @@ public class InventoryManagementView {
 
         // Add a label and image to the table and fit the image
         storageTable.add(internalItemGroupTable).left().spaceRight(10);
-        storageTable.add(itemImage).width(100).height(100);
+        storageTable.add(itemImage);
         storageTable.setTouchable(Touchable.disabled);
         itemImage.setScaling(Scaling.fit);
         storageStack.add(storageImage);
@@ -293,6 +288,10 @@ public class InventoryManagementView {
             super(new Texture(Gdx.files.internal("menu/storageButtonBackground.png")));
             this.itemName = itemName;
         }
+
+        public String getItemName() {
+            return itemName;
+        }
     }
 
     private class ItemImage extends Image {
@@ -304,7 +303,7 @@ public class InventoryManagementView {
         }
     }
 
-    private class WorkingImageGroup extends Group {
+    private class WorkingImageTable extends Table {
 
         private final Drawable rotateRightButtonDrawable = new TextureRegionDrawable(
                 new TextureRegion(new Texture(Gdx.files.internal("rotateRightButton.png"))));
@@ -315,19 +314,31 @@ public class InventoryManagementView {
         private final Drawable discardButtonDrawable = new TextureRegionDrawable(
                 new TextureRegion(new Texture(Gdx.files.internal("discardButton.png"))));
 
+
         private ImageButton rotateRightButton;
         private ImageButton rotateLeftButton;
         private ImageButton acceptButton;
         private ImageButton discardButton;
 
 
-
-        private WorkingImageGroup(){
+        private WorkingImageTable(String itemName){
             rotateRightButton = new ImageButton(rotateRightButtonDrawable);
             rotateLeftButton = new ImageButton(rotateLeftButtonDrawable);
             acceptButton = new ImageButton(acceptButtonDrawable);
             discardButton = new ImageButton(discardButtonDrawable);
-        }
 
+            Image itemImage = new Image(atlas.findRegion(itemName));
+
+            this.add(discardButton).left().size(25);
+            this.add(acceptButton).right().size(25);
+            this.row();
+            this.add(itemImage).center().colspan(2)
+                    .width(itemImage.getWidth()).height(itemImage.getHeight()).pad(20);
+            this.row();
+            this.add(rotateLeftButton).left().size(25);
+            this.add(rotateRightButton).right().size(25);
+            this.setPosition(500, 200);
+            stage.addActor(this);
+        }
     }
 }
