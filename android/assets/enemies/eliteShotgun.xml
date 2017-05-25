@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<enemy>
+    <name>EliteShotgun</name>
+    <scorevalue>50</scorevalue>
+    <difficulty>4</difficulty>
+    <behaviour>DUMB</behaviour>
+    <inventoryname>eliteShotgunInventory.xml</inventoryname>
+    <spriteenum>ENEMY</spriteenum>
+</enemy>

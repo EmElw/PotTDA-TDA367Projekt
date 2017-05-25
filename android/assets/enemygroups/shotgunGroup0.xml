@@ -1,0 +1,4 @@
+<enemygroup name="ShotGunGroup0">
+    <difficulty>2</difficulty>
+    <enemy>Shotgun</enemy>
+</enemygroup>
