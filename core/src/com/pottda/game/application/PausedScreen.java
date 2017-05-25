@@ -33,6 +33,8 @@ class PausedScreen {
     private void create() {
         pausedStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
         optionsStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
+        pausedView = new PausedView(pausedStage);
+        optionsView = new OptionsView(optionsStage);
     }
 
     void render() {
@@ -58,11 +60,6 @@ class PausedScreen {
     void dispose() {
         pausedStage.dispose();
         optionsStage.dispose();
-    }
-
-    void doOnStartGame() {
-        pausedView = new PausedView(pausedStage);
-        optionsView = new OptionsView(optionsStage);
     }
 
     private void checkTouch() { // TODO move to a controller class
