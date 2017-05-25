@@ -51,7 +51,7 @@ import static com.pottda.game.model.Constants.HEIGHT_METERS;
 import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 import static com.pottda.game.model.Constants.WIDTH_METERS;
 
-class GameScreen implements NewControllerListener, ScoreChangeListener, DeathListener {
+class GameScreen extends AbstractScreen implements NewControllerListener, ScoreChangeListener, DeathListener {
     private Stage hudStage;
     private Stage joystickStage;
     private Stage gameStage;
@@ -159,12 +159,37 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
         checkTouch();
     }
 
+    @Override
+    public void show() {
+        
+    }
+
+    @Override
+    public void render(float delta) {
+
+    }
+
     void resize(int width, int height) {
         hudStage.getViewport().update(width, height, false);
         gameStage.getViewport().update(width, height, false);
         joystickStage.getViewport().update(width, height, false);
         gameOverStage.getViewport().update(width, height, false);
         bgStage.getViewport().update(width, height, false);
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
     }
 
     void dispose() {

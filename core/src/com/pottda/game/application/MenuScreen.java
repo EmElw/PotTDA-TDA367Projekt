@@ -1,129 +1,199 @@
 package com.pottda.game.application;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Box2D;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.ControllerOptions;
-import com.pottda.game.view.MainControlsView;
-import com.pottda.game.view.MainDifficultyView;
-import com.pottda.game.view.MainMenuView;
 
-import static com.pottda.game.application.GameState.MAIN_CHOOSE;
-import static com.pottda.game.application.GameState.MAIN_CONTROLS;
 import static com.pottda.game.application.GameState.MAIN_MENU;
 import static com.pottda.game.application.GameState.RUNNING;
 import static com.pottda.game.application.GameState.gameState;
-import static com.pottda.game.controller.ControllerOptions.ControllerMode.KEYBOARD_MOUSE;
-import static com.pottda.game.controller.ControllerOptions.ControllerMode.KEYBOARD_ONLY;
-import static com.pottda.game.controller.ControllerOptions.ControllerMode.TOUCH_JOYSTICK;
-import static com.pottda.game.controller.ControllerOptions.joystickStage;
-import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
-import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
+import static com.pottda.game.model.Constants.*;
 
-class MenuScreen {
-    private Stage mainMenuStage;
-    private Stage mainControlsStage;
-    private Stage mainDifficultyStage;
+class MenuScreen extends AbstractScreen {
+    private final static int PADDING = 40;
+    private final static Color bgColor = new Color(0xDACC09FF);
 
-    private MainMenuView mainMenuView;
-    private MainControlsView mainControlsView;
-    private MainDifficultyView mainDifficultyView;
+    private Stage stage;
+    // TODO access in nicer way
+    private Skin skin = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
 
     private final GameScreen gameScreen;
-    private final PausedScreen pausedScreen;
 
-    MenuScreen(GameScreen gameScreen, PausedScreen pausedScreen) {
+    private TextButton startButton;
+    private TextButton settingsButton;
+    private TextButton quitButton;
+
+    private Table settingsTable;
+    private ButtonGroup<TextButton> controlButtons;
+
+    MenuScreen(Game game, GameScreen gameScreen) {
+        super(game);
         this.gameScreen = gameScreen;
-        this.pausedScreen = pausedScreen;
         create();
     }
 
     private void create() {
-        mainMenuStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
+        stage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
+        stage.setDebugAll(true);
+        Gdx.input.setInputProcessor(stage);
 
-        mainControlsStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
-        mainDifficultyStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
-        mainMenuView = new MainMenuView(mainMenuStage);
-        mainDifficultyView = new MainDifficultyView(mainDifficultyStage);
-        mainControlsView = new MainControlsView(mainControlsStage);
-        Gdx.input.setInputProcessor(mainMenuStage);
-        Box2D.init();
-        gameState = MAIN_MENU;
-    }
-
-    public void render() {
-        switch (gameState) {
-            case MAIN_MENU:
-                // Draw the main menu
-                mainMenuView.render();
-                break;
-            case MAIN_CHOOSE:
-                // Draw the choose difficulty menu
-                mainDifficultyView.render();
-                break;
-            case MAIN_CONTROLS:
-                // Draw the choose controller menu
-                mainControlsView.render();
-                break;
-        }
-        checkTouch();
-    }
-
-    void resize(int width, int height) {
-        mainMenuStage.getViewport().update(width, height, false);
-        mainControlsStage.getViewport().update(width, height, false);
-        mainDifficultyStage.getViewport().update(width, height, false);
-    }
-
-    void dispose() {
-        mainControlsStage.dispose();
-        mainDifficultyStage.dispose();
-        mainMenuStage.dispose();
-    }
-
-    private void checkTouch() {
-        if (Gdx.input.justTouched()) {
-            Vector3 vector3 = mainMenuStage.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-            switch (gameState) {
-                case MAIN_MENU:
-                    if (mainMenuView.checkIfTouchingStart(vector3)) {
-                        gameState = MAIN_CONTROLS;
-                    } else if (mainMenuView.checkIfTouchingQuit(vector3)) {
-                        // Exit game
-                        Gdx.app.exit();
-                    }
-                    break;
-                case MAIN_CHOOSE:
-                    if (mainDifficultyView.checkIfTouchingEasy(vector3)) {
-                        // TODO Set easy mode
-                        gameScreen.doOnStartGame();
-                        pausedScreen.doOnStartGame();
-                        gameState = RUNNING;
-                        Gdx.input.setInputProcessor(joystickStage);
-                    } else if (mainDifficultyView.checkIfTouchingHard(vector3)) {
-                        // TODO Set hard mode
-                        gameScreen.doOnStartGame();
-                        pausedScreen.doOnStartGame();
-                        gameState = RUNNING;
-                        Gdx.input.setInputProcessor(joystickStage);
-                    }
-                    break;
-                case MAIN_CONTROLS:
-                    if (mainControlsView.checkIfTouchingTouch(vector3)) {
-                        gameState = MAIN_CHOOSE;
-                        ControllerOptions.controllerSettings = TOUCH_JOYSTICK;
-                        ControllerOptions.joystickStage = gameScreen.getJoystickStage();
-                    } else if (mainControlsView.checkIfTouchingKeyboardOnly(vector3)) {
-                        gameState = MAIN_CHOOSE;
-                        ControllerOptions.controllerSettings = KEYBOARD_ONLY;
-                    } else if (mainControlsView.checkIfTouchingKeyboardMouse(vector3)) {
-                        gameState = MAIN_CHOOSE;
-                        ControllerOptions.controllerSettings = KEYBOARD_MOUSE;
-                    }
-                    break;
+        setUpUI();
+        startButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent evt, float x, float y) {
+                startGame();
             }
-        }
+        });
+
+        settingsTable.setVisible(false);
+        settingsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent evt, float x, float y) {
+                settingsTable.setVisible(!settingsTable.isVisible());
+            }
+        });
+
+        quitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent evt, float x, float y) {
+                quitGame();
+            }
+        });
+
+
+        gameState = MAIN_MENU;
+
+
     }
+
+    private void quitGame() {
+        Gdx.app.exit();
+    }
+
+    private void startGame() {
+        gameScreen.doOnStartGame();
+        gameState = RUNNING;
+        Gdx.input.setInputProcessor(ControllerOptions.joystickStage);   // TODO clean
+        switchScreen(gameScreen);
+    }
+
+    private void setUpUI() {
+
+        Table superTable = new Table();
+        superTable.setFillParent(true);
+        superTable.pad(PADDING);
+        {
+            Table buttonTable = new Table();
+            {
+                startButton = new TextButton("START", skin);
+                buttonTable.add(startButton).fillX().row();
+
+                settingsButton = new TextButton("SETTINGS", skin);
+                buttonTable.add(settingsButton).fillX().row();
+
+                quitButton = new TextButton("QUIT", skin);
+                buttonTable.add(quitButton).fillX().row();
+            }
+            superTable.add(buttonTable).bottom().left().fillX().expand();
+
+            settingsTable = new Table();
+            {
+                settingsTable.setBackground(solidBackground(bgColor));
+
+                Label sfxVol = new Label("SFX", skin);
+                settingsTable.add(sfxVol).right().uniformX();
+
+                Slider sfxSlider = new Slider(0, 100, 1, false, skin);
+                settingsTable.add(sfxSlider).left().expandX().fillX().row();
+
+                Label musicVol = new Label("Music", skin);
+                settingsTable.add(musicVol).right();
+
+                Slider musicSlider = new Slider(0, 100, 1, false, skin);
+                settingsTable.add(musicSlider).left().expandX().fillX().row();
+
+                TextButton kmButton = new TextButton("Keyboard + Mouse", skin);
+                settingsTable.add();
+                settingsTable.add(kmButton).fillX().row();
+
+                TextButton koButton = new TextButton("Keyboard only", skin);
+                settingsTable.add();
+                settingsTable.add(koButton).fillX().row();
+
+                TextButton tchButton = new TextButton("Touch", skin);
+                settingsTable.add();
+                settingsTable.add(tchButton).fillX().row();
+
+                controlButtons = new ButtonGroup<TextButton>(kmButton, koButton, tchButton);
+                controlButtons.setChecked("Keyboard + Mouse");
+
+                settingsTable.invalidateHierarchy();
+            }
+            superTable.add(settingsTable).bottom().right().fillX().expand();
+        }
+        stage.addActor(superTable);
+    }
+
+    @Override
+    public void show() {
+
+    }
+
+    @Override
+    public void render(float delta) {
+        stage.act(delta);
+        stage.draw();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        stage.getViewport().update(width, height, false);
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public void dispose() {
+        stage.dispose();
+    }
+
+    private Drawable solidBackground(Color color) {
+        Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGB888);
+        pm.setColor(color);
+        pm.fill();
+        Texture tex = new Texture(pm);
+        pm.dispose();
+        return new TextureRegionDrawable(new TextureRegion(tex));
+    }
+
+
 }
+
+// Box2D.init();

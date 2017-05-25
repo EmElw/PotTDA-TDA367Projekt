@@ -23,14 +23,17 @@ public class PoTDAGame extends Game {
     private GameScreen gameScreen;
     private MenuScreen menuScreen;
     private PausedScreen pausedScreen;
+    private float delta;
 
     @Override
     public void create() {
         Gdx.graphics.setTitle(Constants.GAME_TITLE);
+
+
         camera = new OrthographicCamera();
         gameScreen = new GameScreen();
         pausedScreen = new PausedScreen(gameScreen);
-        menuScreen = new MenuScreen(gameScreen, pausedScreen);
+        menuScreen = new MenuScreen(this, gameScreen);
     }
 
     @Override
@@ -43,12 +46,13 @@ public class PoTDAGame extends Game {
 
     @Override
     public void render() {
+        delta = Gdx.graphics.getDeltaTime();
         Gdx.gl.glClearColor(0, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
 
         if (gameState == MAIN_MENU || gameState == MAIN_CONTROLS || gameState == MAIN_CHOOSE) {
-            menuScreen.render();
+            menuScreen.render(delta);
         } else if (gameState == RESTARTING) {
             doOnRestartGame();
         } else if (gameState == PAUSED || gameState == OPTIONS) {
