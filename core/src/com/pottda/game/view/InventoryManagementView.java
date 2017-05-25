@@ -54,8 +54,7 @@ public class InventoryManagementView {
                             iml.inventoryItemTouched(((ItemImage) evt.getTarget()).item);
                         }
                         return true;
-                    } else if (evt.getTarget() instanceof WorkingImageTable)
-                        return true;
+                    }
                 } catch (ClassCastException e) {
                     return false;
                 }
@@ -63,10 +62,8 @@ public class InventoryManagementView {
             }
 
             @Override
-            public void touchDragged(InputEvent evt, float x, float y, int index){
-                if (evt.getTarget() instanceof WorkingImageTable) {
-                    workingItemTable.setPosition(x, y);
-                }
+            public void touchDragged(InputEvent evt, float x, float y, int index) {
+
             }
 
             @Override
@@ -265,7 +262,7 @@ public class InventoryManagementView {
             inventoryGroup.addActor(connectionImage);
         }
         inventoryGroup.validate();
-        inventoryTable.add(inventoryGroup).expand().bottom().left().pad(2*SIZE);
+        inventoryTable.add(inventoryGroup).expand().bottom().left().pad(2 * SIZE);
     }
 
     // Boring stuff
@@ -321,15 +318,18 @@ public class InventoryManagementView {
         private ImageButton discardButton;
 
 
-        private WorkingImageTable(String itemName){
+        private WorkingImageTable(String itemName) {
             rotateRightButton = new ImageButton(rotateRightButtonDrawable);
             rotateLeftButton = new ImageButton(rotateLeftButtonDrawable);
             acceptButton = new ImageButton(acceptButtonDrawable);
             discardButton = new ImageButton(discardButtonDrawable);
 
-            Image itemImage = new Image(atlas.findRegion(itemName));
+            final Image itemImage = new Image(atlas.findRegion(itemName));
+            itemImage.setOrigin(itemImage.getWidth() / 2, itemImage.getHeight() / 2);
 
             this.add(discardButton).left().size(25);
+
+
             this.add(acceptButton).right().size(25);
             this.row();
             this.add(itemImage).center().colspan(2)
@@ -339,6 +339,41 @@ public class InventoryManagementView {
             this.add(rotateRightButton).right().size(25);
             this.setPosition(500, 200);
             stage.addActor(this);
+
+            addListener(new InputListener() {
+                // Used to keep 0,0 relative distance to touch coordinate constant
+                float xOffset;
+                float yOffset;
+
+                @Override
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    xOffset = x;
+                    yOffset = y;
+                    return true;
+                }
+
+                public void touchDragged(InputEvent event, float x, float y, int pointer) {
+                    setPosition(getX() + x - xOffset, getY() + y - yOffset);
+                    // TODO validate if the new coordinates are legal inside the inventory (send event to the listener if they are at all within inventory?)
+                }
+            });
+
+            rotateLeftButton.addListener(new InputListener() {
+
+
+                @Override
+                public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
+                    itemImage.rotateBy(90);
+                    return true;
+                }
+            });
+            rotateRightButton.addListener(new InputListener() {
+                @Override
+                public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
+                    itemImage.rotateBy(-90);
+                    return true;
+                }
+            });
         }
     }
 }
