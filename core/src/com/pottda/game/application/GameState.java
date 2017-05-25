@@ -10,7 +10,8 @@ enum GameState {
     MAIN_CONTROLS,
     WAITING_FOR_INVENTORY,
     GAME_OVER,
-    RESTARTING;
+    RESTARTING,
+    INVENTORY;
 
     static GameState gameState;
 }

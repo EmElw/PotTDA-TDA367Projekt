@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.pottda.game.model.Constants;
 import com.pottda.game.model.builders.AbstractModelBuilder;
 
+import static com.pottda.game.application.GameState.INVENTORY;
 import static com.pottda.game.application.GameState.MAIN_CHOOSE;
 import static com.pottda.game.application.GameState.MAIN_CONTROLS;
 import static com.pottda.game.application.GameState.MAIN_MENU;
@@ -56,7 +57,7 @@ public class PoTDAGame extends Game {
             doOnRestartGame();
         } else if (gameState == PAUSED || gameState == OPTIONS) {
             pausedScreen.render();
-        } else if (gameState == WAITING_FOR_INVENTORY) {
+        } else if (gameState == INVENTORY) {
             inventoryScreen.render();
         } else {
             gameScreen.render();

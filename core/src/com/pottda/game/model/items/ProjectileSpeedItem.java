@@ -1,7 +1,6 @@
 package com.pottda.game.model.items;
 
 import com.pottda.game.model.Projectile;
-import com.pottda.game.model.ProjectileListener;
 
 public class ProjectileSpeedItem extends GenericProjectileModifier {
     private float projectileSpeedMultiplier;

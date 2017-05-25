@@ -24,7 +24,7 @@ public class Character extends ModelActor implements InventoryChangeListener {
      * Current health of a character
      */
     int currentHealth = 0;
-    private Map<Stat, Double> stats;
+    private final Map<Stat, Double> stats;
     private final Vector2f movementVector;
 
     public static Character player;

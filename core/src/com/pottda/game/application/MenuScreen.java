@@ -40,7 +40,7 @@ class MenuScreen {
         create();
     }
 
-    public void create() {
+    private void create() {
         mainMenuStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
 
         mainControlsStage = new Stage(new StretchViewport(WIDTH, HEIGHT));

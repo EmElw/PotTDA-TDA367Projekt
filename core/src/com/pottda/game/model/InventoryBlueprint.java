@@ -3,7 +3,6 @@ package com.pottda.game.model;
 import com.pottda.game.model.items.ItemSize;
 import com.pottda.game.model.items.SizedItem;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 

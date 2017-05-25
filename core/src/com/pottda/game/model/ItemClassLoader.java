@@ -2,7 +2,6 @@ package com.pottda.game.model;
 
 import com.pottda.game.model.items.SizedItem;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
