@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <enemy>
-    <name>TestEnemy0</name>
+    <name>Grunt</name>
     <scorevalue>10</scorevalue>
     <difficulty>1</difficulty>
     <behaviour>DUMB</behaviour>
-    <inventoryname>playerStartInventory.xml</inventoryname>
+    <inventoryname>gruntInventory.xml</inventoryname>
     <spriteenum>ENEMY</spriteenum>
 </enemy>

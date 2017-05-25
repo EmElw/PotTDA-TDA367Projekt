@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<enemy>
+    <name>EliteGrunt</name>
+    <scorevalue>35</scorevalue>
+    <difficulty>3</difficulty>
+    <behaviour>DUMB</behaviour>
+    <inventoryname>eliteGruntInventory.xml</inventoryname>
+    <spriteenum>ENEMY</spriteenum>
+</enemy>
