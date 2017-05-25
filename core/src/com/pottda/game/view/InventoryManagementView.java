@@ -349,6 +349,7 @@ public class InventoryManagementView {
             this.add(rotateRightButton).right().size(25);
             this.setPosition(200, 200);
 
+            // TODO fix vectors pls
             Vector2 vector = new Vector2(itemImage.localToParentCoordinates(
                     new Vector2(itemImage.getOriginX(), itemImage.getOriginY())));
             setOrigin(vector.x, vector.y);
