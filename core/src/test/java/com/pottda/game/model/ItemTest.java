@@ -36,8 +36,8 @@ public class ItemTest {
     private AttackItem enemySimpleCannon;
     private SupportItem healthItem;
     private AttackItem penetratingCannon;
-    private Item projectileSpeedItem;
-    private Item speedItem;
+    private GenericProjectileModifier projectileSpeedItem;
+    private SupportItem speedItem;
 
     @Before
     public void setUp() {
@@ -180,6 +180,26 @@ public class ItemTest {
         assertEquals(penetratingCannon.baseOutputs.size(), 1);
         assertTrue(penetratingCannon.cooldownMS == 300);
         assertTrue(penetratingCannon.damage == 10);
+    }
+
+    @Test
+    public void testProjectileSpeedItem() {
+        projectileSpeedItem.init();
+        assertTrue(projectileSpeedItem.dropRate == 0.25f * 0.5f
+                || projectileSpeedItem.dropRate == 0.5f * 0.5f
+                || projectileSpeedItem.dropRate == 0.1f * 0.5f);
+        assertTrue(projectileSpeedItem.name.contains("Projectile Speed Module"));
+        assertTrue(projectileSpeedItem.isProjectileModifier);
+    }
+
+    @Test
+    public void testSpeedItem() {
+        speedItem.init();
+        assertTrue(speedItem.statMap.containsKey(Stat.ACCEL));
+        assertTrue(speedItem.dropRate == 0.25f * 0.5f
+                || speedItem.dropRate == 0.5f * 0.5f
+                || speedItem.dropRate == 0.1f * 0.5f);
+        assertTrue(speedItem.name.contains("Speed Module"));
     }
 
 }
