@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<enemy>
+    <name>Shotgun</name>
+    <scorevalue>20</scorevalue>
+    <difficulty>2</difficulty>
+    <behaviour>DUMB</behaviour>
+    <inventoryname>shotgunInventory.xml</inventoryname>
+    <spriteenum>ENEMY</spriteenum>
+</enemy>

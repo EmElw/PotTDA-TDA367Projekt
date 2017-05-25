@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<inventory w="10" h="10">
+    <item name="EnemySimpleCannon" x="0" y="4" orientation="0"/>
+    <item name="MultiShot" x="1" y="3" orientation="0"/>
+    <item name="MultiShot" x="3" y="3" orientation="0"/>
+    <sizedItem name="DamageItem" x="5" y="3" orientation="0" size="0"/>
+    <sizedItem name="SpeedItem" x="0" y="0" orientation="0" size="2"/>
+    <sizedItem name="HealthItem" x="2" y="0" orientation="0" size="1"/>
+</inventory>

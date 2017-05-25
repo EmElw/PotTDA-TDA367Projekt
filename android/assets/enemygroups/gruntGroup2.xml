@@ -1,0 +1,4 @@
+<enemygroup name="GruntGroup2">
+    <difficulty>1</difficulty>
+    <enemy>Grunt</enemy>
+</enemygroup>
