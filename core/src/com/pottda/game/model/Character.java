@@ -93,6 +93,10 @@ public class Character extends ModelActor implements InventoryChangeListener {
         return currentHealth;
     }
 
+    public int getMaxHealth() {
+        return (int)stats.get(HEALTH).floatValue();
+    }
+
     @Override
     public void inventoryChanged() {
         double healthFraction = 1;

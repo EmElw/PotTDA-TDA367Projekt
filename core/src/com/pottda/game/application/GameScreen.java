@@ -260,7 +260,7 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
         label.setText(scoreLabelText + score);
 
         // Set the health bar to player's current health
-        hudView.setHealthbar(Character.player.getCurrentHealth());
+        hudView.setHealthbar(Character.player.getCurrentHealth(), Character.player.getMaxHealth());
 
         // Draw the game
         backgroundView.render(gameStage.getCamera());
@@ -390,7 +390,7 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
         // Add player
         new CharacterBuilder().
                 setTeam(Character.PLAYER_TEAM).
-                setInventoryFromFile("playerStartInventory.xml").
+                setInventoryFromFile("sizedItemTestInv.xml"). //playerStartInventory
                 setBehaviour(ModelActor.Behaviour.NONE).
                 setPosition(new Vector2f(WIDTH_METERS / 2, HEIGHT_METERS / 2)).
                 setSprite(Sprites.PLAYER).
