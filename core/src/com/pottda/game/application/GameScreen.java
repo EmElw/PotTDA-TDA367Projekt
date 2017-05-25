@@ -1,9 +1,12 @@
 package com.pottda.game.application;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
@@ -52,6 +55,8 @@ import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 import static com.pottda.game.model.Constants.WIDTH_METERS;
 
 class GameScreen extends AbstractScreen implements NewControllerListener, ScoreChangeListener, DeathListener {
+
+
     private Stage hudStage;
     private Stage joystickStage;
     private Stage gameStage;
@@ -86,7 +91,8 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
 
     private static final float SCALING = 2f;
 
-    GameScreen() {
+    GameScreen(Game game) {
+        super(game);
         create();
     }
 
@@ -106,6 +112,36 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
     }
 
     void render() {
+
+    }
+
+    @Override
+    public void show() {
+
+    }
+
+
+    @Override
+    public void resize(int width, int height) {
+        hudStage.getViewport().update(width, height, false);
+        gameStage.getViewport().update(width, height, false);
+        joystickStage.getViewport().update(width, height, false);
+        gameOverStage.getViewport().update(width, height, false);
+        bgStage.getViewport().update(width, height, false);
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void render(SpriteBatch batch, float delta) {
         switch (gameState) {
             case RUNNING:
             case WAITING_FOR_INVENTORY:
@@ -157,33 +193,6 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
         }
 
         checkTouch();
-    }
-
-    @Override
-    public void show() {
-        
-    }
-
-    @Override
-    public void render(float delta) {
-
-    }
-
-    void resize(int width, int height) {
-        hudStage.getViewport().update(width, height, false);
-        gameStage.getViewport().update(width, height, false);
-        joystickStage.getViewport().update(width, height, false);
-        gameOverStage.getViewport().update(width, height, false);
-        bgStage.getViewport().update(width, height, false);
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
 
     }
 
@@ -192,7 +201,8 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
 
     }
 
-    void dispose() {
+    @Override
+    public void dispose() {
         hudStage.dispose();
         gameOverStage.dispose();
         if (world != null) {
@@ -381,6 +391,7 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
                 case RUNNING:
                     if (hudView.checkIfTouchingPauseButton(vector3)) {
                         // Touching pause button
+                        switchScreen(new PausedScreen(game, this));
                         gameState = PAUSED;
                     }
                     break;

@@ -3,9 +3,8 @@ package com.pottda.game.application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -31,7 +30,6 @@ class MenuScreen extends AbstractScreen {
     // TODO access in nicer way
     private Skin skin = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
 
-    private final GameScreen gameScreen;
 
     private TextButton startButton;
     private TextButton settingsButton;
@@ -39,14 +37,17 @@ class MenuScreen extends AbstractScreen {
 
     private Table settingsTable;
     private ButtonGroup<TextButton> controlButtons;
+    private OrthographicCamera camera;
 
-    MenuScreen(Game game, GameScreen gameScreen) {
+    MenuScreen(Game game) {
         super(game);
-        this.gameScreen = gameScreen;
         create();
     }
 
     private void create() {
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, WIDTH_VIEWPORT, HEIGHT_VIEWPORT);
+
         stage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
         stage.setDebugAll(true);
         Gdx.input.setInputProcessor(stage);
@@ -85,10 +86,11 @@ class MenuScreen extends AbstractScreen {
     }
 
     private void startGame() {
-        gameScreen.doOnStartGame();
+        GameScreen gs = new GameScreen(game);
         gameState = RUNNING;
         Gdx.input.setInputProcessor(ControllerOptions.joystickStage);   // TODO clean
-        switchScreen(gameScreen);
+        switchScreen(gs);
+        dispose();
     }
 
     private void setUpUI() {
@@ -149,34 +151,8 @@ class MenuScreen extends AbstractScreen {
     }
 
     @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void render(float delta) {
-        stage.act(delta);
-        stage.draw();
-    }
-
-    @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, false);
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
     }
 
     @Override
@@ -193,7 +169,18 @@ class MenuScreen extends AbstractScreen {
         return new TextureRegionDrawable(new TextureRegion(tex));
     }
 
+    @Override
+    public void render(SpriteBatch batch, float delta) {
+        Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        camera.update();
+        batch.setProjectionMatrix(camera.combined);
+
+        batch.begin();
+        stage.act(delta);
+        stage.draw();
+        batch.end();
+
+    }
 }
-
-// Box2D.init();

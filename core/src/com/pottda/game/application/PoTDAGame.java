@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.pottda.game.model.Constants;
 import com.pottda.game.model.builders.AbstractModelBuilder;
 
@@ -18,48 +19,20 @@ import static com.pottda.game.application.GameState.gameState;
 import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
 
 public class PoTDAGame extends Game {
-    private OrthographicCamera camera;
 
     private GameScreen gameScreen;
     private MenuScreen menuScreen;
     private PausedScreen pausedScreen;
-    private float delta;
+
+    private SpriteBatch batch;
 
     @Override
     public void create() {
         Gdx.graphics.setTitle(Constants.GAME_TITLE);
 
+        batch = new SpriteBatch();
 
-        camera = new OrthographicCamera();
-        gameScreen = new GameScreen();
-        pausedScreen = new PausedScreen(gameScreen);
-        menuScreen = new MenuScreen(this, gameScreen);
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        camera.setToOrtho(false, HEIGHT_VIEWPORT * width / (float) height, HEIGHT_VIEWPORT);
-        gameScreen.resize(width, height);
-        menuScreen.resize(width, height);
-        pausedScreen.resize(width, height);
-    }
-
-    @Override
-    public void render() {
-        delta = Gdx.graphics.getDeltaTime();
-        Gdx.gl.glClearColor(0, 0.5f, 0.5f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        camera.update();
-
-        if (gameState == MAIN_MENU || gameState == MAIN_CONTROLS || gameState == MAIN_CHOOSE) {
-            menuScreen.render(delta);
-        } else if (gameState == RESTARTING) {
-            doOnRestartGame();
-        } else if (gameState == PAUSED || gameState == OPTIONS) {
-            pausedScreen.render();
-        } else {
-            gameScreen.render();
-        }
+        setScreen(new MenuScreen(this, new GameScreen(this, null)));
     }
 
     /**
@@ -70,6 +43,14 @@ public class PoTDAGame extends Game {
         AbstractModelBuilder.clear();
         create();
     }
+
+    @Override
+    public void render() {
+        if (screen != null) {
+            ((AbstractScreen) screen).render(batch, Gdx.graphics.getDeltaTime());
+        }
+    }
+
 
     @Override
     public void dispose() {

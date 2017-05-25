@@ -1,7 +1,10 @@
 package com.pottda.game.application;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -16,7 +19,7 @@ import static com.pottda.game.application.GameState.gameState;
 import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
 import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 
-class PausedScreen {
+class PausedScreen extends AbstractScreen {
     private Stage pausedStage;
     private Stage optionsStage;
 
@@ -24,8 +27,11 @@ class PausedScreen {
     private OptionsView optionsView;
 
     private final SoundsAndMusic soundsAndMusic;
+    private Screen gameScreen;
 
-    PausedScreen(GameScreen gameScreen) {
+    PausedScreen(Game game, GameScreen gameScreen) {
+        super(game);
+        this.gameScreen = gameScreen;
         soundsAndMusic = gameScreen.getSoundsAndMusic();
         create();
     }
@@ -37,7 +43,15 @@ class PausedScreen {
         optionsView = new OptionsView(optionsStage);
     }
 
-    void render() {
+    @Override
+    public void resize(int width, int height) {
+        optionsStage.getViewport().update(width, height, false);
+        pausedStage.getViewport().update(width, height, false);
+    }
+
+
+    @Override
+    public void render(SpriteBatch batch, float delta) {
         switch (gameState) {
             case PAUSED:
                 // Draw the pause menu
@@ -50,14 +64,11 @@ class PausedScreen {
         }
 
         checkTouch();
+
     }
 
-    void resize(int width, int height) {
-        optionsStage.getViewport().update(width, height, false);
-        pausedStage.getViewport().update(width, height, false);
-    }
-
-    void dispose() {
+    @Override
+    public void dispose() {
         pausedStage.dispose();
         optionsStage.dispose();
     }
@@ -70,6 +81,7 @@ class PausedScreen {
                 case PAUSED:
                     if (pausedView.checkIfTouchingPauseResume(vector3)) {
                         // Touching pause resume
+                        switchScreen(gameScreen);
                         gameState = RUNNING;
                     } else if (pausedView.checkIfTouchingPauseOptions(vector3)) {
                         // Touching pause options
