@@ -226,13 +226,15 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
         createPlayer();
 
         createWorldBorders();
+
+        createObstacles();
     }
 
     private void createObstacles() {
         float xx;
         float yy;
         float r;
-        for (int i = 0; i < OBSTACLE_AMOUNT; i++){
+        for (int i = 0; i < OBSTACLE_AMOUNT; i++) {
             xx = (float) Math.random() * WIDTH_METERS;
             yy = (float) Math.random() * HEIGHT_METERS;
             r = (float) (Math.random() * (OBSTACLE_MAX_RADIUS - OBSTACLE_MIN_RADIUS)) + OBSTACLE_MIN_RADIUS;

@@ -44,16 +44,19 @@ public class ControllerHookup implements NewModelListener {
                 controller = createController(m, view);
             }
         } else if (m instanceof Obstacle) {
-            view = new ActorView(m.sprite, ((Vector2f) ((Obstacle) m).size));
+            if (((Obstacle) m).isRound) {
+                view = new ActorView(m.sprite, new Vector2f(((Obstacle) m).size.x * 2, ((Obstacle) m).size.x * 2));
+            } else {
+                view = new ActorView(m.sprite, ((Vector2f) ((Obstacle) m).size));
+            }
             controller = new ObstacleController(m, view);
         }
-        
+
         try {
             stage.addActor(view);
             notifyListeners(controller);
-        }
-        catch (NullPointerException e){
-            throw new Error("couldn't handle model-type",e);
+        } catch (NullPointerException e) {
+            throw new Error("couldn't handle model-type", e);
         }
     }
 
