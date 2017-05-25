@@ -1,6 +1,7 @@
 package com.pottda.game.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -328,12 +329,10 @@ public class InventoryManagementView {
             itemImage.setOrigin(itemImage.getWidth() / 2, itemImage.getHeight() / 2);
 
             this.add(discardButton).left().size(25);
-
-
             this.add(acceptButton).right().size(25);
             this.row();
             this.add(itemImage).center().colspan(2)
-                    .width(itemImage.getWidth()).height(itemImage.getHeight()).pad(20);
+                    .width(itemImage.getWidth()).height(itemImage.getHeight()).pad(10);
             this.row();
             this.add(rotateLeftButton).left().size(25);
             this.add(rotateRightButton).right().size(25);
@@ -353,7 +352,9 @@ public class InventoryManagementView {
                 }
 
                 public void touchDragged(InputEvent event, float x, float y, int pointer) {
-                    setPosition(getX() + x - xOffset, getY() + y - yOffset);
+                    setPosition(
+                            ((int)(getX() + x - xOffset)/25)*25,
+                            ((int)(getY() + y - yOffset)/25)*25);
                     // TODO validate if the new coordinates are legal inside the inventory (send event to the listener if they are at all within inventory?)
                 }
             });
@@ -371,6 +372,14 @@ public class InventoryManagementView {
                 @Override
                 public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
                     itemImage.rotateBy(-90);
+                    return true;
+                }
+            });
+
+            discardButton.addListener(new InputListener(){
+                @Override
+                public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
+                    clearChildren();
                     return true;
                 }
             });
