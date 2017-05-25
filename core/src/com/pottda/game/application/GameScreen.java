@@ -396,30 +396,30 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
     }
 
     private void createWorldBorders() {
-        final float border_thickness = 0.25f;
+        final float border_thickness = 1f;
         // Bottom border
         new ObstacleBuilder().
-                setSize(WIDTH_METERS, border_thickness).
+                setSize(WIDTH_METERS + border_thickness * 2, border_thickness).
                 setPosition(new Vector2f(WIDTH_METERS / 2, -border_thickness / 2)).
-                setSprite(Sprites.BORDER).
+                setSprite(Sprites.NONE).
                 create();
         // Left border
         new ObstacleBuilder().
-                setSize(border_thickness, HEIGHT_METERS).
+                setSize(border_thickness, HEIGHT_METERS + border_thickness * 2).
                 setPosition(new Vector2f(-border_thickness / 2, HEIGHT_METERS / 2)).
-                setSprite(Sprites.BORDER).
+                setSprite(Sprites.NONE).
                 create();
         // Top border
         new ObstacleBuilder().
-                setSize(WIDTH_METERS, border_thickness).
+                setSize(WIDTH_METERS + border_thickness * 2, border_thickness).
                 setPosition(new Vector2f(WIDTH_METERS / 2, border_thickness / 2 + HEIGHT_METERS)).
-                setSprite(Sprites.BORDER).
+                setSprite(Sprites.NONE).
                 create();
         // Right border
         new ObstacleBuilder().
-                setSize(border_thickness, HEIGHT_METERS).
+                setSize(border_thickness, HEIGHT_METERS + border_thickness * 2).
                 setPosition(new Vector2f(border_thickness / 2 + WIDTH_METERS, HEIGHT_METERS / 2)).
-                setSprite(Sprites.BORDER).
+                setSprite(Sprites.NONE).
                 create();
     }
 

@@ -33,7 +33,7 @@ public class ActorView extends Image {
      * @param texture the texture to set as image
      * @param size    vector with width and height of image
      */
-    private ActorView(Texture texture, Vector2f size) {
+    public ActorView(Texture texture, Vector2f size) {
         super(new TextureRegionDrawable(new TextureRegion(texture)));
         this.size = size;
         this.texture = texture;
