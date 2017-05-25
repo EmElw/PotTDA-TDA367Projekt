@@ -286,10 +286,6 @@ public class InventoryManagementView {
             super(new Texture(Gdx.files.internal("menu/storageButtonBackground.png")));
             this.itemName = itemName;
         }
-
-        public String getItemName() {
-            return itemName;
-        }
     }
 
     private class ItemImage extends Image {
