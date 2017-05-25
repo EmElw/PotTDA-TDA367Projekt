@@ -155,6 +155,7 @@ public class PoTDA extends ApplicationAdapter implements NewControllerListener, 
         testStorage.addItem(new SimpleCannon());
         testStorage.addItem(new MultiShot());
         testStorage.addItem(new Switcher());
+        testStorage.addItem(new BouncingBallCannon());
 
         Gdx.graphics.setTitle(GAME_TITLE);
         camera = new OrthographicCamera();

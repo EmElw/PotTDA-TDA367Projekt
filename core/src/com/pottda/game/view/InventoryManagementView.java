@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
@@ -31,6 +32,7 @@ public class InventoryManagementView {
     private Table storageTable;
     private Table inventoryTable;
     private Skin mySkin = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
+    private WidgetGroup inventoryGroup;
 
     private Table table;
     private Image itemImage;
@@ -49,7 +51,7 @@ public class InventoryManagementView {
                     if (evt.getTarget() instanceof StorageImage) {
                         if (workingItemTable != null)
                             workingItemTable.clearChildren();
-                        workingItemTable = new WorkingImageTable(((StorageImage) evt.getTarget()).itemName);
+                        workingItemTable = new WorkingImageTable(((StorageImage) evt.getTarget()).getItem());
                     } else if (evt.getTarget() instanceof ItemImage) {
                         for (InventoryManagementListener iml : listeners) {
                             iml.inventoryItemTouched(((ItemImage) evt.getTarget()).item);
@@ -154,14 +156,18 @@ public class InventoryManagementView {
 
     public void updateStorageTable(Storage storage) {
         for (String s : storage.getItems()) {
-            addToStorageTable(s, storage.getNrOf(s));
+            try {
+                addToStorageTable(s, storage.getNrOf(s), storage.getItem(s));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private void addToStorageTable(final String itemName, int itemCount) {
+    private void addToStorageTable(String itemName, int itemCount, Item item) {
         // Create a table to hold name + image
         Table storageTable = new Table();
-        final StorageImage storageImage = new StorageImage(itemName);
+        final StorageImage storageImage = new StorageImage(item);
         Stack storageStack = new Stack();
         //storageImage.setColor(0.03f, 0.69f, 0.73f, 1);  // TODO test only
 
@@ -213,7 +219,7 @@ public class InventoryManagementView {
 
     public void updateInventoryGroup(Inventory inventory) {
         // Create inventory
-        WidgetGroup inventoryGroup = new WidgetGroup();
+        inventoryGroup = new WidgetGroup();
 
         List<Point2i> connections = new ArrayList<Point2i>();
 
@@ -281,10 +287,16 @@ public class InventoryManagementView {
     private class StorageImage extends Image {
 
         private String itemName;    // The external item name associated with this button
+        private Item item;
 
-        private StorageImage(String itemName) {
+        private StorageImage(Item item) {
             super(new Texture(Gdx.files.internal("menu/storageButtonBackground.png")));
-            this.itemName = itemName;
+            this.itemName = item.getName();
+            this.item = item;
+        }
+
+        private Item getItem() {
+            return item;
         }
     }
 
@@ -315,14 +327,17 @@ public class InventoryManagementView {
         private ImageButton discardButton;
 
 
-        private WorkingImageTable(String itemName) {
+        private WorkingImageTable(Item item) {
             rotateRightButton = new ImageButton(rotateRightButtonDrawable);
             rotateLeftButton = new ImageButton(rotateLeftButtonDrawable);
             acceptButton = new ImageButton(acceptButtonDrawable);
             discardButton = new ImageButton(discardButtonDrawable);
 
-            final Image itemImage = new Image(atlas.findRegion(itemName));
-            itemImage.setOrigin(itemImage.getWidth() / 2, itemImage.getHeight() / 2);
+            final Image itemImage = new Image(atlas.findRegion(item.getName()));
+            Point2i negativeOffset = item.getBaseBottomLeft();
+            itemImage.setOrigin(
+                    (float) ((0.5 - negativeOffset.x) * SIZE),
+                    (float) ((0.5 - negativeOffset.y) * SIZE));
 
             this.add(discardButton).left().size(25);
             this.add(acceptButton).right().size(25);
@@ -332,8 +347,12 @@ public class InventoryManagementView {
             this.row();
             this.add(rotateLeftButton).left().size(25);
             this.add(rotateRightButton).right().size(25);
-            this.setPosition(500, 200);
-            stage.addActor(this);
+            this.setPosition(200, 200);
+
+            Vector2 vector = new Vector2(itemImage.localToParentCoordinates(
+                    new Vector2(itemImage.getOriginX(), itemImage.getOriginY())));
+            setOrigin(vector.x, vector.y);
+            inventoryGroup.addActor(this);
 
             addListener(new InputListener() {
                 // Used to keep 0,0 relative distance to touch coordinate constant
@@ -351,7 +370,12 @@ public class InventoryManagementView {
                     setPosition(
                             ((int)(getX() + x - xOffset)/25)*25,
                             ((int)(getY() + y - yOffset)/25)*25);
+                    localToParentCoordinates(new Vector2(getOriginX(),getOriginY()));
+
                     // TODO validate if the new coordinates are legal inside the inventory (send event to the listener if they are at all within inventory?)
+                    /*for (InventoryManagementListener iml : listeners) {
+
+                    }*/
                 }
             });
 
