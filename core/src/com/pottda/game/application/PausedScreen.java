@@ -13,8 +13,8 @@ import static com.pottda.game.application.GameState.OPTIONS;
 import static com.pottda.game.application.GameState.PAUSED;
 import static com.pottda.game.application.GameState.RUNNING;
 import static com.pottda.game.application.GameState.gameState;
-import static com.pottda.game.model.Constants.HEIGHT;
-import static com.pottda.game.model.Constants.WIDTH;
+import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
+import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 
 class PausedScreen {
     private Stage pausedStage;
@@ -31,8 +31,8 @@ class PausedScreen {
     }
 
     private void create() {
-        pausedStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
-        optionsStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
+        pausedStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
+        optionsStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
     }
 
     void render() {

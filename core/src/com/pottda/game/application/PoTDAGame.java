@@ -14,9 +14,8 @@ import static com.pottda.game.application.GameState.MAIN_MENU;
 import static com.pottda.game.application.GameState.OPTIONS;
 import static com.pottda.game.application.GameState.PAUSED;
 import static com.pottda.game.application.GameState.RESTARTING;
-import static com.pottda.game.application.GameState.WAITING_FOR_INVENTORY;
 import static com.pottda.game.application.GameState.gameState;
-import static com.pottda.game.model.Constants.HEIGHT;
+import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
 
 public class PoTDAGame extends Game {
     private OrthographicCamera camera;
@@ -24,7 +23,6 @@ public class PoTDAGame extends Game {
     private GameScreen gameScreen;
     private MenuScreen menuScreen;
     private PausedScreen pausedScreen;
-    private InventoryScreen inventoryScreen;
 
     @Override
     public void create() {
@@ -33,16 +31,14 @@ public class PoTDAGame extends Game {
         gameScreen = new GameScreen();
         pausedScreen = new PausedScreen(gameScreen);
         menuScreen = new MenuScreen(gameScreen, pausedScreen);
-        inventoryScreen = new InventoryScreen();
     }
 
     @Override
     public void resize(int width, int height) {
-        camera.setToOrtho(false, HEIGHT * width / (float) height, HEIGHT);
+        camera.setToOrtho(false, HEIGHT_VIEWPORT * width / (float) height, HEIGHT_VIEWPORT);
         gameScreen.resize(width, height);
         menuScreen.resize(width, height);
         pausedScreen.resize(width, height);
-        inventoryScreen.resize(width, height);
     }
 
     @Override
@@ -57,8 +53,6 @@ public class PoTDAGame extends Game {
             doOnRestartGame();
         } else if (gameState == PAUSED || gameState == OPTIONS) {
             pausedScreen.render();
-        } else if (gameState == INVENTORY) {
-            inventoryScreen.render();
         } else {
             gameScreen.render();
         }

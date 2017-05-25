@@ -46,9 +46,9 @@ import static com.pottda.game.application.GameState.RESTARTING;
 import static com.pottda.game.application.GameState.RUNNING;
 import static com.pottda.game.application.GameState.WAITING_FOR_INVENTORY;
 import static com.pottda.game.application.GameState.gameState;
-import static com.pottda.game.model.Constants.HEIGHT;
+import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
 import static com.pottda.game.model.Constants.HEIGHT_METERS;
-import static com.pottda.game.model.Constants.WIDTH;
+import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 import static com.pottda.game.model.Constants.WIDTH_METERS;
 
 class GameScreen implements NewControllerListener, ScoreChangeListener, DeathListener {
@@ -93,12 +93,12 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
     private long startWaitInventory;
 
     private void create() {
-        hudStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
-        joystickStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
+        hudStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
+        joystickStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
         gameStage = new Stage(new StretchViewport(WIDTH_METERS / SCALING, HEIGHT_METERS / SCALING));
         gameStage.getCamera().position.x = WIDTH_METERS / 2 / SCALING;
         gameStage.getCamera().position.y = HEIGHT_METERS / 2 / SCALING;
-        gameOverStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
+        gameOverStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
         bgStage = new Stage(new StretchViewport(WIDTH_METERS, HEIGHT_METERS));
         gameOverView = new GameOverView(gameOverStage);
 

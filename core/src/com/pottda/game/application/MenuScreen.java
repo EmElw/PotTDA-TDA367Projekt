@@ -19,8 +19,8 @@ import static com.pottda.game.controller.ControllerOptions.ControllerMode.KEYBOA
 import static com.pottda.game.controller.ControllerOptions.ControllerMode.KEYBOARD_ONLY;
 import static com.pottda.game.controller.ControllerOptions.ControllerMode.TOUCH_JOYSTICK;
 import static com.pottda.game.controller.ControllerOptions.joystickStage;
-import static com.pottda.game.model.Constants.HEIGHT;
-import static com.pottda.game.model.Constants.WIDTH;
+import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
+import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 
 class MenuScreen {
     private Stage mainMenuStage;
@@ -41,10 +41,10 @@ class MenuScreen {
     }
 
     private void create() {
-        mainMenuStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
+        mainMenuStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
 
-        mainControlsStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
-        mainDifficultyStage = new Stage(new StretchViewport(WIDTH, HEIGHT));
+        mainControlsStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
+        mainDifficultyStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
         mainMenuView = new MainMenuView(mainMenuStage);
         mainDifficultyView = new MainDifficultyView(mainDifficultyStage);
         mainControlsView = new MainControlsView(mainControlsStage);
