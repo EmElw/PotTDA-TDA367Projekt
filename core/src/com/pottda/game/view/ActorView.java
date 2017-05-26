@@ -5,14 +5,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.pottda.game.PoTDA;
+import com.pottda.game.model.Constants;
 import com.pottda.game.model.Sprites;
 
 import javax.vecmath.Vector2f;
 
-/**
- *
- */
 public class ActorView extends Image {
     private final Texture texture;
     private Vector2f size;
@@ -26,8 +23,8 @@ public class ActorView extends Image {
         super(new TextureRegionDrawable(new TextureRegion(texture)));
         this.texture = texture;
         // set the rotation point to middle of image
-        this.setOrigin((texture.getWidth() * PoTDA.WIDTH_RATIO) / 2, (texture.getHeight() * PoTDA.HEIGHT_RATIO) / 2);
-        this.setSize(this.getWidth() * PoTDA.WIDTH_RATIO, this.getHeight() * PoTDA.HEIGHT_RATIO); // Resize to make in meters instead of pixels
+        this.setOrigin((texture.getWidth() * Constants.WIDTH_RATIO) / 2, (texture.getHeight() * Constants.HEIGHT_RATIO) / 2);
+        this.setSize(this.getWidth() * Constants.WIDTH_RATIO, this.getHeight() * Constants.HEIGHT_RATIO); // Resize to make in meters instead of pixels
     }
 
     /**
@@ -36,11 +33,11 @@ public class ActorView extends Image {
      * @param texture the texture to set as image
      * @param size    vector with width and height of image
      */
-    private ActorView(Texture texture, Vector2f size) {
+    public ActorView(Texture texture, Vector2f size) {
         super(new TextureRegionDrawable(new TextureRegion(texture)));
         this.size = size;
         this.texture = texture;
-        this.setOrigin(-(texture.getWidth() * PoTDA.WIDTH_RATIO) / 2, -(texture.getHeight() * PoTDA.HEIGHT_RATIO) / 2);
+        this.setOrigin(-(texture.getWidth() * Constants.WIDTH_RATIO) / 2, -(texture.getHeight() * Constants.HEIGHT_RATIO) / 2);
         this.setSize(size.x, size.y);
 
     }
@@ -61,14 +58,9 @@ public class ActorView extends Image {
      */
     public void setPoint(float xPosition, float yPosition, boolean isObstacle) {
         if (!isObstacle) {
-            this.setPosition(xPosition - (texture.getWidth() * PoTDA.WIDTH_RATIO) / 2, yPosition - (texture.getHeight() * PoTDA.HEIGHT_RATIO) / 2);
+            this.setPosition(xPosition - (texture.getWidth() * Constants.WIDTH_RATIO) / 2, yPosition - (texture.getHeight() * Constants.HEIGHT_RATIO) / 2);
         } else {
-            // Set the correct positions
-            if (size.x > size.y) {
-                this.setPosition(xPosition - size.x / 2, yPosition);
-            } else {
-                this.setPosition(xPosition, yPosition - size.y / 2);
-            }
+            this.setPosition(xPosition - size.x / 2, yPosition - size.y / 2);
         }
     }
 

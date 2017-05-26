@@ -24,7 +24,7 @@ public class Character extends ModelActor implements InventoryChangeListener {
      * Current health of a character
      */
     int currentHealth = 0;
-    private static Map<Stat, Double> stats;
+    private final Map<Stat, Double> stats;
     private final Vector2f movementVector;
 
     public static Character player;
@@ -40,16 +40,17 @@ public class Character extends ModelActor implements InventoryChangeListener {
 
         stats = new EnumMap<Stat, Double>(Stat.class);
 
-        // Sum all simple stats
-        for (Stat stat : Stat.values()) {
-            stats.put(stat, 0 + inventory.getSumStat(stat));
-        }
+//        // Sum all simple stats
+//        for (Stat stat : Stat.values()) {
+//            stats.put(stat, 0 + inventory.getSumStat(stat));
+//        }
 
         inventoryChanged();
     }
 
     @Override
     public void giveInput(Vector2f move, Vector2f attack) {
+        // TODO Ta reda på varför det är en annan stats Map när denna kallas jämfört med när stats uppdateras från inventory
         // Movement
         movementVector.set(move);
         // Scale the vector based on the Character's capabilities
@@ -73,7 +74,7 @@ public class Character extends ModelActor implements InventoryChangeListener {
      */
     void takeDamage(int incomingDamage) {
         currentHealth -= incomingDamage;
-        if (currentHealth <= 0) {
+        if (currentHealth <= 0 && !shouldBeRemoved) {
             shouldBeRemoved = true;
             if (deathListeners != null) {
                 for (DeathListener dl : deathListeners) {
@@ -90,6 +91,10 @@ public class Character extends ModelActor implements InventoryChangeListener {
      */
     public int getCurrentHealth() {
         return currentHealth;
+    }
+
+    public int getMaxHealth() {
+        return (int)stats.get(HEALTH).floatValue();
     }
 
     @Override

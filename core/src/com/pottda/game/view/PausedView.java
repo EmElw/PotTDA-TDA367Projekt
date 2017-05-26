@@ -8,13 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.pottda.game.model.Sprites;
 
-/**
- * Created by Rikard Teodorsson on 2017-05-18.
- */
-
 public class PausedView {
 
-    private final Stage stage;
+    private final Stage pausedStage;
 
     private Image pauseResume;
     private Image pauseOptions;
@@ -27,41 +23,50 @@ public class PausedView {
         QUIT
     }
 
-    public PausedView(final Stage stage) {
-        this.stage = stage;
+    public PausedView(final Stage pausedStage) {
+        this.pausedStage = pausedStage;
         create();
     }
 
     private void create() {
         // Add pause background
-        addToStage(stage.getWidth(), stage.getHeight());
+        addToStage(pausedStage.getWidth(),
+                pausedStage.getHeight());
 
-        // Add pause resume button
-        addToStage(Sprites.PAUSERESUME, imageEnum.RESUME, stage.getWidth() / 2 - 150, stage.getHeight() - 150);
+        addToStage(Sprites.PAUSERESUME,
+                imageEnum.RESUME,
+                pausedStage.getWidth() / 2 - 150,
+                pausedStage.getHeight() - 150);
 
-        // Add pause options button
-        addToStage(Sprites.PAUSEOPTIONS, imageEnum.OPTIONS, stage.getWidth() / 2 - 150, stage.getHeight() - 300);
+        addToStage(Sprites.PAUSEOPTIONS,
+                imageEnum.OPTIONS,
+                pausedStage.getWidth() / 2 - 150,
+                pausedStage.getHeight() - 300);
 
-        // Add pause quit button
-        addToStage(Sprites.PAUSEQUIT, imageEnum.QUIT, stage.getWidth() / 2 - 150, 30);
+        addToStage(Sprites.PAUSEQUIT,
+                imageEnum.QUIT,
+                pausedStage.getWidth() / 2 - 150,
+                30);
     }
 
     private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos) {
+        // TODO generalise views with an abstract class
         Image image2 = getImage(new Texture(Gdx.files.internal(texturePath.fileName)), image);
         assert image2 != null;
         image2.setX(xPos);
         image2.setY(yPos);
-        stage.addActor(image2);
+        pausedStage.addActor(image2);
     }
 
     private void addToStage(float width, float height) {
+        // TODO generalise views with an abstract class
         Image image2 = getImage(new Texture(Gdx.files.internal(Sprites.OPTIONSBG.fileName)), imageEnum.BACKGROUND);
         assert image2 != null;
         image2.setX(0f);
         image2.setY(0f);
         image2.setWidth(width);
         image2.setHeight(height);
-        stage.addActor(image2);
+        pausedStage.addActor(image2);
     }
 
     private Image getImage(Texture texturePath, imageEnum image) {
@@ -79,7 +84,7 @@ public class PausedView {
     }
 
     public void render() {
-        stage.draw();
+        pausedStage.draw();
     }
 
     /**

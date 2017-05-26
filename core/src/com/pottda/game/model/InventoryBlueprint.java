@@ -1,5 +1,8 @@
 package com.pottda.game.model;
 
+import com.pottda.game.model.items.ItemSize;
+import com.pottda.game.model.items.SizedItem;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -53,17 +56,27 @@ public class InventoryBlueprint {
      */
     private final Map<PointAndOrientation, Class<? extends Item>> itemMap;
 
+    private final Map<PointAndOrientation, ItemSize> itemSizeMap;
     private InventoryBlueprint(XMLInventory inventory) {
         itemMap = new HashMap<PointAndOrientation, Class<? extends Item>>();
+        itemSizeMap = new HashMap<PointAndOrientation, ItemSize>();
         width = inventory.width;
         height = inventory.height;
 
         try {
             for (XMLItem i : inventory.items) {
-                addItemClass(ItemClassLoader.getItemClass(i.getClassName()),
-                        i.getX(),
-                        i.getY(),
-                        i.getOrientation());
+                if (i instanceof XMLSizedItem){
+                    addSizedItemClass(ItemClassLoader.getSizedItemClass(i.getClassName()),
+                            i.getX(),
+                            i.getY(),
+                            i.getOrientation(),
+                            ((XMLSizedItem) i).getSize());
+                } else {
+                    addItemClass(ItemClassLoader.getItemClass(i.getClassName()),
+                            i.getX(),
+                            i.getY(),
+                            i.getOrientation());
+                }
             }
         } catch (Exception e) {
             throw new Error("could not instantiate items :", e);
@@ -72,7 +85,12 @@ public class InventoryBlueprint {
 
     private void addItemClass(Class<? extends Item> type, int x, int y, int orientation) {
         itemMap.put(new PointAndOrientation(orientation, x, y), type);
+    }
 
+    private void addSizedItemClass(Class<? extends SizedItem> type, int x, int y, int orientation, ItemSize size) {
+        PointAndOrientation pao = new PointAndOrientation(orientation, x, y);
+        itemMap.put(pao, type);
+        itemSizeMap.put(pao, size);
     }
 
     private class PointAndOrientation {
@@ -96,6 +114,9 @@ public class InventoryBlueprint {
         for (Map.Entry<PointAndOrientation, Class<? extends Item>> entry : itemMap.entrySet()) {
             try {
                 item = entry.getValue().newInstance();
+                if (itemSizeMap.containsKey(entry.getKey())){
+                    ((SizedItem) item).setSize(itemSizeMap.get(entry.getKey()));
+                }
                 item.init();
                 item.setX(entry.getKey().x);
                 item.setY(entry.getKey().y);

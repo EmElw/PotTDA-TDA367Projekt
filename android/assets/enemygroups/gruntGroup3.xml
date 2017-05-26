@@ -1,0 +1,4 @@
+<enemygroup name="GruntGroup3">
+    <difficulty>3</difficulty>
+    <enemy>EliteGrunt</enemy>
+</enemygroup>

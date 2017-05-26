@@ -3,13 +3,8 @@ package com.pottda.game.view;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 
-/**
- * Created by Rikard Teodorsson on 2017-05-03.
- */
-
 public class SoundsAndMusic {
     private static Music music;
-    //private static Sound sound;
 
     public SoundsAndMusic() {
         music = Gdx.audio.newMusic(Gdx.files.internal("music/DragonSlayer.mp3"));
@@ -20,7 +15,7 @@ public class SoundsAndMusic {
      */
     public void play() {
         if (!music.isPlaying()) {
-            music.setVolume(0.5f); // sets the volume to half the maximum volume
+            music.setVolume(0.5f);
             music.setLooping(true);
             music.play();
         }

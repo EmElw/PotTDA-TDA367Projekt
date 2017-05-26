@@ -1,17 +1,22 @@
 package com.pottda.game.model.items;
 
-import com.pottda.game.model.Item;
-
 import javax.vecmath.Point2i;
 
-abstract class SupportItem extends Item {
-    ItemSize itemSize = ItemSize.NORMAL;
+public abstract class SupportItem extends SizedItem {
+    /**
+     * Size for minor:
+     * [X]
+     *
+     * Size for normal:
+     * [X]X
+     *
+     * Size for big:
+     *  X X
+     * [X]X
+     */
 
-    public void setSize(ItemSize itemSize){
-        this.itemSize = itemSize;
-    }
-
-    void setBasePositions(){
+    @Override
+    protected void setBasePositions(){
         switch (itemSize){
             case BIG:
                 basePositions.add(new Point2i(1, 1));

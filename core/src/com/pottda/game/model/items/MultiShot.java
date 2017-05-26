@@ -13,11 +13,7 @@ import javax.vecmath.Vector2f;
  * It creates copies at in a fan-pattern
  */
 public class MultiShot extends Item {
-
-    /*
-    The spread between each projectile, expressed as radians?
-     */
-    private final static float SPREAD = 0.3f;
+    private final static float SPREAD_RAD = 0.3f;
     private final Vector2f temporaryVector = new Vector2f();
 
     /*
@@ -84,14 +80,14 @@ public class MultiShot extends Item {
         double direction = Math.toRadians(p.getAngle());
 
         /*
-        Create thew new projectiles, set their appropiate direction
+        Create thew new projectiles, set their appropriate direction
         and call their onAttack()
          */
         for (int i = 0; i < sumAdditionalProjectiles; i++) {
-            double newDir = direction - SPREAD * sumAdditionalProjectiles / 2
-                    + SPREAD * i;
+            double newDir = direction - SPREAD_RAD * sumAdditionalProjectiles / 2
+                    + SPREAD_RAD * i;
             if (newDir >= direction) {
-                newDir += SPREAD;
+                newDir += SPREAD_RAD;
             }
 
             temporaryVector.set((float) Math.cos(newDir), (float) Math.sin(newDir));

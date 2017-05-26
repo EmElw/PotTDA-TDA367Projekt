@@ -1,0 +1,4 @@
+<enemygroup name="ShotGunGroup1">
+    <difficulty>4</difficulty>
+    <enemy>EliteShotgun</enemy>
+</enemygroup>

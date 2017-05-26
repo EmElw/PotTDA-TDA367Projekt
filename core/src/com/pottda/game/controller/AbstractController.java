@@ -15,7 +15,6 @@ import javax.vecmath.Vector2f;
 public abstract class AbstractController {
     final Vector2f movementVector;
     final Vector2f attackVector;
-//    final boolean isAI;
 
     final ModelActor modelActor;
     private final ActorView actorView;
@@ -35,7 +34,7 @@ public abstract class AbstractController {
     }
 
     /**
-     * Called by PoTDA every frame
+     * Called by PoTDAGame every frame
      */
     public void onNewFrame() {
         setInputVectors();
@@ -61,13 +60,9 @@ public abstract class AbstractController {
         modelActor.giveInput(movementVector, attackVector);
     }
 
-    /**
-     * Updates the ActorView so everything can be drawn out later
-     */
     private void updateView() {
         // TODO extend with other modifications such as rotation and stuff
         Vector2f position = modelActor.getPosition();
-//        float degrees = modelActor.getAngle();
 
         if (modelActor instanceof Obstacle) {
             actorView.setPoint(position.x, position.y, true);

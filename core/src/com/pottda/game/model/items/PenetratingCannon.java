@@ -25,7 +25,7 @@ public class PenetratingCannon extends AttackItem{
 
         baseOutputs.add(new Point2i(0, 1));
 
-        cooldown = 300;
+        cooldownMS = 300;
         damage = 10;
     }
 }

@@ -23,7 +23,7 @@ public class SimpleCannon extends AttackItem {
 
         baseOutputs.add(new Point2i(1, 0));
 
-        cooldown = 200;
+        cooldownMS = 200;
         damage = 10;
 
     }

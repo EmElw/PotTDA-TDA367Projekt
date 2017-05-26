@@ -8,9 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.pottda.game.model.Sprites;
 
-/**
- * Created by Rikard Teodorsson on 2017-05-03.
- */
 
 public class HUDView {
 
@@ -33,14 +30,21 @@ public class HUDView {
     }
 
     private void create() {
-        // Add health bar
-        addToStage(Sprites.HEALTHBAR, imageEnum.HEALTHBAR, 10, stage.getHeight() - 30);
+        addToStage(Sprites.HEALTHBAR,
+                imageEnum.HEALTHBAR,
+                10,
+                stage.getHeight() - 30);
 
         // Add health to health bar
-        addToStage(Sprites.HEALTHBARRED, imageEnum.HEALTHBARRED, healthbar.getX(), stage.getHeight() - 30);
+        addToStage(Sprites.HEALTHBARRED,
+                imageEnum.HEALTHBARRED,
+                healthbar.getX(),
+                stage.getHeight() - 30);
 
-        // Add pause button
-        addToStage(Sprites.PAUSEBUTTON, imageEnum.PAUSEBUTTON, stage.getWidth() - 60, stage.getHeight() - 50);
+        addToStage(Sprites.PAUSEBUTTON,
+                imageEnum.PAUSEBUTTON,
+                stage.getWidth() - 60,
+                stage.getHeight() - 50);
     }
 
     public void render() {
@@ -48,6 +52,7 @@ public class HUDView {
     }
 
     private void addToStage(Sprites texturePath, imageEnum image, float xPos, float yPos) {
+        // TODO generalise views with an abstract class
         Image image2 = getImage(new Texture(Gdx.files.internal(texturePath.fileName)), image);
         assert image2 != null;
         image2.setX(xPos);
@@ -84,11 +89,11 @@ public class HUDView {
      *
      * @param health new health. A value between 0 and 100
      */
-    public void setHealthbar(float health) {
+    public void setHealthbar(float health, float playerMaxHealth) {
         if (health < 0) {
             health = 0;
         }
-        healthbarRed.setWidth(health);
+        healthbarRed.setWidth((health / playerMaxHealth) * 100);
     }
 
     public float getHealth() {

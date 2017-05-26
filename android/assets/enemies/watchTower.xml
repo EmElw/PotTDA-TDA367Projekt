@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<enemy>
+    <name>WatchTower</name>
+    <scorevalue>45</scorevalue>
+    <difficulty>3</difficulty>
+    <behaviour>STATIONARY</behaviour>
+    <inventoryname>watchTowerInventory.xml</inventoryname>
+    <spriteenum>WATCH_TOWER</spriteenum>
+</enemy>

@@ -24,7 +24,7 @@ public class BouncingBallCannon extends AttackItem {
 
         baseOutputs.add(new Point2i(1, 0));
 
-        cooldown = 300;
+        cooldownMS = 300;
         damage = 10;
     }
 }
