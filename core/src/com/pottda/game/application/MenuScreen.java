@@ -25,18 +25,21 @@ class MenuScreen extends AbstractScreen {
     private final static Color bgColor = new Color(0xDACC09FF);
 
     private Stage stage;
+    private OrthographicCamera camera;
+
     // TODO access in nicer way
     private Skin skin = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
 
-
-    private Table settingsTable;
     private TextButton startButton;
     private TextButton settingsButton;
     private TextButton quitButton;
-    private OrthographicCamera camera;
+
+    private Table settingsTable;
+
     private TextButton keyboardMouseControlsButton;
     private TextButton keyboardOnlyControlsButton;
     private TextButton touchControlsButton;
+
     private Slider musicSlider;
     private Slider sfxSlider;
 
@@ -117,8 +120,6 @@ class MenuScreen extends AbstractScreen {
 
 
         gameState = MAIN_MENU;
-
-
     }
 
     private void quitGame() {
