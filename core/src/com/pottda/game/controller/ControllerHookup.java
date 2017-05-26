@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
 import com.pottda.game.view.ActorView;
+import com.pottda.game.view.ObstacleTextureFactory;
 
 import javax.vecmath.Vector2f;
 import java.util.ArrayList;
@@ -48,34 +49,11 @@ public class ControllerHookup implements NewModelListener {
             }
         } else if (m instanceof Obstacle) {
             if (((Obstacle) m).isRound) {
-                int radius = Math.round(((Obstacle) m).size.x / Constants.WIDTH_RATIO);
-
-                Pixmap tempPixMap = new Pixmap(radius * 2 + 1, radius * 2 + 1, Pixmap.Format.RGBA8888);
-
-                tempPixMap.setColor(Color.BLACK);
-                tempPixMap.fillCircle(radius, radius, radius);
-                tempPixMap.setColor(Color.WHITE);
-                tempPixMap.drawCircle(radius, radius, radius);
-
-                Texture tempTexture = new Texture(tempPixMap);
-
                 Vector2f size = new Vector2f(((Obstacle) m).size.x, ((Obstacle) m).size.x);
                 size.scale(2);
-                view = new ActorView(tempTexture, size);
+                view = new ActorView(ObstacleTextureFactory.getCircularObstacleTexture(((Obstacle) m).size.x), size);
             } else {
-                int width = Math.round(((Obstacle) m).size.x / Constants.WIDTH_RATIO);
-                int height = Math.round(((Obstacle) m).size.y / Constants.HEIGHT_RATIO);
-
-                Pixmap tempPixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
-
-                tempPixmap.setColor(Color.BLACK);
-                tempPixmap.fillRectangle(0, 0, width, height);
-                tempPixmap.setColor(Color.WHITE);
-                tempPixmap.drawRectangle(0, 0, width, height);
-
-                Texture tempTexture = new Texture(tempPixmap);
-
-                view = new ActorView(tempTexture, ((Vector2f) ((Obstacle) m).size));
+                view = new ActorView(ObstacleTextureFactory.getRectangularObstacleTexture((Vector2f) ((Obstacle) m).size), ((Vector2f) ((Obstacle) m).size));
             }
             controller = new ObstacleController(m, view);
         }
