@@ -338,6 +338,7 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
                 }
             }
             if (ControllerOptions.controllerSettings == ControllerOptions.ControllerMode.TOUCH_JOYSTICK) {
+                // Center the labels when using joysticks to prevent fingers/joystick to cover the text
                 label.setPosition(hudStage.getWidth() / 2 - label.getPrefWidth() / 2, label.getPrefHeight() - labelMargin);
             } else {
                 label.setPosition(hudStage.getWidth() - label.getPrefWidth() - labelMargin, label.getPrefHeight() - labelMargin);

@@ -16,27 +16,27 @@ class ItemDropLabel {
         label.setColor(label.getColor().r, label.getColor().g, label.getColor().b, 0f);
     }
 
-    public Label getLabel() {
+    Label getLabel() {
         return label;
     }
 
-    public long getTimeSinceAppeared() {
+    long getTimeSinceAppeared() {
         return timeSinceAppeared;
     }
 
-    public void setFadeOut(boolean fadeOut) {
+    void setFadeOut(boolean fadeOut) {
         this.fadeOut = fadeOut;
     }
 
-    public void setFadeIn(boolean fadeIn) {
+    void setFadeIn(boolean fadeIn) {
         this.fadeIn = fadeIn;
     }
 
-    public boolean isFadingIn() {
+    boolean isFadingIn() {
         return fadeIn;
     }
 
-    public boolean isFadingOut() {
+    boolean isFadingOut() {
         return fadeOut;
     }
 }
