@@ -7,7 +7,6 @@ import com.pottda.game.model.Storage;
 
 public class InventoryManagementScreen extends AbstractScreen {
 
-
     Inventory inventory;
     Storage storage;
 

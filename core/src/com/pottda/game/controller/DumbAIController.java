@@ -23,8 +23,8 @@ class DumbAIController extends AIController {
      * @param modelActor
      * @param actorView
      */
-    DumbAIController(ModelActor modelActor, ActorView actorView) {
-        super(modelActor, actorView);
+    DumbAIController(ModelActor modelActor, ActorView actorView, EnemyHealthBarController enemyHealthBarController) {
+        super(modelActor, actorView, enemyHealthBarController);
         localSafeDistance = DEFAULT_SAFE_DISTANCE;
     }
 
@@ -35,8 +35,8 @@ class DumbAIController extends AIController {
      * @param actorView    {@inheritDoc}
      * @param safeDistance an integer in meters
      */
-    DumbAIController(ModelActor modelActor, ActorView actorView, int safeDistance) {
-        super(modelActor, actorView);
+    DumbAIController(ModelActor modelActor, ActorView actorView, EnemyHealthBarController enemyHealthBarController, int safeDistance) {
+        super(modelActor, actorView, enemyHealthBarController);
         this.localSafeDistance = safeDistance;
     }
 
