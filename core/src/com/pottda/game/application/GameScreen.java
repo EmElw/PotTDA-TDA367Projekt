@@ -85,6 +85,7 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
 
     private long startWaitGameOver;
     private static final long WAITING_TIME_GAME_OVER_SECONDS = 3;
+    private static final long WAITING_TIME_LABEL_SECONDS = 3;
 
     private static int score;
     private int enemyAmount;
@@ -318,7 +319,7 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
             final Label label = itemDropLabel.getLabel();
             final long time = itemDropLabel.getTimeSinceAppeared();
 
-            if (!isFadingOut && (System.currentTimeMillis() - time) / 1000 > 3) {
+            if (!isFadingOut && (System.currentTimeMillis() - time) / 1000 > WAITING_TIME_LABEL_SECONDS) {
                 itemDropLabel.setFadeOut(true);
             }
             if (isFadingIn) {
