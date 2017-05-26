@@ -3,7 +3,6 @@ package com.pottda.game.application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -17,9 +16,11 @@ import com.pottda.game.controller.*;
 import com.pottda.game.model.Character;
 import com.pottda.game.model.DeathListener;
 import com.pottda.game.model.EnemyBlueprint;
+import com.pottda.game.model.Item;
 import com.pottda.game.model.ModelActor;
 import com.pottda.game.model.ScoreChangeListener;
 import com.pottda.game.model.Sprites;
+import com.pottda.game.model.Storage;
 import com.pottda.game.model.WaveController;
 import com.pottda.game.model.builders.AbstractModelBuilder;
 import com.pottda.game.model.builders.CharacterBuilder;
@@ -83,14 +84,22 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
 
     private long startWaitGameOver;
     private static final long WAITING_TIME_GAME_OVER_SECONDS = 3;
+    private static final long WAITING_TIME_LABEL_SECONDS = 3;
 
     private static int score;
     private int enemyAmount;
 
-    private Label label;
+    private Label scoreLabel;
     private static final String scoreLabelText = "Score: ";
 
     private static final float SCALING = 2f;
+
+    private Storage storage;
+    private InventoryManagementScreen inventoryManagementScreen;
+
+    private List<ItemDropLabel> itemDropLabelList;
+    private Label.LabelStyle labelStyle;
+    private static final float labelMargin = 3f;
 
     GameScreen(Game game) {
         super(game);
@@ -114,7 +123,11 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
 
         soundsAndMusic = new SoundsAndMusic();
 
+        storage = new Storage();
+
         doOnStartGame();
+
+        inventoryManagementScreen = new InventoryManagementScreen(game, Character.player.inventory, storage);
     }
 
 
@@ -162,8 +175,8 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
                 if (!playersIsAlive()) {
                     startWaitGameOver = System.currentTimeMillis();
                     gameState = GAME_OVER;
-                    label.setPosition(gameOverStage.getWidth() / 2 - label.getWidth(), gameOverStage.getHeight() * 11 / 16);
-                    gameOverStage.addActor(label);
+                    scoreLabel.setPosition(gameOverStage.getWidth() / 2 - scoreLabel.getWidth(), gameOverStage.getHeight() * 11 / 16);
+                    gameOverStage.addActor(scoreLabel);
                 }
                 break;
             case GAME_OVER:
@@ -198,7 +211,7 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
         }
     }
 
-    void doOnStartGame() {
+    private void doOnStartGame() {
         gameState = NONE;
 
         controllers = new HashSet<AbstractController>();
@@ -221,12 +234,15 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
         startMusic();
 
         score = 0;
+
         BitmapFont bf = new BitmapFont();
-        Label.LabelStyle style = new Label.LabelStyle(bf, Color.WHITE);
-        label = new Label(scoreLabelText, style);
-        label.setPosition(hudStage.getWidth() / 6, hudStage.getHeight() - 30);
-        label.setFontScale(1.5f);
-        hudStage.addActor(label);
+        labelStyle = new Label.LabelStyle(bf, Color.WHITE);
+        scoreLabel = new Label(scoreLabelText, labelStyle);
+        scoreLabel.setPosition(hudStage.getWidth() / 6, hudStage.getHeight() - 30);
+        scoreLabel.setFontScale(1.5f);
+        hudStage.addActor(scoreLabel);
+
+        itemDropLabelList = new ArrayList<ItemDropLabel>();
 
         MyXMLReader reader = new MyXMLReader();
         reader.generateXMLAssets();
@@ -312,7 +328,9 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
     }
 
     private void updateWorld(boolean moveCamera) {
-        label.setText(scoreLabelText + score);
+        scoreLabel.setText(scoreLabelText + score);
+
+        updateLabels();
 
         hudView.setHealthbar(Character.player.getCurrentHealth(), Character.player.getMaxHealth());
 
@@ -320,6 +338,48 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
         gameView.render(moveCamera);
         hudStage.draw();
         hudView.render();
+    }
+
+    private void updateLabels() {
+        for (int i = 0; i < itemDropLabelList.size(); i++) {
+            ItemDropLabel itemDropLabel = itemDropLabelList.get(i);
+            final boolean isFadingOut = itemDropLabel.isFadingOut();
+            final boolean isFadingIn = itemDropLabel.isFadingIn();
+            final Label label = itemDropLabel.getLabel();
+            final long time = itemDropLabel.getTimeSinceAppeared();
+
+            if (!isFadingOut && (System.currentTimeMillis() - time) / 1000 > WAITING_TIME_LABEL_SECONDS) {
+                itemDropLabel.setFadeOut(true);
+            }
+            if (isFadingIn) {
+                Color color = label.getColor();
+                if (color.a < 1f) {
+                    label.setColor(color.r, color.g, color.b, color.a + 0.01f);
+                } else {
+                    itemDropLabel.setFadeIn(false);
+                }
+            } else if (isFadingOut) {
+                Color color = label.getColor();
+                if (color.a > 0f) {
+                    label.setColor(color.r, color.g, color.b, color.a - 0.01f);
+                } else {
+                    // Delete once faded out
+                    itemDropLabelList.remove(i);
+                }
+            }
+            if (ControllerOptions.controllerSettings == ControllerOptions.ControllerMode.TOUCH_JOYSTICK) {
+                // Center the labels when using joysticks to prevent fingers/joystick to cover the text
+                label.setPosition(hudStage.getWidth() / 2 - label.getPrefWidth() / 2, label.getPrefHeight() * i);
+            } else {
+                label.setPosition(hudStage.getWidth() - label.getPrefWidth() - labelMargin, label.getPrefHeight() * i);
+            }
+        }
+    }
+
+    private void addItemLabel(String name) {
+        Label label = new Label(name, labelStyle);
+        hudStage.addActor(label);
+        itemDropLabelList.add(new ItemDropLabel(label, System.currentTimeMillis()));
     }
 
     private void spawnEnemies() {
@@ -394,9 +454,16 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
     }
 
     @Override
-    public void onDeath() {
+    public void onDeath(Set<Item> itemDropList) {
         enemyAmount--;
         System.out.println("Enemies alive: " + enemyAmount);
+        for (Item item : itemDropList) {
+            if (item != null) {
+                storage.addItem(item);
+                System.out.println("Added item " + item.getName());
+                addItemLabel(item.getName());
+            }
+        }
     }
 
     // TODO move to a controller class
