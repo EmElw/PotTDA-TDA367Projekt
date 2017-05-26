@@ -469,7 +469,7 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
     private void createPlayer() {
         new CharacterBuilder().
                 setTeam(Character.PLAYER_TEAM).
-                setInventoryFromFile("sizedItemTestInv.xml"). //playerStartInventory
+                setInventoryFromFile("playerStartInventory.xml").
                 setBehaviour(ModelActor.Behaviour.NONE).
                 setPosition(new Vector2f(WIDTH_METERS / 2, HEIGHT_METERS / 2)).
                 setSprite(Sprites.PLAYER).
