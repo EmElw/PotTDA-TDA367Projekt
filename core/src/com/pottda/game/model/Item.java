@@ -208,4 +208,7 @@ public abstract class Item extends ProjectileListenerAdapter {
     private static final int[] b = {0, -1, 0, 1};
     private static final int[] c = {0, 1, 0, -1};
 
+    public String getName() {
+        return name;
+    }
 }

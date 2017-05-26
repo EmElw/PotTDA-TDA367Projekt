@@ -1,7 +1,5 @@
 package com.pottda.game.model;
 
-import com.pottda.game.controller.view.InventoryManagementController;
-
 import java.util.*;
 
 /**
