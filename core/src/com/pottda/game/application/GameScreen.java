@@ -89,13 +89,17 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
     private static int score;
     private int enemyAmount;
 
-    private Label label;
+    private Label scoreLabel;
+    private Label itemDropLabel;
     private static final String scoreLabelText = "Score: ";
 
     private static final float SCALING = 2f;
 
     private Storage storage;
     private InventoryManagementScreen inventoryManagementScreen;
+    private long timeSinceLabelAppeared = 0;
+    private boolean fadeIn = false;
+    private boolean fadeOut = false;
 
     GameScreen(Game game) {
         super(game);
@@ -120,6 +124,10 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
         soundsAndMusic = new SoundsAndMusic();
 
         storage = new Storage();
+
+        timeSinceLabelAppeared = 0;
+        fadeIn = false;
+        fadeOut = false;
 
         doOnStartGame();
 
@@ -171,8 +179,8 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
                 if (!playersIsAlive()) {
                     startWaitGameOver = System.currentTimeMillis();
                     gameState = GAME_OVER;
-                    label.setPosition(gameOverStage.getWidth() / 2 - label.getWidth(), gameOverStage.getHeight() * 11 / 16);
-                    gameOverStage.addActor(label);
+                    scoreLabel.setPosition(gameOverStage.getWidth() / 2 - scoreLabel.getWidth(), gameOverStage.getHeight() * 11 / 16);
+                    gameOverStage.addActor(scoreLabel);
                 }
                 break;
             case GAME_OVER:
@@ -230,12 +238,16 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
         startMusic();
 
         score = 0;
+        // Add score label
         BitmapFont bf = new BitmapFont();
         Label.LabelStyle style = new Label.LabelStyle(bf, Color.WHITE);
-        label = new Label(scoreLabelText, style);
-        label.setPosition(hudStage.getWidth() / 6, hudStage.getHeight() - 30);
-        label.setFontScale(1.5f);
-        hudStage.addActor(label);
+        scoreLabel = new Label(scoreLabelText, style);
+        scoreLabel.setPosition(hudStage.getWidth() / 6, hudStage.getHeight() - 30);
+        scoreLabel.setFontScale(1.5f);
+        hudStage.addActor(scoreLabel);
+
+        itemDropLabel = new Label("", style);
+        hudStage.addActor(itemDropLabel);
 
         MyXMLReader reader = new MyXMLReader();
         reader.generateXMLAssets();
@@ -291,7 +303,26 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
     }
 
     private void updateWorld(boolean moveCamera) {
-        label.setText(scoreLabelText + score);
+        scoreLabel.setText(scoreLabelText + score);
+
+        if (!fadeOut && (System.currentTimeMillis() - timeSinceLabelAppeared) / 1000 > 3) {
+            fadeOut = true;
+        }
+        if (fadeIn) {
+            Color color = itemDropLabel.getColor();
+            if (color.a < 1f) {
+                itemDropLabel.setColor(color.r, color.g, color.b, color.a + 0.01f);
+            } else {
+                fadeIn = false;
+            }
+        } else if (fadeOut) {
+            Color color = itemDropLabel.getColor();
+            if (color.a > 0f) {
+                itemDropLabel.setColor(color.r, color.g, color.b, color.a - 0.01f);
+            } else {
+                fadeOut = false;
+            }
+        }
 
         hudView.setHealthbar(Character.player.getCurrentHealth(), Character.player.getMaxHealth());
 
@@ -376,6 +407,10 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
             if (item != null) {
                 storage.addItem(item);
                 System.out.println("Added item " + item.getName());
+                itemDropLabel.setText(item.getName());
+                itemDropLabel.setPosition(hudStage.getWidth() - itemDropLabel.getPrefWidth(), itemDropLabel.getPrefHeight());
+                timeSinceLabelAppeared = System.currentTimeMillis();
+                fadeIn = true;
             }
         }
     }
