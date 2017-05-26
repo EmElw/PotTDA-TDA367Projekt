@@ -100,6 +100,7 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
     private long startWaitInventory;
 
     private void create() {
+        Gdx.input.setInputProcessor(ControllerOptions.joystickStage);   // TODO clean
         joystickStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
         ControllerOptions.joystickStage = joystickStage;
 
@@ -240,6 +241,7 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
         controllerHookup.addListener(this);
 
         // Set up ModelBuilder with PhysicsActorFactory and ControllerHookup
+        AbstractModelBuilder.clear();
         AbstractModelBuilder.setPhysiscActorFactory(new Box2DPhysicsActorFactory(world));
         AbstractModelBuilder.addListener(controllerHookup);
 

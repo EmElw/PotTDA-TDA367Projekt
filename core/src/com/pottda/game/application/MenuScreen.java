@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.ControllerOptions;
 
+import static com.pottda.game.application.Constants.SKIN_QH;
 import static com.pottda.game.application.GameState.MAIN_MENU;
 import static com.pottda.game.application.GameState.RUNNING;
 import static com.pottda.game.application.GameState.gameState;
@@ -21,8 +22,6 @@ import static com.pottda.game.model.Constants.*;
 
 class MenuScreen extends AbstractScreen {
 
-    // TODO access in nicer way
-    private Skin skin = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
 
     private TextButton startButton;
     private TextButton settingsButton;
@@ -123,7 +122,6 @@ class MenuScreen extends AbstractScreen {
     private void startGame() {
         GameScreen gs = new GameScreen(game);
         gameState = RUNNING;
-        Gdx.input.setInputProcessor(ControllerOptions.joystickStage);   // TODO clean
         switchScreen(gs);
         dispose();
     }
@@ -136,13 +134,16 @@ class MenuScreen extends AbstractScreen {
         {
             Table buttonTable = new Table();
             {
-                startButton = new TextButton("START", skin);
+                startButton = new TextButton("START", SKIN_QH
+                );
                 buttonTable.add(startButton).fillX().row();
 
-                settingsButton = new TextButton("SETTINGS", skin);
+                settingsButton = new TextButton("SETTINGS", SKIN_QH
+                );
                 buttonTable.add(settingsButton).fillX().row();
 
-                quitButton = new TextButton("QUIT", skin);
+                quitButton = new TextButton("QUIT", SKIN_QH
+                );
                 buttonTable.add(quitButton).fillX().row();
             }
             superTable.add(buttonTable).bottom().left().fillX().expand();
@@ -151,28 +152,35 @@ class MenuScreen extends AbstractScreen {
             {
                 settingsTable.setBackground(solidBackground(Constants.bgColor));
 
-                Label sfxVol = new Label("SFX", skin);
+                Label sfxVol = new Label("SFX", SKIN_QH
+                );
                 settingsTable.add(sfxVol).right().uniformX();
 
-                sfxSlider = new Slider(0, 100, 1, false, skin);
+                sfxSlider = new Slider(0, 100, 1, false, SKIN_QH
+                );
 //                sfxSlider.setValue() // TODO set music with sliders
                 settingsTable.add(sfxSlider).left().expandX().fillX().row();
 
-                Label musicVol = new Label("Music", skin);
+                Label musicVol = new Label("Music", SKIN_QH
+                );
                 settingsTable.add(musicVol).right();
 
-                musicSlider = new Slider(0, 100, 1, false, skin);
+                musicSlider = new Slider(0, 100, 1, false, SKIN_QH
+                );
                 settingsTable.add(musicSlider).left().expandX().fillX().row();
 
-                keyboardMouseControlsButton = new TextButton("Keyboard + Mouse", skin);
+                keyboardMouseControlsButton = new TextButton("Keyboard + Mouse", SKIN_QH
+                );
                 settingsTable.add();
                 settingsTable.add(keyboardMouseControlsButton).fillX().row();
 
-                keyboardOnlyControlsButton = new TextButton("Keyboard only", skin);
+                keyboardOnlyControlsButton = new TextButton("Keyboard only", SKIN_QH
+                );
                 settingsTable.add();
                 settingsTable.add(keyboardOnlyControlsButton).fillX().row();
 
-                touchControlsButton = new TextButton("Touch", skin);
+                touchControlsButton = new TextButton("Touch", SKIN_QH
+                );
                 settingsTable.add();
                 settingsTable.add(touchControlsButton).fillX().row();
 

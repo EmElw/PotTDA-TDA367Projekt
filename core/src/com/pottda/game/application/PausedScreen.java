@@ -11,7 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
+import static com.pottda.game.application.Constants.DIVIDER_HEIGHT;
 import static com.pottda.game.application.Constants.PADDING;
+import static com.pottda.game.application.Constants.SKIN_QH;
 import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
 import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 
@@ -19,8 +21,6 @@ class PausedScreen extends AbstractScreen {
 
     private Screen gameScreen;
 
-    // TODO access in nicer way
-    private Skin skin = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
 
     private Slider sfxSlider;
     private Slider musicSlider;
@@ -78,36 +78,44 @@ class PausedScreen extends AbstractScreen {
 
     private void resumeGame() {
         switchScreen(gameScreen);
+        GameState.gameState = GameState.RUNNING;
         dispose();
     }
-
 
     private void setUpUI() {
         Table superTable = new Table();
         superTable.setFillParent(true);
 
         {
-            Label sfxLabel = new Label("SFX", skin);
-            superTable.add(sfxLabel).right().uniformX();
+            Label pauseTitle = new Label("PAUSED", SKIN_QH, "title");
+            superTable.add(pauseTitle).center().fillX().expandX().height(120).row();
 
-            sfxSlider = new Slider(0, 100, 1, false, skin);
-            superTable.add(sfxSlider).left().expandX().row();
+            Label sfxVol = new Label("SFX", SKIN_QH);
+            superTable.add(sfxVol).right().uniformX();
 
-            Label musicLabel = new Label("MUSIC", skin);
-            superTable.add(sfxLabel).right().uniformX();
+            sfxSlider = new Slider(0, 100, 1, false, SKIN_QH);
+//                sfxSlider.setValue() // TODO set music with sliders
+            superTable.add(sfxSlider).left().expandX().fillX();
+            superTable.add().row();
 
-            musicSlider = new Slider(0, 100, 1, false, skin);
-            superTable.add(sfxSlider).left().expandX().row();
+            Label musicVol = new Label("Music", SKIN_QH);
+            superTable.add(musicVol).right();
 
-            resumeButton = new TextButton("RESUME", skin);
+            musicSlider = new Slider(0, 100, 1, false, SKIN_QH);
+            superTable.add(musicSlider).left().expandX().fillX();
+            superTable.add().row();
+
+            // Add a divider
+            superTable.add().height(DIVIDER_HEIGHT).row();
+
+            resumeButton = new TextButton("RESUME", SKIN_QH);
             superTable.add(resumeButton).bottom().left();
 
-            toMenuButton = new TextButton("MAIN MENU", skin);
+            toMenuButton = new TextButton("MAIN MENU", SKIN_QH);
             superTable.add(toMenuButton).bottom().right();
         }
         superTable.pad(PADDING);
         stage.addActor(superTable);
-
     }
 
     @Override
