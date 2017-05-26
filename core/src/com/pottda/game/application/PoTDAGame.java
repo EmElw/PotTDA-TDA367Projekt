@@ -13,6 +13,9 @@ public class PoTDAGame extends Game {
     public void create() {
         Gdx.graphics.setTitle(Constants.GAME_TITLE);
 
+        MyXMLReader reader = new MyXMLReader();
+        reader.generateXMLAssets();
+
         batch = new SpriteBatch();
 
         setScreen(new MenuScreen(this));

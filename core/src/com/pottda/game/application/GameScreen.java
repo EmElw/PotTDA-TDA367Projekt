@@ -60,10 +60,6 @@ class GameScreen extends AbstractScreen {
         world = new World(new Vector2(0, 0), false);
         world.setContactListener(new CollisionListener());
         accumulator = 0;
-
-        MyXMLReader reader = new MyXMLReader();
-        reader.generateXMLAssets();
-
         controllerManager = new ControllerManager();
         ControllerHookup controllerHookup = new ControllerHookup(gameStage, hudStage);
         controllerHookup.addListener(controllerManager);
