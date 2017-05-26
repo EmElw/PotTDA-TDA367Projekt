@@ -99,6 +99,7 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
 
     private List<ItemDropLabel> itemDropLabelList;
     private Label.LabelStyle labelStyle;
+    private static final float labelMargin = 10f;
 
     GameScreen(Game game) {
         super(game);
@@ -336,7 +337,7 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
                     itemDropLabelList.remove(i);
                 }
             }
-            label.setPosition(hudStage.getWidth() - label.getPrefWidth(), label.getPrefHeight() * (i + 1));
+            label.setPosition(hudStage.getWidth() - label.getPrefWidth() - labelMargin, label.getPrefHeight() - labelMargin);
         }
     }
 
