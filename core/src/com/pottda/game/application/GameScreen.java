@@ -59,6 +59,7 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
     private static final int OBSTACLE_AMOUNT = 10;
     private static final float OBSTACLE_MAX_RADIUS = 3f;
     private static final float OBSTACLE_MIN_RADIUS = 0.5f;
+    private static final float OBSTACLE_OFFSET = 1f;
     private Stage hudStage;
     private Stage joystickStage;
     private Stage gameStage;
@@ -253,9 +254,9 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
         float yy;
         float r;
         for (int i = 0; i < OBSTACLE_AMOUNT; i++) {
-            xx = (float) Math.random() * WIDTH_METERS;
-            yy = (float) Math.random() * HEIGHT_METERS;
             r = (float) (Math.random() * (OBSTACLE_MAX_RADIUS - OBSTACLE_MIN_RADIUS)) + OBSTACLE_MIN_RADIUS;
+            xx = (float) Math.random() * (WIDTH_METERS - 2 * r - 2 * OBSTACLE_OFFSET) + r + OBSTACLE_OFFSET;
+            yy = (float) Math.random() * (HEIGHT_METERS - 2 * r - 2 * OBSTACLE_OFFSET) + r + OBSTACLE_OFFSET;
 
             new ObstacleBuilder().
                     setRadius(r).
