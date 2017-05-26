@@ -12,11 +12,13 @@ import javax.vecmath.Vector2f;
 public class ObstacleBuilder extends AbstractModelBuilder implements IObstacleBuilder {
 
     private final Tuple2f size = new Vector2f(0, 0);
+    private Boolean isRound;
 
     @Override
     public ModelActor create() {
         Obstacle obstacle = new Obstacle();
         obstacle.size = this.size;
+        obstacle.isRound = isRound;
         obstacle.setPhysicsActor(physiscActorFactory.getObstaclePhysicsActor(obstacle));
         setCommonAndNotify(obstacle);
         return obstacle;
@@ -27,12 +29,19 @@ public class ObstacleBuilder extends AbstractModelBuilder implements IObstacleBu
     @Override
     public IObstacleBuilder setSize(float width, float heigth) {
         size.set(width, heigth);
+        isRound = false;
         return this;
     }
 
     @Override
     public IObstacleBuilder setSize(Tuple2f dimensions) {
-        size.set(dimensions);
+        return setSize(dimensions.x, dimensions.y);
+    }
+
+    @Override
+    public IObstacleBuilder setRadius(float radius) {
+        size.set(radius, 0);
+        isRound = true;
         return this;
     }
 }

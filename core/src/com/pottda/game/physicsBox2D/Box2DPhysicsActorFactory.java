@@ -8,7 +8,6 @@ import static com.pottda.game.model.ModelActor.ENEMY_TEAM;
 import static com.pottda.game.model.ModelActor.PLAYER_TEAM;
 
 public class Box2DPhysicsActorFactory implements PhysicsActorFactory{
-    // Constants
     private final static float GRAVITY = 0f;
 
     private final static float CHARACTER_LINEAR_DAMPING = 4f;
@@ -57,7 +56,6 @@ public class Box2DPhysicsActorFactory implements PhysicsActorFactory{
 
     @Override
     public PhysicsActor getProjectilePhysicsActor(Projectile projectile) {
-        // Set bounciness of projectile
         if (projectile.isBouncy) {
             projectileFixtureDef.restitution = PROJECTILE_BOUNCINESS_BOUNCY;
         } else {
@@ -75,8 +73,7 @@ public class Box2DPhysicsActorFactory implements PhysicsActorFactory{
             projectileFixtureDef.filter.categoryBits = PROJECTILE_PLAYER_FILTER.categoryBits;
             projectileFixtureDef.filter.maskBits = PROJECTILE_PLAYER_FILTER.maskBits;
         }
-        
-        // Make projectile's body
+
         Body body = world.createBody(projectileBodyDef);
         body.createFixture(projectileFixtureDef);
         body.createFixture(projectileSensorFixtureDef);
@@ -100,8 +97,7 @@ public class Box2DPhysicsActorFactory implements PhysicsActorFactory{
                 characterFixtureDef.filter.maskBits = CHARACTER_ENEMY_FILTER.maskBits;
                 break;
         }
-        
-        // Make character's body
+
         Body body = world.createBody(characterBodyDef);
         body.createFixture(characterFixtureDef);
 
@@ -113,12 +109,16 @@ public class Box2DPhysicsActorFactory implements PhysicsActorFactory{
 
     @Override
     public PhysicsActor getObstaclePhysicsActor(Obstacle obstacle) {
-        // Set size of obstacle
-        PolygonShape tempPolygon = new PolygonShape();
-        tempPolygon.setAsBox(obstacle.size.x / 2, obstacle.size.y / 2);
-        obstacleFixtureDef.shape = tempPolygon;
-        
-        // Make obstacle's body
+        Shape tempShape;
+        if(obstacle.isRound){
+            tempShape = new CircleShape();
+            ((CircleShape)tempShape).setRadius(obstacle.size.getX());
+        } else {
+            tempShape = new PolygonShape();
+            ((PolygonShape)tempShape).setAsBox(obstacle.size.x / 2, obstacle.size.y / 2);
+        }
+        obstacleFixtureDef.shape = tempShape;
+
         Body body = world.createBody(obstacleBodyDef);
         body.createFixture(obstacleFixtureDef);
 
@@ -143,27 +143,27 @@ public class Box2DPhysicsActorFactory implements PhysicsActorFactory{
         PROJECTILE_PIERCING_FILTER.categoryBits = 0x0010;
         OBSTACLE_FILTER.categoryBits = 0x0020;
 
-        // Player collides with Enemy Character and Projectile and obstacle
+        // Player collides with Enemy Character and Projectile, and Obstacle
         CHARACTER_PLAYER_FILTER.maskBits = (short) (CHARACTER_PLAYER_FILTER.categoryBits |
                 CHARACTER_ENEMY_FILTER.categoryBits |
                 PROJECTILE_ENEMY_FILTER.categoryBits |
                 OBSTACLE_FILTER.categoryBits);
 
-        // Enemy collides with itself, Player Character, Projectile and obstacle
+        // Enemy collides with itself, Player Character and Projectile, and Obstacle
         CHARACTER_ENEMY_FILTER.maskBits = (short)(CHARACTER_PLAYER_FILTER.categoryBits |
                 CHARACTER_ENEMY_FILTER.categoryBits |
                 PROJECTILE_PLAYER_FILTER.categoryBits |
                 OBSTACLE_FILTER.categoryBits);
 
-        // Player Projectile collides with Enemy Character and obstacle
+        // Player Projectile collides with Enemy Character and Obstacle
         PROJECTILE_PLAYER_FILTER.maskBits = (short) (CHARACTER_ENEMY_FILTER.categoryBits |
                 OBSTACLE_FILTER.categoryBits);
 
-        // Enemy Projectile collides with Player Character and obstacle
+        // Enemy Projectile collides with Player Character and Obstacle
         PROJECTILE_ENEMY_FILTER.maskBits = (short) (CHARACTER_PLAYER_FILTER.categoryBits |
                 OBSTACLE_FILTER.categoryBits);
 
-        // Projectiles with the 'piercing' flag only collide with the terrain and obstacle
+        // Projectiles with the 'piercing' flag only collide with Obstacle
         PROJECTILE_PIERCING_FILTER.maskBits = OBSTACLE_FILTER.categoryBits;
 
         // Obstacles collide with everything
