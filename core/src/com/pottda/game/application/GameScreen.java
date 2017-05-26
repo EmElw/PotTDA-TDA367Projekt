@@ -90,16 +90,15 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
     private int enemyAmount;
 
     private Label scoreLabel;
-    private Label itemDropLabel;
     private static final String scoreLabelText = "Score: ";
 
     private static final float SCALING = 2f;
 
     private Storage storage;
     private InventoryManagementScreen inventoryManagementScreen;
-    private long timeSinceLabelAppeared = 0;
-    private boolean fadeIn = false;
-    private boolean fadeOut = false;
+
+    private List<ItemDropLabel> itemDropLabelList;
+    private Label.LabelStyle labelStyle;
 
     GameScreen(Game game) {
         super(game);
@@ -124,10 +123,6 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
         soundsAndMusic = new SoundsAndMusic();
 
         storage = new Storage();
-
-        timeSinceLabelAppeared = 0;
-        fadeIn = false;
-        fadeOut = false;
 
         doOnStartGame();
 
@@ -240,14 +235,13 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
         score = 0;
         // Add score label
         BitmapFont bf = new BitmapFont();
-        Label.LabelStyle style = new Label.LabelStyle(bf, Color.WHITE);
-        scoreLabel = new Label(scoreLabelText, style);
+        labelStyle = new Label.LabelStyle(bf, Color.WHITE);
+        scoreLabel = new Label(scoreLabelText, labelStyle);
         scoreLabel.setPosition(hudStage.getWidth() / 6, hudStage.getHeight() - 30);
         scoreLabel.setFontScale(1.5f);
         hudStage.addActor(scoreLabel);
 
-        itemDropLabel = new Label("", style);
-        hudStage.addActor(itemDropLabel);
+        itemDropLabelList = new ArrayList<ItemDropLabel>();
 
         MyXMLReader reader = new MyXMLReader();
         reader.generateXMLAssets();
@@ -305,24 +299,7 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
     private void updateWorld(boolean moveCamera) {
         scoreLabel.setText(scoreLabelText + score);
 
-        if (!fadeOut && (System.currentTimeMillis() - timeSinceLabelAppeared) / 1000 > 3) {
-            fadeOut = true;
-        }
-        if (fadeIn) {
-            Color color = itemDropLabel.getColor();
-            if (color.a < 1f) {
-                itemDropLabel.setColor(color.r, color.g, color.b, color.a + 0.01f);
-            } else {
-                fadeIn = false;
-            }
-        } else if (fadeOut) {
-            Color color = itemDropLabel.getColor();
-            if (color.a > 0f) {
-                itemDropLabel.setColor(color.r, color.g, color.b, color.a - 0.01f);
-            } else {
-                fadeOut = false;
-            }
-        }
+        updateLabels();
 
         hudView.setHealthbar(Character.player.getCurrentHealth(), Character.player.getMaxHealth());
 
@@ -330,6 +307,43 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
         gameView.render(moveCamera);
         hudStage.draw();
         hudView.render();
+    }
+
+    private void updateLabels() {
+        for (int i = 0; i < itemDropLabelList.size(); i++) {
+            ItemDropLabel itemDropLabel = itemDropLabelList.get(i);
+            final boolean isFadingOut = itemDropLabel.isFadingOut();
+            final boolean isFadingIn = itemDropLabel.isFadingIn();
+            final Label label = itemDropLabel.getLabel();
+            final long time = itemDropLabel.getTimeSinceAppeared();
+
+            if (!isFadingOut && (System.currentTimeMillis() - time) / 1000 > 3) {
+                itemDropLabel.setFadeOut(true);
+            }
+            if (isFadingIn) {
+                Color color = label.getColor();
+                if (color.a < 1f) {
+                    label.setColor(color.r, color.g, color.b, color.a + 0.01f);
+                } else {
+                    itemDropLabel.setFadeIn(false);
+                }
+            } else if (isFadingOut) {
+                Color color = label.getColor();
+                if (color.a > 0f) {
+                    label.setColor(color.r, color.g, color.b, color.a - 0.01f);
+                } else {
+                    // Delete once faded out
+                    itemDropLabelList.remove(i);
+                }
+            }
+            label.setPosition(hudStage.getWidth() - label.getPrefWidth(), label.getPrefHeight() * (i + 1));
+        }
+    }
+
+    private void addItemLabel(String name) {
+        Label label = new Label(name, labelStyle);
+        hudStage.addActor(label);
+        itemDropLabelList.add(new ItemDropLabel(label, System.currentTimeMillis()));
     }
 
     private void spawnEnemies() {
@@ -407,10 +421,7 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
             if (item != null) {
                 storage.addItem(item);
                 System.out.println("Added item " + item.getName());
-                itemDropLabel.setText(item.getName());
-                itemDropLabel.setPosition(hudStage.getWidth() - itemDropLabel.getPrefWidth(), itemDropLabel.getPrefHeight());
-                timeSinceLabelAppeared = System.currentTimeMillis();
-                fadeIn = true;
+                addItemLabel(item.getName());
             }
         }
     }
@@ -457,7 +468,7 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
     private void createPlayer() {
         new CharacterBuilder().
                 setTeam(Character.PLAYER_TEAM).
-                setInventoryFromFile("playerStartInventory.xml").
+                setInventoryFromFile("sizedItemTestInv.xml"). //playerStartInventory
                 setBehaviour(ModelActor.Behaviour.NONE).
                 setPosition(new Vector2f(WIDTH_METERS / 2, HEIGHT_METERS / 2)).
                 setSprite(Sprites.PLAYER).
