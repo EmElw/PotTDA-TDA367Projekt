@@ -5,5 +5,5 @@
     <difficulty>3</difficulty>
     <behaviour>STATIONARY</behaviour>
     <inventoryname>watchTowerInventory.xml</inventoryname>
-    <spriteenum>ENEMY</spriteenum>
+    <spriteenum>WATCH_TOWER</spriteenum>
 </enemy>
