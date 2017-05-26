@@ -13,10 +13,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.pottda.game.controller.AbstractController;
-import com.pottda.game.controller.ControllerHookup;
-import com.pottda.game.controller.ControllerOptions;
-import com.pottda.game.controller.NewControllerListener;
+import com.pottda.game.controller.*;
 import com.pottda.game.model.Character;
 import com.pottda.game.model.DeathListener;
 import com.pottda.game.model.EnemyBlueprint;
@@ -352,6 +349,10 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
     private void prepareForRemoval(AbstractController controller) {
         controller.getModel().getPhysicsActor().destroyBody();
         controller.getView().remove();
+        if (controller instanceof AIController) {
+            ((AIController) controller).getEnemyHealthBarController().getRedView().remove();
+            ((AIController) controller).getEnemyHealthBarController().getFrameView().remove();
+        }
         controllerRemovalBuffer.add(controller);
     }
 

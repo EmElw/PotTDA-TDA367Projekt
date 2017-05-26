@@ -20,6 +20,8 @@ import java.util.List;
  */
 public class ControllerHookup implements NewModelListener {
 
+    private static final float HEALTHBAR_WIDTH = 1;
+    private static final float HEALTHBAR_HEIGHT = 0.2f;
     private final Stage stage;
 
     public ControllerHookup(Stage stage) {
@@ -35,6 +37,7 @@ public class ControllerHookup implements NewModelListener {
     @Override
     public void onNewModel(ModelActor m) {
         ActorView view = null;
+        EnemyHealthBarController enemyHealthBarController = null;
 
         AbstractController controller = null;
         if (m instanceof Projectile) {
@@ -45,7 +48,8 @@ public class ControllerHookup implements NewModelListener {
             if (m.team == Character.PLAYER_TEAM) {
                 controller = createInputController(m, view);
             } else if (m.team == Character.ENEMY_TEAM) {
-                controller = createController(m, view);
+                enemyHealthBarController = new EnemyHealthBarController(HEALTHBAR_WIDTH, HEALTHBAR_HEIGHT, ((Character) m).getMaxHealth());
+                controller = createController(m, view, enemyHealthBarController);
             }
         } else if (m instanceof Obstacle) {
             if (((Obstacle) m).isRound) {
@@ -60,6 +64,10 @@ public class ControllerHookup implements NewModelListener {
 
         try {
             stage.addActor(view);
+            if (enemyHealthBarController != null) {
+                stage.addActor(enemyHealthBarController.getRedView());
+                stage.addActor(enemyHealthBarController.getFrameView());
+            }
             notifyListeners(controller);
         } catch (NullPointerException e) {
             throw new Error("couldn't handle model-type", e);
@@ -72,14 +80,14 @@ public class ControllerHookup implements NewModelListener {
         }
     }
 
-    private AbstractController createController(ModelActor m, ActorView view) {
+    private AbstractController createController(ModelActor m, ActorView view, EnemyHealthBarController enemyHealthBarController) {
         switch (m.behaviour) {
             case NONE:
                 break;
             case DUMB:
-                return new DumbAIController(m, view);
+                return new DumbAIController(m, view, enemyHealthBarController);
             case STATIONARY:
-                return new StationaryAIController(m, view);
+                return new StationaryAIController(m, view, enemyHealthBarController);
         }
         throw new Error("Missing controller setup for behaviour: " + m.behaviour.toString());
     }

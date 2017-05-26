@@ -19,7 +19,7 @@ public class ActorView extends Image {
      *
      * @param texture the texture to set as image
      */
-    private ActorView(Texture texture) {
+    public ActorView(Texture texture) {
         super(new TextureRegionDrawable(new TextureRegion(texture)));
         this.texture = texture;
         // set the rotation point to middle of image
