@@ -253,14 +253,39 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
         float xx;
         float yy;
         float r;
+        Vector2f tempPosition;
+
+        Boolean validLocation;
+
+        List<Vector2f> positions = new ArrayList<Vector2f>();
         for (int i = 0; i < OBSTACLE_AMOUNT; i++) {
-            r = (float) (Math.random() * (OBSTACLE_MAX_RADIUS - OBSTACLE_MIN_RADIUS)) + OBSTACLE_MIN_RADIUS;
-            xx = (float) Math.random() * (WIDTH_METERS - 2 * r - 2 * OBSTACLE_OFFSET) + r + OBSTACLE_OFFSET;
-            yy = (float) Math.random() * (HEIGHT_METERS - 2 * r - 2 * OBSTACLE_OFFSET) + r + OBSTACLE_OFFSET;
+            tempPosition = new Vector2f();
+            do {
+                r = (float) (Math.random() * (OBSTACLE_MAX_RADIUS - OBSTACLE_MIN_RADIUS)) + OBSTACLE_MIN_RADIUS;
+                xx = (float) Math.random() * (WIDTH_METERS - 2 * r - 2 * OBSTACLE_OFFSET) + r + OBSTACLE_OFFSET;
+                yy = (float) Math.random() * (HEIGHT_METERS - 2 * r - 2 * OBSTACLE_OFFSET) + r + OBSTACLE_OFFSET;
+
+                if(i == 0){
+                    validLocation = true;
+                } else {
+                    validLocation = true;
+                    for(int j = 0; j < i; j++){
+                        tempPosition.set(xx, yy);
+                        tempPosition.sub(positions.get(j));
+                        if(tempPosition.length() < 2 * OBSTACLE_MAX_RADIUS + OBSTACLE_OFFSET){
+                            validLocation = false;
+                            break;
+                        }
+                    }
+                }
+            }while (!validLocation);
+
+            tempPosition.set(xx, yy);
+            positions.add(tempPosition);
 
             new ObstacleBuilder().
                     setRadius(r).
-                    setPosition(new Vector2f(xx, yy)).
+                    setPosition(tempPosition).
                     setSprite(Sprites.BORDER).
                     create();
         }
