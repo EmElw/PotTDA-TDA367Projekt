@@ -351,10 +351,10 @@ public class InventoryManagementView {
             // TODO fix vectors pls
             // Vector2 vector = itemImage.localToParentCoordinates(new Vector2(itemImage.getOriginX(), itemImage.getOriginY()));
 
-            final float xTable = inventoryTable.getX()+50;
-            final float yTable = inventoryTable.getY()+50;
+            final float xTable = inventoryTable.getX() + 50;
+            final float yTable = inventoryTable.getY() + 50;
 
-            setPosition(200,200);
+            setPosition(200, 200);
 
             inventoryGroup.addActor(this);
 
@@ -372,9 +372,17 @@ public class InventoryManagementView {
                 }
 
                 public void touchDragged(InputEvent event, float x, float y, int pointer) {
+                    float extraY = 0f;
+                    float extraX = 0f;
+                    if (itemImage.getPrefHeight() / 25 % 2 != 0) {
+                        extraY = 25f / 2f;
+                    }
+                    if (itemImage.getPrefWidth() / 25 % 2 != 0) {
+                        extraX = 25f / 2f;
+                    }
                     setPosition(
-                            ((int)(getX() + x - xOffset)/25)*25,
-                            ((int)(getY() + y - yOffset)/25)*25);
+                            ((int) (getX() + x - xOffset) / 25) * 25 + extraX,
+                            ((int) (getY() + y - yOffset) / 25) * 25 + extraY);
                     // TODO validate if the new coordinates are legal inside the inventory (send event to the listener if they are at all within inventory?)
                     /*for (InventoryManagementListener iml : listeners) {
 
@@ -398,7 +406,7 @@ public class InventoryManagementView {
                     return true;
                 }
             });
-            discardButton.addListener(new InputListener(){
+            discardButton.addListener(new InputListener() {
                 @Override
                 public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
                     clearChildren();
