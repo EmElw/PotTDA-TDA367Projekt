@@ -40,9 +40,16 @@ public class EnemyHealthBarController {
     }
 
     public void setHealth(int currentHealth) {
+        if(currentHealth == maxHealth){
+            redView.setVisible(false);
+            frameView.setVisible(false);
+        } else {
+            redView.setVisible(true);
+            frameView.setVisible(true);
+        }
+
         if (currentHealth != lastHealth) {
-            redView.scaleBy(1 - redView.getScaleX(), 0);
-            redView.scaleBy((currentHealth / ((float) maxHealth)) - 1f, 0);
+            redView.setScale((currentHealth / ((float) maxHealth)), 1);
             lastHealth = currentHealth;
         }
     }
