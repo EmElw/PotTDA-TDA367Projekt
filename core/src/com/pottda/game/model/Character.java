@@ -94,7 +94,7 @@ public class Character extends ModelActor implements InventoryChangeListener {
     }
 
     public int getMaxHealth() {
-        return (int)stats.get(HEALTH).floatValue();
+        return (int) stats.get(HEALTH).floatValue();
     }
 
     @Override
@@ -120,5 +120,9 @@ public class Character extends ModelActor implements InventoryChangeListener {
 
     public void setDeathListeners(List<DeathListener> deathListeners) {
         this.deathListeners = deathListeners;
+    }
+
+    public void addDeathListener(DeathListener listener) {
+        deathListeners.add(listener);
     }
 }
