@@ -3,7 +3,6 @@ package com.pottda.game.application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -21,11 +20,6 @@ import static com.pottda.game.application.GameState.gameState;
 import static com.pottda.game.model.Constants.*;
 
 class MenuScreen extends AbstractScreen {
-    private final static int PADDING = 40;
-    private final static Color bgColor = new Color(0xDACC09FF);
-
-    private Stage stage;
-    private OrthographicCamera camera;
 
     // TODO access in nicer way
     private Skin skin = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
@@ -51,7 +45,7 @@ class MenuScreen extends AbstractScreen {
 
     private void create() {
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, WIDTH_VIEWPORT, HEIGHT_VIEWPORT);
+        ((OrthographicCamera) camera).setToOrtho(false, WIDTH_VIEWPORT, HEIGHT_VIEWPORT);
 
         stage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
         stage.setDebugAll(true);
@@ -138,7 +132,7 @@ class MenuScreen extends AbstractScreen {
 
         Table superTable = new Table();
         superTable.setFillParent(true);
-        superTable.pad(PADDING);
+        superTable.pad(Constants.PADDING);
         {
             Table buttonTable = new Table();
             {
@@ -155,7 +149,7 @@ class MenuScreen extends AbstractScreen {
 
             settingsTable = new Table();
             {
-                settingsTable.setBackground(solidBackground(bgColor));
+                settingsTable.setBackground(solidBackground(Constants.bgColor));
 
                 Label sfxVol = new Label("SFX", skin);
                 settingsTable.add(sfxVol).right().uniformX();
@@ -227,18 +221,4 @@ class MenuScreen extends AbstractScreen {
         return new TextureRegionDrawable(new TextureRegion(tex));
     }
 
-    @Override
-    public void render(SpriteBatch batch, float delta) {
-        Gdx.gl.glClearColor(0, 0, 0.2f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        camera.update();
-        batch.setProjectionMatrix(camera.combined);
-
-        batch.begin();
-        stage.act(delta);
-        stage.draw();
-        batch.end();
-
-    }
 }

@@ -2,117 +2,122 @@ package com.pottda.game.application;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.pottda.game.view.OptionsView;
-import com.pottda.game.view.PausedView;
-import com.pottda.game.view.SoundsAndMusic;
 
-import static com.pottda.game.application.GameState.OPTIONS;
-import static com.pottda.game.application.GameState.PAUSED;
-import static com.pottda.game.application.GameState.RUNNING;
-import static com.pottda.game.application.GameState.gameState;
+import static com.pottda.game.application.Constants.PADDING;
 import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
 import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 
 class PausedScreen extends AbstractScreen {
-    private Stage pausedStage;
-    private Stage optionsStage;
 
-    private PausedView pausedView;
-    private OptionsView optionsView;
-
-    private final SoundsAndMusic soundsAndMusic;
     private Screen gameScreen;
+
+    // TODO access in nicer way
+    private Skin skin = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
+
+    private Slider sfxSlider;
+    private Slider musicSlider;
+    private TextButton resumeButton;
+    private TextButton toMenuButton;
 
     PausedScreen(Game game, GameScreen gameScreen) {
         super(game);
         this.gameScreen = gameScreen;
-        soundsAndMusic = gameScreen.getSoundsAndMusic();
         create();
     }
 
     private void create() {
-        pausedStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
-        optionsStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
-        pausedView = new PausedView(pausedStage);
-        optionsView = new OptionsView(optionsStage);
+        camera = new OrthographicCamera();
+        ((OrthographicCamera) camera).setToOrtho(false, WIDTH_VIEWPORT, HEIGHT_VIEWPORT);
+
+        stage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
+        stage.setDebugAll(true);
+        Gdx.input.setInputProcessor(stage);
+
+        setUpUI();
+
+        resumeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                resumeGame();
+            }
+        });
+        toMenuButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                toMainMenu();
+            }
+        });
+
+        sfxSlider.addListener(new DragListener() {
+            @Override
+            public void drag(InputEvent event, float x, float y, int pointer) {
+                // setSfxVolume(x / getWidth); // TODO set volume
+            }
+        });
+        musicSlider.addListener(new DragListener() {
+            @Override
+            public void drag(InputEvent event, float x, float y, int pointer) {
+                // setMusicVolume(x / getWidth); // TODO set volume
+            }
+        });
+    }
+
+    private void toMainMenu() {
+        // TODO decide about this
+        switchScreen(new MenuScreen(game));
+        dispose();
+    }
+
+    private void resumeGame() {
+        switchScreen(gameScreen);
+        dispose();
+    }
+
+
+    private void setUpUI() {
+        Table superTable = new Table();
+        superTable.setFillParent(true);
+
+        {
+            Label sfxLabel = new Label("SFX", skin);
+            superTable.add(sfxLabel).right().uniformX();
+
+            sfxSlider = new Slider(0, 100, 1, false, skin);
+            superTable.add(sfxSlider).left().expandX().row();
+
+            Label musicLabel = new Label("MUSIC", skin);
+            superTable.add(sfxLabel).right().uniformX();
+
+            musicSlider = new Slider(0, 100, 1, false, skin);
+            superTable.add(sfxSlider).left().expandX().row();
+
+            resumeButton = new TextButton("RESUME", skin);
+            superTable.add(resumeButton).bottom().left();
+
+            toMenuButton = new TextButton("MAIN MENU", skin);
+            superTable.add(toMenuButton).bottom().right();
+        }
+        superTable.pad(PADDING);
+        stage.addActor(superTable);
+
     }
 
     @Override
     public void resize(int width, int height) {
-        optionsStage.getViewport().update(width, height, false);
-        pausedStage.getViewport().update(width, height, false);
+        stage.getViewport().update(width, height, false);
     }
 
-
-    @Override
-    public void render(SpriteBatch batch, float delta) {
-        switch (gameState) {
-            case PAUSED:
-                // Draw the pause menu
-                pausedView.render();
-                break;
-            case OPTIONS:
-                // Draw the options menu
-                optionsView.render();
-                break;
-        }
-
-        checkTouch();
-
-    }
 
     @Override
     public void dispose() {
-        pausedStage.dispose();
-        optionsStage.dispose();
+        stage.dispose();
     }
-
-    private void checkTouch() { // TODO move to a controller class
-        if (Gdx.input.justTouched()) { // Only check first touch
-            // Get hudStage camera and unproject to get correct coordinates!
-            Vector3 vector3 = pausedStage.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-            switch (gameState) {
-                case PAUSED:
-                    if (pausedView.checkIfTouchingPauseResume(vector3)) {
-                        // Touching pause resume
-                        switchScreen(gameScreen);
-                        gameState = RUNNING;
-                    } else if (pausedView.checkIfTouchingPauseOptions(vector3)) {
-                        // Touching pause options
-                        gameState = OPTIONS;
-                    } else if (pausedView.checkIfTouchingPauseQuit(vector3)) {
-                        // Touching pause quit
-                        Gdx.app.exit();
-                    }
-                    break;
-                case OPTIONS:
-                    if (optionsView.checkIfTouchingOptionsReturn(vector3)) {
-                        // Touched
-                        gameState = PAUSED;
-                    } else if (optionsView.checkIfTouchingOptionsMusic(vector3)) {
-                        soundsAndMusic.setMusicVolume(optionsView.getNewMusicVolume(vector3));
-                    } else if (optionsView.checkIfTouchingOptionsSFX(vector3)) {
-                        soundsAndMusic.setSFXVolume(optionsView.getNewSFXVolume(vector3));
-                    }
-                    break;
-            }
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            switch (gameState) {
-                case PAUSED:
-                    gameState = RUNNING;
-                    break;
-                case OPTIONS:
-                    gameState = PAUSED;
-                    break;
-            }
-        }
-    }
-
 }
