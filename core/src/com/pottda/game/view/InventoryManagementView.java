@@ -339,22 +339,26 @@ public class InventoryManagementView {
                     (float) ((0.5 - negativeOffset.x) * SIZE),
                     (float) ((0.5 - negativeOffset.y) * SIZE));
 
-            this.add(discardButton).left().size(25);
-            this.add(acceptButton).right().size(25);
+            this.add(discardButton).left().size(SIZE);
+            this.add(acceptButton).right().size(SIZE);
             this.row();
             this.add(itemImage).center().colspan(2)
-                    .width(itemImage.getWidth()).height(itemImage.getHeight()).pad(10);
+                    .width(itemImage.getWidth()).height(itemImage.getHeight());
             this.row();
-            this.add(rotateLeftButton).left().size(25);
-            this.add(rotateRightButton).right().size(25);
-            this.setPosition(200, 200);
+            this.add(rotateLeftButton).left().size(SIZE);
+            this.add(rotateRightButton).right().size(SIZE);
 
             // TODO fix vectors pls
-            Vector2 vector = new Vector2(itemImage.localToParentCoordinates(
-                    new Vector2(itemImage.getOriginX(), itemImage.getOriginY())));
-            setOrigin(vector.x, vector.y);
+            // Vector2 vector = itemImage.localToParentCoordinates(new Vector2(itemImage.getOriginX(), itemImage.getOriginY()));
+
+            final float xTable = inventoryTable.getX()+50;
+            final float yTable = inventoryTable.getY()+50;
+
+            setPosition(200,200);
+
             inventoryGroup.addActor(this);
 
+            //final Vector2 finalVector = vector;
             addListener(new InputListener() {
                 // Used to keep 0,0 relative distance to touch coordinate constant
                 float xOffset;
@@ -371,8 +375,6 @@ public class InventoryManagementView {
                     setPosition(
                             ((int)(getX() + x - xOffset)/25)*25,
                             ((int)(getY() + y - yOffset)/25)*25);
-                    localToParentCoordinates(new Vector2(getOriginX(),getOriginY()));
-
                     // TODO validate if the new coordinates are legal inside the inventory (send event to the listener if they are at all within inventory?)
                     /*for (InventoryManagementListener iml : listeners) {
 
@@ -396,7 +398,6 @@ public class InventoryManagementView {
                     return true;
                 }
             });
-
             discardButton.addListener(new InputListener(){
                 @Override
                 public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
