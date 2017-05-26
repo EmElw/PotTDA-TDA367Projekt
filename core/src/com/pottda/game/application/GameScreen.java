@@ -100,7 +100,7 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
 
     private List<ItemDropLabel> itemDropLabelList;
     private Label.LabelStyle labelStyle;
-    private static final float labelMargin = 10f;
+    private static final float labelMargin = 3f;
 
     GameScreen(Game game) {
         super(game);
@@ -235,7 +235,7 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
         startMusic();
 
         score = 0;
-        // Add score label
+
         BitmapFont bf = new BitmapFont();
         labelStyle = new Label.LabelStyle(bf, Color.WHITE);
         scoreLabel = new Label(scoreLabelText, labelStyle);
@@ -340,9 +340,9 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
             }
             if (ControllerOptions.controllerSettings == ControllerOptions.ControllerMode.TOUCH_JOYSTICK) {
                 // Center the labels when using joysticks to prevent fingers/joystick to cover the text
-                label.setPosition(hudStage.getWidth() / 2 - label.getPrefWidth() / 2, label.getPrefHeight() - labelMargin);
+                label.setPosition(hudStage.getWidth() / 2 - label.getPrefWidth() / 2, label.getPrefHeight() * i);
             } else {
-                label.setPosition(hudStage.getWidth() - label.getPrefWidth() - labelMargin, label.getPrefHeight() - labelMargin);
+                label.setPosition(hudStage.getWidth() - label.getPrefWidth() - labelMargin, label.getPrefHeight() * i);
             }
         }
     }
