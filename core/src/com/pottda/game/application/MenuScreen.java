@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pottda.game.controller.ControllerOptions;
 
 import static com.pottda.game.application.Constants.SKIN_QH;
@@ -46,12 +47,10 @@ class MenuScreen extends AbstractScreen {
         camera = new OrthographicCamera();
         ((OrthographicCamera) camera).setToOrtho(false, WIDTH_VIEWPORT, HEIGHT_VIEWPORT);
 
-        stage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
+        stage = new MenuStage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
         stage.setDebugAll(true);
         Gdx.input.setInputProcessor(stage);
 
-        // Initiates UI and sets the fields of the actor with logic
-        setUpUI();
 
         // Actor logic is here
         startButton.addListener(new ClickListener() {
@@ -126,66 +125,6 @@ class MenuScreen extends AbstractScreen {
         dispose();
     }
 
-    private void setUpUI() {
-
-        Table superTable = new Table();
-        superTable.setFillParent(true);
-        superTable.pad(Constants.PADDING);
-        {
-            Table buttonTable = new Table();
-            {
-                startButton = new TextButton("START", SKIN_QH);
-                buttonTable.add(startButton).fillX().row();
-
-                settingsButton = new TextButton("SETTINGS", SKIN_QH);
-                buttonTable.add(settingsButton).fillX().row();
-
-                quitButton = new TextButton("QUIT", SKIN_QH);
-                buttonTable.add(quitButton).fillX().row();
-            }
-            superTable.add(buttonTable).bottom().left().fillX().expand();
-
-            settingsTable = new Table();
-            {
-                settingsTable.setBackground(solidBackground(Constants.bgColor));
-
-                Label sfxVol = new Label("SFX", SKIN_QH);
-                settingsTable.add(sfxVol).right().uniformX();
-
-                sfxSlider = new Slider(0, 100, 1, false, SKIN_QH);
-//                sfxSlider.setValue() // TODO set music with sliders
-                settingsTable.add(sfxSlider).left().expandX().fillX().row();
-
-                Label musicVol = new Label("Music", SKIN_QH);
-                settingsTable.add(musicVol).right();
-
-                musicSlider = new Slider(0, 100, 1, false, SKIN_QH);
-                settingsTable.add(musicSlider).left().expandX().fillX().row();
-
-                keyboardMouseControlsButton = new TextButton("Keyboard + Mouse", SKIN_QH);
-                settingsTable.add();
-                settingsTable.add(keyboardMouseControlsButton).fillX().row();
-
-                keyboardOnlyControlsButton = new TextButton("Keyboard only", SKIN_QH);
-                settingsTable.add();
-                settingsTable.add(keyboardOnlyControlsButton).fillX().row();
-
-                touchControlsButton = new TextButton("Touch", SKIN_QH);
-                settingsTable.add();
-                settingsTable.add(touchControlsButton).fillX().row();
-
-                ButtonGroup<TextButton> controlButtons = new ButtonGroup<TextButton>(keyboardMouseControlsButton, keyboardOnlyControlsButton, touchControlsButton);
-                controlButtons.setChecked("Keyboard + Mouse");
-
-                checkControlButton();
-
-                settingsTable.invalidateHierarchy();
-            }
-            superTable.add(settingsTable).bottom().right().fillX().expand();
-        }
-        stage.addActor(superTable);
-    }
-
     private void checkControlButton() {
         switch (ControllerOptions.controllerSettings) {
             case TOUCH_JOYSTICK:
@@ -219,4 +158,71 @@ class MenuScreen extends AbstractScreen {
         return new TextureRegionDrawable(new TextureRegion(tex));
     }
 
+    private class MenuStage extends Stage {
+
+        public MenuStage(Viewport viewport) {
+            super(viewport);
+            initActors();
+        }
+
+        private void initActors() {
+
+            Table superTable = new Table();
+            superTable.setFillParent(true);
+            superTable.pad(Constants.PADDING);
+            {
+                Table buttonTable = new Table();
+                {
+                    startButton = new TextButton("START", SKIN_QH);
+                    buttonTable.add(startButton).fillX().row();
+
+                    settingsButton = new TextButton("SETTINGS", SKIN_QH);
+                    buttonTable.add(settingsButton).fillX().row();
+
+                    quitButton = new TextButton("QUIT", SKIN_QH);
+                    buttonTable.add(quitButton).fillX().row();
+                }
+                superTable.add(buttonTable).bottom().left().fillX().expand();
+
+                settingsTable = new Table();
+                {
+                    settingsTable.setBackground(solidBackground(Constants.bgColor));
+
+                    Label sfxVol = new Label("SFX", SKIN_QH);
+                    settingsTable.add(sfxVol).right().uniformX();
+
+                    sfxSlider = new Slider(0, 100, 1, false, SKIN_QH);
+//                sfxSlider.setValue() // TODO set music with sliders
+                    settingsTable.add(sfxSlider).left().expandX().fillX().row();
+
+                    Label musicVol = new Label("Music", SKIN_QH);
+                    settingsTable.add(musicVol).right();
+
+                    musicSlider = new Slider(0, 100, 1, false, SKIN_QH);
+                    settingsTable.add(musicSlider).left().expandX().fillX().row();
+
+                    keyboardMouseControlsButton = new TextButton("Keyboard + Mouse", SKIN_QH);
+                    settingsTable.add();
+                    settingsTable.add(keyboardMouseControlsButton).fillX().row();
+
+                    keyboardOnlyControlsButton = new TextButton("Keyboard only", SKIN_QH);
+                    settingsTable.add();
+                    settingsTable.add(keyboardOnlyControlsButton).fillX().row();
+
+                    touchControlsButton = new TextButton("Touch", SKIN_QH);
+                    settingsTable.add();
+                    settingsTable.add(touchControlsButton).fillX().row();
+
+                    ButtonGroup<TextButton> controlButtons = new ButtonGroup<TextButton>(keyboardMouseControlsButton, keyboardOnlyControlsButton, touchControlsButton);
+                    controlButtons.setChecked("Keyboard + Mouse");
+
+                    checkControlButton();
+
+                    settingsTable.invalidateHierarchy();
+                }
+                superTable.add(settingsTable).bottom().right().fillX().expand();
+            }
+            addActor(superTable);
+        }
+    }
 }

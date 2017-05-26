@@ -55,7 +55,7 @@ import static com.pottda.game.model.Constants.HEIGHT_METERS;
 import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 import static com.pottda.game.model.Constants.WIDTH_METERS;
 
-class GameScreen extends AbstractScreenimplements NewControllerListener, ScoreChangeListener, DeathListener {private static final int OBSTACLE_AMOUNT = 10;
+class GameScreen extends AbstractScreen implements NewControllerListener, ScoreChangeListener, DeathListener {
     private static final int OBSTACLE_AMOUNT = 10;
     private static final float OBSTACLE_MAX_RADIUS = 3f;
     private static final float OBSTACLE_MIN_RADIUS = 0.5f;
@@ -170,7 +170,7 @@ class GameScreen extends AbstractScreenimplements NewControllerListener, ScoreCh
             case GAME_OVER:
                 final long currentTime = System.currentTimeMillis();
                 if ((currentTime - startWaitGameOver) / 1000 >= WAITING_TIME_GAME_OVER_SECONDS) {
-                    switchScreen(new GameOverScreen(game,score));
+                    switchScreen(new GameOverScreen(game, score));
                     dispose();
                 } else {
                     updateGame();
