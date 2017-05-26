@@ -60,6 +60,7 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
     private static final float OBSTACLE_MAX_RADIUS = 3f;
     private static final float OBSTACLE_MIN_RADIUS = 0.5f;
     private static final float OBSTACLE_OFFSET = 1f;
+    private static final int MAX_OBSTACLE_SPAWNING_TRIES = 100;
     private Stage hudStage;
     private Stage joystickStage;
     private Stage gameStage;
@@ -253,41 +254,46 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
         float xx;
         float yy;
         float r;
+        int iterationCounter;
         Vector2f tempPosition;
 
         Boolean validLocation;
 
         List<Vector2f> positions = new ArrayList<Vector2f>();
         for (int i = 0; i < OBSTACLE_AMOUNT; i++) {
+            iterationCounter = 0;
             tempPosition = new Vector2f();
             do {
                 r = (float) (Math.random() * (OBSTACLE_MAX_RADIUS - OBSTACLE_MIN_RADIUS)) + OBSTACLE_MIN_RADIUS;
                 xx = (float) Math.random() * (WIDTH_METERS - 2 * r - 2 * OBSTACLE_OFFSET) + r + OBSTACLE_OFFSET;
                 yy = (float) Math.random() * (HEIGHT_METERS - 2 * r - 2 * OBSTACLE_OFFSET) + r + OBSTACLE_OFFSET;
 
-                if(i == 0){
+                if (i == 0) {
                     validLocation = true;
                 } else {
                     validLocation = true;
-                    for(int j = 0; j < i; j++){
+                    for (int j = 0; j < i; j++) {
                         tempPosition.set(xx, yy);
                         tempPosition.sub(positions.get(j));
-                        if(tempPosition.length() < 2 * OBSTACLE_MAX_RADIUS + OBSTACLE_OFFSET){
+                        if (tempPosition.length() < 2 * OBSTACLE_MAX_RADIUS + OBSTACLE_OFFSET) {
                             validLocation = false;
                             break;
                         }
                     }
                 }
-            }while (!validLocation);
+                iterationCounter++;
+            } while (!validLocation && iterationCounter < MAX_OBSTACLE_SPAWNING_TRIES);
 
-            tempPosition.set(xx, yy);
-            positions.add(tempPosition);
+            if (iterationCounter < MAX_OBSTACLE_SPAWNING_TRIES) {
+                tempPosition.set(xx, yy);
+                positions.add(tempPosition);
 
-            new ObstacleBuilder().
-                    setRadius(r).
-                    setPosition(tempPosition).
-                    setSprite(Sprites.BORDER).
-                    create();
+                new ObstacleBuilder().
+                        setRadius(r).
+                        setPosition(tempPosition).
+                        setSprite(Sprites.BORDER).
+                        create();
+            }
         }
     }
 
