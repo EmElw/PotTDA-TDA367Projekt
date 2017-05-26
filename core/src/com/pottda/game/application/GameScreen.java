@@ -337,7 +337,11 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
                     itemDropLabelList.remove(i);
                 }
             }
-            label.setPosition(hudStage.getWidth() - label.getPrefWidth() - labelMargin, label.getPrefHeight() - labelMargin);
+            if (ControllerOptions.controllerSettings == ControllerOptions.ControllerMode.TOUCH_JOYSTICK) {
+                label.setPosition(hudStage.getWidth() / 2 - label.getPrefWidth() / 2, label.getPrefHeight() - labelMargin);
+            } else {
+                label.setPosition(hudStage.getWidth() - label.getPrefWidth() - labelMargin, label.getPrefHeight() - labelMargin);
+            }
         }
     }
 
