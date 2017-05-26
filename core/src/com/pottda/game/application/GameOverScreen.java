@@ -13,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import static com.pottda.game.application.Constants.SKIN_QH;
+import static com.pottda.game.application.GameState.RUNNING;
+import static com.pottda.game.application.GameState.gameState;
 import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
 import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 
@@ -61,8 +63,9 @@ public class GameOverScreen extends AbstractScreen {
     }
 
     private void restartGame() {
-        GameState.gameState = GameState.RESTARTING;
-        switchScreen(new GameScreen(game));
+        GameScreen gs = new GameScreen(game);
+        gameState = RUNNING;
+        switchScreen(gs);
         dispose();
     }
 
@@ -87,11 +90,6 @@ public class GameOverScreen extends AbstractScreen {
 
         }
         stage.addActor(superTable);
-    }
-
-    @Override
-    public void render(SpriteBatch batch, float delta) {
-
     }
 
     @Override

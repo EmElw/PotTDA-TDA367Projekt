@@ -134,16 +134,13 @@ class MenuScreen extends AbstractScreen {
         {
             Table buttonTable = new Table();
             {
-                startButton = new TextButton("START", SKIN_QH
-                );
+                startButton = new TextButton("START", SKIN_QH);
                 buttonTable.add(startButton).fillX().row();
 
-                settingsButton = new TextButton("SETTINGS", SKIN_QH
-                );
+                settingsButton = new TextButton("SETTINGS", SKIN_QH);
                 buttonTable.add(settingsButton).fillX().row();
 
-                quitButton = new TextButton("QUIT", SKIN_QH
-                );
+                quitButton = new TextButton("QUIT", SKIN_QH);
                 buttonTable.add(quitButton).fillX().row();
             }
             superTable.add(buttonTable).bottom().left().fillX().expand();
@@ -152,35 +149,28 @@ class MenuScreen extends AbstractScreen {
             {
                 settingsTable.setBackground(solidBackground(Constants.bgColor));
 
-                Label sfxVol = new Label("SFX", SKIN_QH
-                );
+                Label sfxVol = new Label("SFX", SKIN_QH);
                 settingsTable.add(sfxVol).right().uniformX();
 
-                sfxSlider = new Slider(0, 100, 1, false, SKIN_QH
-                );
+                sfxSlider = new Slider(0, 100, 1, false, SKIN_QH);
 //                sfxSlider.setValue() // TODO set music with sliders
                 settingsTable.add(sfxSlider).left().expandX().fillX().row();
 
-                Label musicVol = new Label("Music", SKIN_QH
-                );
+                Label musicVol = new Label("Music", SKIN_QH);
                 settingsTable.add(musicVol).right();
 
-                musicSlider = new Slider(0, 100, 1, false, SKIN_QH
-                );
+                musicSlider = new Slider(0, 100, 1, false, SKIN_QH);
                 settingsTable.add(musicSlider).left().expandX().fillX().row();
 
-                keyboardMouseControlsButton = new TextButton("Keyboard + Mouse", SKIN_QH
-                );
+                keyboardMouseControlsButton = new TextButton("Keyboard + Mouse", SKIN_QH);
                 settingsTable.add();
                 settingsTable.add(keyboardMouseControlsButton).fillX().row();
 
-                keyboardOnlyControlsButton = new TextButton("Keyboard only", SKIN_QH
-                );
+                keyboardOnlyControlsButton = new TextButton("Keyboard only", SKIN_QH);
                 settingsTable.add();
                 settingsTable.add(keyboardOnlyControlsButton).fillX().row();
 
-                touchControlsButton = new TextButton("Touch", SKIN_QH
-                );
+                touchControlsButton = new TextButton("Touch", SKIN_QH);
                 settingsTable.add();
                 settingsTable.add(touchControlsButton).fillX().row();
 

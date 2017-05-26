@@ -171,7 +171,8 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
             case GAME_OVER:
                 final long currentTime = System.currentTimeMillis();
                 if ((currentTime - startWaitGameOver) / 1000 >= WAITING_TIME_GAME_OVER_SECONDS) {
-                    gameOverView.render();
+                    switchScreen(new GameOverScreen(game,score));
+                    dispose();
                 } else {
                     updateGame();
                     updateWorld(false);
