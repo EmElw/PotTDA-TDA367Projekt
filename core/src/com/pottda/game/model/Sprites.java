@@ -9,6 +9,12 @@ public enum Sprites {
     ENEMYY4("charactersprites/star.png"),
     ENEMYY5("charactersprites/windmill.png"),
 
+    GRUNT("charactersprites/grunt.png"),
+    ELITE_GRUNT("charactersprites/eliteGrunt.png"),
+    SHOTGUN("charactersprites/shotgun.png"),
+    ELITE_SHOTGUN("charactersprites/eliteShotgun.png"),
+    WATCH_TOWER("charactersprites/watchTower.png"),
+
     ENEMYPROJECTILE("game/projectile1.png"),
     PLAYERPROJECTILE("game/projectile2.png"),
     BORDER("game/border.png"),

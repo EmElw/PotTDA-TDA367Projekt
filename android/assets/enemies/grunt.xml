@@ -5,5 +5,5 @@
     <difficulty>1</difficulty>
     <behaviour>DUMB</behaviour>
     <inventoryname>gruntInventory.xml</inventoryname>
-    <spriteenum>ENEMY</spriteenum>
+    <spriteenum>GRUNT</spriteenum>
 </enemy>

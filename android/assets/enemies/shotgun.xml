@@ -5,5 +5,5 @@
     <difficulty>2</difficulty>
     <behaviour>DUMB</behaviour>
     <inventoryname>shotgunInventory.xml</inventoryname>
-    <spriteenum>ENEMY</spriteenum>
+    <spriteenum>SHOTGUN</spriteenum>
 </enemy>
