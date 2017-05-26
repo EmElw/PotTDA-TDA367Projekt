@@ -2,6 +2,7 @@ package com.pottda.game.application;
 
 import com.badlogic.gdx.Game;
 import com.pottda.game.model.Inventory;
+import com.pottda.game.model.Storage;
 
 public class InventoryManagementScreen extends AbstractScreen {
 
