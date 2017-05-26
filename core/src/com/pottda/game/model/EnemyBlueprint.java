@@ -16,21 +16,15 @@ public class EnemyBlueprint {
     private final static Map<String, EnemyBlueprint> blueprints = new HashMap<String, EnemyBlueprint>();
 
     /**
-     * Returns a semi-built enemy
+     * Returns a semi-built enemy with behaviour, inventory, scoreValue and sprite set
      *
      * @param name the name of the enemy to build
-     * @return a {@link IModelBuilder} with behaviour, inventory and sprite set
+     * @return a {@link IModelBuilder}
      */
     public static IModelBuilder getEnemy(String name) {
         return blueprints.get(name).build();
     }
 
-    /**
-     * Returns an {@link EnemyBlueprint} for the given name
-     *
-     * @param s a {@link String}
-     * @return an {@link EnemyBlueprint}
-     */
     static EnemyBlueprint getBlueprint(String s) {
         if (blueprints.containsKey(s)) {
             return blueprints.get(s);
@@ -48,17 +42,12 @@ public class EnemyBlueprint {
         blueprints.put(xml.name, new EnemyBlueprint(xml));
     }
 
-    // ---- meta
     private final String name;
-
     private final int difficulty;
 
-    // ---- properties
     private final ModelActor.Behaviour behaviour;
     private final String inventoryName;
     private final Sprites sprite;
-
-    private List<DeathListener> deathListeners;
 
     private final int scoreValue;
 
@@ -73,12 +62,11 @@ public class EnemyBlueprint {
 
     public IModelBuilder build() {
 
-        // TODO implement death-listeners for score
         return new CharacterBuilder().
+                setScoreValue(scoreValue).
                 setTeam(Character.ENEMY_TEAM).
                 setBehaviour(behaviour).
                 setInventory(InventoryBlueprint.getInventory(inventoryName)).
-                setDeathListeners(deathListeners).
                 setSprite(sprite);
     }
 
@@ -86,8 +74,4 @@ public class EnemyBlueprint {
         return name;
     }
 
-    public void setListeners(List<ScoreChangeListener> scoreChangeListeners, List<DeathListener> deathListeners) {
-        this.deathListeners = deathListeners;
-        deathListeners.add(new EnemyDeathListener(scoreValue, scoreChangeListeners));
-    }
 }

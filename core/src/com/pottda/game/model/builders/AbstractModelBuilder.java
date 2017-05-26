@@ -61,4 +61,5 @@ public abstract class AbstractModelBuilder implements IModelBuilder {
     public static void clear() {
         listenerList.clear();
     }
+
 }

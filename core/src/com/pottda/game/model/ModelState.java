@@ -1,9 +1,12 @@
 package com.pottda.game.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Magnus on 2017-05-26.
  */
-public class ModelState implements DeathListener, ScoreChangeListener, NewModelListener {
+public class ModelState implements DeathListener, NewModelListener {
 
     private int score;
     private int enemiesAlive;
@@ -12,10 +15,13 @@ public class ModelState implements DeathListener, ScoreChangeListener, NewModelL
 
     private Storage storage;
     private Inventory inventory;
+    private List<ScoreChangeListener> scoreChangeListeners;
 
     public ModelState() {
+        storage = new Storage();
         score = 0;
         enemiesAlive = 0;
+        scoreChangeListeners = new ArrayList<ScoreChangeListener>();
     }
 
     public boolean enemiesAlive() {
@@ -29,8 +35,12 @@ public class ModelState implements DeathListener, ScoreChangeListener, NewModelL
     @Override
     public void onDeath(Character character) {
         if (character.team == ModelActor.ENEMY_TEAM) {
+            storage.addItems(character.inventory.getItemDropList());
             enemiesAlive--;
-            System.out.println("eA:" + enemiesAlive);
+            score += character.getScoreValue();
+            for (ScoreChangeListener scl : scoreChangeListeners) {
+                scl.scoreChanged(character.getScoreValue());
+            }
             if (enemiesAlive < 0)
                 throw new Error("Less than 0 enemies alive");
         } else {
@@ -38,10 +48,6 @@ public class ModelState implements DeathListener, ScoreChangeListener, NewModelL
         }
     }
 
-    @Override
-    public void scoreChanged(int points) {
-        score += points;
-    }
 
     @Override
     public void onNewModel(ModelActor m) {
@@ -72,5 +78,9 @@ public class ModelState implements DeathListener, ScoreChangeListener, NewModelL
 
     public Character getPlayer() {
         return player;
+    }
+
+    public void addScoreChangeListener(ScoreChangeListener listener) {
+        scoreChangeListeners.add(listener);
     }
 }

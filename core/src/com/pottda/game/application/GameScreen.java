@@ -4,10 +4,12 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.*;
 import com.pottda.game.model.*;
@@ -33,6 +35,7 @@ class GameScreen extends AbstractScreen {
 
     private Stage hudStage;
     private Stage gameStage;
+    private Stage backgroundStage;
 
     private World world;
 
@@ -84,10 +87,17 @@ class GameScreen extends AbstractScreen {
 
     private void initStages() {
 
-        camera = new OrthographicCamera(WIDTH_METERS / 2 / SCALING, HEIGHT_METERS / 2 / SCALING);
+        camera = new OrthographicCamera(WIDTH_METERS / SCALING, HEIGHT_METERS / SCALING);
 
-        hudStage = new Stage(new StretchViewport(WIDTH_VIEWPORT,HEIGHT_VIEWPORT,camera));
-        gameStage = new Stage(new StretchViewport(WIDTH_METERS * SCALING, HEIGHT_METERS * SCALING, camera));
+
+        backgroundStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
+
+        Image background = new Image(new Texture(Gdx.files.internal(Sprites.MAINBACKGROUND.fileName)));
+        background.setPosition(background.getWidth() / 2, background.getHeight() / 2);
+        backgroundStage.addActor(background);
+
+        hudStage = new Stage(new StretchViewport(WIDTH_METERS, HEIGHT_METERS));
+        gameStage = new Stage(new StretchViewport(WIDTH_METERS / SCALING, HEIGHT_METERS / SCALING, camera));
 
     }
 
@@ -100,6 +110,10 @@ class GameScreen extends AbstractScreen {
     public void render(SpriteBatch batch, float delta) {
         updateModel(delta);
 
+        backgroundStage.getCamera().position.set(new Vector2(
+                camera.position.x / 2,
+                camera.position.y / 2), 0);
+
         camera.position.set(controllerManager.getPlayerController().getView().getX(),
                 controllerManager.getPlayerController().getView().getY(),
                 0);
@@ -110,8 +124,9 @@ class GameScreen extends AbstractScreen {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
+        backgroundStage.draw();
         gameStage.draw();
-
+        hudStage.draw();
 
         batch.end();
 
@@ -245,7 +260,8 @@ class GameScreen extends AbstractScreen {
     }
 
     private void toInventoryManagement() {
-        System.out.println("To inventory");
+        if (System.currentTimeMillis() % 1000 == 0)
+            System.out.println("To inventory");
 //        switchScreen(new InventoryManagementScreen(game,
 //                modelState.getInventory(),
 //                modelState.getStorage()));

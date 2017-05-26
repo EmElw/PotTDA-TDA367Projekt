@@ -22,5 +22,7 @@ public interface ICharacterBuilder extends IModelBuilder {
 
     ICharacterBuilder setBehaviour(ModelActor.Behaviour behaviour);
 
+    ICharacterBuilder setScoreValue(int scoreValue);
+
     ICharacterBuilder setDeathListeners(List<DeathListener> deathListeners);
 }

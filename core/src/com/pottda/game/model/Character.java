@@ -31,6 +31,7 @@ public class Character extends ModelActor implements InventoryChangeListener {
     public static Character player;
 
     private List<DeathListener> deathListeners;
+    private int scoreValue;
 
     // -- Constructors --
 
@@ -126,5 +127,13 @@ public class Character extends ModelActor implements InventoryChangeListener {
 
     public void addDeathListener(DeathListener listener) {
         deathListeners.add(listener);
+    }
+
+    public int getScoreValue() {
+        return scoreValue;
+    }
+
+    public void setScoreValue(int scoreValue) {
+        this.scoreValue = scoreValue;
     }
 }

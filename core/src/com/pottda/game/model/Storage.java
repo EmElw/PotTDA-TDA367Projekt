@@ -98,6 +98,10 @@ public class Storage {
         listeners.remove(storageChangeListener);
     }
 
+    public void addItems(Collection<Item> items) {
+        items.addAll(items);
+    }
+
     /**
      * ItemStorage holds one specific item and keeps additional statistics of it
      */

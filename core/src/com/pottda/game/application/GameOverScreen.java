@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -27,13 +28,12 @@ public class GameOverScreen extends AbstractMenuScreen {
 
     private TextButton menuButton;
     private TextButton restartButton;
-    private Camera camera;
-    private Stage stage;
+    private Label scoreLabel;
 
     public GameOverScreen(Game game, int score) {
         super(game);
         this.score = score;
-        create();
+
     }
 
     @Override
@@ -57,6 +57,7 @@ public class GameOverScreen extends AbstractMenuScreen {
         });
     }
 
+
     private void toMainMenu() {
         GameState.gameState = GameState.MAIN_MENU;
         switchScreen(new MenuScreen(game));
@@ -76,6 +77,12 @@ public class GameOverScreen extends AbstractMenuScreen {
             initActors();
         }
 
+        @Override
+        public void act(float delta) {
+            super.act(delta);
+            scoreLabel.setText("Score: " + score);
+        }
+
         private void initActors() {
             Table superTable = new Table();
             superTable.setFillParent(true);
@@ -86,7 +93,7 @@ public class GameOverScreen extends AbstractMenuScreen {
                 restartButton = new TextButton("Restart", SKIN_QH);
                 superTable.add(restartButton).bottom().left().uniformX();
 
-                Label scoreLabel = new Label("Score: " + score, SKIN_QH);
+                scoreLabel = new Label("Score: " + score, SKIN_QH);
                 superTable.add(scoreLabel).center().row();
 
                 menuButton = new TextButton("Main Menu", SKIN_QH);

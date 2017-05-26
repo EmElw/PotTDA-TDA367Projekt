@@ -69,8 +69,8 @@ public class ControllerHookup implements NewModelListener {
         try {
             gameStage.addActor(view);
             if (enemyHealthBarController != null) {
-                stage.addActor(enemyHealthBarController.getRedView());
-                stage.addActor(enemyHealthBarController.getFrameView());
+                gameStage.addActor(enemyHealthBarController.getRedView());
+                gameStage.addActor(enemyHealthBarController.getFrameView());
             }
             notifyListeners(controller);
         } catch (NullPointerException e) {
