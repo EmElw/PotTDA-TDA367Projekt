@@ -3,7 +3,6 @@ package com.pottda.game.application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -20,9 +19,11 @@ import com.pottda.game.controller.NewControllerListener;
 import com.pottda.game.model.Character;
 import com.pottda.game.model.DeathListener;
 import com.pottda.game.model.EnemyBlueprint;
+import com.pottda.game.model.Item;
 import com.pottda.game.model.ModelActor;
 import com.pottda.game.model.ScoreChangeListener;
 import com.pottda.game.model.Sprites;
+import com.pottda.game.model.Storage;
 import com.pottda.game.model.WaveController;
 import com.pottda.game.model.builders.AbstractModelBuilder;
 import com.pottda.game.model.builders.CharacterBuilder;
@@ -93,6 +94,9 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
 
     private static final float SCALING = 2f;
 
+    private Storage storage;
+    private InventoryManagementScreen inventoryManagementScreen;
+
     GameScreen(Game game) {
         super(game);
         create();
@@ -115,7 +119,11 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
 
         soundsAndMusic = new SoundsAndMusic();
 
+        storage = new Storage();
+
         doOnStartGame();
+
+        inventoryManagementScreen = new InventoryManagementScreen(game, Character.player.inventory, storage);
     }
 
 
@@ -199,7 +207,7 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
         }
     }
 
-    void doOnStartGame() {
+    private void doOnStartGame() {
         gameState = NONE;
 
         controllers = new HashSet<AbstractController>();
@@ -361,9 +369,15 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
     }
 
     @Override
-    public void onDeath() {
+    public void onDeath(Set<Item> itemDropList) {
         enemyAmount--;
         System.out.println("Enemies alive: " + enemyAmount);
+        for (Item item : itemDropList) {
+            if (item != null) {
+                storage.addItem(item);
+                System.out.println("Added item " + item.getName());
+            }
+        }
     }
 
     // TODO move to a controller class

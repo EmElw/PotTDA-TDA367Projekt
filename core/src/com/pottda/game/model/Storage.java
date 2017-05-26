@@ -1,12 +1,7 @@
 package com.pottda.game.model;
 
-import com.pottda.game.controller.view.InventoryManagementController;
-
 import java.util.*;
 
-/**
- * Created by Mr Cornholio on 21/05/2017.
- */
 public class Storage {
 
     private List<StorageChangeListener> listeners;
@@ -99,7 +94,7 @@ public class Storage {
         listeners.add(storageChangeListener);
     }
 
-    public void removeStorageChangeListener(StorageChangeListener storageChangeListener){
+    public void removeStorageChangeListener(StorageChangeListener storageChangeListener) {
         listeners.remove(storageChangeListener);
     }
 
