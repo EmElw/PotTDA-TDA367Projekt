@@ -19,10 +19,12 @@ import java.util.List;
  */
 public class ControllerHookup implements NewModelListener {
 
-    private final Stage stage;
+    private final Stage gameStage;
+    private final Stage hudStage;
 
-    public ControllerHookup(Stage stage) {
-        this.stage = stage;
+    public ControllerHookup(Stage gameStage, Stage hudStage) {
+        this.gameStage = gameStage;
+        this.hudStage = hudStage;
     }
 
     private final List<NewControllerListener> listenerList = new ArrayList<NewControllerListener>();
@@ -45,6 +47,8 @@ public class ControllerHookup implements NewModelListener {
                 controller = createInputController(m, view);
             } else if (m.team == Character.ENEMY_TEAM) {
                 controller = createController(m, view);
+            } else {
+                throw new Error("bad team");
             }
         } else if (m instanceof Obstacle) {
             if (((Obstacle) m).isRound) {
@@ -81,7 +85,7 @@ public class ControllerHookup implements NewModelListener {
         }
 
         try {
-            stage.addActor(view);
+            gameStage.addActor(view);
             notifyListeners(controller);
         } catch (NullPointerException e) {
             throw new Error("couldn't handle model-type", e);
@@ -109,9 +113,9 @@ public class ControllerHookup implements NewModelListener {
     private AbstractController createInputController(ModelActor m, ActorView view) {
         switch (ControllerOptions.controllerSettings) {
             case TOUCH_JOYSTICK:
-                return new TouchJoystickController(m, view, ControllerOptions.joystickStage);
+                return new TouchJoystickController(m, view, hudStage);
             case KEYBOARD_MOUSE:
-                return new KeyboardMouseController(m, view, stage);
+                return new KeyboardMouseController(m, view, gameStage);
             case KEYBOARD_ONLY:
                 return new KeyboardOnlyController(m, view);
         }

@@ -1,5 +1,8 @@
 package com.pottda.game.controller;
 
+import com.pottda.game.model.Character;
+import com.pottda.game.model.ModelActor;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
@@ -8,6 +11,8 @@ import java.util.Stack;
  * Created by Magnus on 2017-05-26.
  */
 public class ControllerManager implements NewControllerListener {
+
+    private AbstractController playerController;
 
     private Set<AbstractController> controllers;
     private Stack<AbstractController> controllerBuffer;
@@ -22,14 +27,22 @@ public class ControllerManager implements NewControllerListener {
     @Override
     public void onNewController(AbstractController c) {
         controllerBuffer.push(c);
+        if (c.getModel() instanceof Character) {
+            if (c.getModel().team == ModelActor.PLAYER_TEAM) {
+                if (playerController == null) {
+                    playerController = c;
+                } else throw new Error("Created another player");
+            }
+        }
+
     }
 
-    public void update() {
-        removeDeadActors();
+    public void updateControllers() {
+        addNewActors();
 
         updateActors();
 
-        addNewActors();
+        removeDeadActors();
     }
 
     private void updateActors() {
@@ -56,5 +69,9 @@ public class ControllerManager implements NewControllerListener {
             controllers.removeAll(controllerRemovalBuffer);
             controllerRemovalBuffer.clear();
         }
+    }
+
+    public AbstractController getPlayerController() {
+        return playerController;
     }
 }

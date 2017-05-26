@@ -1,6 +1,7 @@
 package com.pottda.game.application;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.pottda.game.model.Inventory;
 import com.pottda.game.model.Storage;
 
@@ -20,5 +21,10 @@ public class InventoryManagementScreen extends AbstractScreen {
 
     @Override
     public void dispose() {
+    }
+
+    @Override
+    public void render(SpriteBatch batch, float delta) {
+
     }
 }

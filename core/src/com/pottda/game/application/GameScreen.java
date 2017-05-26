@@ -2,16 +2,12 @@ package com.pottda.game.application;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.*;
 import com.pottda.game.model.*;
@@ -21,54 +17,32 @@ import com.pottda.game.model.builders.CharacterBuilder;
 import com.pottda.game.model.builders.ObstacleBuilder;
 import com.pottda.game.physicsBox2D.Box2DPhysicsActorFactory;
 import com.pottda.game.physicsBox2D.CollisionListener;
-import com.pottda.game.view.BackgroundView;
-import com.pottda.game.view.GameOverView;
-import com.pottda.game.view.GameView;
-import com.pottda.game.view.HUDView;
-import com.pottda.game.view.SoundsAndMusic;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Stack;
 
 import javax.vecmath.Vector2f;
 
-import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
-import static com.pottda.game.model.Constants.HEIGHT_METERS;
-import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
-import static com.pottda.game.model.Constants.WIDTH_METERS;
+import static com.pottda.game.model.Constants.*;
 
-class GameScreen extends AbstractScreen implements {
+class GameScreen extends AbstractScreen {
     private static final int OBSTACLE_AMOUNT = 10;
     private static final float OBSTACLE_MAX_RADIUS = 3f;
     private static final float OBSTACLE_MIN_RADIUS = 0.5f;
+    private static final float SCALING = 2f;
     private static final long WAITING_TIME_GAME_OVER_SECONDS = 3;
 
+    private OrthographicCamera camera;
+
     private Stage hudStage;
-    private Stage joystickStage;
     private Stage gameStage;
-    private Stage bgStage;
 
     private World world;
 
+    /*
+    Stores delta time on new frames until it exceeds the physics world's update time threshold
+     */
     private float accumulator;
 
-    private HUDView hudView;
-    private SoundsAndMusic soundsAndMusic;
-    private GameView gameView;
-    private BackgroundView backgroundView;
-
     private ModelState modelState;
-
     private WaveController waveController;
-
-
-    private static int score;
-    private int enemyAmount;
-
-    private static final float SCALING = 2f;
     private ControllerManager controllerManager;
 
     GameScreen(Game game) {
@@ -76,32 +50,29 @@ class GameScreen extends AbstractScreen implements {
         create();
     }
 
-    private long startWaitInventory;
-
     private void create() {
+
+        initStages();
 
         world = new World(new Vector2(0, 0), false);
         world.setContactListener(new CollisionListener());
         accumulator = 0;
 
-        score = 0;
-        enemyAmount = 0;
-
         MyXMLReader reader = new MyXMLReader();
         reader.generateXMLAssets();
 
         controllerManager = new ControllerManager();
-        ControllerHookup controllerHookup = new ControllerHookup(gameStage);
+        ControllerHookup controllerHookup = new ControllerHookup(gameStage, hudStage);
         controllerHookup.addListener(controllerManager);
 
         modelState = new ModelState();
 
-        AbstractModelBuilder.clear();   // Clear any previous configs (TODO improve?)
+        AbstractModelBuilder.clear();
         AbstractModelBuilder.setPhysiscActorFactory(new Box2DPhysicsActorFactory(world));
 
         AbstractModelBuilder.addListener(controllerHookup);
         AbstractModelBuilder.addListener(modelState);
-        
+
         waveController = new WaveController();
 
         createPlayer();
@@ -111,30 +82,61 @@ class GameScreen extends AbstractScreen implements {
         createObstacles();
     }
 
+    private void initStages() {
+
+        camera = new OrthographicCamera(WIDTH_METERS / 2 / SCALING, HEIGHT_METERS / 2 / SCALING);
+
+        hudStage = new Stage(new StretchViewport(WIDTH_VIEWPORT,HEIGHT_VIEWPORT,camera));
+        gameStage = new Stage(new StretchViewport(WIDTH_METERS * SCALING, HEIGHT_METERS * SCALING, camera));
+
+    }
 
     @Override
     public void resize(int width, int height) {
-        hudStage.getViewport().update(width, height, false);
         gameStage.getViewport().update(width, height, false);
-        joystickStage.getViewport().update(width, height, false);
-        bgStage.getViewport().update(width, height, false);
     }
-
 
     @Override
     public void render(SpriteBatch batch, float delta) {
-
-
         updateModel(delta);
+
+        camera.position.set(controllerManager.getPlayerController().getView().getX(),
+                controllerManager.getPlayerController().getView().getY(),
+                0);
+
+        Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+
+        gameStage.draw();
+
+
+        batch.end();
+
     }
 
+    @Override
+    public void dispose() {
+        gameStage.dispose();
+    }
+
+    @Override
+    public void pause() {
+        toPause();
+    }
+
+    // Model updating
+
     private void updateModel(float delta) {
-        controllerManager.update();
+        controllerManager.updateControllers();
+
         doPhysicsStep(delta);
 
         spawnEnemies();
 
-        if (!enemiesAlive()) {
+        if (!modelState.enemiesAlive()) {
             if (waveController.levelFinished()) {
                 toInventoryManagement();
             } else {
@@ -142,25 +144,22 @@ class GameScreen extends AbstractScreen implements {
             }
         }
 
-        if (!playersIsAlive()) {
+        if (!modelState.playerAlive()) {
             toGameOver();
         }
 
     }
 
-    private void toInventoryManagement() {
-
+    private void doPhysicsStep(float deltaTime) {
+        float frameTime = Math.min(deltaTime, 0.25f);
+        accumulator += frameTime;
+        while (accumulator >= (1.0f / 60.0f)) {
+            world.step(1.0f / 60.0f, 6, 2);
+            accumulator -= 1.0f / 60.0f;
+        }
     }
 
-    private void toGameOver() {
-        switchScreen(new GameOverScreen(game, score));
-        dispose();
-    }
-
-    @Override
-    public void dispose() {
-    }
-
+    // ModelActor creation
 
     private void createObstacles() {
         float xx;
@@ -179,12 +178,10 @@ class GameScreen extends AbstractScreen implements {
         }
     }
 
-
     private void spawnEnemies() {
-        List<ScoreChangeListener> scoreChangeListeners = new ArrayList<ScoreChangeListener>();
-        List<EnemyBlueprint> list = waveController.getToSpawn();
         Vector2f playerPosition = Character.player.getPosition();
-        for (EnemyBlueprint bp : list) {
+
+        for (EnemyBlueprint bp : waveController.getToSpawn()) {
             float xx, yy;
             do {
                 xx = (float) (WIDTH_METERS * Math.random());
@@ -194,43 +191,8 @@ class GameScreen extends AbstractScreen implements {
                 yy = (float) (HEIGHT_METERS * Math.random());
             } while (Math.abs(yy - playerPosition.y) < HEIGHT_METERS / (2 * SCALING));
 
-            List<DeathListener> deathListeners = new ArrayList<DeathListener>();
-            deathListeners.add(this);
-            bp.setListeners(scoreChangeListeners, deathListeners);
             bp.build().setPosition(new Vector2f(xx, yy)).create();
-
-            enemyAmount++;
         }
-    }
-
-
-    private void doPhysicsStep(float deltaTime) {
-        float frameTime = Math.min(deltaTime, 0.25f);
-        accumulator += frameTime;
-        while (accumulator >= (1.0f / 60.0f)) {
-            world.step(1.0f / 60.0f, 6, 2);
-            accumulator -= 1.0f / 60.0f;
-        }
-    }
-
-    @Override
-    public void scoreChanged(int points) {
-        score += points;
-        System.out.println("Score: " + score);
-    }
-
-    @Override
-    public void onDeath() {
-        enemyAmount--;
-        System.out.println("Enemies alive: " + enemyAmount);
-    }
-
-    private boolean enemiesAlive() {
-        return enemyAmount > 0;
-    }
-
-    private boolean playersIsAlive() {
-        return hudView.getHealth() > 0;
     }
 
     private void createPlayer() {
@@ -270,4 +232,23 @@ class GameScreen extends AbstractScreen implements {
                 setSprite(Sprites.NONE).
                 create();
     }
+
+    // Screen-switching
+
+    private void toGameOver() {
+        switchScreen(new GameOverScreen(game, modelState.getScore()));
+        dispose();
+    }
+
+    private void toPause() {
+        switchScreen(new PausedScreen(game, this));
+    }
+
+    private void toInventoryManagement() {
+        System.out.println("To inventory");
+//        switchScreen(new InventoryManagementScreen(game,
+//                modelState.getInventory(),
+//                modelState.getStorage()));
+    }
+
 }

@@ -2,8 +2,8 @@ package com.pottda.game.application;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -22,11 +22,13 @@ import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 /**
  * Created by Magnus on 2017-05-26.
  */
-public class GameOverScreen extends AbstractScreen {
+public class GameOverScreen extends AbstractMenuScreen {
     private int score;
 
     private TextButton menuButton;
     private TextButton restartButton;
+    private Camera camera;
+    private Stage stage;
 
     public GameOverScreen(Game game, int score) {
         super(game);
@@ -34,9 +36,9 @@ public class GameOverScreen extends AbstractScreen {
         create();
     }
 
-    private void create() {
-        camera = new OrthographicCamera();
-        ((OrthographicCamera) camera).setToOrtho(false, WIDTH_VIEWPORT, HEIGHT_VIEWPORT);
+    @Override
+    void create() {
+        super.create();
 
         stage = new GameOverStage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
         stage.setDebugAll(true);
@@ -66,16 +68,6 @@ public class GameOverScreen extends AbstractScreen {
         gameState = RUNNING;
         switchScreen(gs);
         dispose();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, false);
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
     }
 
     private class GameOverStage extends Stage {

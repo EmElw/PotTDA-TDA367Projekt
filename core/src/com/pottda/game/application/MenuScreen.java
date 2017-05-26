@@ -21,7 +21,7 @@ import static com.pottda.game.application.GameState.RUNNING;
 import static com.pottda.game.application.GameState.gameState;
 import static com.pottda.game.model.Constants.*;
 
-class MenuScreen extends AbstractScreen {
+class MenuScreen extends AbstractMenuScreen {
 
 
     private TextButton startButton;
@@ -37,15 +37,14 @@ class MenuScreen extends AbstractScreen {
     private Slider musicSlider;
     private Slider sfxSlider;
 
-
     MenuScreen(Game game) {
         super(game);
-        create();
     }
 
-    private void create() {
-        camera = new OrthographicCamera();
-        ((OrthographicCamera) camera).setToOrtho(false, WIDTH_VIEWPORT, HEIGHT_VIEWPORT);
+
+    @Override
+    void create() {
+        super.create();
 
         stage = new MenuStage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
         stage.setDebugAll(true);
@@ -137,16 +136,6 @@ class MenuScreen extends AbstractScreen {
                 keyboardOnlyControlsButton.isChecked();
                 break;
         }
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, false);
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
     }
 
     private Drawable solidBackground(Color color) {

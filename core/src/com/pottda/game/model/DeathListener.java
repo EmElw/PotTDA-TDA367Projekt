@@ -1,5 +1,5 @@
 package com.pottda.game.model;
 
 public interface DeathListener {
-    void onDeath();
+    void onDeath(Character character);
 }

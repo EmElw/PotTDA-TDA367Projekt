@@ -2,6 +2,7 @@ package com.pottda.game.model;
 
 import javax.vecmath.Vector2f;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ public class Character extends ModelActor implements InventoryChangeListener {
     // -- Constructors --
 
     public Character() {
+        this.deathListeners = new ArrayList<DeathListener>();
         this.inventory = new Inventory();
         this.isProjectile = false;
         this.movementVector = new Vector2f();
@@ -78,7 +80,7 @@ public class Character extends ModelActor implements InventoryChangeListener {
             shouldBeRemoved = true;
             if (deathListeners != null) {
                 for (DeathListener dl : deathListeners) {
-                    dl.onDeath();
+                    dl.onDeath(this);
                 }
             }
         }

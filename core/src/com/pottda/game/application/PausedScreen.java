@@ -18,7 +18,7 @@ import static com.pottda.game.application.Constants.SKIN_QH;
 import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
 import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 
-class PausedScreen extends AbstractScreen {
+class PausedScreen extends AbstractMenuScreen {
 
     private Screen gameScreen;
 
@@ -30,17 +30,15 @@ class PausedScreen extends AbstractScreen {
     PausedScreen(Game game, GameScreen gameScreen) {
         super(game);
         this.gameScreen = gameScreen;
-        create();
     }
 
-    private void create() {
-        camera = new OrthographicCamera();
-        ((OrthographicCamera) camera).setToOrtho(false, WIDTH_VIEWPORT, HEIGHT_VIEWPORT);
+    @Override
+    void create() {
+        super.create();
 
-        stage = new PausedStage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
+        stage = new PausedScreen.PausedStage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
         stage.setDebugAll(true);
         Gdx.input.setInputProcessor(stage);
-
 
         resumeButton.addListener(new ClickListener() {
             @Override
@@ -79,16 +77,6 @@ class PausedScreen extends AbstractScreen {
         switchScreen(gameScreen);
         GameState.gameState = GameState.RUNNING;
         dispose();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, false);
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
     }
 
     private class PausedStage extends Stage {

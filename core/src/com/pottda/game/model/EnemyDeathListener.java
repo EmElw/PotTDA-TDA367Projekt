@@ -12,7 +12,7 @@ class EnemyDeathListener implements DeathListener{
     }
 
     @Override
-    public void onDeath() {
+    public void onDeath(Character character) {
         for (ScoreChangeListener scl : scoreChangeListenerList){
             scl.scoreChanged(points);
         }
