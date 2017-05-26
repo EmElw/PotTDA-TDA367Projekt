@@ -5,8 +5,8 @@ import com.pottda.game.model.ModelActor;
 import com.pottda.game.view.ActorView;
 
 class StationaryAIController extends AIController{
-    StationaryAIController(ModelActor modelActor, ActorView actorView) {
-        super(modelActor, actorView);
+    StationaryAIController(ModelActor modelActor, ActorView actorView, EnemyHealthBarController enemyHealthBarController) {
+        super(modelActor, actorView, enemyHealthBarController);
     }
 
     @Override
