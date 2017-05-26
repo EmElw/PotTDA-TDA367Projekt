@@ -2,16 +2,14 @@ package com.pottda.game.application;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -31,13 +29,17 @@ class MenuScreen extends AbstractScreen {
     private Skin skin = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
 
 
+    private Table settingsTable;
     private TextButton startButton;
     private TextButton settingsButton;
     private TextButton quitButton;
-
-    private Table settingsTable;
-    private ButtonGroup<TextButton> controlButtons;
     private OrthographicCamera camera;
+    private TextButton keyboardMouseControlsButton;
+    private TextButton keyboardOnlyControlsButton;
+    private TextButton touchControlsButton;
+    private Slider musicSlider;
+    private Slider sfxSlider;
+
 
     MenuScreen(Game game) {
         super(game);
@@ -52,7 +54,10 @@ class MenuScreen extends AbstractScreen {
         stage.setDebugAll(true);
         Gdx.input.setInputProcessor(stage);
 
+        // Initiates UI and sets the fields of the actor with logic
         setUpUI();
+
+        // Actor logic is here
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent evt, float x, float y) {
@@ -72,6 +77,41 @@ class MenuScreen extends AbstractScreen {
             @Override
             public void clicked(InputEvent evt, float x, float y) {
                 quitGame();
+            }
+        });
+
+        keyboardMouseControlsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent evt, float x, float y) {
+                keyboardMouseControlsButton.setChecked(true);
+                ControllerOptions.controllerSettings = ControllerOptions.ControllerMode.KEYBOARD_MOUSE;
+            }
+        });
+        keyboardOnlyControlsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent evt, float x, float y) {
+                keyboardOnlyControlsButton.setChecked(true);
+                ControllerOptions.controllerSettings = ControllerOptions.ControllerMode.KEYBOARD_ONLY;
+            }
+        });
+        touchControlsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent evt, float x, float y) {
+                touchControlsButton.setChecked(true);
+                ControllerOptions.controllerSettings = ControllerOptions.ControllerMode.TOUCH_JOYSTICK;
+            }
+        });
+
+        sfxSlider.addListener(new DragListener() {
+            @Override
+            public void drag(InputEvent event, float x, float y, int pointer) {
+                // setSfxVolume(x / getWidth); // TODO set volume
+            }
+        });
+        musicSlider.addListener(new DragListener() {
+            @Override
+            public void drag(InputEvent event, float x, float y, int pointer) {
+                // setMusicVolume(x / getWidth); // TODO set volume
             }
         });
 
@@ -119,35 +159,52 @@ class MenuScreen extends AbstractScreen {
                 Label sfxVol = new Label("SFX", skin);
                 settingsTable.add(sfxVol).right().uniformX();
 
-                Slider sfxSlider = new Slider(0, 100, 1, false, skin);
+                sfxSlider = new Slider(0, 100, 1, false, skin);
+//                sfxSlider.setValue() // TODO set music with sliders
                 settingsTable.add(sfxSlider).left().expandX().fillX().row();
 
                 Label musicVol = new Label("Music", skin);
                 settingsTable.add(musicVol).right();
 
-                Slider musicSlider = new Slider(0, 100, 1, false, skin);
+                musicSlider = new Slider(0, 100, 1, false, skin);
                 settingsTable.add(musicSlider).left().expandX().fillX().row();
 
-                TextButton kmButton = new TextButton("Keyboard + Mouse", skin);
+                keyboardMouseControlsButton = new TextButton("Keyboard + Mouse", skin);
                 settingsTable.add();
-                settingsTable.add(kmButton).fillX().row();
+                settingsTable.add(keyboardMouseControlsButton).fillX().row();
 
-                TextButton koButton = new TextButton("Keyboard only", skin);
+                keyboardOnlyControlsButton = new TextButton("Keyboard only", skin);
                 settingsTable.add();
-                settingsTable.add(koButton).fillX().row();
+                settingsTable.add(keyboardOnlyControlsButton).fillX().row();
 
-                TextButton tchButton = new TextButton("Touch", skin);
+                touchControlsButton = new TextButton("Touch", skin);
                 settingsTable.add();
-                settingsTable.add(tchButton).fillX().row();
+                settingsTable.add(touchControlsButton).fillX().row();
 
-                controlButtons = new ButtonGroup<TextButton>(kmButton, koButton, tchButton);
+                ButtonGroup<TextButton> controlButtons = new ButtonGroup<TextButton>(keyboardMouseControlsButton, keyboardOnlyControlsButton, touchControlsButton);
                 controlButtons.setChecked("Keyboard + Mouse");
+
+                checkControlButton();
 
                 settingsTable.invalidateHierarchy();
             }
             superTable.add(settingsTable).bottom().right().fillX().expand();
         }
         stage.addActor(superTable);
+    }
+
+    private void checkControlButton() {
+        switch (ControllerOptions.controllerSettings) {
+            case TOUCH_JOYSTICK:
+                touchControlsButton.isChecked();
+                break;
+            case KEYBOARD_MOUSE:
+                keyboardMouseControlsButton.isChecked();
+                break;
+            case KEYBOARD_ONLY:
+                keyboardOnlyControlsButton.isChecked();
+                break;
+        }
     }
 
     @Override

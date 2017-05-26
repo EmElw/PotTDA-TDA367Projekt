@@ -32,16 +32,7 @@ public class PoTDAGame extends Game {
 
         batch = new SpriteBatch();
 
-        setScreen(new MenuScreen(this, new GameScreen(this, null)));
-    }
-
-    /**
-     * Restarts the game by recreating everything
-     */
-    private void doOnRestartGame() {
-        dispose();
-        AbstractModelBuilder.clear();
-        create();
+        setScreen(new MenuScreen(this));
     }
 
     @Override
@@ -49,13 +40,5 @@ public class PoTDAGame extends Game {
         if (screen != null) {
             ((AbstractScreen) screen).render(batch, Gdx.graphics.getDeltaTime());
         }
-    }
-
-
-    @Override
-    public void dispose() {
-        menuScreen.dispose();
-        gameScreen.dispose();
-        pausedScreen.dispose();
     }
 }

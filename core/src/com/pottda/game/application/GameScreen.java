@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.AbstractController;
 import com.pottda.game.controller.ControllerHookup;
+import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.controller.NewControllerListener;
 import com.pottda.game.model.Character;
 import com.pottda.game.model.DeathListener;
@@ -99,8 +100,10 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
     private long startWaitInventory;
 
     private void create() {
-        hudStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
         joystickStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
+        ControllerOptions.joystickStage = joystickStage;
+
+        hudStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
         gameStage = new Stage(new StretchViewport(WIDTH_METERS / SCALING, HEIGHT_METERS / SCALING));
         gameStage.getCamera().position.x = WIDTH_METERS / 2 / SCALING;
         gameStage.getCamera().position.y = HEIGHT_METERS / 2 / SCALING;
@@ -109,15 +112,8 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
         gameOverView = new GameOverView(gameOverStage);
 
         soundsAndMusic = new SoundsAndMusic();
-    }
 
-    void render() {
-
-    }
-
-    @Override
-    public void show() {
-
+        doOnStartGame();
     }
 
 
@@ -130,15 +126,6 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
         bgStage.getViewport().update(width, height, false);
     }
 
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
 
     @Override
     public void render(SpriteBatch batch, float delta) {
@@ -197,11 +184,6 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
     }
 
     @Override
-    public void hide() {
-
-    }
-
-    @Override
     public void dispose() {
         hudStage.dispose();
         gameOverStage.dispose();
@@ -219,7 +201,7 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
     /**
      * Inits the game world and player
      */
-    void doOnStartGame() {
+    private void doOnStartGame() {
         gameState = NONE;
 
         controllers = new HashSet<AbstractController>();
