@@ -61,6 +61,13 @@ public class ControllerManager implements NewControllerListener {
             if (controller.shouldBeRemoved()) {
                 controller.getModel().getPhysicsActor().destroyBody();
                 controller.getView().remove();
+
+                try {
+                    ((AIController) controller).getEnemyHealthBarController().getRedView().remove();
+                    ((AIController) controller).getEnemyHealthBarController().getFrameView().remove();
+                } catch (ClassCastException e) {
+                }
+
                 controllerRemovalBuffer.add(controller);
             }
         }
