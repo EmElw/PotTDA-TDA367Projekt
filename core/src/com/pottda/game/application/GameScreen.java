@@ -1,9 +1,12 @@
 package com.pottda.game.application;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
@@ -12,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.AbstractController;
 import com.pottda.game.controller.ControllerHookup;
+import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.controller.NewControllerListener;
 import com.pottda.game.model.Character;
 import com.pottda.game.model.DeathListener;
@@ -51,7 +55,7 @@ import static com.pottda.game.model.Constants.HEIGHT_METERS;
 import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 import static com.pottda.game.model.Constants.WIDTH_METERS;
 
-class GameScreen implements NewControllerListener, ScoreChangeListener, DeathListener {
+class GameScreen extends AbstractScreen implements NewControllerListener, ScoreChangeListener, DeathListener {
     private static final int OBSTACLE_AMOUNT = 10;
     private static final float OBSTACLE_MAX_RADIUS = 3f;
     private static final float OBSTACLE_MIN_RADIUS = 0.5f;
@@ -89,15 +93,19 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
 
     private static final float SCALING = 2f;
 
-    GameScreen() {
+    GameScreen(Game game) {
+        super(game);
         create();
     }
 
     private long startWaitInventory;
 
     private void create() {
-        hudStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
+        Gdx.input.setInputProcessor(ControllerOptions.joystickStage);   // TODO clean
         joystickStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
+        ControllerOptions.joystickStage = joystickStage;
+
+        hudStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
         gameStage = new Stage(new StretchViewport(WIDTH_METERS / SCALING, HEIGHT_METERS / SCALING));
         gameStage.getCamera().position.x = WIDTH_METERS / 2 / SCALING;
         gameStage.getCamera().position.y = HEIGHT_METERS / 2 / SCALING;
@@ -106,9 +114,23 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
         gameOverView = new GameOverView(gameOverStage);
 
         soundsAndMusic = new SoundsAndMusic();
+
+        doOnStartGame();
     }
 
-    void render() {
+
+    @Override
+    public void resize(int width, int height) {
+        hudStage.getViewport().update(width, height, false);
+        gameStage.getViewport().update(width, height, false);
+        joystickStage.getViewport().update(width, height, false);
+        gameOverStage.getViewport().update(width, height, false);
+        bgStage.getViewport().update(width, height, false);
+    }
+
+
+    @Override
+    public void render(SpriteBatch batch, float delta) {
         switch (gameState) {
             case RUNNING:
             case WAITING_FOR_INVENTORY:
@@ -148,7 +170,8 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
             case GAME_OVER:
                 final long currentTime = System.currentTimeMillis();
                 if ((currentTime - startWaitGameOver) / 1000 >= WAITING_TIME_GAME_OVER_SECONDS) {
-                    gameOverView.render();
+                    switchScreen(new GameOverScreen(game, score));
+                    dispose();
                 } else {
                     updateGame();
                     updateWorld(false);
@@ -158,17 +181,11 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
         }
 
         checkTouch();
+
     }
 
-    void resize(int width, int height) {
-        hudStage.getViewport().update(width, height, false);
-        gameStage.getViewport().update(width, height, false);
-        joystickStage.getViewport().update(width, height, false);
-        gameOverStage.getViewport().update(width, height, false);
-        bgStage.getViewport().update(width, height, false);
-    }
-
-    void dispose() {
+    @Override
+    public void dispose() {
         hudStage.dispose();
         gameOverStage.dispose();
         if (world != null) {
@@ -218,6 +235,7 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
         ControllerHookup controllerHookup = new ControllerHookup(gameStage);
         controllerHookup.addListener(this);
 
+        AbstractModelBuilder.clear();   // Clear any previous configs (TODO improve?)
         AbstractModelBuilder.setPhysiscActorFactory(new Box2DPhysicsActorFactory(world));
         AbstractModelBuilder.addListener(controllerHookup);
 
@@ -356,6 +374,8 @@ class GameScreen implements NewControllerListener, ScoreChangeListener, DeathLis
             switch (gameState) {
                 case RUNNING:
                     if (hudView.checkIfTouchingPauseButton(vector3)) {
+                        // Touching pause button
+                        switchScreen(new PausedScreen(game, this));
                         gameState = PAUSED;
                     }
                     break;
