@@ -150,6 +150,10 @@ public class Inventory {
 
     }
 
+    public boolean checkIfLegalPos(float x, float y, Item item) {
+
+    }
+
     /**
      * Attacks in the given direction
      *

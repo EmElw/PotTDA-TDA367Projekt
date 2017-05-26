@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.pottda.game.model.Inventory;
 import com.pottda.game.model.Item;
 import com.pottda.game.model.Storage;
+import org.lwjgl.Sys;
 
 import javax.vecmath.Point2i;
 
@@ -36,6 +37,8 @@ public class InventoryManagementView {
 
     private Table table;
     private Image itemImage;
+
+    private Inventory inventory;
 
     private WorkingImageTable workingItemTable;
 
@@ -221,9 +224,11 @@ public class InventoryManagementView {
         // Create inventory
         inventoryGroup = new WidgetGroup();
 
+        this.inventory = inventory;
+
         List<Point2i> connections = new ArrayList<Point2i>();
 
-        for (Item i : inventory.getItems()) {
+        for (Item i : this.inventory.getItems()) {
             TextureAtlas.AtlasRegion region = atlas.findRegion(i.getName());
             region.flip(false, true);
             ItemImage itemImage = new ItemImage(region, i);
@@ -262,7 +267,7 @@ public class InventoryManagementView {
         Texture notConnection = new Texture(Gdx.files.internal("outputTest.png"));
         for (Point2i p : connections) {
             Image connectionImage = new Image(
-                    inventory.itemAt(p) == null ? notConnection : connection);
+                    this.inventory.itemAt(p) == null ? notConnection : connection);
 
             connectionImage.setPosition(p.x * SIZE, p.y * SIZE);
             connectionImage.setTouchable(Touchable.disabled);
@@ -327,7 +332,7 @@ public class InventoryManagementView {
         private ImageButton discardButton;
 
 
-        private WorkingImageTable(Item item) {
+        private WorkingImageTable(final Item item) {
             rotateRightButton = new ImageButton(rotateRightButtonDrawable);
             rotateLeftButton = new ImageButton(rotateLeftButtonDrawable);
             acceptButton = new ImageButton(acceptButtonDrawable);
@@ -350,9 +355,6 @@ public class InventoryManagementView {
 
             // TODO fix vectors pls
             // Vector2 vector = itemImage.localToParentCoordinates(new Vector2(itemImage.getOriginX(), itemImage.getOriginY()));
-
-            final float xTable = inventoryTable.getX() + 50;
-            final float yTable = inventoryTable.getY() + 50;
 
             setPosition(200, 200);
 
@@ -380,13 +382,23 @@ public class InventoryManagementView {
                     if (itemImage.getPrefWidth() / 25 % 2 != 0) {
                         extraX = 25f / 2f;
                     }
-                    setPosition(
-                            ((int) (getX() + x - xOffset) / 25) * 25 + extraX,
-                            ((int) (getY() + y - yOffset) / 25) * 25 + extraY);
-                    // TODO validate if the new coordinates are legal inside the inventory (send event to the listener if they are at all within inventory?)
-                    /*for (InventoryManagementListener iml : listeners) {
 
-                    }*/
+                    float posX = ((int) (getX() + x - xOffset) / 25) * 25 + extraX;
+                    float posY = ((int) (getY() + y - yOffset) / 25) * 25 + extraY;
+
+
+                    setPosition(posX, posY);
+                    // TODO validate if the new coordinates are legal inside the inventory (send event to the listener if they are at all within inventory?)
+                    if(inventory.checkIfLegalPos(posX, posY, item)) {
+                        acceptButton.setColor(0, 0, 0, 1);
+                    } else {
+                        acceptButton.setColor(100, 100, 100, 0.5f);
+                    }
+                    /*if (getX() >= xGroupMin && getX() <= xGroupMax
+                            && getY() >= yGroupMin && getY() <= yGroupMax) {
+
+                    } else
+                        acceptButton.setColor(100, 100, 100, 0.5f);*/
                 }
             });
 
