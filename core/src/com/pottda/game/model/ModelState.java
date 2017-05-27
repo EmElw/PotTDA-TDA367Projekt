@@ -54,7 +54,6 @@ public class ModelState implements DeathListener, NewModelListener {
         if (m instanceof Character) {
             if (m.team == ModelActor.ENEMY_TEAM) {
                 enemiesAlive++;
-                System.out.println("eA" + enemiesAlive);
             } else {
                 if (player == null) {
                     player = (Character) m;

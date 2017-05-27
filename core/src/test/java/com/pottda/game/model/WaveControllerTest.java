@@ -39,7 +39,7 @@ public class WaveControllerTest {
 
     @Test
     public void test() {
-        waveController.quicken((long) 10E5);
+        waveController.progressTime((long) 10E5);
 
         Assert.assertFalse(waveController.getToSpawn().isEmpty());
     }

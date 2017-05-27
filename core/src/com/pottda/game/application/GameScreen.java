@@ -145,20 +145,16 @@ class GameScreen extends AbstractScreen {
 
         doPhysicsStep(delta);
 
-        spawnEnemies();
+        spawnEnemies(delta);
 
         if (!modelState.enemiesAlive()) {
             if (waveController.levelFinished()) {
                 toInventoryManagement();
-            } else {
-                waveController.quicken((long) (delta * 100));
+            }
+            if (!modelState.playerAlive()) {
+                toGameOver();
             }
         }
-
-        if (!modelState.playerAlive()) {
-            toGameOver();
-        }
-
     }
 
     private void doPhysicsStep(float deltaTime) {
@@ -189,8 +185,10 @@ class GameScreen extends AbstractScreen {
         }
     }
 
-    private void spawnEnemies() {
-        Vector2f playerPosition = Character.player.getPosition();
+    private void spawnEnemies(float delta) {
+        Vector2f playerPosition = modelState.getPlayer().getPosition();
+
+        waveController.progressTime((modelState.enemiesAlive() ? delta : delta * 5));
 
         for (EnemyBlueprint bp : waveController.getToSpawn()) {
             float xx, yy;
