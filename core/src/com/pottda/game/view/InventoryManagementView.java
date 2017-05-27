@@ -329,7 +329,8 @@ public class InventoryManagementView {
         private ImageButton acceptButton;
         private ImageButton discardButton;
 
-        private float prePosX = 0, prePosY = 0;
+        private float prePosX = 0, prePosY = 0, posX, posY;
+        private boolean acceptButtonStatus = false;
 
 
         private WorkingImageTable(final Item item) {
@@ -385,15 +386,15 @@ public class InventoryManagementView {
                         extraX = 25f / 2f;
                     }
 
-                    float posX = ((int) (getX() + x - xOffset) / 25) * 25 + extraX;
-                    float posY = ((int) (getY() + y - yOffset) / 25) * 25 + extraY;
+                    posX = ((int) (getX() + x - xOffset) / 25) * 25 + extraX;
+                    posY = ((int) (getY() + y - yOffset) / 25) * 25 + extraY;
 
 
                     setPosition(posX, posY);
                     // TODO validate if the new coordinates are legal inside the inventory (send event to the listener if they are at all within inventory?)
-                    if ((posX - 25 ) >= prePosX || (posY - 25) >= prePosY) {
-                        prePosX = ((posX - 25) >= prePosX) ? posX : prePosX;
-                        prePosY = ((posX - 25) >= prePosY) ? posX : prePosY;
+                    if ((posX - 25) >= prePosX || (posX + 25) <= prePosX || (posY - 25) >= prePosY || (posY + 25) <= prePosY) {
+                        prePosX = ((posX - 25) >= prePosX || (posX + 25) <= prePosX) ? posX : prePosX;
+                        prePosY = ((posY - 25) >= prePosY || (posY + 25) <= prePosY) ? posY : prePosY;
                         setAcceptButtonState(posX, posY, itemImage.getRotation(), item);
                     }
 
@@ -429,6 +430,16 @@ public class InventoryManagementView {
                 }
             });
             acceptButton.addListener(new InputListener(){
+                @Override
+                public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
+                    if (acceptButtonStatus) {
+                        for(InventoryManagementListener iml : listeners) {
+                            iml.storageItemDropped(item.getName(), (int)posX/25, (int)posY/25, (int)itemImage.getRotation()/90);
+                        }
+                        return true;
+                    }
+                    return false;
+                }
 
             });
         }
@@ -436,8 +447,10 @@ public class InventoryManagementView {
         private void setAcceptButtonState(float x, float y, float rotation, Item item) {
             if(inventory.checkIfLegalPos((int)x/25, (int)y/25, (int)itemImage.getRotation()/90 , item)) {
                 acceptButton.setColor(0, 0, 0, 1);
+                acceptButtonStatus = true;
             } else {
                 acceptButton.setColor(100, 100, 100, 0.5f);
+                acceptButtonStatus = false;
             }
         }
     }
