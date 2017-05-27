@@ -291,12 +291,10 @@ public class InventoryManagementView {
 
     private class StorageImage extends Image {
 
-        private String itemName;    // The external item name associated with this button
         private Item item;
 
         private StorageImage(Item item) {
             super(new Texture(Gdx.files.internal("menu/storageButtonBackground.png")));
-            this.itemName = item.getName();
             this.item = item;
         }
 
@@ -330,6 +328,8 @@ public class InventoryManagementView {
         private ImageButton rotateLeftButton;
         private ImageButton acceptButton;
         private ImageButton discardButton;
+
+        private float prePosX = 0, prePosY = 0;
 
 
         private WorkingImageTable(final Item item) {
@@ -391,7 +391,11 @@ public class InventoryManagementView {
 
                     setPosition(posX, posY);
                     // TODO validate if the new coordinates are legal inside the inventory (send event to the listener if they are at all within inventory?)
-                    setAcceptButtonState(posX, posY, itemImage.getRotation() , item);
+                    if ((posX - 25 ) >= prePosX || (posY - 25) >= prePosY) {
+                        prePosX = ((posX - 25) >= prePosX) ? posX : prePosX;
+                        prePosY = ((posX - 25) >= prePosY) ? posX : prePosY;
+                        setAcceptButtonState(posX, posY, itemImage.getRotation(), item);
+                    }
 
                     /*if (getX() >= xGroupMin && getX() <= xGroupMax
                             && getY() >= yGroupMin && getY() <= yGroupMax) {
@@ -423,6 +427,9 @@ public class InventoryManagementView {
                     clearChildren();
                     return true;
                 }
+            });
+            acceptButton.addListener(new InputListener(){
+
             });
         }
 

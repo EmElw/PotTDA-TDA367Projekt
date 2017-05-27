@@ -28,5 +28,5 @@ public interface InventoryManagementListener {
      * @param x
      * @param y
      */
-    void storageItemDropped(String itemName, int x, int y);
+    void storageItemDropped(String itemName, int x, int y, int orientation);
 }
