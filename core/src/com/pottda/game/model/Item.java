@@ -173,9 +173,6 @@ public abstract class Item extends ProjectileListenerAdapter {
         return output;
     }
 
-    public String getName() {
-        return name;
-    }
 
     /**
      * Call to randomly determine if this item should be dropped
@@ -279,5 +276,8 @@ public abstract class Item extends ProjectileListenerAdapter {
 
     public void setY(int y) {
         this.y = y;
+    }
+    public String getName() {
+        return name;
     }
 }

@@ -78,7 +78,7 @@ public class Character extends ModelActor implements InventoryChangeListener {
             shouldBeRemoved = true;
             if (deathListeners != null) {
                 for (DeathListener dl : deathListeners) {
-                    dl.onDeath();
+                    dl.onDeath(inventory.getItemDropList());
                 }
             }
         }
