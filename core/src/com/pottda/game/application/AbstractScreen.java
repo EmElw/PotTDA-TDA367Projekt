@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 /**
  * Abstraction to interact with Game in smoother ways
  */
-public abstract class AbstractScreen implements Screen {
+abstract class AbstractScreen implements Screen {
 
     protected Game game;
 

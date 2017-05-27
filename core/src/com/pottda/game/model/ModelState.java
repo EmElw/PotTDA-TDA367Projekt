@@ -1,7 +1,9 @@
 package com.pottda.game.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Magnus on 2017-05-26.
@@ -17,11 +19,14 @@ public class ModelState implements DeathListener, NewModelListener {
     private Inventory inventory;
     private List<ScoreChangeListener> scoreChangeListeners;
 
+    public Set<Item> droppedItems;
+
     public ModelState() {
         storage = new Storage();
         score = 0;
         enemiesAlive = 0;
         scoreChangeListeners = new ArrayList<ScoreChangeListener>();
+        droppedItems = new HashSet<Item>();
     }
 
     public boolean enemiesAlive() {
@@ -35,7 +40,8 @@ public class ModelState implements DeathListener, NewModelListener {
     @Override
     public void onDeath(Character character) {
         if (character.team == ModelActor.ENEMY_TEAM) {
-            storage.addItems(character.inventory.getItemDropList());
+            droppedItems = character.inventory.getItemDropList();
+            storage.addItems(droppedItems);
             enemiesAlive--;
             score += character.getScoreValue();
             for (ScoreChangeListener scl : scoreChangeListeners) {
@@ -47,7 +53,6 @@ public class ModelState implements DeathListener, NewModelListener {
             player = null;
         }
     }
-
 
     @Override
     public void onNewModel(ModelActor m) {

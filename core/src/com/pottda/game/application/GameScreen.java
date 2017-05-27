@@ -33,7 +33,7 @@ class GameScreen extends AbstractScreen {
 
     private OrthographicCamera camera;
 
-    private Stage hudStage;
+    private HUDStage hudStage;
     private Stage gameStage;
     private Stage backgroundStage;
 
@@ -54,6 +54,7 @@ class GameScreen extends AbstractScreen {
     }
 
     private void create() {
+        modelState = new ModelState();
 
         initStages();
 
@@ -63,8 +64,6 @@ class GameScreen extends AbstractScreen {
         controllerManager = new ControllerManager();
         ControllerHookup controllerHookup = new ControllerHookup(gameStage, hudStage);
         controllerHookup.addListener(controllerManager);
-
-        modelState = new ModelState();
 
         AbstractModelBuilder.clear();
         AbstractModelBuilder.setPhysiscActorFactory(new Box2DPhysicsActorFactory(world));
@@ -86,18 +85,17 @@ class GameScreen extends AbstractScreen {
         camera = new OrthographicCamera(WIDTH_METERS / SCALING, HEIGHT_METERS / SCALING);
 
         backgroundStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
-        hudStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
+        hudStage = new HUDStage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
+        hudStage.initStage();
+        modelState.addScoreChangeListener(hudStage);
 
         Image background = new Image(new Texture(Gdx.files.internal(Sprites.MAINBACKGROUND.fileName)));
         background.setPosition(-background.getPrefWidth() / 4, -background.getPrefHeight() / 4);
         backgroundStage.addActor(background);
 
-        Image image = new Image(new Texture(Gdx.files.internal(Sprites.HEALTHBARRED.fileName)));
-        image.setPosition(3, hudStage.getHeight() - image.getPrefHeight() - 3);
-        hudStage.addActor(image);
-
         gameStage = new Stage(new StretchViewport(WIDTH_METERS / SCALING, HEIGHT_METERS / SCALING, camera));
 
+        Gdx.input.setInputProcessor(hudStage);
     }
 
     @Override
@@ -109,11 +107,8 @@ class GameScreen extends AbstractScreen {
 
     @Override
     public void render(SpriteBatch batch, float delta) {
+        Gdx.input.setInputProcessor(hudStage);
         updateModel(delta);
-
-        backgroundStage.getCamera().position.set(new Vector2(
-                Character.player.getPosition().x / WIDTH_RATIO / 2,
-                Character.player.getPosition().y / HEIGHT_RATIO / 2), 0);
 
         camera.position.set(controllerManager.getPlayerController().getView().getX(),
                 controllerManager.getPlayerController().getView().getY(),
@@ -127,6 +122,16 @@ class GameScreen extends AbstractScreen {
 
         backgroundStage.draw();
         gameStage.draw();
+        if (modelState.droppedItems.size() > 0) {
+            hudStage.onNewDrop(modelState.droppedItems);
+            modelState.droppedItems.clear();
+        }
+
+        if (hudStage.toPause()) {
+            hudStage.setToPause(false);
+            toPause();
+        }
+
         hudStage.draw();
 
         batch.end();
@@ -216,7 +221,7 @@ class GameScreen extends AbstractScreen {
     private void createPlayer() {
         new CharacterBuilder().
                 setTeam(Character.PLAYER_TEAM).
-                setInventoryFromFile("playerStartInventory.xml").
+                setInventoryFromFile("sizedItemTestInv.xml"). //playerStartInventory
                 setBehaviour(ModelActor.Behaviour.NONE).
                 setPosition(new Vector2f(WIDTH_METERS / 2, HEIGHT_METERS / 2)).
                 setSprite(Sprites.PLAYER).
