@@ -15,50 +15,31 @@ import com.pottda.game.view.InventoryManagementView;
 
 import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
 import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
+
 import com.pottda.game.model.Storage;
 
-public class InventoryManagementScreen extends AbstractScreen {
+public class InventoryManagementScreen extends AbstractMenuScreen {
 
     Inventory inventory;
     Storage storage;
-
-    private Camera camera;
-    private Stage stage;
 
     private InventoryManagementController controller;
 
     InventoryManagementScreen(Game game, Inventory inventory, Storage storage) {
         super(game);
+        this.inventory = inventory;
+        this.storage = storage;
         create(inventory, storage);
     }
 
     private void create(Inventory inventory, Storage storage) {
-        camera = new OrthographicCamera();
-        ((OrthographicCamera) camera).setToOrtho(false, WIDTH_VIEWPORT, HEIGHT_VIEWPORT);
 
-        stage = new Stage();
+        stage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
 
         InventoryManagementView inventoryView = new InventoryManagementView(stage);
         inventoryView.updateStorageTable(storage);
         inventoryView.updateInventoryGroup(inventory);
 
         controller = new InventoryManagementController(inventory, storage, inventoryView);
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, false);
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
-    }
-
-    @Override
-    public void render(SpriteBatch batch, float delta) {
-        batch.begin();
-        stage.draw();
-        batch.end();
     }
 }

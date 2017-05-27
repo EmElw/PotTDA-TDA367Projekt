@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
@@ -64,7 +65,7 @@ public class InventoryManagementView {
                             workingItemTable.clearChildren();
                         if (chosenImage != null)
                             chosenImage.setColor(1, 1, 1, 1);
-                        chosenImage = (ItemImage)evt.getTarget();
+                        chosenImage = (ItemImage) evt.getTarget();
                         workingItemTable = new WorkingImageTable(chosenImage.item);
                         chosenImage.setColor(100, 100, 100, 0.5f);
                         isFromStorage = false;
@@ -335,20 +336,18 @@ public class InventoryManagementView {
                 new TextureRegion(new Texture(Gdx.files.internal("discardButton.png"))));
 
 
-        private ImageButton rotateRightButton;
-        private ImageButton rotateLeftButton;
-        private ImageButton acceptButton;
-        private ImageButton discardButton;
+        private ImageButton rotateRightButton = new ImageButton(rotateRightButtonDrawable);
+        private ImageButton rotateLeftButton = new ImageButton(rotateLeftButtonDrawable);
+        private ImageButton acceptButton = new ImageButton(acceptButtonDrawable);
+        private ImageButton discardButton = new ImageButton(discardButtonDrawable);
 
         private float prePosX = 0, prePosY = 0, posX, posY;
         private boolean acceptButtonStatus = false;
         private final Image itemImage;
 
+        private Vector2 inventoryPosition;
+
         private WorkingImageTable(final Item item) {
-            rotateRightButton = new ImageButton(rotateRightButtonDrawable);
-            rotateLeftButton = new ImageButton(rotateLeftButtonDrawable);
-            acceptButton = new ImageButton(acceptButtonDrawable);
-            discardButton = new ImageButton(discardButtonDrawable);
 
             itemImage = new Image(atlas.findRegion(item.getName()));
             Point2i negativeOffset = item.getBaseBottomLeft();
@@ -365,7 +364,7 @@ public class InventoryManagementView {
             this.add(rotateLeftButton).left().size(SIZE);
             this.add(rotateRightButton).right().size(SIZE);
 
-            setAcceptButtonState(200, 200, itemImage.getRotation() , item);
+            setAcceptButtonState(200, 200, itemImage.getRotation(), item);
 
             // TODO fix vectors pls
             // Vector2 vector = itemImage.localToParentCoordinates(new Vector2(itemImage.getOriginX(), itemImage.getOriginY()));
@@ -438,24 +437,24 @@ public class InventoryManagementView {
                 public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
                     clearChildren();
                     if (chosenImage != null)
-                        chosenImage.setColor(1,1,1, 1);
+                        chosenImage.setColor(1, 1, 1, 1);
                     return true;
                 }
             });
-            acceptButton.addListener(new InputListener(){
+            acceptButton.addListener(new InputListener() {
                 @Override
                 public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
                     if (acceptButtonStatus) {
                         if (isFromStorage) {
                             for (InventoryManagementListener iml : listeners) {
                                 iml.storageItemDropped(item.getName(), (int) posX / 25,
-                                        (int) posY / 25, (int) itemImage.getRotation() / 90 % 4);
+                                        (int) posY / 25, (int) itemImage.getRotation() / 90);
                             }
                             return true;
                         } else {
                             for (InventoryManagementListener iml : listeners) {
                                 iml.inventoryItemMoved(item, (int) posX / 25,
-                                        (int) posY / 25, (int) itemImage.getRotation() / 90 % 4);
+                                        (int) posY / 25, (int) itemImage.getRotation() / 90);
                             }
                             return true;
                         }
@@ -467,7 +466,7 @@ public class InventoryManagementView {
         }
 
         private void setAcceptButtonState(float x, float y, float rotation, Item item) {
-            if(inventory.itemLegalAt((int)x/25, (int)y/25, (int)itemImage.getRotation()/90%4 , item)) {
+            if (inventory.itemLegalAt((int) x / 25, (int) y / 25, (int) itemImage.getRotation() / 90 % 4, item)) {
                 acceptButton.setColor(0, 0, 0, 1);
                 acceptButtonStatus = true;
             } else {

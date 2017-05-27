@@ -230,8 +230,8 @@ public abstract class Item extends ProjectileListenerAdapter {
      */
     private static Point2i rotate(int x, int y, int rotation) {
         Point2i returnValue = new Point2i(x, y);
-        returnValue.x = a[rotation] * x + b[rotation] * y;
-        returnValue.y = c[rotation] * x + a[rotation] * y;
+        returnValue.x = a[rotation % 4] * x + b[rotation % 4] * y;
+        returnValue.y = c[rotation % 4] * x + a[rotation % 4] * y;
         return returnValue;
     }
 
