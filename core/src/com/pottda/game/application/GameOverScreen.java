@@ -2,6 +2,7 @@ package com.pottda.game.application;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -19,24 +20,22 @@ import static com.pottda.game.application.GameState.gameState;
 import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
 import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 
-/**
- * Created by Magnus on 2017-05-26.
- */
-public class GameOverScreen extends AbstractScreen {
+class GameOverScreen extends AbstractMenuScreen {
     private int score;
 
     private TextButton menuButton;
     private TextButton restartButton;
+    private Label scoreLabel;
 
     public GameOverScreen(Game game, int score) {
         super(game);
         this.score = score;
-        create();
+
     }
 
-    private void create() {
-        camera = new OrthographicCamera();
-        ((OrthographicCamera) camera).setToOrtho(false, WIDTH_VIEWPORT, HEIGHT_VIEWPORT);
+    @Override
+    void create() {
+        super.create();
 
         stage = new GameOverStage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
         stage.setDebugAll(true);
@@ -55,6 +54,7 @@ public class GameOverScreen extends AbstractScreen {
         });
     }
 
+
     private void toMainMenu() {
         GameState.gameState = GameState.MAIN_MENU;
         switchScreen(new MenuScreen(game));
@@ -68,20 +68,16 @@ public class GameOverScreen extends AbstractScreen {
         dispose();
     }
 
-    @Override
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, false);
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
-    }
-
     private class GameOverStage extends Stage {
         GameOverStage(Viewport viewport) {
             super(viewport);
             initActors();
+        }
+
+        @Override
+        public void act(float delta) {
+            super.act(delta);
+            scoreLabel.setText("Score: " + score);
         }
 
         private void initActors() {
@@ -94,7 +90,7 @@ public class GameOverScreen extends AbstractScreen {
                 restartButton = new TextButton("Restart", SKIN_QH);
                 superTable.add(restartButton).bottom().left().uniformX();
 
-                Label scoreLabel = new Label("Score: " + score, SKIN_QH);
+                scoreLabel = new Label("Score: " + score, SKIN_QH);
                 superTable.add(scoreLabel).center().row();
 
                 menuButton = new TextButton("Main Menu", SKIN_QH);

@@ -14,6 +14,7 @@ public class CharacterBuilder extends AbstractModelBuilder implements ICharacter
     private Inventory inventory;
     private ModelActor.Behaviour behaviour = null;
     private List<DeathListener> deathListeners;
+    private int scoreValue = 0;
 
     @Override
     public ModelActor create() {
@@ -35,7 +36,9 @@ public class CharacterBuilder extends AbstractModelBuilder implements ICharacter
 
         character.behaviour = behaviour;
 
-        if(deathListeners != null) {
+        character.setScoreValue(scoreValue);
+
+        if (deathListeners != null) {
             character.setDeathListeners(deathListeners);
         }
 
@@ -66,6 +69,12 @@ public class CharacterBuilder extends AbstractModelBuilder implements ICharacter
     @Override
     public ICharacterBuilder setBehaviour(ModelActor.Behaviour behaviour) {
         this.behaviour = behaviour;
+        return this;
+    }
+
+    @Override
+    public ICharacterBuilder setScoreValue(int scoreValue) {
+        this.scoreValue = scoreValue;
         return this;
     }
 

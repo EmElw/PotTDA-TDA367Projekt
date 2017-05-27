@@ -37,6 +37,7 @@ public class ObstacleTextureFactory {
         tempPixMap.setColor(Color.WHITE);
         tempPixMap.drawCircle(radius, radius, radius);
 
+
         return new Texture(tempPixMap);
     }
 }
