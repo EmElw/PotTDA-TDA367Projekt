@@ -186,21 +186,23 @@ class GameScreen extends AbstractScreen {
     }
 
     private void spawnEnemies(float delta) {
-        Vector2f playerPosition = modelState.getPlayer().getPosition();
+        if (modelState.playerAlive()) {
+            Vector2f playerPosition = modelState.getPlayer().getPosition();
 
-        waveController.progressTime((modelState.enemiesAlive() ? delta : delta * 5));
+            waveController.progressTime((modelState.enemiesAlive() ? delta : delta * 5));
 
-        for (EnemyBlueprint bp : waveController.getToSpawn()) {
-            float xx, yy;
-            do {
-                xx = (float) (WIDTH_METERS * Math.random());
-            } while (Math.abs(xx - playerPosition.x) < WIDTH_METERS / (2 * SCALING));
+            for (EnemyBlueprint bp : waveController.getToSpawn()) {
+                float xx, yy;
+                do {
+                    xx = (float) (WIDTH_METERS * Math.random());
+                } while (Math.abs(xx - playerPosition.x) < WIDTH_METERS / (2 * SCALING));
 
-            do {
-                yy = (float) (HEIGHT_METERS * Math.random());
-            } while (Math.abs(yy - playerPosition.y) < HEIGHT_METERS / (2 * SCALING));
+                do {
+                    yy = (float) (HEIGHT_METERS * Math.random());
+                } while (Math.abs(yy - playerPosition.y) < HEIGHT_METERS / (2 * SCALING));
 
-            bp.build().setPosition(new Vector2f(xx, yy)).create();
+                bp.build().setPosition(new Vector2f(xx, yy)).create();
+            }
         }
     }
 
@@ -254,8 +256,8 @@ class GameScreen extends AbstractScreen {
     }
 
     private void toInventoryManagement() {
-        if (System.currentTimeMillis() % 1000 == 0)
-            System.out.println("To inventory");
+        System.out.println("To inventory");
+        waveController.newLevel();
 //        switchScreen(new InventoryManagementScreen(game,
 //                modelState.getInventory(),
 //                modelState.getStorage()));
