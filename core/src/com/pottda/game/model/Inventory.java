@@ -117,20 +117,17 @@ public class Inventory {
         checkedItems.add(item); // Add to checked items set
 
         // Recursively check each output
-        for (int i = 0; i < item.outputItems.size(); i++) {
-            Item op = item.outputItems.get(i);
-
+        for (Item op : item.outputItems) {
             if (op == null) {
-                return false;   // Base success case
+                continue;
             }
+
             if (isLooping(op,
-                    i == item.outputItems.size() ?              // If it is the last output:
-                            checkedItems :                      // - reuse the input set
-                            new HashSet<Item>(checkedItems))) { // - otherwise, create a copy
+                    new HashSet<Item>(checkedItems))) {
                 return true;
             }
         }
-        return false;       // Reaches here if all outputs are not looping
+        return false;
 
     }
 

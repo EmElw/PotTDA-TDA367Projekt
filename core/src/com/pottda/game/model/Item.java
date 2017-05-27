@@ -260,6 +260,7 @@ public abstract class Item extends ProjectileListenerAdapter {
 
     public void setOrientation(int orientation) {
         this.orientation = orientation;
+        changedOutputs = changedPositions = true;
     }
 
     public int getX() {
@@ -268,6 +269,7 @@ public abstract class Item extends ProjectileListenerAdapter {
 
     public void setX(int x) {
         this.x = x;
+        changedOutputs = changedPositions = true;
     }
 
     public int getY() {
@@ -276,7 +278,9 @@ public abstract class Item extends ProjectileListenerAdapter {
 
     public void setY(int y) {
         this.y = y;
+        changedOutputs = changedPositions = true;
     }
+
     public String getName() {
         return name;
     }

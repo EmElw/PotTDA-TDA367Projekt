@@ -65,6 +65,7 @@ public class ItemTest {
         speedItem = new SpeedItem();
     }
 
+
     @Test
     public void rotateTest() {
         List<Point2i> positionsA = a.getTransformedRotatedPositions();
@@ -73,8 +74,8 @@ public class ItemTest {
         List<Point2i> expectedPositionsA = new ArrayList<Point2i>();
         {
             expectedPositionsA.add(new Point2i(2, 5));
-            expectedPositionsA.add(new Point2i(1, 5));
             expectedPositionsA.add(new Point2i(2, 4));
+            expectedPositionsA.add(new Point2i(1, 5));
             expectedPositionsA.add(new Point2i(1, 4));
         }
 
