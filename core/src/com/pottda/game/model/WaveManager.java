@@ -13,7 +13,7 @@ import java.util.List;
  * <p>
  * Variables dealing with time are in seconds
  */
-public class WaveController {
+public class WaveManager {
 
     private static final float SPAWN_DELAY = 2;
     private static final float TIME_VARIANCE = 1.5f;
@@ -26,7 +26,7 @@ public class WaveController {
 
     private int level = 0;
 
-    public WaveController() {
+    public WaveManager() {
         newLevel();
     }
 
@@ -99,6 +99,10 @@ public class WaveController {
         for (SpawnEvent evt : levelData.spawnEvents) {
             evt.timeToSpawn -= delta;
         }
+    }
+
+    public int getLevel() {
+        return level;
     }
 
     private class Level {

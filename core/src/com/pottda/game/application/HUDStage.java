@@ -10,6 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.model.Character;
@@ -19,10 +21,9 @@ import com.pottda.game.model.Item;
 import com.pottda.game.model.ScoreChangeListener;
 import com.pottda.game.model.Sprites;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
+import static com.pottda.game.application.Constants.SKIN_QH;
 
 class HUDStage extends Stage implements ScoreChangeListener {
 
@@ -44,14 +45,15 @@ class HUDStage extends Stage implements ScoreChangeListener {
 
     HUDStage(StretchViewport stretchViewport) {
         super((stretchViewport));
+        initStage();
     }
 
-    void initStage() {
+    private void initStage() {
         itemDropLabelList = new ArrayList<ItemDropLabel>();
 
         BitmapFont bf = new BitmapFont();
         labelStyle = new Label.LabelStyle(bf, Color.WHITE);
-        scoreLabel = new Label(scoreLabelText, labelStyle);
+        scoreLabel = new Label(scoreLabelText + "0", SKIN_QH);
         scoreLabel.setPosition(getWidth() / 6, getHeight() - 30);
         scoreLabel.setFontScale(1.5f);
         addActor(scoreLabel);
@@ -104,7 +106,7 @@ class HUDStage extends Stage implements ScoreChangeListener {
     }
 
     private void addItemLabel(String name) {
-        Label label = new Label(name, labelStyle);
+        Label label = new Label(name, SKIN_QH);
         addActor(label);
         itemDropLabelList.add(new ItemDropLabel(label, System.currentTimeMillis()));
     }
@@ -165,5 +167,18 @@ class HUDStage extends Stage implements ScoreChangeListener {
     public void scoreChanged(int points) {
         score += points;
         scoreLabel.setText(scoreLabelText + score);
+    }
+
+    public void showLevelClear(int level) {
+        final Label label = new Label("Level " + level + " cleared", SKIN_QH, "title");
+        label.setPosition(this.getWidth() / 2 - label.getWidth() / 2, 100);
+        addActor(label);
+
+        new Timer().scheduleTask(new Timer.Task() {
+            @Override
+            public void run() {
+                label.remove();
+            }
+        }, 1.99f);
     }
 }

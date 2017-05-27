@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.*;
 import com.pottda.game.model.*;
@@ -45,7 +46,7 @@ class GameScreen extends AbstractScreen {
     private float accumulator;
 
     private ModelState modelState;
-    private WaveController waveController;
+    private WaveManager waveManager;
     private ControllerManager controllerManager;
 
     GameScreen(Game game) {
@@ -71,7 +72,7 @@ class GameScreen extends AbstractScreen {
         AbstractModelBuilder.addListener(controllerHookup);
         AbstractModelBuilder.addListener(modelState);
 
-        waveController = new WaveController();
+        waveManager = new WaveManager();
 
         createPlayer();
 
@@ -86,7 +87,6 @@ class GameScreen extends AbstractScreen {
 
         backgroundStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
         hudStage = new HUDStage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
-        hudStage.initStage();
         modelState.addScoreChangeListener(hudStage);
 
         Image background = new Image(new Texture(Gdx.files.internal(Sprites.MAINBACKGROUND.fileName)));
@@ -159,13 +159,12 @@ class GameScreen extends AbstractScreen {
 
         spawnEnemies(delta);
 
-        if (!modelState.enemiesAlive()) {
-            if (waveController.levelFinished()) {
-                toInventoryManagement();
-            }
-            if (!modelState.playerAlive()) {
-                toGameOver();
-            }
+        if (!modelState.playerAlive()) {
+            toGameOver();
+        }
+
+        if (!modelState.enemiesAlive() && waveManager.levelFinished()) {
+            toInventoryManagement();
         }
     }
 
@@ -201,9 +200,9 @@ class GameScreen extends AbstractScreen {
         if (modelState.playerAlive()) {
             Vector2f playerPosition = modelState.getPlayer().getPosition();
 
-            waveController.progressTime((modelState.enemiesAlive() ? delta : delta * 5));
+            waveManager.progressTime((modelState.enemiesAlive() ? delta : delta * 5));
 
-            for (EnemyBlueprint bp : waveController.getToSpawn()) {
+            for (EnemyBlueprint bp : waveManager.getToSpawn()) {
                 float xx, yy;
                 do {
                     xx = (float) (WIDTH_METERS * Math.random());
@@ -259,8 +258,14 @@ class GameScreen extends AbstractScreen {
     // Screen-switching
 
     private void toGameOver() {
-        switchScreen(new GameOverScreen(game, modelState.getScore()));
-        dispose();
+        if (Timer.instance().isEmpty())
+            Timer.instance().scheduleTask(new Timer.Task() {
+                @Override
+                public void run() {
+                    switchScreen(new GameOverScreen(game, modelState.getScore()));
+                    dispose();
+                }
+            }, 2);
     }
 
     private void toPause() {
@@ -268,11 +273,19 @@ class GameScreen extends AbstractScreen {
     }
 
     private void toInventoryManagement() {
-        System.out.println("To inventory");
-        waveController.newLevel();
+        if (Timer.instance().isEmpty()) {
+            hudStage.showLevelClear(waveManager.getLevel());
+            Timer.instance().scheduleTask(new Timer.Task() {
+                @Override
+                public void run() {
+                    System.out.println("To inventory");
+                    waveManager.newLevel();
 //        switchScreen(new InventoryManagementScreen(game,
 //                modelState.getInventory(),
 //                modelState.getStorage()));
+                }
+            }, 2);
+        }
     }
 
 }
