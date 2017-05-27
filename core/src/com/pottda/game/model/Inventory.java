@@ -150,8 +150,8 @@ public class Inventory {
 
     }
 
-    public boolean checkIfLegalPos(float x, float y, Item item) {
-
+    public boolean checkIfLegalPos(int x, int y, int orientation, Item item) {
+        return (x == 8 && y == 8);
     }
 
     /**

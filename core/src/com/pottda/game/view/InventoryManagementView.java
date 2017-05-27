@@ -353,6 +353,8 @@ public class InventoryManagementView {
             this.add(rotateLeftButton).left().size(SIZE);
             this.add(rotateRightButton).right().size(SIZE);
 
+            setAcceptButtonState(200, 200, itemImage.getRotation() , item);
+
             // TODO fix vectors pls
             // Vector2 vector = itemImage.localToParentCoordinates(new Vector2(itemImage.getOriginX(), itemImage.getOriginY()));
 
@@ -389,11 +391,8 @@ public class InventoryManagementView {
 
                     setPosition(posX, posY);
                     // TODO validate if the new coordinates are legal inside the inventory (send event to the listener if they are at all within inventory?)
-                    if(inventory.checkIfLegalPos(posX, posY, item)) {
-                        acceptButton.setColor(0, 0, 0, 1);
-                    } else {
-                        acceptButton.setColor(100, 100, 100, 0.5f);
-                    }
+                    setAcceptButtonState(posX, posY, itemImage.getRotation() , item);
+
                     /*if (getX() >= xGroupMin && getX() <= xGroupMax
                             && getY() >= yGroupMin && getY() <= yGroupMax) {
 
@@ -425,6 +424,14 @@ public class InventoryManagementView {
                     return true;
                 }
             });
+        }
+
+        private void setAcceptButtonState(float x, float y, float rotation, Item item) {
+            if(inventory.checkIfLegalPos((int)x/25, (int)y/25, (int)itemImage.getRotation()/90 , item)) {
+                acceptButton.setColor(0, 0, 0, 1);
+            } else {
+                acceptButton.setColor(100, 100, 100, 0.5f);
+            }
         }
     }
 }
