@@ -42,7 +42,7 @@ public class Character extends ModelActor implements InventoryChangeListener {
 
 //        // Sum all simple stats
 //        for (Stat stat : Stat.values()) {
-//            stats.put(stat, 0 + inventory.getSumStat(stat));
+//            stats.put(stat, 0 + inventory.getStatSum(stat));
 //        }
 
         inventoryChanged();
@@ -107,7 +107,7 @@ public class Character extends ModelActor implements InventoryChangeListener {
 
         // Fetch all the stats from the inventory
         for (Stat stat : Stat.values()) {
-            stats.put(stat, 0 + inventory.getSumStat(stat));
+            stats.put(stat, 0 + inventory.getStatSum(stat));
         }
 
         // Add base values

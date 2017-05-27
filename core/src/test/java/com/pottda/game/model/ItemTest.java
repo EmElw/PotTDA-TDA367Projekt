@@ -16,6 +16,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.vecmath.Point2i;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -66,28 +67,24 @@ public class ItemTest {
 
     @Test
     public void rotateTest() {
+        List<Point2i> positionsA = a.getTransformedRotatedPositions();
+        List<Point2i> outputA = a.getTransformedRotatedPositions();
 
-        List<Integer> positionsA = a.getPositionsAsIntegers(10);
-        List<Integer> outputA = a.getOutputAsInteger(10);
-        Collections.sort(positionsA);
+        List<Point2i> expectedPositionsA = new ArrayList<Point2i>();
+        {
+            expectedPositionsA.add(new Point2i(2, 5));
+            expectedPositionsA.add(new Point2i(1, 5));
+            expectedPositionsA.add(new Point2i(2, 4));
+            expectedPositionsA.add(new Point2i(1, 4));
+        }
 
-        List<Integer> positionsB = b.getPositionsAsIntegers(10);
-        List<Integer> outputB = b.getOutputAsInteger(10);
-        Collections.sort(positionsB);
+        List<Point2i> expectedOutputA = new ArrayList<Point2i>();
+        {
+            expectedOutputA.add(new Point2i(0, 4));
+        }
 
-        // Create the expected values
-        List<Integer> rotatedA = new ArrayList<Integer>();
-        rotatedA.addAll(Arrays.asList(51, 52, 41, 42));
-        Collections.sort(rotatedA);
-
-        List<Integer> rotatedB = new ArrayList<Integer>();
-        rotatedB.addAll(Arrays.asList(48, 38, 39, 29));
-        Collections.sort(rotatedB);
-
-        Assert.assertEquals(rotatedA, positionsA);
-        Assert.assertEquals(rotatedB, positionsB);
-        Assert.assertEquals(outputA.get(0), Integer.valueOf(40));
-        Assert.assertEquals(outputB.get(0), Integer.valueOf(19));
+        assertEquals(expectedPositionsA, positionsA);
+        assertEquals(expectedOutputA, outputA);
     }
 
     @Test
