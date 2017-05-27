@@ -45,6 +45,8 @@ public class InventoryManagementView {
 
     private ItemImage chosenImage;
 
+    private boolean isFromStorage;
+
     public InventoryManagementView(final Stage stage) {
         this.stage = stage;
         stage.setDebugAll(true);
@@ -58,7 +60,8 @@ public class InventoryManagementView {
                         if (chosenImage != null)
                             chosenImage.setColor(1, 1, 1, 1);
                         workingItemTable = new WorkingImageTable(((StorageImage) evt.getTarget()).getItem());
-                        
+                        isFromStorage = true;
+
                     } else if (evt.getTarget() instanceof ItemImage) {
                         if (workingItemTable != null)
                             workingItemTable.clearChildren();
@@ -67,9 +70,8 @@ public class InventoryManagementView {
                         chosenImage = (ItemImage)evt.getTarget();
                         workingItemTable = new WorkingImageTable(chosenImage.item);
                         chosenImage.setColor(100, 100, 100, 0.5f);
-                        for (InventoryManagementListener iml : listeners) {
+                        isFromStorage = false;
 
-                        }
                     }
                 } catch (ClassCastException e) {
                     return false;
@@ -168,6 +170,8 @@ public class InventoryManagementView {
     }
 
     public void updateStorageTable(Storage storage) {
+        if (storageTable != null)
+            storageTable.clearChildren();
         for (String s : storage.getItems()) {
             try {
                 addToStorageTable(s, storage.getNrOf(s), storage.getItem(s));
@@ -231,6 +235,8 @@ public class InventoryManagementView {
 
     public void updateInventoryGroup(Inventory inventory) {
         // Create inventory
+        if (inventoryGroup != null)
+            inventoryTable.clearChildren();
         inventoryGroup = new WidgetGroup();
 
         this.inventory = inventory;
@@ -239,7 +245,6 @@ public class InventoryManagementView {
 
         for (Item i : this.inventory.getItems()) {
             TextureAtlas.AtlasRegion region = atlas.findRegion(i.getName());
-            region.flip(false, true);
             ItemImage itemImage = new ItemImage(region, i);
 
             // TODO listener
@@ -435,7 +440,8 @@ public class InventoryManagementView {
                 @Override
                 public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
                     clearChildren();
-                    chosenImage.setColor(1,1,1, 1);
+                    if (chosenImage != null)
+                        chosenImage.setColor(1,1,1, 1);
                     return true;
                 }
             });
@@ -443,10 +449,19 @@ public class InventoryManagementView {
                 @Override
                 public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
                     if (acceptButtonStatus) {
-                        for(InventoryManagementListener iml : listeners) {
-                            iml.storageItemDropped(item.getName(), (int)posX/25, (int)posY/25, (int)itemImage.getRotation()/90);
+                        if (isFromStorage) {
+                            for (InventoryManagementListener iml : listeners) {
+                                iml.storageItemDropped(item.getName(), (int) posX / 25,
+                                        (int) posY / 25, (int) itemImage.getRotation() / 90 % 4);
+                            }
+                            return true;
+                        } else {
+                            for (InventoryManagementListener iml : listeners) {
+                                iml.inventoryItemMoved(item, (int) posX / 25,
+                                        (int) posY / 25, (int) itemImage.getRotation() / 90 % 4);
+                            }
+                            return true;
                         }
-                        return true;
                     }
                     return false;
                 }
@@ -455,7 +470,7 @@ public class InventoryManagementView {
         }
 
         private void setAcceptButtonState(float x, float y, float rotation, Item item) {
-            if(inventory.checkIfLegalPos((int)x/25, (int)y/25, (int)itemImage.getRotation()/90 , item)) {
+            if(inventory.checkIfLegalPos((int)x/25, (int)y/25, (int)itemImage.getRotation()/90%4 , item)) {
                 acceptButton.setColor(0, 0, 0, 1);
                 acceptButtonStatus = true;
             } else {

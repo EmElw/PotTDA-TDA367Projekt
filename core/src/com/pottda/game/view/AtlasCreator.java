@@ -35,6 +35,7 @@ public class AtlasCreator {
 
         for (Item i : itemList) {
             atlas.addRegion(i.getName(), new TextureRegion(createTextureForItem(i)));
+            atlas.findRegion(i.getName()).flip(false, true);
         }
 
     }

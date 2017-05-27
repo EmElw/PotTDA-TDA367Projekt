@@ -66,15 +66,19 @@ public class InventoryManagementController implements InventoryChangeListener, S
 
     @Override
     public void storageItemDropped(String itemName, int x, int y, int orientation) {
-        try {
             Item item = storage.popItem(itemName);
             item.setX(x);
             item.setY(y);
             item.setOrientation(orientation);
 
             inventory.addItem(item);
-        } catch (Exception e) {
-            throw new Error("Popped item from empty storage : ", e);
-        }
+    }
+
+    @Override
+    public void inventoryItemMoved(Item item, int x, int y, int orientation) {
+        //inventory.removeItem(item);
+        item.setX(x);
+        item.setY(y);
+        item.setOrientation(orientation);
     }
 }

@@ -152,7 +152,7 @@ public class Inventory {
     }
 
     public boolean checkIfLegalPos(int x, int y, int orientation, Item item) {
-        return (x == 7 && y == 7);
+        return true;
     }
 
     /**

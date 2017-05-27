@@ -22,11 +22,17 @@ public interface InventoryManagementListener {
     void inventoryItemTouched(Item item);
 
     /**
-     * Called on touchUp when an item is dropped into a relevant coordinate in the inventory
+     * Called on acceptButton when an item is dropped into a relevant coordinate in the inventory
      *
      * @param itemName
      * @param x
      * @param y
      */
     void storageItemDropped(String itemName, int x, int y, int orientation);
+
+    /**
+     * Called on acceptButton when an item is moved in the inventory
+     * @param item
+     */
+    void inventoryItemMoved(Item item, int x, int y, int orientation);
 }
