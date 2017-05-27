@@ -24,6 +24,8 @@ public class ObstacleTextureFactory {
         tempPixmap.setColor(Color.WHITE);
         tempPixmap.drawRectangle(0, 0, width, height);
 
+        tempPixmap.dispose();
+
         return new Texture(tempPixmap);
     }
 
@@ -36,6 +38,8 @@ public class ObstacleTextureFactory {
         tempPixMap.fillCircle(radius, radius, radius);
         tempPixMap.setColor(Color.WHITE);
         tempPixMap.drawCircle(radius, radius, radius);
+
+        tempPixMap.dispose();
 
         return new Texture(tempPixMap);
     }

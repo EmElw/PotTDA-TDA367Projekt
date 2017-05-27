@@ -35,6 +35,9 @@ public class EnemyHealthBarController {
         Texture frameTexture = new Texture(frame);
         Texture redTexture = new Texture(filling);
 
+        frame.dispose();
+        filling.dispose();
+
         redView = new ActorView(redTexture, new Vector2f(width, height));
         frameView = new ActorView(frameTexture);
     }
