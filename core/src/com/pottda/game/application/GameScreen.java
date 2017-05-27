@@ -85,14 +85,17 @@ class GameScreen extends AbstractScreen {
 
         camera = new OrthographicCamera(WIDTH_METERS / SCALING, HEIGHT_METERS / SCALING);
 
-
         backgroundStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
+        hudStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
 
         Image background = new Image(new Texture(Gdx.files.internal(Sprites.MAINBACKGROUND.fileName)));
-        background.setPosition(background.getWidth() / 2, background.getHeight() / 2);
+        background.setPosition(-background.getPrefWidth() / 4, -background.getPrefHeight() / 4);
         backgroundStage.addActor(background);
 
-        hudStage = new Stage(new StretchViewport(WIDTH_METERS, HEIGHT_METERS));
+        Image image = new Image(new Texture(Gdx.files.internal(Sprites.HEALTHBARRED.fileName)));
+        image.setPosition(3, hudStage.getHeight() - image.getPrefHeight() - 3);
+        hudStage.addActor(image);
+
         gameStage = new Stage(new StretchViewport(WIDTH_METERS / SCALING, HEIGHT_METERS / SCALING, camera));
 
     }
@@ -100,6 +103,8 @@ class GameScreen extends AbstractScreen {
     @Override
     public void resize(int width, int height) {
         gameStage.getViewport().update(width, height, false);
+        hudStage.getViewport().update(width, height, false);
+        backgroundStage.getViewport().update(width, height, false);
     }
 
     @Override
@@ -107,8 +112,8 @@ class GameScreen extends AbstractScreen {
         updateModel(delta);
 
         backgroundStage.getCamera().position.set(new Vector2(
-                camera.position.x / 2,
-                camera.position.y / 2), 0);
+                Character.player.getPosition().x / WIDTH_RATIO / 2,
+                Character.player.getPosition().y / HEIGHT_RATIO / 2), 0);
 
         camera.position.set(controllerManager.getPlayerController().getView().getX(),
                 controllerManager.getPlayerController().getView().getY(),
@@ -131,6 +136,8 @@ class GameScreen extends AbstractScreen {
     @Override
     public void dispose() {
         gameStage.dispose();
+        backgroundStage.dispose();
+        hudStage.dispose();
     }
 
     @Override
