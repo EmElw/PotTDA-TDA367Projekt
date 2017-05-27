@@ -2,10 +2,12 @@ package com.pottda.game.application;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.view.InventoryManagementController;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.pottda.game.model.Inventory;
 import com.pottda.game.model.Storage;
 import com.pottda.game.model.Storage;
@@ -19,6 +21,9 @@ public class InventoryManagementScreen extends AbstractScreen {
 
     Inventory inventory;
     Storage storage;
+
+    private Camera camera;
+    private Stage stage;
 
     private InventoryManagementController controller;
 
@@ -47,5 +52,13 @@ public class InventoryManagementScreen extends AbstractScreen {
 
     @Override
     public void dispose() {
+        stage.dispose();
+    }
+
+    @Override
+    public void render(SpriteBatch batch, float delta) {
+        batch.begin();
+        stage.draw();
+        batch.end();
     }
 }

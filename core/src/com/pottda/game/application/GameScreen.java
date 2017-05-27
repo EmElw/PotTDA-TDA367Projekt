@@ -2,259 +2,77 @@ package com.pottda.game.application;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.*;
+import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
-import com.pottda.game.model.DeathListener;
-import com.pottda.game.model.EnemyBlueprint;
-import com.pottda.game.model.Item;
-import com.pottda.game.model.ModelActor;
-import com.pottda.game.model.ScoreChangeListener;
-import com.pottda.game.model.Sprites;
-import com.pottda.game.model.Storage;
-import com.pottda.game.model.WaveController;
 import com.pottda.game.model.builders.AbstractModelBuilder;
 import com.pottda.game.model.builders.CharacterBuilder;
 import com.pottda.game.model.builders.ObstacleBuilder;
 import com.pottda.game.physicsBox2D.Box2DPhysicsActorFactory;
 import com.pottda.game.physicsBox2D.CollisionListener;
-import com.pottda.game.view.BackgroundView;
-import com.pottda.game.view.GameOverView;
-import com.pottda.game.view.GameView;
-import com.pottda.game.view.HUDView;
-import com.pottda.game.view.SoundsAndMusic;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Stack;
 
 import javax.vecmath.Vector2f;
 
-import static com.pottda.game.application.GameState.GAME_OVER;
-import static com.pottda.game.application.GameState.NONE;
-import static com.pottda.game.application.GameState.PAUSED;
-import static com.pottda.game.application.GameState.RESTARTING;
-import static com.pottda.game.application.GameState.RUNNING;
-import static com.pottda.game.application.GameState.WAITING_FOR_INVENTORY;
-import static com.pottda.game.application.GameState.gameState;
-import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
-import static com.pottda.game.model.Constants.HEIGHT_METERS;
-import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
-import static com.pottda.game.model.Constants.WIDTH_METERS;
+import static com.pottda.game.model.Constants.*;
 
-class GameScreen extends AbstractScreen implements NewControllerListener, ScoreChangeListener, DeathListener {
+class GameScreen extends AbstractScreen {
     private static final int OBSTACLE_AMOUNT = 10;
     private static final float OBSTACLE_MAX_RADIUS = 3f;
     private static final float OBSTACLE_MIN_RADIUS = 0.5f;
-    private static final float OBSTACLE_OFFSET = 1f;
-    private static final int MAX_OBSTACLE_SPAWNING_TRIES = 100;
-    private Stage hudStage;
-    private Stage joystickStage;
+    private static final float SCALING = 2f;
+    private static final long WAITING_TIME_GAME_OVER_SECONDS = 3;
+
+    private OrthographicCamera camera;
+
+    private HUDStage hudStage;
     private Stage gameStage;
-    private Stage gameOverStage;
-    private Stage bgStage;
+    private Stage backgroundStage;
 
     private World world;
 
+    /*
+    Stores delta time on new frames until it exceeds the physics world's update time threshold
+     */
     private float accumulator;
 
-    private HUDView hudView;
-    private SoundsAndMusic soundsAndMusic;
-    private GameView gameView;
-    private BackgroundView backgroundView;
-
-    private GameOverView gameOverView;
-
-    private WaveController waveController;
-
-    private Set<AbstractController> controllers;
-    private Stack<AbstractController> controllerBuffer;
-    private Stack<AbstractController> controllerRemovalBuffer;
-
-    private long startWaitGameOver;
-    private static final long WAITING_TIME_GAME_OVER_SECONDS = 3;
-    private static final long WAITING_TIME_LABEL_SECONDS = 3;
-
-    private static int score;
-    private int enemyAmount;
-
-    private Label scoreLabel;
-    private static final String scoreLabelText = "Score: ";
-
-    private static final float SCALING = 2f;
-
-    private Storage storage;
-    private InventoryManagementScreen inventoryManagementScreen;
-
-    private List<ItemDropLabel> itemDropLabelList;
-    private Label.LabelStyle labelStyle;
-    private static final float labelMargin = 3f;
+    private ModelState modelState;
+    private WaveManager waveManager;
+    private ControllerManager controllerManager;
 
     GameScreen(Game game) {
         super(game);
         create();
     }
 
-    private long startWaitInventory;
-
     private void create() {
-        Gdx.input.setInputProcessor(ControllerOptions.joystickStage);   // TODO clean
-        joystickStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
-        ControllerOptions.joystickStage = joystickStage;
+        modelState = new ModelState();
 
-        hudStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
-        gameStage = new Stage(new StretchViewport(WIDTH_METERS / SCALING, HEIGHT_METERS / SCALING));
-        gameStage.getCamera().position.x = WIDTH_METERS / 2 / SCALING;
-        gameStage.getCamera().position.y = HEIGHT_METERS / 2 / SCALING;
-        gameOverStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
-        bgStage = new Stage(new StretchViewport(WIDTH_METERS, HEIGHT_METERS));
-        gameOverView = new GameOverView(gameOverStage);
-
-        soundsAndMusic = new SoundsAndMusic();
-
-        storage = new Storage();
-
-        doOnStartGame();
-
-        inventoryManagementScreen = new InventoryManagementScreen(game, Character.player.inventory, storage);
-    }
-
-
-    @Override
-    public void resize(int width, int height) {
-        hudStage.getViewport().update(width, height, false);
-        gameStage.getViewport().update(width, height, false);
-        joystickStage.getViewport().update(width, height, false);
-        gameOverStage.getViewport().update(width, height, false);
-        bgStage.getViewport().update(width, height, false);
-    }
-
-
-    @Override
-    public void render(SpriteBatch batch, float delta) {
-        switch (gameState) {
-            case RUNNING:
-            case WAITING_FOR_INVENTORY:
-                updateGame();
-
-                doPhysicsStep(Gdx.graphics.getDeltaTime());
-
-                updateWorld(true);
-
-                spawnEnemies();
-
-                if (!enemiesAlive()) {
-                    if (waveController.levelFinished() && gameState != WAITING_FOR_INVENTORY) {
-                        startWaitInventory = System.currentTimeMillis();
-                        gameState = WAITING_FOR_INVENTORY;
-                    } else {
-                        waveController.quicken(9);
-                    }
-                }
-                if (gameState.equals(WAITING_FOR_INVENTORY)) {
-                    System.out.println("waiting");
-                    if ((System.currentTimeMillis() - startWaitInventory) / 1000 < WAITING_TIME_GAME_OVER_SECONDS) {
-                        // TODO switch to inventory
-                        System.out.println("To inventory");
-                        gameState = RUNNING;
-                        levelStart();
-                    }
-                }
-
-                if (!playersIsAlive()) {
-                    startWaitGameOver = System.currentTimeMillis();
-                    gameState = GAME_OVER;
-                    scoreLabel.setPosition(gameOverStage.getWidth() / 2 - scoreLabel.getWidth(), gameOverStage.getHeight() * 11 / 16);
-                    gameOverStage.addActor(scoreLabel);
-                }
-                break;
-            case GAME_OVER:
-                final long currentTime = System.currentTimeMillis();
-                if ((currentTime - startWaitGameOver) / 1000 >= WAITING_TIME_GAME_OVER_SECONDS) {
-                    switchScreen(new GameOverScreen(game, score));
-                    dispose();
-                } else {
-                    updateGame();
-                    updateWorld(false);
-                    doPhysicsStep(Gdx.graphics.getDeltaTime());
-                }
-                break;
-        }
-
-        checkTouch();
-
-    }
-
-    @Override
-    public void dispose() {
-        hudStage.dispose();
-        gameOverStage.dispose();
-        if (world != null) {
-            world.dispose();
-        }
-        if (soundsAndMusic != null) {
-            soundsAndMusic.dispose();
-        }
-        if (gameView != null) {
-            gameView.dispose();
-        }
-    }
-
-    private void doOnStartGame() {
-        gameState = NONE;
-
-        controllers = new HashSet<AbstractController>();
-        controllerBuffer = new Stack<AbstractController>();
-        controllerRemovalBuffer = new Stack<AbstractController>();
-
-        hudView = new HUDView(hudStage);
-        gameView = new GameView(gameStage, joystickStage);
-        backgroundView = new BackgroundView(bgStage);
+        initStages();
 
         world = new World(new Vector2(0, 0), false);
         world.setContactListener(new CollisionListener());
         accumulator = 0;
+        controllerManager = new ControllerManager();
+        ControllerHookup controllerHookup = new ControllerHookup(gameStage, hudStage);
+        controllerHookup.addListener(controllerManager);
 
-        score = 0;
-        enemyAmount = 0;
-
-        startWaitGameOver = 0;
-
-        startMusic();
-
-        score = 0;
-
-        BitmapFont bf = new BitmapFont();
-        labelStyle = new Label.LabelStyle(bf, Color.WHITE);
-        scoreLabel = new Label(scoreLabelText, labelStyle);
-        scoreLabel.setPosition(hudStage.getWidth() / 6, hudStage.getHeight() - 30);
-        scoreLabel.setFontScale(1.5f);
-        hudStage.addActor(scoreLabel);
-
-        itemDropLabelList = new ArrayList<ItemDropLabel>();
-
-        MyXMLReader reader = new MyXMLReader();
-        reader.generateXMLAssets();
-
-        ControllerHookup controllerHookup = new ControllerHookup(gameStage);
-        controllerHookup.addListener(this);
-
-        AbstractModelBuilder.clear();   // Clear any previous configs (TODO improve?)
+        AbstractModelBuilder.clear();
         AbstractModelBuilder.setPhysiscActorFactory(new Box2DPhysicsActorFactory(world));
-        AbstractModelBuilder.addListener(controllerHookup);
 
-        waveController = new WaveController();
+        AbstractModelBuilder.addListener(controllerHookup);
+        AbstractModelBuilder.addListener(modelState);
+
+        waveManager = new WaveManager();
 
         createPlayer();
 
@@ -263,169 +81,90 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
         createObstacles();
     }
 
-    private void createObstacles() {
-        float xx;
-        float yy;
-        float r;
-        int iterationCounter;
-        Vector2f tempPosition;
+    private void initStages() {
 
-        Boolean validLocation;
+        camera = new OrthographicCamera(WIDTH_METERS / SCALING, HEIGHT_METERS / SCALING);
 
-        List<Vector2f> positions = new ArrayList<Vector2f>();
-        for (int i = 0; i < OBSTACLE_AMOUNT; i++) {
-            iterationCounter = 0;
-            tempPosition = new Vector2f();
-            do {
-                r = (float) (Math.random() * (OBSTACLE_MAX_RADIUS - OBSTACLE_MIN_RADIUS)) + OBSTACLE_MIN_RADIUS;
-                xx = (float) Math.random() * (WIDTH_METERS - 2 * r - 2 * OBSTACLE_OFFSET) + r + OBSTACLE_OFFSET;
-                yy = (float) Math.random() * (HEIGHT_METERS - 2 * r - 2 * OBSTACLE_OFFSET) + r + OBSTACLE_OFFSET;
+        backgroundStage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
+        hudStage = new HUDStage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
+        modelState.addScoreChangeListener(hudStage);
 
-                if (i == 0) {
-                    validLocation = true;
-                } else {
-                    validLocation = true;
-                    for (int j = 0; j < i; j++) {
-                        tempPosition.set(xx, yy);
-                        tempPosition.sub(positions.get(j));
-                        if (tempPosition.length() < 2 * OBSTACLE_MAX_RADIUS + OBSTACLE_OFFSET) {
-                            validLocation = false;
-                            break;
-                        }
-                    }
-                }
-                iterationCounter++;
-            } while (!validLocation && iterationCounter < MAX_OBSTACLE_SPAWNING_TRIES);
+        Image background = new Image(new Texture(Gdx.files.internal(Sprites.MAINBACKGROUND.fileName)));
+        background.setPosition(-background.getPrefWidth() / 4, -background.getPrefHeight() / 4);
+        backgroundStage.addActor(background);
 
-            if (iterationCounter < MAX_OBSTACLE_SPAWNING_TRIES) {
-                tempPosition.set(xx, yy);
-                positions.add(tempPosition);
+        gameStage = new Stage(new StretchViewport(WIDTH_METERS / SCALING, HEIGHT_METERS / SCALING, camera));
 
-                new ObstacleBuilder().
-                        setRadius(r).
-                        setPosition(tempPosition).
-                        setSprite(Sprites.BORDER).
-                        create();
-            }
+        Gdx.input.setInputProcessor(hudStage);
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        gameStage.getViewport().update(width, height, false);
+        hudStage.getViewport().update(width, height, false);
+        backgroundStage.getViewport().update(width, height, false);
+    }
+
+    @Override
+    public void render(SpriteBatch batch, float delta) {
+        Gdx.input.setInputProcessor(hudStage);
+        updateModel(delta);
+
+        camera.position.set(controllerManager.getPlayerController().getView().getX(),
+                controllerManager.getPlayerController().getView().getY(),
+                0);
+
+        Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+
+        backgroundStage.draw();
+        gameStage.draw();
+        if (modelState.droppedItems.size() > 0) {
+            hudStage.onNewDrop(modelState.droppedItems);
+            modelState.droppedItems.clear();
         }
-    }
 
-    private void levelStart() {
-        waveController.newLevel();
-    }
-
-    private void updateGame() {
-        if (controllers != null) {
-            removeDeadActors();
-
-            for (AbstractController c : controllers) {
-                c.onNewFrame();
-            }
-            // TODO could potentially do some juggling to also execute the onFrame for all o these
-            controllers.addAll(controllerBuffer);
-            controllerBuffer.clear();
+        if (hudStage.toPause()) {
+            hudStage.setToPause(false);
+            toPause();
         }
-    }
 
-    private void updateWorld(boolean moveCamera) {
-        scoreLabel.setText(scoreLabelText + score);
-
-        updateLabels();
-
-        hudView.setHealthbar(Character.player.getCurrentHealth(), Character.player.getMaxHealth());
-
-        backgroundView.render(gameStage.getCamera());
-        gameView.render(moveCamera);
         hudStage.draw();
-        hudView.render();
+
+        batch.end();
+
     }
 
-    private void updateLabels() {
-        for (int i = 0; i < itemDropLabelList.size(); i++) {
-            ItemDropLabel itemDropLabel = itemDropLabelList.get(i);
-            final boolean isFadingOut = itemDropLabel.isFadingOut();
-            final boolean isFadingIn = itemDropLabel.isFadingIn();
-            final Label label = itemDropLabel.getLabel();
-            final long time = itemDropLabel.getTimeSinceAppeared();
-
-            if (!isFadingOut && (System.currentTimeMillis() - time) / 1000 > WAITING_TIME_LABEL_SECONDS) {
-                itemDropLabel.setFadeOut(true);
-            }
-            if (isFadingIn) {
-                Color color = label.getColor();
-                if (color.a < 1f) {
-                    label.setColor(color.r, color.g, color.b, color.a + 0.01f);
-                } else {
-                    itemDropLabel.setFadeIn(false);
-                }
-            } else if (isFadingOut) {
-                Color color = label.getColor();
-                if (color.a > 0f) {
-                    label.setColor(color.r, color.g, color.b, color.a - 0.01f);
-                } else {
-                    // Delete once faded out
-                    itemDropLabelList.remove(i);
-                }
-            }
-            if (ControllerOptions.controllerSettings == ControllerOptions.ControllerMode.TOUCH_JOYSTICK) {
-                // Center the labels when using joysticks to prevent fingers/joystick to cover the text
-                label.setPosition(hudStage.getWidth() / 2 - label.getPrefWidth() / 2, label.getPrefHeight() * i);
-            } else {
-                label.setPosition(hudStage.getWidth() - label.getPrefWidth() - labelMargin, label.getPrefHeight() * i);
-            }
-        }
+    @Override
+    public void dispose() {
+        gameStage.dispose();
+        backgroundStage.dispose();
+        hudStage.dispose();
     }
 
-    private void addItemLabel(String name) {
-        Label label = new Label(name, labelStyle);
-        hudStage.addActor(label);
-        itemDropLabelList.add(new ItemDropLabel(label, System.currentTimeMillis()));
+    @Override
+    public void pause() {
+        toPause();
     }
 
-    private void spawnEnemies() {
-        List<ScoreChangeListener> scoreChangeListeners = new ArrayList<ScoreChangeListener>();
-        scoreChangeListeners.add(this);
-        List<EnemyBlueprint> list = waveController.getToSpawn();
-        Vector2f playerPosition = Character.player.getPosition();
-        for (EnemyBlueprint bp : list) {
-            float xx, yy;
-            do {
-                xx = (float) (WIDTH_METERS * Math.random());
-            } while (Math.abs(xx - playerPosition.x) < WIDTH_METERS / (2 * SCALING));
+    // Model updating
 
-            do {
-                yy = (float) (HEIGHT_METERS * Math.random());
-            } while (Math.abs(yy - playerPosition.y) < HEIGHT_METERS / (2 * SCALING));
+    private void updateModel(float delta) {
+        controllerManager.updateControllers();
 
-            List<DeathListener> deathListeners = new ArrayList<DeathListener>();
-            deathListeners.add(this);
-            bp.setListeners(scoreChangeListeners, deathListeners);
-            bp.build().setPosition(new Vector2f(xx, yy)).create();
+        doPhysicsStep(delta);
 
-            enemyAmount++;
-        }
-    }
+        spawnEnemies(delta);
 
-    private void prepareForRemoval(AbstractController controller) {
-        controller.getModel().getPhysicsActor().destroyBody();
-        controller.getView().remove();
-        if (controller instanceof AIController) {
-            ((AIController) controller).getEnemyHealthBarController().getRedView().remove();
-            ((AIController) controller).getEnemyHealthBarController().getFrameView().remove();
-        }
-        controllerRemovalBuffer.add(controller);
-    }
-
-    private void removeDeadActors() {
-        for (AbstractController c : controllers) {
-            if (c.shouldBeRemoved()) {
-                prepareForRemoval(c);
-            }
+        if (!modelState.playerAlive()) {
+            toGameOver();
         }
 
-        if (controllerRemovalBuffer.size() > 0) {
-            controllers.removeAll(controllerRemovalBuffer);
-            controllerRemovalBuffer.clear();
+        if (!modelState.enemiesAlive() && waveManager.levelFinished()) {
+            toInventoryManagement();
         }
     }
 
@@ -438,77 +177,50 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
         }
     }
 
-    private void startMusic() {
-        soundsAndMusic.play();
-    }
+    // ModelActor creation
 
-    @Override
-    public void onNewController(AbstractController c) {
-        controllerBuffer.add(c);
-    }
+    private void createObstacles() {
+        float xx;
+        float yy;
+        float r;
+        for (int i = 0; i < OBSTACLE_AMOUNT; i++) {
+            xx = (float) Math.random() * WIDTH_METERS;
+            yy = (float) Math.random() * HEIGHT_METERS;
+            r = (float) (Math.random() * (OBSTACLE_MAX_RADIUS - OBSTACLE_MIN_RADIUS)) + OBSTACLE_MIN_RADIUS;
 
-    @Override
-    public void scoreChanged(int points) {
-        score += points;
-        System.out.println("Score: " + score);
-    }
-
-    @Override
-    public void onDeath(Set<Item> itemDropList) {
-        enemyAmount--;
-        System.out.println("Enemies alive: " + enemyAmount);
-        for (Item item : itemDropList) {
-            if (item != null) {
-                storage.addItem(item);
-                System.out.println("Added item " + item.getName());
-                addItemLabel(item.getName());
-            }
+            new ObstacleBuilder().
+                    setRadius(r).
+                    setPosition(new Vector2f(xx, yy)).
+                    setSprite(Sprites.BORDER).
+                    create();
         }
     }
 
-    // TODO move to a controller class
-    private void checkTouch() {
-        // Only check first touch
-        if (Gdx.input.justTouched()) {
-            Vector3 vector3 = hudStage.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
-            switch (gameState) {
-                case RUNNING:
-                    if (hudView.checkIfTouchingPauseButton(vector3)) {
-                        // Touching pause button
-                        switchScreen(new PausedScreen(game, this));
-                        gameState = PAUSED;
-                    }
-                    break;
-                case GAME_OVER:
-                    if (gameOverView.checkIfTouchingRestartButton(vector3)) {
-                        gameState = RESTARTING;
-                    } else if (gameOverView.checkIfTouchingQuitButton(vector3)) {
-                        Gdx.app.exit();
-                    }
-                    break;
+    private void spawnEnemies(float delta) {
+        if (modelState.playerAlive()) {
+            Vector2f playerPosition = modelState.getPlayer().getPosition();
+
+            waveManager.progressTime((modelState.enemiesAlive() ? delta : delta * 5));
+
+            for (EnemyBlueprint bp : waveManager.getToSpawn()) {
+                float xx, yy;
+                do {
+                    xx = (float) (WIDTH_METERS * Math.random());
+                } while (Math.abs(xx - playerPosition.x) < WIDTH_METERS / (2 * SCALING));
+
+                do {
+                    yy = (float) (HEIGHT_METERS * Math.random());
+                } while (Math.abs(yy - playerPosition.y) < HEIGHT_METERS / (2 * SCALING));
+
+                bp.build().setPosition(new Vector2f(xx, yy)).create();
             }
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            switch (gameState) {
-                case RUNNING:
-                    gameState = PAUSED;
-                    break;
-            }
-        }
-    }
-
-    private boolean enemiesAlive() {
-        return enemyAmount > 0;
-    }
-
-    private boolean playersIsAlive() {
-        return hudView.getHealth() > 0;
     }
 
     private void createPlayer() {
         new CharacterBuilder().
                 setTeam(Character.PLAYER_TEAM).
-                setInventoryFromFile("playerStartInventory.xml").
+                setInventoryFromFile("sizedItemTestInv.xml"). //playerStartInventory
                 setBehaviour(ModelActor.Behaviour.NONE).
                 setPosition(new Vector2f(WIDTH_METERS / 2, HEIGHT_METERS / 2)).
                 setSprite(Sprites.PLAYER).
@@ -543,11 +255,37 @@ class GameScreen extends AbstractScreen implements NewControllerListener, ScoreC
                 create();
     }
 
-    Stage getJoystickStage() {
-        return joystickStage;
+    // Screen-switching
+
+    private void toGameOver() {
+        if (Timer.instance().isEmpty())
+            Timer.instance().scheduleTask(new Timer.Task() {
+                @Override
+                public void run() {
+                    switchScreen(new GameOverScreen(game, modelState.getScore()));
+                    dispose();
+                }
+            }, 2);
     }
 
-    SoundsAndMusic getSoundsAndMusic() {
-        return soundsAndMusic;
+    private void toPause() {
+        switchScreen(new PausedScreen(game, this));
     }
+
+    private void toInventoryManagement() {
+        if (Timer.instance().isEmpty()) {
+            hudStage.showLevelClear(waveManager.getLevel());
+            Timer.instance().scheduleTask(new Timer.Task() {
+                @Override
+                public void run() {
+                    System.out.println("To inventory");
+                    waveManager.newLevel();
+//        switchScreen(new InventoryManagementScreen(game,
+//                modelState.getInventory(),
+//                modelState.getStorage()));
+                }
+            }, 2);
+        }
+    }
+
 }

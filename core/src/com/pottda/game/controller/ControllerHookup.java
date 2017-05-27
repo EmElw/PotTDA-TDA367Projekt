@@ -22,10 +22,12 @@ public class ControllerHookup implements NewModelListener {
 
     private static final float HEALTHBAR_WIDTH = 1;
     private static final float HEALTHBAR_HEIGHT = 0.2f;
-    private final Stage stage;
+    private final Stage gameStage;
+    private final Stage hudStage;
 
-    public ControllerHookup(Stage stage) {
-        this.stage = stage;
+    public ControllerHookup(Stage gameStage, Stage hudStage) {
+        this.gameStage = gameStage;
+        this.hudStage = hudStage;
     }
 
     private final List<NewControllerListener> listenerList = new ArrayList<NewControllerListener>();
@@ -50,6 +52,8 @@ public class ControllerHookup implements NewModelListener {
             } else if (m.team == Character.ENEMY_TEAM) {
                 enemyHealthBarController = new EnemyHealthBarController(HEALTHBAR_WIDTH, HEALTHBAR_HEIGHT, ((Character) m).getMaxHealth());
                 controller = createController(m, view, enemyHealthBarController);
+            } else {
+                throw new Error("bad team");
             }
         } else if (m instanceof Obstacle) {
             if (((Obstacle) m).isRound) {
@@ -63,10 +67,10 @@ public class ControllerHookup implements NewModelListener {
         }
 
         try {
-            stage.addActor(view);
+            gameStage.addActor(view);
             if (enemyHealthBarController != null) {
-                stage.addActor(enemyHealthBarController.getRedView());
-                stage.addActor(enemyHealthBarController.getFrameView());
+                gameStage.addActor(enemyHealthBarController.getRedView());
+                gameStage.addActor(enemyHealthBarController.getFrameView());
             }
             notifyListeners(controller);
         } catch (NullPointerException e) {
@@ -95,9 +99,9 @@ public class ControllerHookup implements NewModelListener {
     private AbstractController createInputController(ModelActor m, ActorView view) {
         switch (ControllerOptions.controllerSettings) {
             case TOUCH_JOYSTICK:
-                return new TouchJoystickController(m, view, ControllerOptions.joystickStage);
+                return new TouchJoystickController(m, view, hudStage);
             case KEYBOARD_MOUSE:
-                return new KeyboardMouseController(m, view, stage);
+                return new KeyboardMouseController(m, view, gameStage);
             case KEYBOARD_ONLY:
                 return new KeyboardOnlyController(m, view);
         }

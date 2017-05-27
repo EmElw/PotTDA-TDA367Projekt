@@ -2,6 +2,7 @@ package com.pottda.game.model;
 
 import javax.vecmath.Vector2f;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -30,10 +31,12 @@ public class Character extends ModelActor implements InventoryChangeListener {
     public static Character player;
 
     private List<DeathListener> deathListeners;
+    private int scoreValue;
 
     // -- Constructors --
 
     public Character() {
+        this.deathListeners = new ArrayList<DeathListener>();
         this.inventory = new Inventory();
         this.isProjectile = false;
         this.movementVector = new Vector2f();
@@ -78,7 +81,7 @@ public class Character extends ModelActor implements InventoryChangeListener {
             shouldBeRemoved = true;
             if (deathListeners != null) {
                 for (DeathListener dl : deathListeners) {
-                    dl.onDeath(inventory.getItemDropList());
+                    dl.onDeath(this);
                 }
             }
         }
@@ -94,7 +97,7 @@ public class Character extends ModelActor implements InventoryChangeListener {
     }
 
     public int getMaxHealth() {
-        return (int)stats.get(HEALTH).floatValue();
+        return (int) stats.get(HEALTH).floatValue();
     }
 
     @Override
@@ -120,5 +123,17 @@ public class Character extends ModelActor implements InventoryChangeListener {
 
     public void setDeathListeners(List<DeathListener> deathListeners) {
         this.deathListeners = deathListeners;
+    }
+
+    public void addDeathListener(DeathListener listener) {
+        deathListeners.add(listener);
+    }
+
+    public int getScoreValue() {
+        return scoreValue;
+    }
+
+    public void setScoreValue(int scoreValue) {
+        this.scoreValue = scoreValue;
     }
 }

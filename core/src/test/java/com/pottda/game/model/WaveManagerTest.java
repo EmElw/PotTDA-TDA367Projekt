@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by Magnus on 2017-05-22.
  */
-public class WaveControllerTest {
+public class WaveManagerTest {
 
     @BeforeClass
     public static void setUp() {
@@ -30,18 +30,18 @@ public class WaveControllerTest {
         generateGroups(new FileHandle(groupPath), new MyXMLReader());
     }
 
-    private WaveController waveController;
+    private WaveManager waveManager;
 
     @Before
     public void instantiating() {
-        waveController = new WaveController();
+        waveManager = new WaveManager();
     }
 
     @Test
     public void test() {
-        waveController.quicken((long) 10E5);
+        waveManager.progressTime((long) 10E5);
 
-        Assert.assertFalse(waveController.getToSpawn().isEmpty());
+        Assert.assertFalse(waveManager.getToSpawn().isEmpty());
     }
 
     private static void generateEnemies(FileHandle folder, MyXMLReader reader) {
