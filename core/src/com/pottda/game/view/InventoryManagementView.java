@@ -36,7 +36,6 @@ public class InventoryManagementView {
     private WidgetGroup inventoryGroup;
 
     private Table table;
-    private Image itemImage;
 
     private Inventory inventory;
 
@@ -56,10 +55,12 @@ public class InventoryManagementView {
                             workingItemTable.clearChildren();
                         workingItemTable = new WorkingImageTable(((StorageImage) evt.getTarget()).getItem());
                     } else if (evt.getTarget() instanceof ItemImage) {
+                        if (workingItemTable != null)
+                            workingItemTable.clearChildren();
+                        workingItemTable = new WorkingImageTable(((ItemImage) evt.getTarget()).item);
                         for (InventoryManagementListener iml : listeners) {
-                            iml.inventoryItemTouched(((ItemImage) evt.getTarget()).item);
+                            listeners.
                         }
-                        return true;
                     }
                 } catch (ClassCastException e) {
                     return false;
@@ -172,6 +173,7 @@ public class InventoryManagementView {
         Table storageTable = new Table();
         final StorageImage storageImage = new StorageImage(item);
         Stack storageStack = new Stack();
+        Image itemImage;
         //storageImage.setColor(0.03f, 0.69f, 0.73f, 1);  // TODO test only
 
 //        storageImage.addListener(
@@ -204,8 +206,6 @@ public class InventoryManagementView {
         Label itemCountLabel = new Label("#" + Integer.toString(itemCount), mySkin);
         itemCountLabel.setFontScale(0.5f, 0.5f);
         internalItemGroupTable.add(itemCountLabel).right();
-
-        Image itemImage = this.itemImage;
 
         // Add a label and image to the table and fit the image
         storageTable.add(internalItemGroupTable).left().spaceRight(10);
@@ -331,7 +331,7 @@ public class InventoryManagementView {
 
         private float prePosX = 0, prePosY = 0, posX, posY;
         private boolean acceptButtonStatus = false;
-
+        private final Image itemImage;
 
         private WorkingImageTable(final Item item) {
             rotateRightButton = new ImageButton(rotateRightButtonDrawable);
@@ -339,7 +339,7 @@ public class InventoryManagementView {
             acceptButton = new ImageButton(acceptButtonDrawable);
             discardButton = new ImageButton(discardButtonDrawable);
 
-            final Image itemImage = new Image(atlas.findRegion(item.getName()));
+            itemImage = new Image(atlas.findRegion(item.getName()));
             Point2i negativeOffset = item.getBaseBottomLeft();
             itemImage.setOrigin(
                     (float) ((0.5 - negativeOffset.x) * SIZE),
