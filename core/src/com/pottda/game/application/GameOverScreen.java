@@ -20,10 +20,7 @@ import static com.pottda.game.application.GameState.gameState;
 import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
 import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 
-/**
- * Created by Magnus on 2017-05-26.
- */
-public class GameOverScreen extends AbstractMenuScreen {
+class GameOverScreen extends AbstractMenuScreen {
     private int score;
 
     private TextButton menuButton;

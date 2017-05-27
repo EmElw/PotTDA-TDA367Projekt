@@ -7,14 +7,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
 import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 
-public abstract class AbstractMenuScreen extends AbstractScreen {
+abstract class AbstractMenuScreen extends AbstractScreen {
 
-    Camera camera;
+    private Camera camera;
     Stage stage;
 
     AbstractMenuScreen(Game game) {
@@ -28,7 +27,7 @@ public abstract class AbstractMenuScreen extends AbstractScreen {
     }
 
     @Override
-    public final void render(SpriteBatch batch, float delta) {
+    public void render(SpriteBatch batch, float delta) {
         if (camera == null) {
             throw new Error("Uninstantiated camera");
         }
