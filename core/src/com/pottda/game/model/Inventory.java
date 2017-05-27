@@ -13,35 +13,13 @@ import java.util.*;
  */
 
 public class Inventory {
-    /*
-    Starting points, set when compile() is called
-     */
-    final Set<AttackItem> attackItems;
-    /*
-    A list of the Items in this Inventory
-     */
     public final Set<Item> items;
-    /*
-    A map kept to quickly find what Item is at a given position, if any
-     */
-    private final Map<Integer, Item> positionMap;
-
-
-    private List<InventoryChangeListener> inventoryChangeListeners;
+    private final List<InventoryChangeListener> inventoryChangeListeners;
 
     private int height;
+
     private int width;
 
-    /*
-    Set to true if two items attempts to set to the same coordinate.
-    overlap = false is a condition for isLegal
-     */
-    private boolean overlap;
-
-
-    /**
-     * Initiate data structures
-     */
     Inventory() {
         overlap = false;
         attackItems = new HashSet<AttackItem>();
@@ -50,16 +28,28 @@ public class Inventory {
         positionMap = new TreeMap<Integer, Item>();
     }
 
+    //Starting points, set when compile() is called
+    final Set<AttackItem> attackItems;
+
+    // Stores positions as (X + width * Y) integers, set in compile()
+    private final Map<Integer, Item> positionMap;
+
+    // Set to true in compile() if there are overlap between items
+    private boolean overlap;
+
     /**
      * Called on creation and should be called whenever the
      * Inventory's state is changed (moved/changed items etc.)
+     * <p>
+     * Sets the values of the attack items and position map
      */
     public void compile() {
         // Map out all the positions of the items
         positionMap.clear();
         overlap = false;
         for (Item item : items) {
-            for (Integer n : item.getPositionsAsIntegers(width)) {
+            for (Point2i point : item.getTransformedRotatedPositions()) {
+                int n = point.x + point.y * width;
                 if ((positionMap.put(n, item)) != null) {
                     overlap = true;
                 }
@@ -73,19 +63,12 @@ public class Inventory {
                 attackItems.add((AttackItem) item);
             }
             // Map each output to an Item or null
-            List<Integer> outputs = item.getOutputAsInteger(width);
             item.outputItems.clear();
-            for (Integer i : outputs) {
-                item.outputItems.add(
-                        positionMap.get(i));
+            List<Point2i> outputs = item.getTransformedRotatedOutputs();
+            for (Point2i point : outputs) {
+                int n = point.x + point.y * width;
+                item.outputItems.add(positionMap.get(n));
             }
-        }
-    }
-
-    private void notifyListeners() {
-        // Calls all the InventoryChangeListeners
-        for (InventoryChangeListener icl : inventoryChangeListeners) {
-            icl.inventoryChanged();
         }
     }
 
@@ -134,32 +117,42 @@ public class Inventory {
         checkedItems.add(item); // Add to checked items set
 
         // Recursively check each output
-        for (int i = 0; i < item.outputItems.size(); i++) {
-            Item op = item.outputItems.get(i);
-
+        for (Item op : item.outputItems) {
             if (op == null) {
-                return false;   // Base success case
+                continue;
             }
+
             if (isLooping(op,
-                    i == item.outputItems.size() ?              // If it is the last output:
-                            checkedItems :                      // - reuse the input set
-                            new HashSet<Item>(checkedItems))) { // - otherwise, create a copy
+                    new HashSet<Item>(checkedItems))) {
                 return true;
             }
         }
-        return false;       // Reaches here if all outputs are not looping
+        return false;
 
     }
 
-    public boolean checkIfLegalPos(int x, int y, int orientation, Item item) {
-        return (x == 7 && y == 7);
+    public boolean itemLegalAt(int x, int y, int orientation, Item item) {
+        // Does a mock-insert of the item and tries to validate
+        // (No permanent change to the inventory state, no notifications)
+        int oldX = item.getX(), oldY = item.getY(), oldOrientation = item.getOrientation();
+        item.setX(x);
+        item.setY(y);
+        item.setOrientation(orientation);
+        this.items.add(item);
+
+        compile();
+        boolean legal = isLegal();
+
+        item.setX(oldX);
+        item.setY(oldY);
+        item.setOrientation(oldOrientation);
+        this.items.remove(item);
+
+        compile();
+
+        return legal;
     }
 
-    /**
-     * Attacks in the given direction
-     *
-     * @param direction a {@link Vector2f} in the wanted direction
-     */
     void attack(Vector2f direction, Vector2f origin, int team) {
 
         // Iterate through all attack items and do stuff
@@ -170,50 +163,12 @@ public class Inventory {
         }
     }
 
-    /**
-     * Sets the dimensions of this {@code Inventory}
-     *
-     * @param w an integer width
-     * @param h an integer height
-     */
-    void setDimensions(int w, int h) {
-        this.width = w;
-        this.height = h;
-    }
-
-    /**
-     * Returns the summed stat-value for the given stat
-     * (not guaranteed to be positive)
-     *
-     * @param stat a {@link Stat}
-     * @return a double
-     */
-    double getSumStat(Stat stat) {
-
+    double getStatSum(Stat stat) {
         double sum = 0;
         for (Item i : items) {
             sum += i.getStat(stat);
         }
         return sum;
-    }
-
-    /**
-     * Adds any number of Items to the Inventory
-     * <p>
-     * This notifies listeners and updates the items internal state
-     *
-     * @param items a {@link Collection<Item>}
-     */
-    public void addItems(Collection<Item> items) {
-        this.items.addAll(items);
-        compile();
-        notifyListeners();
-    }
-
-    public void addItem(Item item) {
-        items.add(item);
-        compile();
-        notifyListeners();
     }
 
     public Set<Item> getItemDropList() {
@@ -230,13 +185,7 @@ public class Inventory {
         return returnSet;
     }
 
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
+    // Standard stuff
 
     public void addInventoryChangeListener(InventoryChangeListener inventoryChangeListener) {
         this.inventoryChangeListeners.add(inventoryChangeListener);
@@ -244,6 +193,29 @@ public class Inventory {
 
     public void removeInventoryChangeListener(InventoryChangeListener inventoryChangeListener) {
         this.inventoryChangeListeners.remove(inventoryChangeListener);
+    }
+
+    public void addItem(Item item) {
+        items.add(item);
+        compile();
+        notifyListeners();
+    }
+
+    /**
+     * Add items and update inventory + call listeners
+     *
+     * @param items a {@link Collection<Item>}
+     */
+    public void addItems(Collection<Item> items) {
+        this.items.addAll(items);
+        compile();
+        notifyListeners();
+    }
+
+    public void removeItem(Item item) {
+        items.remove(item);
+        compile();
+        notifyListeners();
     }
 
     public Set<Item> getItems() {
@@ -255,6 +227,26 @@ public class Inventory {
             return positionMap.get(point.x + point.y * width);
         } else {
             return null;
+        }
+    }
+
+    void setDimensions(int width, int height) {
+        this.width = width;
+        this.height = height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    private void notifyListeners() {
+        // Calls all the InventoryChangeListeners
+        for (InventoryChangeListener icl : inventoryChangeListeners) {
+            icl.inventoryChanged();
         }
     }
 }
