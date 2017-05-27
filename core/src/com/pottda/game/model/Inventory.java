@@ -36,6 +36,8 @@ public class Inventory {
 
     // Set to true in compile() if there are overlap between items
     private boolean overlap;
+    // Set to true if an item's position is outside the item range ( p < 0 || p > width || p > height)
+    private boolean outOfBounds;
 
     /**
      * Called on creation and should be called whenever the
@@ -49,6 +51,9 @@ public class Inventory {
         overlap = false;
         for (Item item : items) {
             for (Point2i point : item.getTransformedRotatedPositions()) {
+                if (point.x < 0 || point.y < 0) {
+                    outOfBounds = true;
+                }
                 int n = point.x + point.y * width;
                 if ((positionMap.put(n, item)) != null) {
                     overlap = true;
@@ -83,8 +88,7 @@ public class Inventory {
      */
     boolean isLegal() {
 
-        // Check for overlapping items
-        if (overlap) {
+        if (overlap || outOfBounds) {
             return false;
         }
 
@@ -135,6 +139,8 @@ public class Inventory {
         // Does a mock-insert of the item and tries to validate
         // (No permanent change to the inventory state, no notifications)
         int oldX = item.getX(), oldY = item.getY(), oldOrientation = item.getOrientation();
+
+
         item.setX(x);
         item.setY(y);
         item.setOrientation(orientation);
