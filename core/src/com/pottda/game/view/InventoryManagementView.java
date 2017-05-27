@@ -43,6 +43,8 @@ public class InventoryManagementView {
 
     private List<InventoryManagementListener> listeners;
 
+    private ItemImage chosenImage;
+
     public InventoryManagementView(final Stage stage) {
         this.stage = stage;
         stage.setDebugAll(true);
@@ -53,13 +55,20 @@ public class InventoryManagementView {
                     if (evt.getTarget() instanceof StorageImage) {
                         if (workingItemTable != null)
                             workingItemTable.clearChildren();
+                        if (chosenImage != null)
+                            chosenImage.setColor(1, 1, 1, 1);
                         workingItemTable = new WorkingImageTable(((StorageImage) evt.getTarget()).getItem());
+                        
                     } else if (evt.getTarget() instanceof ItemImage) {
                         if (workingItemTable != null)
                             workingItemTable.clearChildren();
-                        workingItemTable = new WorkingImageTable(((ItemImage) evt.getTarget()).item);
+                        if (chosenImage != null)
+                            chosenImage.setColor(1, 1, 1, 1);
+                        chosenImage = (ItemImage)evt.getTarget();
+                        workingItemTable = new WorkingImageTable(chosenImage.item);
+                        chosenImage.setColor(100, 100, 100, 0.5f);
                         for (InventoryManagementListener iml : listeners) {
-                            listeners.
+
                         }
                     }
                 } catch (ClassCastException e) {
@@ -426,6 +435,7 @@ public class InventoryManagementView {
                 @Override
                 public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
                     clearChildren();
+                    chosenImage.setColor(1,1,1, 1);
                     return true;
                 }
             });

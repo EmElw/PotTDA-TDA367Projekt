@@ -2,8 +2,6 @@ package com.pottda.game.application;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.pottda.game.model.*;
 import com.pottda.game.model.Constants;
@@ -26,10 +24,6 @@ import static com.pottda.game.application.GameState.gameState;
 import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
 
 public class PoTDAGame extends Game {
-
-    private GameScreen gameScreen;
-    private MenuScreen menuScreen;
-    private PausedScreen pausedScreen;
 
     private SpriteBatch batch;
 

@@ -1,6 +1,7 @@
 package com.pottda.game.model;
 
 import java.util.List;
+import java.util.Set;
 
 class EnemyDeathListener implements DeathListener{
     private final int points;
@@ -12,7 +13,7 @@ class EnemyDeathListener implements DeathListener{
     }
 
     @Override
-    public void onDeath() {
+    public void onDeath(Set<Item> inventory) {
         for (ScoreChangeListener scl : scoreChangeListenerList){
             scl.scoreChanged(points);
         }
