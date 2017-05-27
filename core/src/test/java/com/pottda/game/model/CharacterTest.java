@@ -96,12 +96,12 @@ public class CharacterTest {
 
         item.init();
 
-        assertEquals(Math.round(inventory.getSumStat(Stat.HEALTH)) + BASE_HEALTH, character.currentHealth);
+        assertEquals(Math.round(inventory.getStatSum(Stat.HEALTH)) + BASE_HEALTH, character.currentHealth);
 
         inventory.addItem(item);
         inventory.compile();
 
-        assertEquals(Math.round(inventory.getSumStat(Stat.HEALTH)) + BASE_HEALTH, character.currentHealth);
+        assertEquals(Math.round(inventory.getStatSum(Stat.HEALTH)) + BASE_HEALTH, character.currentHealth);
     }
 
     private Inventory setUpInventory() {

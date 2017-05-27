@@ -1,11 +1,9 @@
 package com.pottda.game.view;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
@@ -15,7 +13,6 @@ import com.badlogic.gdx.utils.Scaling;
 import com.pottda.game.model.Inventory;
 import com.pottda.game.model.Item;
 import com.pottda.game.model.Storage;
-import org.lwjgl.Sys;
 
 import javax.vecmath.Point2i;
 
@@ -470,7 +467,7 @@ public class InventoryManagementView {
         }
 
         private void setAcceptButtonState(float x, float y, float rotation, Item item) {
-            if(inventory.checkIfLegalPos((int)x/25, (int)y/25, (int)itemImage.getRotation()/90%4 , item)) {
+            if(inventory.itemLegalAt((int)x/25, (int)y/25, (int)itemImage.getRotation()/90%4 , item)) {
                 acceptButton.setColor(0, 0, 0, 1);
                 acceptButtonStatus = true;
             } else {
