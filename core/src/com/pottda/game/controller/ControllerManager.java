@@ -66,7 +66,6 @@ public class ControllerManager implements NewControllerListener {
                     ((AIController) controller).getEnemyHealthBarController().getRedView().remove();
                     ((AIController) controller).getEnemyHealthBarController().getFrameView().remove();
                 } catch (ClassCastException e) {
-                    e.printStackTrace();
                 }
 
                 controllerRemovalBuffer.add(controller);
