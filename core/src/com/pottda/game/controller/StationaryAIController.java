@@ -12,8 +12,8 @@ class StationaryAIController extends AIController{
     @Override
     protected void setInputVectors() {
 //        movementVector.set(0, 0);
-        if(Character.player != null && Character.player.getPosition() != null) {
-            attackVector.set(Character.player.getPosition());
+        if(Character.getPlayer() != null && Character.getPlayer().getPosition() != null) {
+            attackVector.set(Character.getPlayer().getPosition());
             attackVector.sub(modelActor.getPosition());
             attackVector.normalize();
         }
