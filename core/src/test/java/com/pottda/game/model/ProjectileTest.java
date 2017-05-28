@@ -59,7 +59,7 @@ public class ProjectileTest {
         projectile = (Projectile) new ProjectileBuilder().
                 setTeam(Character.PLAYER_TEAM).
                 setPosition(new Vector2f()).
-                setSprite(Sprites.ENEMYPROJECTILE).
+                setSprite(com.pottda.game.assets.Sprites.ENEMYPROJECTILE).
                 create();
     }
 
@@ -110,7 +110,7 @@ public class ProjectileTest {
                 setTeam(Character.ENEMY_TEAM).
                 setInventoryFromFile("testInv.xml").
                 setPosition(new Vector2f()).
-                setSprite(Sprites.ENEMY).
+                setSprite(com.pottda.game.assets.Sprites.ENEMY).
                 create();
 
         int projectileDamage = 10;

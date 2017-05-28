@@ -8,8 +8,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
-import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
+import static com.pottda.game.assets.Constants.HEIGHT_VIEWPORT;
+import static com.pottda.game.assets.Constants.WIDTH_VIEWPORT;
 
 abstract class AbstractMenuScreen extends AbstractScreen {
 

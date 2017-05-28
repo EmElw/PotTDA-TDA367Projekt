@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  */
 abstract class AbstractScreen implements Screen {
 
-    protected Game game;
+    final Game game;
 
     AbstractScreen(Game game) {
         this.game = game;

@@ -58,9 +58,8 @@ public class SoundsAndMusic {
     /**
      * Sets the new SFX volume
      *
-     * @param volume new SFX volume. A float value between 0 and 1
      */
-    public void setSFXVolume(float volume) {
+    public void setSFXVolume() {
         //sound.setVolume(0, volume); //id?
     }
 

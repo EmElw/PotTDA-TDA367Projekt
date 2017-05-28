@@ -10,7 +10,6 @@ import com.pottda.game.model.Item;
 
 import javax.vecmath.Point2i;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -25,7 +24,7 @@ public class AtlasCreator {
      * <p>
      * The region-names are the samea s the Item-names.
      */
-    public static TextureAtlas atlas = new TextureAtlas();
+    public static final TextureAtlas atlas = new TextureAtlas();
 
     /**
      * Creates a {@link TextureAtlas}

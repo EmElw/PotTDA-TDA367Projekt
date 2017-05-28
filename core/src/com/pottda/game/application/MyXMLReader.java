@@ -112,7 +112,7 @@ public class MyXMLReader {
      * @return an {@link XMLItem}
      * @throws IOException if the root element in e is not equal to "item"
      */
-    public XMLItem parseItem(Element e) throws IOException {
+    private XMLItem parseItem(Element e) throws IOException {
         if (e.getName().equals("item")) {
             return new XMLItem(
                     e.getAttribute("name"),
@@ -135,7 +135,7 @@ public class MyXMLReader {
         throw new IOException("no sizedItem in root");
     }
 
-    public void generateInventories(MyXMLReader reader) {
+    private void generateInventories(MyXMLReader reader) {
 
         FileHandle folder = Gdx.files.internal("inventoryblueprint");
 
@@ -149,7 +149,7 @@ public class MyXMLReader {
         }
     }
 
-    public void generateEnemies(MyXMLReader reader) {
+    private void generateEnemies(MyXMLReader reader) {
         FileHandle folder = Gdx.files.internal("enemies");
 
         List<FileHandle> contents = Arrays.asList(folder.list("xml"));
@@ -162,7 +162,7 @@ public class MyXMLReader {
         }
     }
 
-    public void generateEnemyGroups(MyXMLReader reader) {
+    private void generateEnemyGroups(MyXMLReader reader) {
         FileHandle folder = Gdx.files.internal("enemygroups");
 
         List<FileHandle> contents = Arrays.asList(folder.list("xml"));

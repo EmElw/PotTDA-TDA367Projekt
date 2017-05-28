@@ -15,8 +15,8 @@ public class ModelState implements DeathListener, NewModelListener {
 
     private Character player;
 
-    private Storage storage;
-    private List<ScoreChangeListener> scoreChangeListeners;
+    private final Storage storage;
+    private final List<ScoreChangeListener> scoreChangeListeners;
 
     public Set<Item> droppedItems;
 

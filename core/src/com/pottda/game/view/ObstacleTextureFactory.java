@@ -3,7 +3,7 @@ package com.pottda.game.view;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.pottda.game.model.Constants;
+import com.pottda.game.assets.Constants;
 
 import javax.vecmath.Vector2f;
 
@@ -12,7 +12,7 @@ public class ObstacleTextureFactory {
         return getRectangularObstacleTexture(sizeMeters.x, sizeMeters.y);
     }
 
-    public static Texture getRectangularObstacleTexture(float widthMeters, float heightMeters){
+    private static Texture getRectangularObstacleTexture(float widthMeters, float heightMeters){
         int width = Math.round(widthMeters / Constants.WIDTH_RATIO);
         int height = Math.round(heightMeters / Constants.HEIGHT_RATIO);
 

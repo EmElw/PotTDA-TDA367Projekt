@@ -30,7 +30,7 @@ public enum ItemSize {
         return statMultiplier;
     }
 
-    public int getIdentifier() {
+    private int getIdentifier() {
         return identifier;
     }
 

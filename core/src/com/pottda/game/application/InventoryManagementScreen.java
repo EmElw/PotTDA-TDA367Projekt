@@ -12,13 +12,13 @@ import com.pottda.game.model.Inventory;
 import com.pottda.game.model.Storage;
 import com.pottda.game.view.InventoryManagementView;
 
-import static com.pottda.game.application.Constants.SKIN_QH;
-import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
-import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
+import static com.pottda.game.assets.Constants.HEIGHT_VIEWPORT;
+import static com.pottda.game.assets.Constants.SKIN_QH;
+import static com.pottda.game.assets.Constants.WIDTH_VIEWPORT;
 
-public class InventoryManagementScreen extends AbstractMenuScreen {
+class InventoryManagementScreen extends AbstractMenuScreen {
 
-    private Screen parentScreen;
+    private final Screen parentScreen;
 
     InventoryManagementScreen(Game game, Screen parentScreen, Inventory inventory, Storage storage) {
         super(game);
