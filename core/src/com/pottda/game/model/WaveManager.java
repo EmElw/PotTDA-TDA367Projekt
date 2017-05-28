@@ -50,7 +50,7 @@ public class WaveManager {
      * Randomly fetches enemyGroups from the blueprint-class until the pool is depleted
      *
      * @param difficulty
-     * @param lengthMS
+     * @param length
      */
     private void newLevel(int difficulty, float length) {
         System.out.println("d: " + difficulty + " , l: " + length);
