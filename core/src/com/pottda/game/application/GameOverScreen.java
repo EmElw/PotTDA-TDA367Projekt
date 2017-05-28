@@ -2,9 +2,6 @@ package com.pottda.game.application;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -15,8 +12,6 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import static com.pottda.game.application.Constants.SKIN_QH;
-import static com.pottda.game.application.GameState.RUNNING;
-import static com.pottda.game.application.GameState.gameState;
 import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
 import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 
@@ -56,14 +51,12 @@ class GameOverScreen extends AbstractMenuScreen {
 
 
     private void toMainMenu() {
-        GameState.gameState = GameState.MAIN_MENU;
         switchScreen(new MenuScreen(game));
         dispose();
     }
 
     private void restartGame() {
         GameScreen gs = new GameScreen(game);
-        gameState = RUNNING;
         switchScreen(gs);
         dispose();
     }

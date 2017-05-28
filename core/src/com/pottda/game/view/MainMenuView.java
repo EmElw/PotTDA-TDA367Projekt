@@ -108,4 +108,6 @@ public class MainMenuView {
         return tr.contains(vector3.x, vector3.y);
     }
 
+    public void dispose() {mainMenuStage.dispose();}
+
 }

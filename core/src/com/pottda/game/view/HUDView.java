@@ -100,4 +100,6 @@ public class HUDView {
         return healthbarRed.getWidth();
     }
 
+    public void dispose() {stage.dispose();}
+
 }

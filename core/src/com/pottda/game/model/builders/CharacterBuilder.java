@@ -1,9 +1,8 @@
 package com.pottda.game.model.builders;
 
-import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
+import com.pottda.game.model.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,9 +25,7 @@ public class CharacterBuilder extends AbstractModelBuilder implements ICharacter
         }
         character.inventory = inventory;
 
-        List<InventoryChangeListener> inventoryChangeListeners = new ArrayList<InventoryChangeListener>(1);
-        inventoryChangeListeners.add(character);
-        inventory.setInventoryChangeListeners(inventoryChangeListeners);
+        inventory.addInventoryChangeListener(character);
 
         inventory.compile();
 

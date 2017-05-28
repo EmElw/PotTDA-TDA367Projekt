@@ -16,7 +16,6 @@ public class ModelState implements DeathListener, NewModelListener {
     private Character player;
 
     private Storage storage;
-    private Inventory inventory;
     private List<ScoreChangeListener> scoreChangeListeners;
 
     public Set<Item> droppedItems;
@@ -72,9 +71,6 @@ public class ModelState implements DeathListener, NewModelListener {
         return player != null;
     }
 
-    public Inventory getInventory() {
-        return inventory;
-    }
 
     public Storage getStorage() {
         return storage;

@@ -2,7 +2,9 @@ package com.pottda.game.application;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -16,10 +18,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pottda.game.controller.ControllerOptions;
 
 import static com.pottda.game.application.Constants.SKIN_QH;
-import static com.pottda.game.application.GameState.MAIN_MENU;
-import static com.pottda.game.application.GameState.RUNNING;
-import static com.pottda.game.application.GameState.gameState;
-import static com.pottda.game.model.Constants.*;
+import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
+import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 
 class MenuScreen extends AbstractMenuScreen {
 
@@ -110,7 +110,6 @@ class MenuScreen extends AbstractMenuScreen {
         });
 
 
-        gameState = MAIN_MENU;
     }
 
     private void quitGame() {
@@ -119,7 +118,6 @@ class MenuScreen extends AbstractMenuScreen {
 
     private void startGame() {
         GameScreen gs = new GameScreen(game);
-        gameState = RUNNING;
         switchScreen(gs);
         dispose();
     }

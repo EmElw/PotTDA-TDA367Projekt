@@ -3,15 +3,14 @@ package com.pottda.game.model;
 import com.pottda.game.model.builders.AbstractModelBuilder;
 import com.pottda.game.model.builders.CharacterBuilder;
 import com.pottda.game.model.builders.ProjectileBuilder;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.vecmath.Vector2f;
-
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ProjectileTest {
     private final PhysicsActorFactory paf = new PhysicsActorFactory() {

@@ -3,7 +3,7 @@ package com.pottda.game.application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.XmlReader;
-import com.badlogic.gdx.utils.XmlReader.*;
+import com.badlogic.gdx.utils.XmlReader.Element;
 import com.pottda.game.model.*;
 
 import java.io.IOException;
@@ -14,6 +14,12 @@ import java.util.List;
 public class MyXMLReader {
 
     private final XmlReader xml = new XmlReader();
+
+    void generateXMLAssets() {
+        generateInventories(this);
+        generateEnemies(this);
+        generateEnemyGroups(this);
+    }
 
     /**
      * Parses a .xml-file containing data for an enemy
@@ -106,7 +112,7 @@ public class MyXMLReader {
      * @return an {@link XMLItem}
      * @throws IOException if the root element in e is not equal to "item"
      */
-    private XMLItem parseItem(Element e) throws IOException {
+    public XMLItem parseItem(Element e) throws IOException {
         if (e.getName().equals("item")) {
             return new XMLItem(
                     e.getAttribute("name"),
@@ -117,13 +123,19 @@ public class MyXMLReader {
         throw new IOException("no item in root");
     }
 
-    void generateXMLAssets() {
-        generateInventories(this);
-        generateEnemies(this);
-        generateEnemyGroups(this);
+    private XMLItem parseSizedItem(Element e) throws IOException {
+        if (e.getName().equals("sizedItem")) {
+            return new XMLSizedItem(
+                    e.getAttribute("name"),
+                    e.getIntAttribute("x"),
+                    e.getIntAttribute("y"),
+                    e.getIntAttribute("orientation"),
+                    e.getIntAttribute("size"));
+        }
+        throw new IOException("no sizedItem in root");
     }
 
-    private void generateInventories(MyXMLReader reader) {
+    public void generateInventories(MyXMLReader reader) {
 
         FileHandle folder = Gdx.files.internal("inventoryblueprint");
 
@@ -137,7 +149,7 @@ public class MyXMLReader {
         }
     }
 
-    private void generateEnemies(MyXMLReader reader) {
+    public void generateEnemies(MyXMLReader reader) {
         FileHandle folder = Gdx.files.internal("enemies");
 
         List<FileHandle> contents = Arrays.asList(folder.list("xml"));
@@ -150,7 +162,7 @@ public class MyXMLReader {
         }
     }
 
-    private void generateEnemyGroups(MyXMLReader reader) {
+    public void generateEnemyGroups(MyXMLReader reader) {
         FileHandle folder = Gdx.files.internal("enemygroups");
 
         List<FileHandle> contents = Arrays.asList(folder.list("xml"));
@@ -161,17 +173,5 @@ public class MyXMLReader {
         } catch (Exception e) {
             throw new Error("failed to generate enemy blueprints: ", e);
         }
-    }
-
-    private XMLItem parseSizedItem(Element e) throws IOException {
-        if (e.getName().equals("sizedItem")) {
-            return new XMLSizedItem(
-                    e.getAttribute("name"),
-                    e.getIntAttribute("x"),
-                    e.getIntAttribute("y"),
-                    e.getIntAttribute("orientation"),
-                    e.getIntAttribute("size"));
-        }
-        throw new IOException("no sizedItem in root");
     }
 }

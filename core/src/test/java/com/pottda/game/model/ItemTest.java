@@ -1,24 +1,11 @@
 package com.pottda.game.model;
 
-import com.pottda.game.model.items.BouncingBallCannon;
-import com.pottda.game.model.items.DamageItem;
-import com.pottda.game.model.items.DemoItemA;
-import com.pottda.game.model.items.DemoItemB;
-import com.pottda.game.model.items.EnemySimpleCannon;
-import com.pottda.game.model.items.GenericProjectileModifier;
-import com.pottda.game.model.items.HealthItem;
-import com.pottda.game.model.items.PenetratingCannon;
-import com.pottda.game.model.items.ProjectileSpeedItem;
-import com.pottda.game.model.items.SpeedItem;
-import com.pottda.game.model.items.SupportItem;
-
-import org.junit.Assert;
+import com.pottda.game.model.items.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.vecmath.Point2i;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -43,14 +30,12 @@ public class ItemTest {
     public void setUp() {
         a = new DemoItemA() {
         };
-        a.init();
         a.setOrientation(2);
         a.setX(2);
         a.setY(5);
 
         b = new DemoItemB() {
         };
-        b.init();
         b.setOrientation(3);
         b.setX(8);
         b.setY(4);
@@ -64,42 +49,32 @@ public class ItemTest {
         speedItem = new SpeedItem();
     }
 
+
     @Test
     public void rotateTest() {
+        List<Point2i> positionsA = a.getTransformedRotatedPositions();
+        List<Point2i> outputA = a.getTransformedRotatedOutputs();
 
-        List<Integer> positionsA = a.getPositionsAsIntegers(10);
-        List<Integer> outputA = a.getOutputAsInteger(10);
-        Collections.sort(positionsA);
+        List<Point2i> expectedPositionsA = new ArrayList<Point2i>();
+        {
+            expectedPositionsA.add(new Point2i(2, 5));
+            expectedPositionsA.add(new Point2i(2, 4));
+            expectedPositionsA.add(new Point2i(1, 5));
+            expectedPositionsA.add(new Point2i(1, 4));
+        }
 
-        List<Integer> positionsB = b.getPositionsAsIntegers(10);
-        List<Integer> outputB = b.getOutputAsInteger(10);
-        Collections.sort(positionsB);
+        List<Point2i> expectedOutputA = new ArrayList<Point2i>();
+        {
+            expectedOutputA.add(new Point2i(0, 4));
+        }
 
-        // Create the expected values
-        List<Integer> rotatedA = new ArrayList<Integer>();
-        rotatedA.addAll(Arrays.asList(51, 52, 41, 42));
-        Collections.sort(rotatedA);
-
-        List<Integer> rotatedB = new ArrayList<Integer>();
-        rotatedB.addAll(Arrays.asList(48, 38, 39, 29));
-        Collections.sort(rotatedB);
-
-        Assert.assertEquals(rotatedA, positionsA);
-        Assert.assertEquals(rotatedB, positionsB);
-        Assert.assertEquals(outputA.get(0), Integer.valueOf(40));
-        Assert.assertEquals(outputB.get(0), Integer.valueOf(19));
+        assertEquals(expectedPositionsA, positionsA);
+        assertEquals(expectedOutputA, outputA);
     }
 
     @Test
     public void testBouncingBallCannon() {
-        assertFalse(bouncingBallCannon.isPrimaryAttack);
-        assertFalse(bouncingBallCannon.bounces);
-        assertEquals(bouncingBallCannon.basePositions, null);
-        assertEquals(bouncingBallCannon.baseOutputs, null);
-        assertFalse(bouncingBallCannon.cooldownMS == 300);
-        assertFalse(bouncingBallCannon.damage == 10);
 
-        bouncingBallCannon.init();
 
         assertTrue(bouncingBallCannon.isPrimaryAttack);
         assertTrue(bouncingBallCannon.bounces);
@@ -119,7 +94,6 @@ public class ItemTest {
     @Test
     public void testDamageItem() {
         // Drop rate: 0.25f, 0.5f, 0.1f
-        damageItem.init();
         assertTrue(damageItem.dropRate == 0.25f * 0.5f
                 || damageItem.dropRate == 0.5f * 0.5f
                 || damageItem.dropRate == 0.1f * 0.5f);
@@ -134,14 +108,6 @@ public class ItemTest {
 
     @Test
     public void testEnemySimpleCannon() {
-        assertFalse(enemySimpleCannon.isPrimaryAttack);
-        assertFalse(enemySimpleCannon.bounces);
-        assertEquals(enemySimpleCannon.basePositions, null);
-        assertEquals(enemySimpleCannon.baseOutputs, null);
-        assertFalse(enemySimpleCannon.cooldownMS == 500);
-        assertFalse(enemySimpleCannon.damage == 20);
-
-        enemySimpleCannon.init();
 
         assertTrue(enemySimpleCannon.isPrimaryAttack);
         assertFalse(enemySimpleCannon.bounces);
@@ -153,7 +119,6 @@ public class ItemTest {
 
     @Test
     public void testHealthItem() {
-        healthItem.init();
         assertTrue(healthItem.statMap.containsKey(Stat.HEALTH));
         assertTrue(healthItem.dropRate == 0.25f * 0.75f
                 || healthItem.dropRate == 0.5f * 0.75f
@@ -163,15 +128,6 @@ public class ItemTest {
 
     @Test
     public void testPenetratingCannon() {
-        assertFalse(penetratingCannon.isPrimaryAttack);
-        assertFalse(penetratingCannon.piercing);
-        assertFalse(penetratingCannon.bounces);
-        assertEquals(penetratingCannon.basePositions, null);
-        assertEquals(penetratingCannon.baseOutputs, null);
-        assertFalse(penetratingCannon.cooldownMS == 300);
-        assertFalse(penetratingCannon.damage == 10);
-
-        penetratingCannon.init();
 
         assertTrue(penetratingCannon.isPrimaryAttack);
         assertTrue(penetratingCannon.piercing);
@@ -184,7 +140,6 @@ public class ItemTest {
 
     @Test
     public void testProjectileSpeedItem() {
-        projectileSpeedItem.init();
         assertTrue(projectileSpeedItem.dropRate == 0.25f * 0.5f
                 || projectileSpeedItem.dropRate == 0.5f * 0.5f
                 || projectileSpeedItem.dropRate == 0.1f * 0.5f);
@@ -194,7 +149,6 @@ public class ItemTest {
 
     @Test
     public void testSpeedItem() {
-        speedItem.init();
         assertTrue(speedItem.statMap.containsKey(Stat.ACCEL));
         assertTrue(speedItem.dropRate == 0.25f * 0.5f
                 || speedItem.dropRate == 0.5f * 0.5f

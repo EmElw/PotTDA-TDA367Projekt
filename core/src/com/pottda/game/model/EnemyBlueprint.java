@@ -3,9 +3,7 @@ package com.pottda.game.model;
 import com.pottda.game.model.builders.CharacterBuilder;
 import com.pottda.game.model.builders.IModelBuilder;
 
-import java.lang.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

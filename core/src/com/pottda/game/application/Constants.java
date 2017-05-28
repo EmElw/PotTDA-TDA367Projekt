@@ -12,5 +12,5 @@ public class Constants {
     final static Color bgColor = new Color(0xDACC09FF);
     final static int DIVIDER_HEIGHT = 70;
     // TODO access in nicer way
-    final static Skin SKIN_QH = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
+    public final static Skin SKIN_QH = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
 }

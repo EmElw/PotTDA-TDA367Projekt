@@ -1,6 +1,5 @@
 package com.pottda.game.model;
 
-import java.lang.*;
 import java.util.ArrayList;
 import java.util.List;
 
