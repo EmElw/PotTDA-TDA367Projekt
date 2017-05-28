@@ -11,12 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import static com.pottda.game.application.Constants.SKIN_QH;
+import static com.pottda.game.assets.Constants.SKIN_QH;
 import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
 import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 
 class GameOverScreen extends AbstractMenuScreen {
-    private int score;
+    private final int score;
 
     private TextButton menuButton;
     private TextButton restartButton;

@@ -8,23 +8,21 @@ import com.pottda.game.view.ActorView;
 
 import javax.vecmath.Vector2f;
 
-public class EnemyHealthBarController {
+class EnemyHealthBarController {
     private int maxHealth;
-    private final int width;
-    private final int height;
     private int lastHealth;
-    private ActorView frameView;
-    private ActorView redView;
+    private final ActorView frameView;
+    private final ActorView redView;
 
-    public EnemyHealthBarController(float width, float height, int maxHealth) {
-        this.width = Math.round(width / Constants.WIDTH_RATIO);
-        this.height = Math.round(height / Constants.HEIGHT_RATIO);
+    EnemyHealthBarController(float width, float height, int maxHealth) {
+        int width1 = Math.round(width / Constants.WIDTH_RATIO);
+        int height1 = Math.round(height / Constants.HEIGHT_RATIO);
         this.maxHealth = maxHealth;
         lastHealth = maxHealth;
 
-        Pixmap frame = new Pixmap(this.width, this.height, Pixmap.Format.RGBA8888);
+        Pixmap frame = new Pixmap(width1, height1, Pixmap.Format.RGBA8888);
         frame.setColor(Color.WHITE);
-        frame.drawRectangle(0, 0, this.width, this.height);
+        frame.drawRectangle(0, 0, width1, height1);
 
         Pixmap filling = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         filling.setColor(Color.RED);

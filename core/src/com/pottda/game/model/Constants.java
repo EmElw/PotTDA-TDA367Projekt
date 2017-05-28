@@ -4,7 +4,7 @@ public class Constants {
 
     public static final String GAME_TITLE = "Panic on TDAncefloor";
 
-    public static final float SCALING = 2f;
+    private static final float SCALING = 2f;
 
     public static final float WIDTH_VIEWPORT = 800;
     public static final float HEIGHT_VIEWPORT = 480;

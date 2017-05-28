@@ -41,18 +41,16 @@ public class EnemyBlueprint {
     }
 
     private final String name;
-    private final int difficulty;
 
     private final ModelActor.Behaviour behaviour;
     private final String inventoryName;
-    private final Sprites sprite;
+    private final com.pottda.game.assets.Sprites sprite;
 
     private final int scoreValue;
 
     private EnemyBlueprint(XMLEnemy xml) {
         this.name = xml.name;
         this.scoreValue = xml.scoreValue;
-        this.difficulty = xml.difficulty;
         this.behaviour = xml.behaviour;
         this.inventoryName = xml.inventoryName;
         this.sprite = xml.sprite;

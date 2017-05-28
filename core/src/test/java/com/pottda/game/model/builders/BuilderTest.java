@@ -9,8 +9,8 @@ import javax.vecmath.Vector2f;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.pottda.game.model.Sprites.BORDER;
-import static com.pottda.game.model.Sprites.ENEMYPROJECTILE;
+import static com.pottda.game.assets.Sprites.BORDER;
+import static com.pottda.game.assets.Sprites.ENEMYPROJECTILE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

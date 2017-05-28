@@ -104,7 +104,7 @@ class GameScreen extends AbstractScreen {
         hudStage = new HUDStage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
         modelState.addScoreChangeListener(hudStage);
 
-        Image background = new Image(new Texture(Gdx.files.internal(Sprites.MAINBACKGROUND.fileName)));
+        Image background = new Image(new Texture(Gdx.files.internal(com.pottda.game.assets.Sprites.MAINBACKGROUND.fileName)));
         background.setPosition(-background.getPrefWidth() / 4, -background.getPrefHeight() / 4);
         backgroundStage.addActor(background);
 
@@ -234,7 +234,7 @@ class GameScreen extends AbstractScreen {
                 new ObstacleBuilder().
                         setRadius(r).
                         setPosition(new Vector2f(xx, yy)).
-                        setSprite(Sprites.BORDER).
+                        setSprite(com.pottda.game.assets.Sprites.BORDER).
                         create();
             } else {
                 arenaFull = true;
@@ -269,7 +269,7 @@ class GameScreen extends AbstractScreen {
                 setInventoryFromFile("sizedItemTestInv.xml"). //playerStartInventory
                 setBehaviour(ModelActor.Behaviour.NONE).
                 setPosition(new Vector2f(WIDTH_METERS / 2, HEIGHT_METERS / 2)).
-                setSprite(Sprites.PLAYER).
+                setSprite(com.pottda.game.assets.Sprites.PLAYER).
                 create();
     }
 
@@ -279,25 +279,25 @@ class GameScreen extends AbstractScreen {
         new ObstacleBuilder().
                 setSize(WIDTH_METERS + border_thickness * 2, border_thickness).
                 setPosition(new Vector2f(WIDTH_METERS / 2, -border_thickness / 2)).
-                setSprite(Sprites.NONE).
+                setSprite(com.pottda.game.assets.Sprites.NONE).
                 create();
         // Left border
         new ObstacleBuilder().
                 setSize(border_thickness, HEIGHT_METERS + border_thickness * 2).
                 setPosition(new Vector2f(-border_thickness / 2, HEIGHT_METERS / 2)).
-                setSprite(Sprites.NONE).
+                setSprite(com.pottda.game.assets.Sprites.NONE).
                 create();
         // Top border
         new ObstacleBuilder().
                 setSize(WIDTH_METERS + border_thickness * 2, border_thickness).
                 setPosition(new Vector2f(WIDTH_METERS / 2, border_thickness / 2 + HEIGHT_METERS)).
-                setSprite(Sprites.NONE).
+                setSprite(com.pottda.game.assets.Sprites.NONE).
                 create();
         // Right border
         new ObstacleBuilder().
                 setSize(border_thickness, HEIGHT_METERS + border_thickness * 2).
                 setPosition(new Vector2f(border_thickness / 2 + WIDTH_METERS, HEIGHT_METERS / 2)).
-                setSprite(Sprites.NONE).
+                setSprite(com.pottda.game.assets.Sprites.NONE).
                 create();
     }
 

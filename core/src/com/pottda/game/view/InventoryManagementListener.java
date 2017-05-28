@@ -10,16 +10,14 @@ public interface InventoryManagementListener {
     /**
      * Called when an {@link Item} in the storage list is touched
      *
-     * @param itemName
      */
-    void storageItemTouched(String itemName);
+    void storageItemTouched();
 
     /**
      * Called when the specific {@link Item} in the inventory is touched
      *
-     * @param item
      */
-    void inventoryItemTouched(Item item);
+    void inventoryItemTouched();
 
     /**
      * Called on acceptButton when an item is dropped into a relevant coordinate in the inventory

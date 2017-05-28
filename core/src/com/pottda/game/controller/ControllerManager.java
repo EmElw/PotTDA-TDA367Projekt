@@ -14,9 +14,9 @@ public class ControllerManager implements NewControllerListener {
 
     private AbstractController playerController;
 
-    private Set<AbstractController> controllers;
-    private Stack<AbstractController> controllerBuffer;
-    private Stack<AbstractController> controllerRemovalBuffer;
+    private final Set<AbstractController> controllers;
+    private final Stack<AbstractController> controllerBuffer;
+    private final Stack<AbstractController> controllerRemovalBuffer;
 
     public ControllerManager() {
         this.controllers = new HashSet<AbstractController>();
@@ -66,6 +66,7 @@ public class ControllerManager implements NewControllerListener {
                     ((AIController) controller).getEnemyHealthBarController().getRedView().remove();
                     ((AIController) controller).getEnemyHealthBarController().getFrameView().remove();
                 } catch (ClassCastException e) {
+                    e.printStackTrace();
                 }
 
                 controllerRemovalBuffer.add(controller);

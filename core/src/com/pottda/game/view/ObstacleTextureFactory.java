@@ -12,7 +12,7 @@ public class ObstacleTextureFactory {
         return getRectangularObstacleTexture(sizeMeters.x, sizeMeters.y);
     }
 
-    public static Texture getRectangularObstacleTexture(float widthMeters, float heightMeters){
+    private static Texture getRectangularObstacleTexture(float widthMeters, float heightMeters){
         int width = Math.round(widthMeters / Constants.WIDTH_RATIO);
         int height = Math.round(heightMeters / Constants.HEIGHT_RATIO);
 
