@@ -84,9 +84,9 @@ public class ControllerManager implements NewControllerListener {
     }
 
     public void clearProjectiles() {
-        for (AbstractController c: controllers) {
+        for (AbstractController c : controllers) {
             if (c.getModel() instanceof Projectile) {
-                if (c.getModel().team == 1)
+                if (c.getModel().getTeam() == ModelActor.ENEMY_TEAM)
                     c.setShouldBeRemoved(true);
             }
         }

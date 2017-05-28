@@ -3,7 +3,6 @@ package com.pottda.game.model.items;
 import com.pottda.game.model.Item;
 import com.pottda.game.model.Projectile;
 import com.pottda.game.model.builders.ProjectileBuilder;
-import com.sun.org.apache.xpath.internal.operations.Mult;
 
 import javax.vecmath.Point2i;
 import javax.vecmath.Vector2f;
@@ -51,7 +50,7 @@ public class Nova extends Item {
     public void onAttack(Projectile p) {
 
         /*
-        Nova needs to find all other Nova's and
+        Nova needs to find all other Novaes and
         enchance its own effect
 
         Instead, it makes reduces the degrees between the shots.
