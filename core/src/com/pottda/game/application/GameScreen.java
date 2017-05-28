@@ -20,6 +20,8 @@ import com.pottda.game.model.*;
 import com.pottda.game.model.builders.AbstractModelBuilder;
 import com.pottda.game.model.builders.CharacterBuilder;
 import com.pottda.game.model.builders.ObstacleBuilder;
+import com.pottda.game.model.items.ChainAttack;
+import com.pottda.game.model.items.MultiShot;
 import com.pottda.game.physicsBox2D.Box2DPhysicsActorFactory;
 import com.pottda.game.physicsBox2D.CollisionListener;
 
@@ -58,6 +60,8 @@ class GameScreen extends AbstractScreen {
 
     private void create() {
         modelState = new ModelState();
+        modelState.getStorage().addItem(new MultiShot());
+        modelState.getStorage().addItem(new ChainAttack());
 
         initStages();
 

@@ -201,8 +201,8 @@ public class InventoryManagementView {
         inventoryGroup = new WidgetGroup();
 
         Image bg = new Image(new TextureRegion(background,
-                SIZE * (inventory.getWidth() + 1),
-                SIZE * (inventory.getHeight() + 1)));
+                SIZE * (inventory.getWidth()),
+                SIZE * (inventory.getHeight())));
         inventoryGroup.addActor(bg);
 
 
@@ -371,7 +371,7 @@ public class InventoryManagementView {
             initInputListeners();
 
             debugLabel = new Label("", mySkin);
-            debugLabel.setVisible(false);
+            debugLabel.setVisible(true);
             debugLabel.setPosition(itemImage.getOriginX(),
                     itemImage.getOriginY());
 
@@ -410,8 +410,8 @@ public class InventoryManagementView {
                     float pxY = getY() + y - yOffset;
 
                     newPoint.set(   // Magical expression to convert and clamp within inventory
-                            Math.min(Math.max(Math.round(pxX / SIZE), 0), inventory.getWidth()),
-                            Math.min(Math.max(Math.round(pxY / SIZE), 0), inventory.getHeight()));
+                            Math.min(Math.max(Math.round(pxX / SIZE), 0), inventory.getWidth()-1),
+                            Math.min(Math.max(Math.round(pxY / SIZE), 0), inventory.getHeight()-1));
 
                     if (!inventoryPosition.equals(newPoint)) {
                         inventoryPosition.set(newPoint);

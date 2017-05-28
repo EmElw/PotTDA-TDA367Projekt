@@ -6,7 +6,9 @@ import org.junit.Test;
 
 import javax.vecmath.Point2i;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -42,20 +44,24 @@ public class ItemTest {
 
         bouncingBallCannon = new BouncingBallCannon();
         damageItem = new DamageItem();
+        damageItem.setSize(ItemSize.NORMAL);
         enemySimpleCannon = new EnemySimpleCannon();
         healthItem = new HealthItem();
+        healthItem.setSize(ItemSize.NORMAL);
         penetratingCannon = new PenetratingCannon();
         projectileSpeedItem = new ProjectileSpeedItem();
+        projectileSpeedItem.setSize(ItemSize.NORMAL);
         speedItem = new SpeedItem();
+        speedItem.setSize(ItemSize.NORMAL);
     }
 
 
     @Test
     public void rotateTest() {
-        List<Point2i> positionsA = a.getTransformedRotatedPositions();
-        List<Point2i> outputA = a.getTransformedRotatedOutputs();
+        Set<Point2i> positionsA = (Set<Point2i>) a.getTransformedRotatedPositions();
+        Set<Point2i> outputA = (Set<Point2i>) a.getTransformedRotatedOutputs();
 
-        List<Point2i> expectedPositionsA = new ArrayList<Point2i>();
+        Set<Point2i> expectedPositionsA = new HashSet<Point2i>();
         {
             expectedPositionsA.add(new Point2i(2, 5));
             expectedPositionsA.add(new Point2i(2, 4));
@@ -63,7 +69,7 @@ public class ItemTest {
             expectedPositionsA.add(new Point2i(1, 4));
         }
 
-        List<Point2i> expectedOutputA = new ArrayList<Point2i>();
+        Set<Point2i> expectedOutputA = new HashSet<Point2i>();
         {
             expectedOutputA.add(new Point2i(0, 4));
         }
@@ -97,7 +103,7 @@ public class ItemTest {
         assertTrue(damageItem.dropRate == 0.25f * 0.5f
                 || damageItem.dropRate == 0.5f * 0.5f
                 || damageItem.dropRate == 0.1f * 0.5f);
-        assertTrue(damageItem.name.contains("Damage Module"));
+        assertTrue(damageItem.name.contains("Damage"));
         assertTrue(damageItem.basePositions.size() == 2 || damageItem.basePositions.size() == 1);
         assertTrue(damageItem.isProjectileModifier);
 
@@ -120,10 +126,10 @@ public class ItemTest {
     @Test
     public void testHealthItem() {
         assertTrue(healthItem.statMap.containsKey(Stat.HEALTH));
-        assertTrue(healthItem.dropRate == 0.25f * 0.75f
-                || healthItem.dropRate == 0.5f * 0.75f
-                || healthItem.dropRate == 0.1f * 0.75f);
-        assertTrue(healthItem.name.contains("Health Module"));
+        assertTrue(healthItem.dropRate == 0.25f * 0.5f
+                || healthItem.dropRate == 0.5f * 0.5f
+                || healthItem.dropRate == 0.1f * 0.5f);
+        assertTrue(healthItem.name.contains("Health"));
     }
 
     @Test
@@ -143,7 +149,7 @@ public class ItemTest {
         assertTrue(projectileSpeedItem.dropRate == 0.25f * 0.5f
                 || projectileSpeedItem.dropRate == 0.5f * 0.5f
                 || projectileSpeedItem.dropRate == 0.1f * 0.5f);
-        assertTrue(projectileSpeedItem.name.contains("Projectile Speed Module"));
+        assertTrue(projectileSpeedItem.name.contains("P. Speed"));
         assertTrue(projectileSpeedItem.isProjectileModifier);
     }
 
@@ -153,7 +159,7 @@ public class ItemTest {
         assertTrue(speedItem.dropRate == 0.25f * 0.5f
                 || speedItem.dropRate == 0.5f * 0.5f
                 || speedItem.dropRate == 0.1f * 0.5f);
-        assertTrue(speedItem.name.contains("Speed Module"));
+        assertTrue(speedItem.name.contains("Speed"));
     }
 
 }

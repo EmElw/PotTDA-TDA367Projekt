@@ -8,6 +8,5 @@ public class SpeedItem extends SupportItem {
         statMap.put(Stat.ACCEL, 5.0 * itemSize.getStatMultiplier());
         dropRate = 0.5f * itemSize.getDropRate();
         name = "Speed";
-        setBasePositions();
     }
 }

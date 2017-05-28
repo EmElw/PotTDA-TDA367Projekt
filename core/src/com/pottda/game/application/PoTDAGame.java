@@ -3,6 +3,7 @@ package com.pottda.game.application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.model.Constants;
 import com.pottda.game.model.Item;
 import com.pottda.game.model.items.*;
@@ -26,6 +27,15 @@ public class PoTDAGame extends Game {
         reader.generateXMLAssets();
 
         setScreen(new MenuScreen(this));
+
+        switch (Gdx.app.getType()) {
+            case Android:
+                ControllerOptions.controllerSettings = ControllerOptions.ControllerMode.TOUCH_JOYSTICK;
+                break;
+            case Desktop:
+                ControllerOptions.controllerSettings = ControllerOptions.ControllerMode.KEYBOARD_MOUSE;
+                break;
+        }
 
 //        Storage storage = new Storage();
 //        storage.addItem(new SimpleCannon());

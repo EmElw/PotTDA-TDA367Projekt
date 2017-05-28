@@ -10,7 +10,6 @@ public class DamageItem extends GenericProjectileModifier {
         damage = Math.round(10 * itemSize.getStatMultiplier());
         dropRate = 0.5f * itemSize.getDropRate();
         name = "Damage";
-        setBasePositions();
         isProjectileModifier = true;
     }
 
