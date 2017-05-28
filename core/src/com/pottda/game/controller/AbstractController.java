@@ -34,11 +34,11 @@ public abstract class AbstractController {
     }
 
     /**
-     * Called by PoTDAGame every frame
+     * @param delta
      */
-    public void onNewFrame() {
+    public void update(float delta) {
         setInputVectors();
-        updateModel();
+        updateModel(delta);
         updateView();
     }
 
@@ -56,8 +56,9 @@ public abstract class AbstractController {
         return modelActor.shouldBeRemoved;
     }
 
-    private void updateModel() {
+    public void updateModel(float delta) {
         modelActor.giveInput(movementVector, attackVector);
+        modelActor.update(delta);
     }
 
     private void updateView() {

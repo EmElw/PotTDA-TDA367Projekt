@@ -20,8 +20,6 @@ import com.pottda.game.model.*;
 import com.pottda.game.model.builders.AbstractModelBuilder;
 import com.pottda.game.model.builders.CharacterBuilder;
 import com.pottda.game.model.builders.ObstacleBuilder;
-import com.pottda.game.model.items.ChainAttack;
-import com.pottda.game.model.items.MultiShot;
 import com.pottda.game.physicsBox2D.Box2DPhysicsActorFactory;
 import com.pottda.game.physicsBox2D.CollisionListener;
 import com.pottda.game.view.SoundsAndMusic;
@@ -177,7 +175,7 @@ class GameScreen extends AbstractScreen {
     // Model updating
 
     private void updateModel(float delta) {
-        controllerManager.updateControllers();
+        controllerManager.update(delta);
 
         doPhysicsStep(delta);
 

@@ -70,6 +70,8 @@ public abstract class ModelActor {
         return physicsActor;
     }
 
+    public abstract void update(float delta);
+
     public enum Behaviour {
         NONE,
         DUMB,

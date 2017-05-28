@@ -10,20 +10,17 @@ import java.util.List;
 public abstract class AttackItem extends Item {
     private final static float CHARACTER_RADIUS = 0.5f;
 
+    protected boolean piercing;
+    protected int cooldownMS;
+    protected boolean bounces;
     protected int damage;
 
-    protected int cooldownMS;
-
-    private long lastAttackTimeMS;
-
-    protected boolean bounces;
-    protected boolean piercing;
+    private float currentCooldown;
 
     @Override
     public void init() {
         damage = 0;
         cooldownMS = 100;
-        lastAttackTimeMS = 0;
         bounces = false;
         piercing = false;
         isPrimaryAttack = false;
@@ -33,6 +30,7 @@ public abstract class AttackItem extends Item {
     }
 
     List<ProjectileListener> attack(Vector2f velocity, Vector2f origin, int team) {
+        currentCooldown = cooldownMS;
         List<ProjectileListener> listeners = new ArrayList<ProjectileListener>();
 
         Item i = this;
@@ -70,14 +68,17 @@ public abstract class AttackItem extends Item {
 
         proj.onAttack();
 
-        lastAttackTimeMS = System.currentTimeMillis();
         return listeners;
 
     }
 
     void tryAttack(Vector2f direction, Vector2f origin, int team) {
-        if (System.currentTimeMillis() - lastAttackTimeMS > cooldownMS) {
+        if (currentCooldown <= 0) {
             attack(direction, origin, team);
         }
+    }
+
+    void decreaseCooldown(float delta) {
+        currentCooldown -= delta * 1000;
     }
 }

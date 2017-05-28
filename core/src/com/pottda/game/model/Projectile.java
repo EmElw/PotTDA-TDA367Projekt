@@ -6,12 +6,13 @@ import java.util.List;
 
 
 public class Projectile extends ModelActor {
+    public static final int DEFAULT_PROJECTILE_LIFETIME_MS = 10000;
+
     public int damage;
     public boolean isBouncy = false;
     public boolean isPiercing = false;
-    private final long timeOfConstructionMS;
     public long lifeTimeMS;
-    public static final int DEFAULT_PROJECTILE_LIFETIME_MS = 10000;
+
     private Vector2f movementVector;
     /**
      * Listeners that care about various game-oriented events
@@ -79,7 +80,6 @@ public class Projectile extends ModelActor {
     public Projectile(int damage, List<ProjectileListener> listeners, Long lifeTimeMS) {
         this.damage = damage;
         setListeners(listeners);
-        timeOfConstructionMS = System.currentTimeMillis();
         this.lifeTimeMS = lifeTimeMS;
         //hasDamaged = new ArrayList<Character>();
     }
@@ -87,7 +87,6 @@ public class Projectile extends ModelActor {
     public Projectile(int damage, List<ProjectileListener> listeners) {
         this.damage = damage;
         this.listeners = listeners;
-        timeOfConstructionMS = System.currentTimeMillis();
         lifeTimeMS = DEFAULT_PROJECTILE_LIFETIME_MS;
         //hasDamaged = new ArrayList<Character>();
     }
@@ -111,7 +110,7 @@ public class Projectile extends ModelActor {
         this.movementVector = movementVector;
     }
 
-    public void changeSpeed(float multiplier){
+    public void changeSpeed(float multiplier) {
         movementVector.scale(multiplier);
         giveInput(movementVector, null);
     }
@@ -119,6 +118,11 @@ public class Projectile extends ModelActor {
     @Override
     public float getAngle() {
         return angle;
+    }
+
+    @Override
+    public void update(float delta) {
+        lifeTimeMS -= delta * 1000;
     }
 
     public void onCollision(Character target) {
@@ -141,7 +145,7 @@ public class Projectile extends ModelActor {
     }
 
     private boolean isDying() {
-        if (System.currentTimeMillis() - timeOfConstructionMS > lifeTimeMS) {
+        if (lifeTimeMS <= 0) {
             shouldBeRemoved = true;
             onDestruction();
         }

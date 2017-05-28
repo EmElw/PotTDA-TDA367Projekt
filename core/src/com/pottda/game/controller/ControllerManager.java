@@ -37,17 +37,17 @@ public class ControllerManager implements NewControllerListener {
 
     }
 
-    public void updateControllers() {
+    public void update(float delta) {
         addNewActors();
 
-        updateActors();
+        updateActors(delta);
 
         removeDeadActors();
     }
 
-    private void updateActors() {
+    private void updateActors(float delta) {
         for (AbstractController c : controllers) {
-            c.onNewFrame();
+            c.update(delta);
         }
     }
 

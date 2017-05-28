@@ -22,8 +22,8 @@ public abstract class AIController extends AbstractController {
     }
 
     @Override
-    public void onNewFrame() {
-        super.onNewFrame();
+    public void update(float delta) {
+        super.update(delta);
         updateHealthbar();
     }
 
