@@ -93,8 +93,8 @@ class HUDStage extends Stage implements ScoreChangeListener {
     }
 
     private void setHealthbar() {
-        float health = Character.player.getCurrentHealth();
-        final float playerMaxHealth = Character.player.getMaxHealth();
+        float health = Character.getPlayer().getCurrentHealth();
+        final float playerMaxHealth = Character.getPlayer().getMaxHealth();
 
         if (health < 0) {
             health = 0;
