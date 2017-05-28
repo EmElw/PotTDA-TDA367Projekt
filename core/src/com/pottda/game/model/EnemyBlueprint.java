@@ -37,7 +37,7 @@ public class EnemyBlueprint {
      * @param xml an {@link XMLEnemy}
      */
     public static void newBlueprint(XMLEnemy xml) {
-        blueprints.put(xml.name, new EnemyBlueprint(xml));
+        blueprints.put(xml.getName(), new EnemyBlueprint(xml));
     }
 
     private final String name;
@@ -49,11 +49,11 @@ public class EnemyBlueprint {
     private final int scoreValue;
 
     private EnemyBlueprint(XMLEnemy xml) {
-        this.name = xml.name;
+        this.name = xml.getName();
         this.scoreValue = xml.scoreValue;
-        this.behaviour = xml.behaviour;
-        this.inventoryName = xml.inventoryName;
-        this.sprite = xml.sprite;
+        this.behaviour = xml.getBehaviour();
+        this.inventoryName = xml.getInventoryName();
+        this.sprite = xml.getSprite();
     }
 
     public IModelBuilder build() {

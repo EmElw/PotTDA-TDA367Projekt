@@ -100,7 +100,7 @@ public class InventoryTest {
     @Test
     public void testCompile() {
         Assert.assertEquals(2, testInv2.attackItems.size());
-        Assert.assertEquals(6, testInv2.items.size());
+        Assert.assertEquals(6, testInv2.getItems().size());
     }
 
     @Test
@@ -119,7 +119,7 @@ public class InventoryTest {
     @Test
     public void testSwitcher() {
         boolean foundSwitcher = false;
-        for (Item i : testInv2.items) {
+        for (Item i : testInv2.getItems()) {
             if (i instanceof Switcher) {
                 foundSwitcher = true;
                 assertTrue(i.getNext() instanceof ChainAttack);

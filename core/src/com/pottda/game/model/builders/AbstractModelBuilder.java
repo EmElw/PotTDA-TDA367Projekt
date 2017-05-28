@@ -30,7 +30,7 @@ public abstract class AbstractModelBuilder implements IModelBuilder {
     }
 
     void setCommonAndNotify(ModelActor modelActor) {
-        modelActor.sprite = sprite;
+        modelActor.setSprite(sprite);
         modelActor.setPosition(postion);
         notifyListeners(modelActor);
     }

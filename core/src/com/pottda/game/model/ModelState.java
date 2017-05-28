@@ -21,7 +21,7 @@ public class ModelState implements DeathListener, NewModelListener {
     private final Storage storage;
     private final List<ScoreChangeListener> scoreChangeListeners;
 
-    public Set<Item> droppedItems;
+    private Set<Item> droppedItems;
 
     public ModelState() {
         storage = new Storage();
@@ -39,10 +39,14 @@ public class ModelState implements DeathListener, NewModelListener {
         return score;
     }
 
+    public Set<Item> getDroppedItems() {
+        return droppedItems;
+    }
+
     @Override
     public void onDeath(Character character) {
-        if (character.team == ModelActor.ENEMY_TEAM) {
-            droppedItems = character.inventory.getItemDropList();
+        if (character.getTeam() == ModelActor.ENEMY_TEAM) {
+            droppedItems = character.getInventory().getItemDropList();
             storage.addItems(droppedItems);
             enemiesAlive--;
             score += character.getScoreValue();
@@ -59,7 +63,7 @@ public class ModelState implements DeathListener, NewModelListener {
     @Override
     public void onNewModel(ModelActor m) {
         if (m instanceof Character) {
-            if (m.team == ModelActor.ENEMY_TEAM) {
+            if (m.getTeam() == ModelActor.ENEMY_TEAM) {
                 enemiesAlive++;
             } else {
                 if (player == null) {

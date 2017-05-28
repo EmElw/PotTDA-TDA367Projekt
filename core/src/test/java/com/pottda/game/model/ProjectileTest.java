@@ -121,23 +121,23 @@ public class ProjectileTest {
         projectile.onCollision(character);
 
         assertEquals(characterMaxHP - projectileDamage, character.getCurrentHealth());
-        assertTrue(projectile.shouldBeRemoved);
+        assertTrue(projectile.isShouldBeRemoved());
     }
 
     @Test
     public void onCollision1() throws Exception {
         projectile.onCollision();
 
-        assertTrue(projectile.shouldBeRemoved);
+        assertTrue(projectile.isShouldBeRemoved());
     }
 
     @Test
     public void isDying() throws Exception {
         long lifeTime = 100;
-        projectile.lifeTimeMS = lifeTime;
+        projectile.setLifeTimeMS(lifeTime);
         TimeUnit.MILLISECONDS.sleep(lifeTime + 5);
         projectile.giveInput(new Vector2f(), new Vector2f());
 
-        assertTrue(projectile.shouldBeRemoved);
+        assertTrue(projectile.isShouldBeRemoved());
     }
 }

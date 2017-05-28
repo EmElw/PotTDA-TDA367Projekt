@@ -7,10 +7,10 @@ import java.util.List;
 
 public class Projectile extends ModelActor {
     public int damage;
-    public boolean isBouncy = false;
-    public boolean isPiercing = false;
+    private boolean isBouncy = false;
+    private boolean isPiercing = false;
     private final long timeOfConstructionMS;
-    public long lifeTimeMS;
+    private long lifeTimeMS;
     public static final int DEFAULT_PROJECTILE_LIFETIME_MS = 10000;
     private Vector2f movementVector;
     /**
@@ -27,6 +27,7 @@ public class Projectile extends ModelActor {
      * (Supposedly better performance-wise)
      */
     private List<Boolean> ignored;
+    private Boolean piercing;
     //public List<Character> hasDamaged;
 
     public void addListener(ProjectileListener listener) {
@@ -135,17 +136,17 @@ public class Projectile extends ModelActor {
 
     public void onCollision() {
         if (!isBouncy) {
-            shouldBeRemoved = true;
+            setShouldBeRemoved(true);
             onDestruction();
         }
     }
 
     private boolean isDying() {
         if (System.currentTimeMillis() - timeOfConstructionMS > lifeTimeMS) {
-            shouldBeRemoved = true;
+            setShouldBeRemoved(true);
             onDestruction();
         }
-        return shouldBeRemoved;
+        return isShouldBeRemoved();
     }
 
     /**
@@ -166,5 +167,33 @@ public class Projectile extends ModelActor {
                 listeners.get(i).onDestruction();
             }
         }
+    }
+
+    public void setBouncy(Boolean bouncy) {
+        this.isBouncy = bouncy;
+    }
+
+    public void setPiercing(Boolean piercing) {
+        this.piercing = piercing;
+    }
+
+    public boolean isBouncy() {
+        return isBouncy;
+    }
+
+    public boolean isPiercing() {
+        return piercing;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public long getLifeTimeMS() {
+        return lifeTimeMS;
+    }
+
+    public void setLifeTimeMS(long lifeTimeMS) {
+        this.lifeTimeMS = lifeTimeMS;
     }
 }

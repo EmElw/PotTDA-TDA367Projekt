@@ -14,7 +14,7 @@ import java.util.List;
  */
 
 public class Inventory {
-    public final Set<Item> items;
+    private final Set<Item> items;
     private final List<InventoryChangeListener> inventoryChangeListeners;
 
     private int height;

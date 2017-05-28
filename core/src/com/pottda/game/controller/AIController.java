@@ -6,7 +6,7 @@ import com.pottda.game.view.ActorView;
 
 import javax.vecmath.Vector2f;
 
-public abstract class AIController extends AbstractController {
+abstract class AIController extends AbstractController {
     private static final float HEALTHBAR_OFFSET = 1;
     private final EnemyHealthBarController enemyHealthBarController;
 

@@ -141,9 +141,9 @@ class GameScreen extends AbstractScreen {
         backgroundStage.getCamera().position.set(new Vector2(camera.position.x / 2 / WIDTH_RATIO, camera.position.y / 2 / HEIGHT_RATIO), 0);
         backgroundStage.draw();
         gameStage.draw();
-        if (modelState.droppedItems.size() > 0) {
-            hudStage.onNewDrop(modelState.droppedItems);
-            modelState.droppedItems.clear();
+        if (modelState.getDroppedItems().size() > 0) {
+            hudStage.onNewDrop(modelState.getDroppedItems());
+            modelState.getDroppedItems().clear();
         }
 
         if (hudStage.toPause()) {
@@ -342,7 +342,7 @@ class GameScreen extends AbstractScreen {
                 public void run() {
                     switchScreen(new InventoryManagementScreen(game,
                             thisScreen,
-                            modelState.getPlayer().inventory,
+                            modelState.getPlayer().getInventory(),
                             modelState.getStorage()));
                     waveManager.newLevel();
                 }

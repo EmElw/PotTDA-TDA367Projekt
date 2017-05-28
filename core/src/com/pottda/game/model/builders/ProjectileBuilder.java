@@ -30,9 +30,9 @@ public class ProjectileBuilder extends AbstractModelBuilder implements IProjecti
         Projectile projectile = new Projectile(damage,
                 listeners,
                 lifetime);
-        projectile.isBouncy = bouncy;
-        projectile.isPiercing = piercing;
-        projectile.team = team;
+        projectile.setBouncy(bouncy);
+        projectile.setPiercing(piercing);
+        projectile.setTeam(team);
 
         if(ignored != null) {
             for (int i = 0; i < ignored.size(); i++) {
@@ -55,12 +55,12 @@ public class ProjectileBuilder extends AbstractModelBuilder implements IProjecti
 
     @Override
     public IProjectileBuilder copyProperties(Projectile p) {
-        team = p.team;
-        bouncy = p.isBouncy;
-        piercing = p.isPiercing;
-        damage = p.damage;
-        lifetime = p.lifeTimeMS;
-        sprite = p.sprite;
+        team = p.getTeam();
+        bouncy = p.isBouncy();
+        piercing = p.isPiercing();
+        damage = p.getDamage();
+        lifetime = p.getLifeTimeMS();
+        sprite = p.getSprite();
         return this;
     }
 

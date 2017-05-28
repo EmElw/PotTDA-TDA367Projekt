@@ -29,7 +29,7 @@ public class ControllerManager implements NewControllerListener {
     public void onNewController(AbstractController c) {
         controllerBuffer.push(c);
         if (c.getModel() instanceof Character) {
-            if (c.getModel().team == ModelActor.PLAYER_TEAM) {
+            if (c.getModel().getTeam() == ModelActor.PLAYER_TEAM) {
                 if (playerController == null) {
                     playerController = c;
                 } else throw new Error("Created another player");

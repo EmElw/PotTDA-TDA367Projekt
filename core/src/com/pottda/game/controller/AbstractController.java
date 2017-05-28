@@ -52,8 +52,8 @@ public abstract class AbstractController {
      */
     protected abstract void setInputVectors();
 
-    public boolean shouldBeRemoved() {
-        return modelActor.shouldBeRemoved;
+    boolean shouldBeRemoved() {
+        return modelActor.isShouldBeRemoved();
     }
 
     public void setShouldBeRemoved(boolean shouldBeRemoved) {
