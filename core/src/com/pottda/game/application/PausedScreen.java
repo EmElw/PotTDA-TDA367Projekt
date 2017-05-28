@@ -5,15 +5,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.pottda.game.view.SoundsAndMusic;
 
-import static com.pottda.game.application.Constants.DIVIDER_HEIGHT;
-import static com.pottda.game.application.Constants.PADDING;
-import static com.pottda.game.application.Constants.SKIN_QH;
+import static com.pottda.game.application.Constants.*;
 import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
 import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 
@@ -61,7 +63,15 @@ class PausedScreen extends AbstractMenuScreen {
         musicSlider.addListener(new DragListener() {
             @Override
             public void drag(InputEvent event, float x, float y, int pointer) {
-                // setMusicVolume(x / getWidth); // TODO set volume
+                final float newVolume = x / musicSlider.getWidth();
+                SoundsAndMusic.setMusicVolume(newVolume);
+            }
+        });
+        musicSlider.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                final float newVolume = x / musicSlider.getWidth();
+                SoundsAndMusic.setMusicVolume(newVolume);
             }
         });
     }
@@ -74,7 +84,6 @@ class PausedScreen extends AbstractMenuScreen {
 
     private void resumeGame() {
         switchScreen(gameScreen);
-        GameState.gameState = GameState.RUNNING;
         dispose();
     }
 
@@ -104,6 +113,7 @@ class PausedScreen extends AbstractMenuScreen {
                 superTable.add(musicVol).right();
 
                 musicSlider = new Slider(0, 100, 1, false, SKIN_QH);
+                musicSlider.setValue(SoundsAndMusic.getMusicVolume() * musicSlider.getMaxValue());
                 superTable.add(musicSlider).left().expandX().fillX();
                 superTable.add().row();
 

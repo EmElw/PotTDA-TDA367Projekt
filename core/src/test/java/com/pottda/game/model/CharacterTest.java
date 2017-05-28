@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import javax.vecmath.Point2i;
 import javax.vecmath.Vector2f;
-import java.util.*;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -18,7 +18,7 @@ public class CharacterTest {
     @Before
     public void setUp() throws Exception {
         fakePhysicsActor = new PhysicsActor() {
-            public Vector2f position;
+            public Vector2f position = new Vector2f();
 
             @Override
             public Vector2f getPosition() {
@@ -28,7 +28,7 @@ public class CharacterTest {
 
             @Override
             public void giveMovementVector(Vector2f movementVector) {
-                position = movementVector;
+                position.set(movementVector);
             }
 
             @Override
@@ -55,31 +55,35 @@ public class CharacterTest {
     public void giveInput() throws Exception {
         Vector2f movementVector = new Vector2f();
         Vector2f attackVector = new Vector2f(1f, 1f);
+        character.inventoryChanged();
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
                 movementVector.set((float) (Math.random() * i), (float) (Math.random() * j));
-                if(movementVector.x == 0 && movementVector.y == 0){
-                    break;
+                if (movementVector.x == 0 && movementVector.y == 0) {
+                    continue;
                 }
                 movementVector.normalize();
                 character.giveInput(movementVector, attackVector);
-                assertTrue((Math.abs(fakePhysicsActor.getPosition().x - movementVector.x) < 0.01f) &&
-                        (Math.abs(fakePhysicsActor.getPosition().y - movementVector.y) < 0.01));
+                assertTrue((Math.abs(fakePhysicsActor.getPosition().x - movementVector.x) < 0.01f));
+                assertTrue(Math.abs(fakePhysicsActor.getPosition().y - movementVector.y) < 0.01);
             }
         }
     }
 
     @Test
     public void takeDamage() throws Exception {
+        character.inventoryChanged();
         int startHealth = character.currentHealth;
-        int damage = new Random().nextInt(startHealth / 2);
-        character.takeDamage(damage);
+        for (int i = 1; i < 100; i++) {
+            character.takeDamage(i);
 
-        assertEquals(character.currentHealth, startHealth - damage);
+            assertEquals(startHealth - i, character.currentHealth);
+            character.currentHealth = startHealth;
+        }
     }
 
     @Test
-    public void stats() throws Exception{
+    public void stats() throws Exception {
         final int BASE_HEALTH = 100;
         Inventory inventory = setUpInventory();
 
@@ -94,17 +98,15 @@ public class CharacterTest {
             }
         };
 
-        item.init();
 
-        assertEquals(Math.round(inventory.getSumStat(Stat.HEALTH)) + BASE_HEALTH, character.currentHealth);
+        assertEquals(BASE_HEALTH, character.currentHealth);
 
         inventory.addItem(item);
-        inventory.compile();
 
-        assertEquals(Math.round(inventory.getSumStat(Stat.HEALTH)) + BASE_HEALTH, character.currentHealth);
+        assertEquals(Math.round(inventory.getStatSum(Stat.HEALTH)) + BASE_HEALTH, character.currentHealth);
     }
 
-    private Inventory setUpInventory(){
+    private Inventory setUpInventory() {
         Inventory inventory = new Inventory();
         inventory.setDimensions(10, 10);
 
@@ -118,17 +120,10 @@ public class CharacterTest {
             }
         };
 
-        item.init();
-
         inventory.addItem(item);
 
-        List<InventoryChangeListener> icl = new ArrayList<InventoryChangeListener>(1);
-        icl.add(character);
-        inventory.setInventoryChangeListeners(icl);
-
         character.inventory = inventory;
-
-        inventory.compile();
+        inventory.addInventoryChangeListener(character);
 
         return inventory;
     }

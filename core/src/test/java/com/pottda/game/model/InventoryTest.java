@@ -7,20 +7,19 @@ import com.pottda.game.model.items.ChainAttack;
 import com.pottda.game.model.items.MultiShot;
 import com.pottda.game.model.items.SimpleCannon;
 import com.pottda.game.model.items.Switcher;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-
 import javax.vecmath.Vector2f;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
 import static com.pottda.game.model.InventoryBlueprint.getInventory;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test some items and Inventory.compile()
@@ -111,10 +110,10 @@ public class InventoryTest {
             if (i instanceof SimpleCannon) {
                 cannon = (AttackItem) i;
                 foundSimpleCannon = true;
-                Assert.assertTrue(i.getNext() instanceof Switcher);
+                assertTrue(i.getNext() instanceof Switcher);
             }
         }
-        Assert.assertTrue(foundSimpleCannon);
+        assertTrue(foundSimpleCannon);
     }
 
     @Test
@@ -123,11 +122,11 @@ public class InventoryTest {
         for (Item i : testInv2.items) {
             if (i instanceof Switcher) {
                 foundSwitcher = true;
-                Assert.assertTrue(i.getNext() instanceof ChainAttack);
-                Assert.assertTrue(i.getNext() instanceof MultiShot);
+                assertTrue(i.getNext() instanceof ChainAttack);
+                assertTrue(i.getNext() instanceof MultiShot);
             }
         }
-        Assert.assertTrue(foundSwitcher);
+        assertTrue(foundSwitcher);
 
     }
 
@@ -140,12 +139,12 @@ public class InventoryTest {
         }
         List<ProjectileListener> list = cannon.attack(new Vector2f(), new Vector2f(), 0);
 
-        Assert.assertTrue(list.get(0) instanceof ChainAttack);
+        assertTrue(list.get(0) instanceof ChainAttack);
 
         list = cannon.attack(new Vector2f(), new Vector2f(), 0);
 
-        Assert.assertTrue(list.get(0) instanceof MultiShot);
-        Assert.assertTrue(list.get(1) instanceof MultiShot);
+        assertTrue(list.get(0) instanceof MultiShot);
+        assertTrue(list.get(1) instanceof MultiShot);
 
 
     }
@@ -153,7 +152,7 @@ public class InventoryTest {
     @Test
     public void testLegality() {
         boolean isLegal = testInv2.isLegal();
-        Assert.assertTrue(isLegal);
+        assertTrue(isLegal);
         {
             Inventory i;
 
@@ -168,6 +167,31 @@ public class InventoryTest {
         }
     }
 
+    @Test
+    public void testInsertLegality() {
+        Item switcher = new Switcher();
+        // Test add to irrelevant space: (no loops, no overlap) legal -> legal
+        assertTrue(testInv2.itemLegalAt(4, 4, 0, switcher));
+
+        // Test add : (with loops, no overlap) legal -> illegal
+        assertFalse(testInv2.itemLegalAt(5, 0, 2, switcher));
+
+        // Test add : (no loops, with overlap) legal -> illegal
+        assertFalse(testInv2.itemLegalAt(6, 3, 0, switcher));
+
+        // Test add : (with loops, with overlap) legal -> illegal
+        assertFalse(testInv2.itemLegalAt(5, 0, 1, switcher));
+
+        // Test add to irrelevant space: (with loops, with overlap) illegal -> illegal
+        switcher.setOrientation(1);
+        switcher.setX(5);
+        switcher.setY(0);
+
+        Item simpleCannon = new SimpleCannon();
+
+        testInv2.addItem(switcher);
+        assertFalse(testInv2.itemLegalAt(6, 6, 0, simpleCannon));
+    }
 
     private static void generateInventories(FileHandle folder, MyXMLReader reader) {
 

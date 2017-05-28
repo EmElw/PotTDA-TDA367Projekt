@@ -1,10 +1,8 @@
 package com.pottda.game.model.items;
 
-import com.pottda.game.model.ProjectileListener;
-
 import javax.vecmath.Point2i;
 
-public abstract class GenericProjectileModifier extends SizedItem implements ProjectileListener {
+public abstract class GenericProjectileModifier extends SizedItem {
     /**
      * Size for minot:
      * [X]O

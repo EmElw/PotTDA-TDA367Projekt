@@ -6,7 +6,6 @@ import com.pottda.game.model.PhysicsActorFactory;
 import com.pottda.game.model.Sprites;
 
 import javax.vecmath.Vector2f;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -25,6 +25,8 @@ public class MultiShot extends Item {
      */
     @Override
     protected void initDynamic() {
+        name = "Multishot";
+
         isProjectileModifier = true;
 
         dropRate = 0.05f;

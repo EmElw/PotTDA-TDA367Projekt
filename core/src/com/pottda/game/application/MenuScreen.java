@@ -2,7 +2,9 @@ package com.pottda.game.application;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -14,12 +16,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pottda.game.controller.ControllerOptions;
+import com.pottda.game.view.SoundsAndMusic;
 
 import static com.pottda.game.application.Constants.SKIN_QH;
-import static com.pottda.game.application.GameState.MAIN_MENU;
-import static com.pottda.game.application.GameState.RUNNING;
-import static com.pottda.game.application.GameState.gameState;
-import static com.pottda.game.model.Constants.*;
+import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
+import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 
 class MenuScreen extends AbstractMenuScreen {
 
@@ -105,12 +106,19 @@ class MenuScreen extends AbstractMenuScreen {
         musicSlider.addListener(new DragListener() {
             @Override
             public void drag(InputEvent event, float x, float y, int pointer) {
-                // setMusicVolume(x / getWidth); // TODO set volume
+                final float newVolume = x / musicSlider.getWidth();
+                SoundsAndMusic.setMusicVolume(newVolume);
+            }
+        });
+        musicSlider.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                final float newVolume = x / musicSlider.getWidth();
+                SoundsAndMusic.setMusicVolume(newVolume);
             }
         });
 
 
-        gameState = MAIN_MENU;
     }
 
     private void quitGame() {
@@ -119,7 +127,6 @@ class MenuScreen extends AbstractMenuScreen {
 
     private void startGame() {
         GameScreen gs = new GameScreen(game);
-        gameState = RUNNING;
         switchScreen(gs);
         dispose();
     }
@@ -188,6 +195,7 @@ class MenuScreen extends AbstractMenuScreen {
                     settingsTable.add(musicVol).right();
 
                     musicSlider = new Slider(0, 100, 1, false, SKIN_QH);
+                    musicSlider.setValue(SoundsAndMusic.getMusicVolume() * musicSlider.getMaxValue());
                     settingsTable.add(musicSlider).left().expandX().fillX().row();
 
                     keyboardMouseControlsButton = new TextButton("Keyboard + Mouse", SKIN_QH);

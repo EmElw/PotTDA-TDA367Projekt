@@ -1,11 +1,8 @@
 package com.pottda.game.controller;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
+import com.pottda.game.model.*;
 import com.pottda.game.view.ActorView;
 import com.pottda.game.view.ObstacleTextureFactory;
 

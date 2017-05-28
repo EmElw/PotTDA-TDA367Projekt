@@ -2,6 +2,7 @@ package com.pottda.game.application;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,14 +13,18 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.pottda.game.controller.*;
-import com.pottda.game.model.*;
+import com.pottda.game.controller.ControllerHookup;
+import com.pottda.game.controller.ControllerManager;
 import com.pottda.game.model.Character;
+import com.pottda.game.model.*;
 import com.pottda.game.model.builders.AbstractModelBuilder;
 import com.pottda.game.model.builders.CharacterBuilder;
 import com.pottda.game.model.builders.ObstacleBuilder;
+import com.pottda.game.model.items.ChainAttack;
+import com.pottda.game.model.items.MultiShot;
 import com.pottda.game.physicsBox2D.Box2DPhysicsActorFactory;
 import com.pottda.game.physicsBox2D.CollisionListener;
+import com.pottda.game.view.SoundsAndMusic;
 
 import javax.vecmath.Tuple2f;
 import javax.vecmath.Vector2f;
@@ -62,6 +67,8 @@ class GameScreen extends AbstractScreen {
 
     private void create() {
         modelState = new ModelState();
+        modelState.getStorage().addItem(new MultiShot());
+        modelState.getStorage().addItem(new ChainAttack());
 
         initStages();
 
@@ -79,6 +86,8 @@ class GameScreen extends AbstractScreen {
         AbstractModelBuilder.addListener(modelState);
 
         waveManager = new WaveManager();
+
+        SoundsAndMusic.play();
 
         createPlayer();
 
@@ -150,6 +159,7 @@ class GameScreen extends AbstractScreen {
         gameStage.dispose();
         backgroundStage.dispose();
         hudStage.dispose();
+        SoundsAndMusic.dispose();
     }
 
     @Override
@@ -309,16 +319,17 @@ class GameScreen extends AbstractScreen {
     }
 
     private void toInventoryManagement() {
+        final Screen thisScreen = this;
         if (Timer.instance().isEmpty()) {
             hudStage.showLevelClear(waveManager.getLevel());
             Timer.instance().scheduleTask(new Timer.Task() {
                 @Override
                 public void run() {
-                    System.out.println("To inventory");
+                    switchScreen(new InventoryManagementScreen(game,
+                            thisScreen,
+                            modelState.getPlayer().inventory,
+                            modelState.getStorage()));
                     waveManager.newLevel();
-//        switchScreen(new InventoryManagementScreen(game,
-//                modelState.getInventory(),
-//                modelState.getStorage()));
                 }
             }, 2);
         }

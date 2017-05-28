@@ -59,17 +59,18 @@ public class Storage {
      * @return an item with the same name as the param
      * @throws Exception
      */
-    public Item popItem(String name) throws Exception {
+    public Item popItem(String name) {
         ItemStorage storage;
         if ((storage = storageMap.get(name)) != null) {
             Item i = storage.items.get(0);
+            storage.items.remove(0);
             if (storage.items.size() == 0) {
                 storageMap.remove(name);
             }
             notifyListeners();
             return i;
         }
-        throw new Exception("Tried to retrieve an item from an empty storage");
+        throw new Error("Tried to retrieve an item from an empty storage");
     }
 
     public Set<String> getItems() {
@@ -99,7 +100,14 @@ public class Storage {
     }
 
     public void addItems(Collection<Item> items) {
-        items.addAll(items);
+        for (Item item : items) {
+            if (storageMap.containsKey(item.getName())) {
+                storageMap.get(item.getName()).items.add(item);
+            } else {
+                storageMap.put(item.getName(), new ItemStorage(item));
+            }
+        }
+        notifyListeners();
     }
 
     /**

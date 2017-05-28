@@ -9,4 +9,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'junit:junit:4.12'
     compile 'com.badlogicgames.gdx:gdx-backend-headless:1.9.6'
+    compile 'com.badlogicgames.gdx:gdx-tools:1.9.6'
 }

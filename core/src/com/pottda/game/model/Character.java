@@ -1,7 +1,6 @@
 package com.pottda.game.model;
 
 import javax.vecmath.Vector2f;
-
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -24,7 +23,7 @@ public class Character extends ModelActor implements InventoryChangeListener {
     /**
      * Current health of a character
      */
-    int currentHealth = 0;
+    int currentHealth = BASE_HEALTH;
     private final Map<Stat, Double> stats;
     private final Vector2f movementVector;
 
@@ -43,17 +42,12 @@ public class Character extends ModelActor implements InventoryChangeListener {
 
         stats = new EnumMap<Stat, Double>(Stat.class);
 
-//        // Sum all simple stats
-//        for (Stat stat : Stat.values()) {
-//            stats.put(stat, 0 + inventory.getSumStat(stat));
-//        }
+        updateStats();
 
-        inventoryChanged();
     }
 
     @Override
     public void giveInput(Vector2f move, Vector2f attack) {
-        // TODO Ta reda på varför det är en annan stats Map när denna kallas jämfört med när stats uppdateras från inventory
         // Movement
         movementVector.set(move);
         // Scale the vector based on the Character's capabilities
@@ -102,23 +96,31 @@ public class Character extends ModelActor implements InventoryChangeListener {
 
     @Override
     public void inventoryChanged() {
-        double healthFraction = 1;
+        int missingHealth = 0;
         // Check the missing health if currentHealth is bigger than zero
         if (currentHealth > 0) {
-            healthFraction = currentHealth / stats.get(HEALTH).intValue();
+            int health = stats.get(HEALTH).intValue();
+            if (health > 0) {
+                missingHealth = health - currentHealth;
+            }
         }
+
+        updateStats();
+
+        // Assign further as necessary
+        currentHealth = (int) Math.max(Math.round(stats.get(Stat.HEALTH) - missingHealth), 1);
+    }
+
+    private void updateStats() {
 
         // Fetch all the stats from the inventory
         for (Stat stat : Stat.values()) {
-            stats.put(stat, 0 + inventory.getSumStat(stat));
+            stats.put(stat, 0 + inventory.getStatSum(stat));
         }
 
         // Add base values
         stats.put(Stat.HEALTH, stats.get(Stat.HEALTH) + (double) BASE_HEALTH);
         stats.put(ACCEL, stats.get(ACCEL) + (double) BASE_ACCEL);
-
-        // Assign further as necessary
-        currentHealth = (int) Math.max(Math.round(stats.get(Stat.HEALTH) * healthFraction), 1);
     }
 
     public void setDeathListeners(List<DeathListener> deathListeners) {
