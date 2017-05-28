@@ -10,6 +10,9 @@ import java.util.Set;
  */
 public class ModelState implements DeathListener, NewModelListener {
 
+    private final int MAX_INVENTORY_WIDTH = 16;
+    private final int MAX_INVENTORY_HEIGHT = 12;
+
     private int score;
     private int enemiesAlive;
 
@@ -71,6 +74,11 @@ public class ModelState implements DeathListener, NewModelListener {
         return player != null;
     }
 
+    public void expandPlayerInventory() {
+        Inventory playerInventory = player.inventory;
+        playerInventory.setDimensions(Math.min(MAX_INVENTORY_WIDTH, playerInventory.getWidth() + 1),
+                Math.min(MAX_INVENTORY_HEIGHT, playerInventory.getHeight() + 1));
+    }
 
     public Storage getStorage() {
         return storage;
