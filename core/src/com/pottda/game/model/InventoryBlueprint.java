@@ -3,6 +3,7 @@ package com.pottda.game.model;
 import com.pottda.game.model.items.ItemSize;
 import com.pottda.game.model.items.SizedItem;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,6 +56,7 @@ public class InventoryBlueprint {
     private final Map<PointAndOrientation, Class<? extends Item>> itemMap;
 
     private final Map<PointAndOrientation, ItemSize> itemSizeMap;
+
     private InventoryBlueprint(XMLInventory inventory) {
         itemMap = new HashMap<PointAndOrientation, Class<? extends Item>>();
         itemSizeMap = new HashMap<PointAndOrientation, ItemSize>();
@@ -63,7 +65,7 @@ public class InventoryBlueprint {
 
         try {
             for (XMLItem i : inventory.items) {
-                if (i instanceof XMLSizedItem){
+                if (i instanceof XMLSizedItem) {
                     addSizedItemClass(ItemClassLoader.getSizedItemClass(i.getClassName()),
                             i.getX(),
                             i.getY(),
@@ -109,11 +111,10 @@ public class InventoryBlueprint {
         Item item;
         for (Map.Entry<PointAndOrientation, Class<? extends Item>> entry : itemMap.entrySet()) {
             try {
-                item = entry.getValue().newInstance();
-                if (itemSizeMap.containsKey(entry.getKey())){
+                item = entry.getValue().getDeclaredConstructor().newInstance();
+                if (itemSizeMap.containsKey(entry.getKey())) {
                     ((SizedItem) item).setSize(itemSizeMap.get(entry.getKey()));
                 }
-                item.init();
                 item.setX(entry.getKey().x);
                 item.setY(entry.getKey().y);
                 item.setOrientation(entry.getKey().orientation);
@@ -122,6 +123,10 @@ public class InventoryBlueprint {
                 throw new InstantiationError("Could not create instance of: " + entry.getValue().toString());
             } catch (IllegalAccessException e) {
                 throw new Error("Access failure in blueprint", e);
+            } catch (NoSuchMethodException e) {
+                throw new Error("Reflect sorcery failure", e);
+            } catch (InvocationTargetException e) {
+                throw new Error("Reflect sorcery failure", e);
             }
         }
 

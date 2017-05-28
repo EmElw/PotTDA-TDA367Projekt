@@ -94,7 +94,6 @@ public class CharacterTest {
             }
         };
 
-        item.init();
 
         assertEquals(Math.round(inventory.getSumStat(Stat.HEALTH)) + BASE_HEALTH, character.currentHealth);
 
@@ -117,8 +116,6 @@ public class CharacterTest {
                 basePositions.add(new Point2i(0, 0));
             }
         };
-
-        item.init();
 
         inventory.addItem(item);
 

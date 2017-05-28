@@ -15,13 +15,19 @@ public class MyXMLReader {
 
     private final XmlReader xml = new XmlReader();
 
+    void generateXMLAssets() {
+        generateInventories(this);
+        generateEnemies(this);
+        generateEnemyGroups(this);
+    }
+
     /**
      * Parses a .xml-file containing data for an enemy
      *
      * @param file a {@link FileHandle}
      * @return a {@link XMLEnemy}
      */
-    public XMLEnemy parseEnemy(FileHandle file) {
+    private XMLEnemy parseEnemy(FileHandle file) {
         try {
             Element root = xml.parse(file);
             if (root.getName().equals("enemy")) {
@@ -45,7 +51,7 @@ public class MyXMLReader {
      * @param file a {@link FileHandle}
      * @return a {@link XMLEnemyGroup}
      */
-    public XMLEnemyGroup parseEnemyGroup(FileHandle file) {
+    private XMLEnemyGroup parseEnemyGroup(FileHandle file) {
         try {
 
             Element root = xml.parse(file);
@@ -74,7 +80,7 @@ public class MyXMLReader {
      * @param file a {@link FileHandle}
      * @return a {@link XMLInventory}
      */
-    public XMLInventory parseInventory(FileHandle file) {
+    private XMLInventory parseInventory(FileHandle file) {
         try {
             Element root = xml.parse(file);
             if (root.getName().equals("inventory")) {
@@ -115,12 +121,6 @@ public class MyXMLReader {
                     e.getIntAttribute("orientation"));
         }
         throw new IOException("no item in root");
-    }
-
-    void generateXMLAssets() {
-        generateInventories(this);
-        generateEnemies(this);
-        generateEnemyGroups(this);
     }
 
     private void generateInventories(MyXMLReader reader) {
