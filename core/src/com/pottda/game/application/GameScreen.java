@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Image; 
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.ControllerHookup;
@@ -328,6 +328,13 @@ class GameScreen extends AbstractScreen {
     private void toInventoryManagement() {
         final Screen thisScreen = this;
         if (Timer.instance().isEmpty()) {
+
+            // Expand inventory at levels 2, 4 and every 3rd level
+            if (waveManager.getLevel() % 3 == 0 ||
+                    waveManager.getLevel() == 2 ||
+                    waveManager.getLevel() == 4)
+                modelState.expandPlayerInventory();
+
             hudStage.showLevelClear(waveManager.getLevel());
             Timer.instance().scheduleTask(new Timer.Task() {
                 @Override
