@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<enemy>
+    <name>Fortress</name>
+    <scorevalue>50</scorevalue>
+    <difficulty>4</difficulty>
+    <behaviour>STATIONARY</behaviour>
+    <inventoryname>fortressInventory.xml</inventoryname>
+    <spriteenum>FORTRESS</spriteenum>
+</enemy>

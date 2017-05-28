@@ -56,6 +56,10 @@ public abstract class AbstractController {
         return modelActor.shouldBeRemoved;
     }
 
+    public void setShouldBeRemoved(boolean shouldBeRemoved) {
+        modelActor.setShouldBeRemoved(shouldBeRemoved);
+    }
+
     private void updateModel() {
         modelActor.giveInput(movementVector, attackVector);
     }
