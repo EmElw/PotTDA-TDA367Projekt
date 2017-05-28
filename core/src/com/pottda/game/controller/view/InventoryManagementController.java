@@ -17,8 +17,8 @@ import com.pottda.game.view.InventoryManagementView;
 public class InventoryManagementController implements InventoryChangeListener, StorageChangeListener, InventoryManagementListener {
 
     // Model data
-    private Inventory inventory;
-    private Storage storage;
+    public Inventory inventory;
+    public Storage storage;
 
     // View data
     private InventoryManagementView view;
@@ -65,20 +65,25 @@ public class InventoryManagementController implements InventoryChangeListener, S
     }
 
     @Override
-    public void storageItemDropped(String itemName, int x, int y, int orientation) {
-            Item item = storage.popItem(itemName);
-            item.setX(x);
-            item.setY(y);
-            item.setOrientation(orientation);
+    public void storageItemToInventory(String itemName, int x, int y, int orientation) {
+        Item item = storage.popItem(itemName);
+        item.setX(x);
+        item.setY(y);
+        item.setOrientation(orientation);
 
-            inventory.addItem(item);
+        inventory.addItem(item);
     }
 
     @Override
     public void inventoryItemMoved(Item item, int x, int y, int orientation) {
         //inventory.removeItem(item);
-        item.setX(x);
-        item.setY(y);
-        item.setOrientation(orientation);
+
+        inventory.moveItem(item, x, y, orientation);
+    }
+
+    @Override
+    public void inventoryItemToStorage(Item item) {
+        inventory.removeItem(item);
+        storage.addItem(item);
     }
 }

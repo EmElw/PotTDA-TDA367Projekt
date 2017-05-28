@@ -28,11 +28,13 @@ public interface InventoryManagementListener {
      * @param x
      * @param y
      */
-    void storageItemDropped(String itemName, int x, int y, int orientation);
+    void storageItemToInventory(String itemName, int x, int y, int orientation);
 
     /**
      * Called on acceptButton when an item is moved in the inventory
      * @param item
      */
     void inventoryItemMoved(Item item, int x, int y, int orientation);
+
+    void inventoryItemToStorage(Item item);
 }

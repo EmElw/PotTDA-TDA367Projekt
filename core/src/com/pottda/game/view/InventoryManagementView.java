@@ -4,10 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
@@ -20,6 +20,7 @@ import javax.vecmath.Point2i;
 import java.util.*;
 import java.util.List;
 
+import static com.pottda.game.application.Constants.SKIN_QH;
 import static com.pottda.game.view.AtlasCreator.SIZE;
 import static com.pottda.game.view.AtlasCreator.atlas;
 
@@ -28,75 +29,27 @@ import static com.pottda.game.view.AtlasCreator.atlas;
  */
 public class InventoryManagementView {
     private Stage stage;
-    private Table storageTable;
-    private Table inventoryTable;
-    private Skin mySkin = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
+
+    private Table storageSuperTable;
+    private Table inventorySuperTable;
+
+    private Skin mySkin = SKIN_QH;
+
     private WidgetGroup inventoryGroup;
 
-    private Table table;
+    private WorkingImageTable currentWorkingItem;
 
     private Inventory inventory;
 
-    private WorkingImageTable workingItemTable;
-
     private List<InventoryManagementListener> listeners;
 
-    private ItemImage chosenImage;
-
-    private boolean isFromStorage;
+    private Texture connection = new Texture(Gdx.files.internal("testconnection.png"));
+    private Texture notConnection = new Texture(Gdx.files.internal("outputTest.png"));
+    private Texture background = new Texture(Gdx.files.internal("bg/bg.png"));
 
     public InventoryManagementView(final Stage stage) {
         this.stage = stage;
         stage.setDebugAll(true);
-        this.stage.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
-                try {
-                    if (evt.getTarget() instanceof StorageImage) {
-                        if (workingItemTable != null)
-                            workingItemTable.clearChildren();
-                        if (chosenImage != null)
-                            chosenImage.setColor(1, 1, 1, 1);
-                        workingItemTable = new WorkingImageTable(((StorageImage) evt.getTarget()).getItem());
-                        isFromStorage = true;
-
-                    } else if (evt.getTarget() instanceof ItemImage) {
-                        if (workingItemTable != null)
-                            workingItemTable.clearChildren();
-                        if (chosenImage != null)
-                            chosenImage.setColor(1, 1, 1, 1);
-                        chosenImage = (ItemImage) evt.getTarget();
-                        workingItemTable = new WorkingImageTable(chosenImage.item);
-                        chosenImage.setColor(100, 100, 100, 0.5f);
-                        isFromStorage = false;
-
-                    }
-                } catch (ClassCastException e) {
-                    return false;
-                }
-                return false;
-            }
-
-            @Override
-            public void touchDragged(InputEvent evt, float x, float y, int index) {
-
-            }
-
-            @Override
-            public void touchUp(InputEvent evt, float x, float y, int index, int button) {
-                if (evt.getTarget() instanceof StorageImage) {
-                    StorageImage actor = (StorageImage) evt.getTarget();
-                } else if (evt.getTarget() instanceof ItemImage) {
-                    ItemImage actor = (ItemImage) evt.getTarget();
-                }
-            }
-
-            /*@Override
-            public boolean mouseMoved(InputEvent event, float x, float y) {
-                workingItemGroup.setPosition(x, y);
-                return true;
-            }*/
-        });
         this.listeners = new ArrayList<InventoryManagementListener>();
         create();
     }
@@ -104,15 +57,15 @@ public class InventoryManagementView {
     public void create() {
         Gdx.input.setInputProcessor(stage);
 
-        table = new Table();
-        table.setFillParent(true);
-        stage.addActor(table);
-
+        Table superTable = new Table();
+        superTable.setFillParent(true);
+        stage.addActor(superTable);
 
         // Create table to hold storage section
-        storageTable = new Table();
+        storageSuperTable = new Table();
+        storageSuperTable.setWidth(150);
         // Create storage & scrollpane for storage
-        ScrollPane scroll = new ScrollPane(storageTable);
+        ScrollPane scroll = new ScrollPane(storageSuperTable);
         scroll.layout();
         scroll.setForceScroll(false, true);
         scroll.setOverscroll(false, false);
@@ -120,134 +73,119 @@ public class InventoryManagementView {
         storage.add(scroll).height(stage.getHeight() - 25);
 
         // Create group to hold inventory section
-        inventoryTable = new Table();
+        inventorySuperTable = new Table();
 
         // Create labels for storage and inventory
         Label storageLabel = new Label("Storage", mySkin);
         Label inventoryLabel = new Label("Inventory", mySkin);
 
         // Add labels and storage/inventory table
-        table.add(storageLabel);
-        table.add(inventoryLabel);
-        table.row();
-        table.add(storage).fill();
-        table.add(inventoryTable).fill().expand();
-    }
-
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
-    }
-
-    public void render() {
-        stage.act();
-        stage.draw();
-    }
-
-    public void dispose() {
-        stage.dispose();
+        superTable.add(storageLabel);
+        superTable.add(inventoryLabel);
+        superTable.row();
+        superTable.add(storage).width(275);
+        superTable.add(inventorySuperTable).fill().expand();
     }
 
     // Interesting stuff
 
     /**
-     * Transforms a coordinate in the top-level stage into a discreet coordinate inside the inventory
+     * Sets the current working item
      * <p>
-     * (i.e. the same as those used internally by items)
+     * Can be null, in which case there is no current working item
      *
-     * @param x
-     * @param y
-     * @return a {@link Point2i}
+     * @param workingImageTable
      */
-    private Point2i toInventoryCoordinate(float x, float y) {
-
-        // Convert to coordinate relative to the inventory group
-
-        // Convert to coordinate in inventory
-
-        return null;
+    private void newWorkingItem(WorkingImageTable workingImageTable) {
+        if (currentWorkingItem == null) {
+            currentWorkingItem = workingImageTable;
+        } else {
+            if (currentWorkingItem.inventoryImage != null) {
+                currentWorkingItem.inventoryImage.setTouchable(Touchable.enabled);
+                currentWorkingItem.inventoryImage.setColor(1, 1, 1, 1);
+            }
+            currentWorkingItem.remove();
+            currentWorkingItem = workingImageTable;
+        }
+        if (currentWorkingItem != null) {
+            inventoryGroup.addActor(currentWorkingItem);
+        }
     }
 
     public void updateStorageTable(Storage storage) {
-        if (storageTable != null)
-            storageTable.clearChildren();
+        if (storageSuperTable != null)
+            storageSuperTable.clearChildren();
         for (String s : storage.getItems()) {
             try {
-                addToStorageTable(s, storage.getNrOf(s), storage.getItem(s));
+                addToStorageTable(storage.getNrOf(s), storage.getItem(s));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private void addToStorageTable(String itemName, int itemCount, Item item) {
+    private void addToStorageTable(int itemCount, final Item item) {
         // Create a table to hold name + image
-        Table storageTable = new Table();
+        Button storageTable = new Button(mySkin);
         final StorageImage storageImage = new StorageImage(item);
         Stack storageStack = new Stack();
         Image itemImage;
-        //storageImage.setColor(0.03f, 0.69f, 0.73f, 1);  // TODO test only
-
-//        storageImage.addListener(
-//                new InputListener() {
-//
-//                    @Override
-//                    public boolean touchDown(InputEvent evt, float x, float y, int pointer, int button) {
-//                        for (InventoryManagementListener iml : listeners) {
-//                            iml.storageItemTouched(itemName);
-//                        }
-//                        return true;
-//                    }
-//
-//                    @Override
-//                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-//
-//                    }
-//                });
 
         Table internalItemGroupTable = new Table();
-        itemImage = new Image(atlas.findRegion(itemName));
+        itemImage = new Image(atlas.findRegion(item.getName()));
 
         // Label hold items name
-        Label itemNameLabel = new Label(itemName, mySkin);
+        Label itemNameLabel = new Label(item.getName(), mySkin);
         itemNameLabel.setFontScale(0.75f, 0.75f);
         internalItemGroupTable.add(itemNameLabel).left();
         internalItemGroupTable.row();
 
         // Label holds item count
-        Label itemCountLabel = new Label("#" + Integer.toString(itemCount), mySkin);
+        Label itemCountLabel = new Label("#" + itemCount, mySkin);
         itemCountLabel.setFontScale(0.5f, 0.5f);
         internalItemGroupTable.add(itemCountLabel).right();
 
         // Add a label and image to the table and fit the image
         storageTable.add(internalItemGroupTable).left().spaceRight(10);
         storageTable.add(itemImage);
-        storageTable.setTouchable(Touchable.disabled);
         itemImage.setScaling(Scaling.fit);
         storageStack.add(storageImage);
         storageStack.add(storageTable);
 
+        // Add touch-listener
+        storageStack.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
+                newWorkingItem(new WorkingImageTable(item, 0, 0, 0, true));
+                return true;
+            }
+        });
+
         // Add the table to our main storage table
-        this.storageTable.add(storageStack).fill();
-        this.storageTable.row();
+        this.storageSuperTable.add(storageStack).fill();
+        this.storageSuperTable.row();
     }
 
     public void updateInventoryGroup(Inventory inventory) {
         // Create inventory
+        this.inventory = inventory;
         if (inventoryGroup != null)
-            inventoryTable.clearChildren();
+            inventorySuperTable.clearChildren();
         inventoryGroup = new WidgetGroup();
 
-        this.inventory = inventory;
+        Image bg = new Image(new TextureRegion(background,
+                SIZE * (inventory.getWidth() + 1),
+                SIZE * (inventory.getHeight() + 1)));
+        inventoryGroup.addActor(bg);
+
 
         List<Point2i> connections = new ArrayList<Point2i>();
 
-        for (Item i : this.inventory.getItems()) {
+        for (Item i : inventory.getItems()) {
             TextureAtlas.AtlasRegion region = atlas.findRegion(i.getName());
-            ItemImage itemImage = new ItemImage(region, i);
+            final ItemImage itemImage = new ItemImage(region, i);
 
-            // TODO listener
-
-            Point2i negativeOffset = i.getBaseBottomLeft();
+            final Point2i negativeOffset = i.getBaseBottomLeft();
 
             connections.addAll(i.getTransformedRotatedOutputs());
 
@@ -259,34 +197,39 @@ public class InventoryManagementView {
                     (i.getX() + negativeOffset.x) * SIZE,
                     (i.getY() + negativeOffset.y) * SIZE);
             inventoryGroup.addActor(itemImage);
+            itemImage.addListener(new InputListener() {
+                @Override
+                public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
+                    return true; // More complex bounding box goes here
+                }
 
-//            itemImage.addListener(new InputListener() {
-//                Item item;
-//
-//                @Override
-//                public boolean touchDown(InputEvent evt, float x, float y, int pointer, int button) {
-//                    for (InventoryManagementListener iml : listeners) {
-//                        iml.inventoryItemTouched(item);
-//                    }
-//                    return true;
-//                }
-//            });
+                @Override
+
+                public void touchUp(InputEvent evt, float x, float y, int index, int button) {
+                    WorkingImageTable workingItem = new WorkingImageTable(itemImage.item,
+                            itemImage.getX() - negativeOffset.x * SIZE,
+                            itemImage.getY() - negativeOffset.y * SIZE,
+                            itemImage.getRotation(),
+                            false);
+                    newWorkingItem(workingItem);
+                    workingItem.setInventoryImage(itemImage);
+                    itemImage.setTouchable(Touchable.disabled);
+                    itemImage.setColor(1, 1, 1, 0.5f);
+                }
+            });
         }
 
-        // Add images for connections
-        // TODO test only use proper resource handling
-        Texture connection = new Texture(Gdx.files.internal("testconnection.png"));
-        Texture notConnection = new Texture(Gdx.files.internal("outputTest.png"));
         for (Point2i p : connections) {
             Image connectionImage = new Image(
-                    this.inventory.itemAt(p) == null ? notConnection : connection);
+                    inventory.itemAt(p) == null ? notConnection : connection);
 
             connectionImage.setPosition(p.x * SIZE, p.y * SIZE);
             connectionImage.setTouchable(Touchable.disabled);
             inventoryGroup.addActor(connectionImage);
         }
+
         inventoryGroup.validate();
-        inventoryTable.add(inventoryGroup).expand().bottom().left().pad(2 * SIZE);
+        inventorySuperTable.add(inventoryGroup).expand().bottom().left().pad(2 * SIZE);
     }
 
     // Boring stuff
@@ -306,12 +249,9 @@ public class InventoryManagementView {
         private Item item;
 
         private StorageImage(Item item) {
-            super(new Texture(Gdx.files.internal("menu/storageButtonBackground.png")));
+            super();
+//            super(new Texture(Gdx.files.internal("menu/storageButtonBackground.png")));
             this.item = item;
-        }
-
-        private Item getItem() {
-            return item;
         }
     }
 
@@ -324,7 +264,7 @@ public class InventoryManagementView {
         }
     }
 
-    private class WorkingImageTable extends Table {
+    private class WorkingImageTable extends WidgetGroup {
 
         private final Drawable rotateRightButtonDrawable = new TextureRegionDrawable(
                 new TextureRegion(new Texture(Gdx.files.internal("rotateRightButton.png"))));
@@ -334,47 +274,89 @@ public class InventoryManagementView {
                 new TextureRegion(new Texture(Gdx.files.internal("acceptButton.png"))));
         private final Drawable discardButtonDrawable = new TextureRegionDrawable(
                 new TextureRegion(new Texture(Gdx.files.internal("discardButton.png"))));
-
-
+        private final Label debugLabel;
         private ImageButton rotateRightButton = new ImageButton(rotateRightButtonDrawable);
+
         private ImageButton rotateLeftButton = new ImageButton(rotateLeftButtonDrawable);
         private ImageButton acceptButton = new ImageButton(acceptButtonDrawable);
         private ImageButton discardButton = new ImageButton(discardButtonDrawable);
-
-        private float prePosX = 0, prePosY = 0, posX, posY;
-        private boolean acceptButtonStatus = false;
+        private final Item workingItem;
         private final Image itemImage;
 
-        private Vector2 inventoryPosition;
+        private boolean currentPositionIsLegal = false;
 
-        private WorkingImageTable(final Item item) {
+        private final boolean isFromStorage;
+
+        private Point2i inventoryPosition;
+        private Point2i negativeOffset;
+        private final Point2i negativeOffsetPx;
+        private ItemImage inventoryImage;
+        private int orientation;
+
+        private WorkingImageTable(final Item item, float x, float y, float rotation, boolean isFromStorage) {
+            this.workingItem = item;
+            this.isFromStorage = isFromStorage;
+            this.setPosition(x, y);
+            this.orientation = (int) (rotation / 90);
+
+            negativeOffset = item.getBaseBottomLeft();
+            negativeOffsetPx = new Point2i(negativeOffset.x * SIZE, negativeOffset.y * SIZE);
+            inventoryPosition = new Point2i(Math.round(x / SIZE), Math.round(y / SIZE));
 
             itemImage = new Image(atlas.findRegion(item.getName()));
-            Point2i negativeOffset = item.getBaseBottomLeft();
             itemImage.setOrigin(
                     (float) ((0.5 - negativeOffset.x) * SIZE),
                     (float) ((0.5 - negativeOffset.y) * SIZE));
+            itemImage.setPosition(negativeOffset.x * SIZE, negativeOffset.y * SIZE);
+            addActor(itemImage);
+            itemImage.setRotation(rotation);
 
-            this.add(discardButton).left().size(SIZE);
-            this.add(acceptButton).right().size(SIZE);
-            this.row();
-            this.add(itemImage).center().colspan(2)
-                    .width(itemImage.getWidth()).height(itemImage.getHeight());
-            this.row();
-            this.add(rotateLeftButton).left().size(SIZE);
-            this.add(rotateRightButton).right().size(SIZE);
+            float d = Math.max(itemImage.getWidth(), itemImage.getHeight());
+            this.setSize(d, d);
 
-            setAcceptButtonState(200, 200, itemImage.getRotation(), item);
+            discardButton.setSize(SIZE, SIZE);
+            discardButton.setPosition(getWidth(), getHeight());
+            addActor(discardButton);
 
-            // TODO fix vectors pls
-            // Vector2 vector = itemImage.localToParentCoordinates(new Vector2(itemImage.getOriginX(), itemImage.getOriginY()));
+            acceptButton.setSize(SIZE, SIZE);
+            acceptButton.setPosition(-SIZE + negativeOffsetPx.x, getHeight());
+            addActor(acceptButton);
 
-            setPosition(200, 200);
+            rotateLeftButton.setSize(SIZE, SIZE);
+            rotateLeftButton.setPosition(-SIZE + negativeOffsetPx.x, -SIZE + negativeOffsetPx.y);
+            addActor(rotateLeftButton);
+
+            rotateRightButton.setSize(SIZE, SIZE);
+            rotateRightButton.setPosition(getWidth(), -SIZE + negativeOffsetPx.y);
+            addActor(rotateRightButton);
 
             inventoryGroup.addActor(this);
 
-            //final Vector2 finalVector = vector;
+            initInputListeners();
+
+            debugLabel = new Label("", mySkin);
+            debugLabel.setPosition(itemImage.getOriginX(),
+                    itemImage.getOriginY());
+
+            addActor(debugLabel);
+
+            updatePositionLegality();
+        }
+
+        private void updatePositionLegality() {
+            debugLabel.setText(inventoryPosition.x + "/" + inventoryPosition.y + " : " + itemImage.getRotation() / 90);
+
+            currentPositionIsLegal = inventory.itemLegalAt(inventoryPosition.x,
+                    inventoryPosition.y,
+                    (int) (itemImage.getRotation() / 90),
+                    workingItem);
+            acceptButton.setDisabled(currentPositionIsLegal);
+            acceptButton.setColor(1, 1, 1, currentPositionIsLegal ? 1 : 0.4f);
+        }
+
+        private void initInputListeners() {
             addListener(new InputListener() {
+                private Point2i newPoint = new Point2i();
                 // Used to keep 0,0 relative distance to touch coordinate constant
                 float xOffset;
                 float yOffset;
@@ -387,92 +369,71 @@ public class InventoryManagementView {
                 }
 
                 public void touchDragged(InputEvent event, float x, float y, int pointer) {
-                    float extraY = 0f;
-                    float extraX = 0f;
-                    if (itemImage.getPrefHeight() / 25 % 2 != 0) {
-                        extraY = 25f / 2f;
+                    float pxX = getX() + x - xOffset;
+                    float pxY = getY() + y - yOffset;
+
+                    newPoint.set(   // Magical expression to convert and clamp within inventory
+                            Math.min(Math.max(Math.round(pxX / SIZE), 0), inventory.getWidth()),
+                            Math.min(Math.max(Math.round(pxY / SIZE), 0), inventory.getHeight()));
+
+                    if (!inventoryPosition.equals(newPoint)) {
+                        inventoryPosition.set(newPoint);
+                        setPosition(newPoint.x * SIZE,
+                                newPoint.y * SIZE);
+                        updatePositionLegality();
                     }
-                    if (itemImage.getPrefWidth() / 25 % 2 != 0) {
-                        extraX = 25f / 2f;
-                    }
-
-                    posX = ((int) (getX() + x - xOffset) / 25) * 25 + extraX;
-                    posY = ((int) (getY() + y - yOffset) / 25) * 25 + extraY;
-
-
-                    setPosition(posX, posY);
-                    // TODO validate if the new coordinates are legal inside the inventory (send event to the listener if they are at all within inventory?)
-                    if ((posX - 25) >= prePosX || (posX + 25) <= prePosX || (posY - 25) >= prePosY || (posY + 25) <= prePosY) {
-                        prePosX = ((posX - 25) >= prePosX || (posX + 25) <= prePosX) ? posX : prePosX;
-                        prePosY = ((posY - 25) >= prePosY || (posY + 25) <= prePosY) ? posY : prePosY;
-                        setAcceptButtonState(posX, posY, itemImage.getRotation(), item);
-                    }
-
-                    /*if (getX() >= xGroupMin && getX() <= xGroupMax
-                            && getY() >= yGroupMin && getY() <= yGroupMax) {
-
-                    } else
-                        acceptButton.setColor(100, 100, 100, 0.5f);*/
                 }
             });
 
-            rotateLeftButton.addListener(new InputListener() {
-
-
+            rotateLeftButton.addListener(new ClickListener() {
                 @Override
-                public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
-                    itemImage.rotateBy(90);
-                    return true;
+                public void clicked(InputEvent evt, float x, float y) {
+                    orientation = (orientation + 1) % 4;
+                    itemImage.setRotation(orientation * 90);
+                    updatePositionLegality();
                 }
             });
-            rotateRightButton.addListener(new InputListener() {
+            rotateRightButton.addListener(new ClickListener() {
                 @Override
-                public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
-                    itemImage.rotateBy(-90);
-                    return true;
+                public void clicked(InputEvent evt, float x, float y) {
+                    orientation = (orientation + 3) % 4; //Easier because of java negative modulo stuff
+                    itemImage.setRotation(orientation * 90);
+                    updatePositionLegality();
                 }
             });
-            discardButton.addListener(new InputListener() {
+            discardButton.addListener(new ClickListener() {
                 @Override
-                public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
-                    clearChildren();
-                    if (chosenImage != null)
-                        chosenImage.setColor(1, 1, 1, 1);
-                    return true;
+                public void clicked(InputEvent evt, float x, float y) {
+                    newWorkingItem(null);
                 }
             });
-            acceptButton.addListener(new InputListener() {
+            acceptButton.addListener(new ClickListener() {
                 @Override
-                public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
-                    if (acceptButtonStatus) {
+                public void clicked(InputEvent evt, float x, float y) {
+                    if (currentPositionIsLegal) {
                         if (isFromStorage) {
                             for (InventoryManagementListener iml : listeners) {
-                                iml.storageItemDropped(item.getName(), (int) posX / 25,
-                                        (int) posY / 25, (int) itemImage.getRotation() / 90);
+                                iml.storageItemToInventory(
+                                        workingItem.getName(),
+                                        inventoryPosition.x,
+                                        inventoryPosition.y,
+                                        orientation);
                             }
-                            return true;
                         } else {
                             for (InventoryManagementListener iml : listeners) {
-                                iml.inventoryItemMoved(item, (int) posX / 25,
-                                        (int) posY / 25, (int) itemImage.getRotation() / 90);
+                                iml.inventoryItemMoved(workingItem,
+                                        inventoryPosition.x,
+                                        inventoryPosition.y,
+                                        orientation);
                             }
-                            return true;
                         }
-                    }
-                    return false;
+                    } else throw new Error("shouldn't get here with disabled button");
                 }
-
             });
         }
 
-        private void setAcceptButtonState(float x, float y, float rotation, Item item) {
-            if (inventory.itemLegalAt((int) x / 25, (int) y / 25, (int) itemImage.getRotation() / 90 % 4, item)) {
-                acceptButton.setColor(0, 0, 0, 1);
-                acceptButtonStatus = true;
-            } else {
-                acceptButton.setColor(100, 100, 100, 0.5f);
-                acceptButtonStatus = false;
-            }
+        private void setInventoryImage(ItemImage inventoryImage) {
+            this.inventoryImage = inventoryImage;
         }
     }
 }

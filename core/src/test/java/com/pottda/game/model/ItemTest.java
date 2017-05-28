@@ -12,14 +12,11 @@ import com.pottda.game.model.items.ProjectileSpeedItem;
 import com.pottda.game.model.items.SpeedItem;
 import com.pottda.game.model.items.SupportItem;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.vecmath.Point2i;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;

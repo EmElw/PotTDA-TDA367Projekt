@@ -136,15 +136,19 @@ public class Inventory {
     }
 
     public boolean itemLegalAt(int x, int y, int orientation, Item item) {
+
         // Does a mock-insert of the item and tries to validate
         // (No permanent change to the inventory state, no notifications)
         int oldX = item.getX(), oldY = item.getY(), oldOrientation = item.getOrientation();
+        boolean inInventory = items.contains(item);
 
 
         item.setX(x);
         item.setY(y);
         item.setOrientation(orientation);
-        this.items.add(item);
+        if (!inInventory) {
+            this.items.add(item);
+        }
 
         compile();
         boolean legal = isLegal();
@@ -152,11 +156,12 @@ public class Inventory {
         item.setX(oldX);
         item.setY(oldY);
         item.setOrientation(oldOrientation);
-        this.items.remove(item);
+        if (!inInventory) {
+            this.items.remove(item);
+        }
 
         compile();
-
-        return legal;
+        return true;
     }
 
     void attack(Vector2f direction, Vector2f origin, int team) {
@@ -254,5 +259,15 @@ public class Inventory {
         for (InventoryChangeListener icl : inventoryChangeListeners) {
             icl.inventoryChanged();
         }
+    }
+
+    public void moveItem(Item item, int x, int y, int orientation) {
+        if (items.contains(item)) {
+            item.setX(x);
+            item.setY(y);
+            item.setOrientation(orientation);
+            compile();
+            notifyListeners();
+        } else throw new Error("trying to move item outside this inventory");
     }
 }

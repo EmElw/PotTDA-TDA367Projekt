@@ -222,6 +222,7 @@ public abstract class Item extends ProjectileListenerAdapter {
      * Returns a copy of a rotated 2D point by n * pi/2 rad or n * 90 degrees around (0,0)
      * <p>
      * Home-brew rotation function because VecMath doesn't appear to support 2D matrices
+     * (and it's sort of fast)
      *
      * @param x        the x-coordinate of the point
      * @param y        the y-coordinate of the point
@@ -229,9 +230,13 @@ public abstract class Item extends ProjectileListenerAdapter {
      * @return {@code int[]} of size 2
      */
     private static Point2i rotate(int x, int y, int rotation) {
-        Point2i returnValue = new Point2i(x, y);
-        returnValue.x = a[rotation % 4] * x + b[rotation % 4] * y;
-        returnValue.y = c[rotation % 4] * x + a[rotation % 4] * y;
+        Point2i returnValue = new Point2i();
+        rotation = rotation % 4;
+        if (rotation < 0){
+            rotation += 4;
+        }
+        returnValue.x = a[rotation] * x + b[rotation] * y;
+        returnValue.y = c[rotation] * x + a[rotation] * y;
         return returnValue;
     }
 

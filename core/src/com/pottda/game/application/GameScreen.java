@@ -2,6 +2,7 @@ package com.pottda.game.application;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -273,16 +274,17 @@ class GameScreen extends AbstractScreen {
     }
 
     private void toInventoryManagement() {
+        final Screen thisScreen = this;
         if (Timer.instance().isEmpty()) {
             hudStage.showLevelClear(waveManager.getLevel());
             Timer.instance().scheduleTask(new Timer.Task() {
                 @Override
                 public void run() {
-                    System.out.println("To inventory");
+                    switchScreen(new InventoryManagementScreen(game,
+                            thisScreen,
+                            modelState.getInventory(),
+                            modelState.getStorage()));
                     waveManager.newLevel();
-//        switchScreen(new InventoryManagementScreen(game,
-//                modelState.getInventory(),
-//                modelState.getStorage()));
                 }
             }, 2);
         }
