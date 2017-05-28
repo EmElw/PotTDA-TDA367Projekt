@@ -27,6 +27,7 @@ public class ItemTest {
     private AttackItem penetratingCannon;
     private GenericProjectileModifier projectileSpeedItem;
     private SupportItem speedItem;
+    private Item novaItem;
 
     @Before
     public void setUp() {
@@ -43,12 +44,14 @@ public class ItemTest {
         b.setY(4);
 
         bouncingBallCannon = new BouncingBallCannon();
+        enemySimpleCannon = new EnemySimpleCannon();
+        penetratingCannon = new PenetratingCannon();
+        novaItem = new Nova();
+
         damageItem = new DamageItem();
         damageItem.setSize(ItemSize.NORMAL);
-        enemySimpleCannon = new EnemySimpleCannon();
         healthItem = new HealthItem();
         healthItem.setSize(ItemSize.NORMAL);
-        penetratingCannon = new PenetratingCannon();
         projectileSpeedItem = new ProjectileSpeedItem();
         projectileSpeedItem.setSize(ItemSize.NORMAL);
         speedItem = new SpeedItem();
@@ -162,4 +165,9 @@ public class ItemTest {
         assertTrue(speedItem.name.contains("Speed"));
     }
 
+    @Test
+    public void testNovaItem() {
+        assertTrue(novaItem.dropRate == 0.05f);
+        assertTrue(novaItem.name.contains("Nova"));
+    }
 }

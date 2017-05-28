@@ -89,6 +89,8 @@ public class ControllerHookup implements NewModelListener {
                 return new DumbAIController(m, view, enemyHealthBarController);
             case STATIONARY:
                 return new StationaryAIController(m, view, enemyHealthBarController);
+            case FIXATING:
+                return new FixatingAIController(m, view, enemyHealthBarController);
         }
         throw new Error("Missing controller setup for behaviour: " + m.getBehaviour().toString());
     }
