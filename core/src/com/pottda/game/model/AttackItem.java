@@ -49,12 +49,12 @@ public abstract class AttackItem extends Item {
         temporaryVector.scale(CHARACTER_RADIUS);
         origin.add(temporaryVector);
 
-        Sprites sprite;
+        com.pottda.game.assets.Sprites sprite;
 
         if (team == Character.PLAYER_TEAM) {
-            sprite = Sprites.PLAYERPROJECTILE;
+            sprite = com.pottda.game.assets.Sprites.PLAYERPROJECTILE;
         } else {
-            sprite = Sprites.ENEMYPROJECTILE;
+            sprite = com.pottda.game.assets.Sprites.ENEMYPROJECTILE;
         }
 
         Projectile proj = (Projectile) new ProjectileBuilder().

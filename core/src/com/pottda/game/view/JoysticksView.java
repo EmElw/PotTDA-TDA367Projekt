@@ -10,7 +10,7 @@ public class JoysticksView {
     private Touchpad movementTouchpad;
     private Touchpad attackTouchpad;
     // TODO access in nicer way
-    private Skin touchpadSkin = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
+    private final Skin touchpadSkin = new Skin(Gdx.files.internal("skin/quantum-horizon-ui.json"));
 
     public JoysticksView(Stage joystickStage) {
         this.joystickStage = joystickStage;

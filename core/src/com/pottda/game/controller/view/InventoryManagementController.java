@@ -12,11 +12,11 @@ import com.pottda.game.view.InventoryManagementView;
 public class InventoryManagementController implements InventoryChangeListener, StorageChangeListener, InventoryManagementListener {
 
     // Model data
-    public Inventory inventory;
-    public Storage storage;
+    private final Inventory inventory;
+    private final Storage storage;
 
     // View data
-    private InventoryManagementView view;
+    private final InventoryManagementView view;
 
     public InventoryManagementController(Inventory inventory, Storage storage, InventoryManagementView view) {
         this.inventory = inventory;
@@ -51,11 +51,11 @@ public class InventoryManagementController implements InventoryChangeListener, S
     }
 
     @Override
-    public void storageItemTouched(String itemName) {
+    public void storageItemTouched() {
     }
 
     @Override
-    public void inventoryItemTouched(Item item) {
+    public void inventoryItemTouched() {
 
     }
 

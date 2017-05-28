@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static com.pottda.game.application.Constants.SKIN_QH;
+import static com.pottda.game.assets.Constants.SKIN_QH;
 
 class HUDStage extends Stage implements ScoreChangeListener {
 
@@ -56,11 +56,11 @@ class HUDStage extends Stage implements ScoreChangeListener {
     }
 
     private void addActors() {
-        Image healthBar = new Image(new Texture(Gdx.files.internal(Sprites.HEALTHBAR.fileName)));
+        Image healthBar = new Image(new Texture(Gdx.files.internal(com.pottda.game.assets.Sprites.HEALTHBAR.fileName)));
         healthBar.setPosition(10, getHeight() - 30);
         addActor(healthBar);
 
-        healthBarRed = new Image(new Texture(Gdx.files.internal(Sprites.HEALTHBARRED.fileName)));
+        healthBarRed = new Image(new Texture(Gdx.files.internal(com.pottda.game.assets.Sprites.HEALTHBARRED.fileName)));
         healthBarRed.setPosition(10, getHeight() - 30);
         addActor(healthBarRed);
 
@@ -68,7 +68,7 @@ class HUDStage extends Stage implements ScoreChangeListener {
         healthLabel.setPosition(20, getHeight() - 30);
         addActor(healthLabel);
 
-        Image pauseButton = new Image(new Texture(Gdx.files.internal(Sprites.PAUSEBUTTON.fileName)));
+        Image pauseButton = new Image(new Texture(Gdx.files.internal(com.pottda.game.assets.Sprites.PAUSEBUTTON.fileName)));
         pauseButton.setPosition(getWidth() - 60, getHeight() - 50);
         pauseButton.addListener(new ClickListener() {
             @Override

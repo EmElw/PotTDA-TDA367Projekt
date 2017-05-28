@@ -8,7 +8,7 @@ import javax.vecmath.Vector2f;
 
 public abstract class AIController extends AbstractController {
     private static final float HEALTHBAR_OFFSET = 1;
-    private EnemyHealthBarController enemyHealthBarController;
+    private final EnemyHealthBarController enemyHealthBarController;
 
     /**
      * {@inheritDoc}

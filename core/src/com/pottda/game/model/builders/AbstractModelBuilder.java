@@ -3,7 +3,7 @@ package com.pottda.game.model.builders;
 import com.pottda.game.model.ModelActor;
 import com.pottda.game.model.NewModelListener;
 import com.pottda.game.model.PhysicsActorFactory;
-import com.pottda.game.model.Sprites;
+import com.pottda.game.assets.Sprites;
 
 import javax.vecmath.Vector2f;
 import java.util.ArrayList;

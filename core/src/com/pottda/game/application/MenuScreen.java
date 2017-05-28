@@ -18,9 +18,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.view.SoundsAndMusic;
 
-import static com.pottda.game.application.Constants.SKIN_QH;
-import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
-import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
+import static com.pottda.game.assets.Constants.HEIGHT_VIEWPORT;
+import static com.pottda.game.assets.Constants.SKIN_QH;
+import static com.pottda.game.assets.Constants.WIDTH_VIEWPORT;
 
 class MenuScreen extends AbstractMenuScreen {
 
@@ -165,7 +165,7 @@ class MenuScreen extends AbstractMenuScreen {
 
             Table superTable = new Table();
             superTable.setFillParent(true);
-            superTable.pad(Constants.PADDING);
+            superTable.pad(com.pottda.game.assets.Constants.PADDING);
             {
                 Table buttonTable = new Table();
                 {
@@ -182,7 +182,7 @@ class MenuScreen extends AbstractMenuScreen {
 
                 settingsTable = new Table();
                 {
-                    settingsTable.setBackground(solidBackground(Constants.bgColor));
+                    settingsTable.setBackground(solidBackground(com.pottda.game.assets.Constants.bgColor));
 
                     Label sfxVol = new Label("SFX", SKIN_QH);
                     settingsTable.add(sfxVol).right().uniformX();

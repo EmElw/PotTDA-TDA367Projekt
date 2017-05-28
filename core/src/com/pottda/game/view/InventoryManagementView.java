@@ -20,11 +20,11 @@ import com.pottda.game.model.Item;
 import com.pottda.game.model.Storage;
 
 import javax.vecmath.Point2i;
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.pottda.game.application.Constants.SKIN_QH;
+import static com.pottda.game.assets.Constants.SKIN_QH;
 import static com.pottda.game.view.AtlasCreator.SIZE;
 import static com.pottda.game.view.AtlasCreator.atlas;
 
@@ -32,12 +32,12 @@ import static com.pottda.game.view.AtlasCreator.atlas;
  * Created by Mr Cornholio on 15/05/2017.
  */
 public class InventoryManagementView {
-    private Stage stage;
+    private final Stage stage;
 
     private Table storageSuperTable;
     private Table inventorySuperTable;
 
-    private Skin mySkin = SKIN_QH;
+    private final Skin mySkin = SKIN_QH;
 
     private WidgetGroup inventoryGroup;
 
@@ -45,12 +45,12 @@ public class InventoryManagementView {
 
     private Inventory inventory;
 
-    private List<InventoryManagementListener> listeners;
+    private final List<InventoryManagementListener> listeners;
 
     private static Texture connection;
     private static Texture notConnection;
 
-    private Texture background = new Texture(Gdx.files.internal("bg/bg.png"));
+    private final Texture background = new Texture(Gdx.files.internal("bg/bg.png"));
 
     public InventoryManagementView(final Stage stage) {
         this.stage = stage;
@@ -59,7 +59,7 @@ public class InventoryManagementView {
         create();
     }
 
-    public void create() {
+    private void create() {
         Gdx.input.setInputProcessor(stage);
 
         Table superTable = new Table();
@@ -277,7 +277,7 @@ public class InventoryManagementView {
 
     private class StorageImage extends Image {
 
-        private Item item;
+        private final Item item;
 
         private StorageImage(Item item) {
             super();
@@ -287,7 +287,7 @@ public class InventoryManagementView {
     }
 
     private class ItemImage extends Image {
-        private Item item;
+        private final Item item;
 
         private ItemImage(TextureAtlas.AtlasRegion region, Item item) {
             super(region);
@@ -307,11 +307,11 @@ public class InventoryManagementView {
                 new TextureRegion(new Texture(Gdx.files.internal("discardButton.png"))));
         private final Label debugLabel;
         private final Label itemNameLabel;
-        private ImageButton rotateRightButton = new ImageButton(rotateRightButtonDrawable);
+        private final ImageButton rotateRightButton = new ImageButton(rotateRightButtonDrawable);
 
-        private ImageButton rotateLeftButton = new ImageButton(rotateLeftButtonDrawable);
-        private ImageButton acceptButton = new ImageButton(acceptButtonDrawable);
-        private ImageButton discardButton = new ImageButton(discardButtonDrawable);
+        private final ImageButton rotateLeftButton = new ImageButton(rotateLeftButtonDrawable);
+        private final ImageButton acceptButton = new ImageButton(acceptButtonDrawable);
+        private final ImageButton discardButton = new ImageButton(discardButtonDrawable);
         private final Item workingItem;
         private final Image itemImage;
 
@@ -319,8 +319,8 @@ public class InventoryManagementView {
 
         private final boolean isFromStorage;
 
-        private Point2i inventoryPosition;
-        private Point2i negativeOffset;
+        private final Point2i inventoryPosition;
+        private final Point2i negativeOffset;
         private final Point2i negativeOffsetPx;
         private ItemImage inventoryImage;
         private int orientation;
@@ -393,7 +393,7 @@ public class InventoryManagementView {
 
         private void initInputListeners() {
             addListener(new InputListener() {
-                private Point2i newPoint = new Point2i();
+                private final Point2i newPoint = new Point2i();
                 // Used to keep 0,0 relative distance to touch coordinate constant
                 float xOffset;
                 float yOffset;

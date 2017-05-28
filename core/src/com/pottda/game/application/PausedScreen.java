@@ -15,13 +15,11 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pottda.game.view.SoundsAndMusic;
 
-import static com.pottda.game.application.Constants.*;
-import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
-import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
+import static com.pottda.game.assets.Constants.*;
 
 class PausedScreen extends AbstractMenuScreen {
 
-    private Screen gameScreen;
+    private final Screen gameScreen;
 
     private Slider sfxSlider;
     private Slider musicSlider;
