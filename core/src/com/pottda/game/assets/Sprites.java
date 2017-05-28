@@ -14,6 +14,8 @@ public enum Sprites {
     SHOTGUN("charactersprites/shotgun.png"),
     ELITE_SHOTGUN("charactersprites/eliteShotgun.png"),
     WATCH_TOWER("charactersprites/watchTower.png"),
+    BOUNCE_CANNON("charactersprites/bounceCannon.png"),
+    ELITE_BOUNCE_CANNON("charactersprites/eliteBounceCannon.png"),
     FORTRESS("charactersprites/fortress.png"),
 
     ENEMYPROJECTILE("game/projectile1.png"),

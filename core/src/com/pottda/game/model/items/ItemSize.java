@@ -3,8 +3,8 @@ package com.pottda.game.model.items;
 
 public enum ItemSize {
     MINOR ("Minor ", 0.5f, 1f, 0),
-    NORMAL ("", 0.25f, 2f, 1),
-    BIG ("Greater ", 0.1f, 4.5f, 2);
+    NORMAL ("", 0.25f, 2.5f, 1),
+    BIG ("Greater ", 0.1f, 6f, 2);
 
     private final String name;
     private final float dropRate;
