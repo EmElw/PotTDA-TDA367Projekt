@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.pottda.game.assets.Constants;
 import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.model.Item;
+import com.pottda.game.model.Storage;
 import com.pottda.game.model.items.*;
 import com.pottda.game.view.AtlasCreator;
 
@@ -37,15 +38,16 @@ public class PoTDAGame extends Game {
                 break;
         }
 
-//        Storage storage = new Storage();
-//        storage.addItem(new SimpleCannon());
-//        storage.addItem(new SimpleCannon());
-//        storage.addItem(new MultiShot());
-//        storage.addItem(new Switcher());
-//        storage.addItem(new BouncingBallCannon());
-//        storage.addItem(new ChainAttack());
-//
-//        setScreen(new InventoryManagementScreen(this, null, InventoryBlueprint.getInventory("testInv2.xml"), storage));
+        /*Storage storage = new Storage();
+        storage.addItem(new SimpleCannon());
+        storage.addItem(new SimpleCannon());
+        storage.addItem(new MultiShot());
+        storage.addItem(new Switcher());
+        storage.addItem(new BouncingBallCannon());
+        storage.addItem(new ChainAttack());
+
+        setScreen(new InventoryManagementScreen(this, null,
+                InventoryBlueprint.getInventory("sizedItemTestInv.xml"), storage));*/
     }
 
     @Override

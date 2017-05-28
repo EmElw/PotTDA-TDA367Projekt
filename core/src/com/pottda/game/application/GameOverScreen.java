@@ -33,7 +33,7 @@ class GameOverScreen extends AbstractMenuScreen {
         super.create();
 
         stage = new GameOverStage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
-        stage.setDebugAll(true);
+        stage.setDebugAll(false);
         Gdx.input.setInputProcessor(stage);
 
         restartButton.addListener(new ClickListener() {

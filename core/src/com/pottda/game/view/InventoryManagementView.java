@@ -88,7 +88,7 @@ public class InventoryManagementView {
         superTable.add(storageLabel);
         superTable.add(inventoryLabel);
         superTable.row();
-        superTable.add(storage).width(275);
+        superTable.add(storage).width(350);
         superTable.add(inventorySuperTable).fill().expand();
 
         createPixmaps();
@@ -180,11 +180,10 @@ public class InventoryManagementView {
         storageStack.add(storageTable);
 
         // Add touch-listener
-        storageStack.addListener(new InputListener() {
+        storageStack.addListener(new ClickListener() {
             @Override
-            public boolean touchDown(InputEvent evt, float x, float y, int index, int button) {
+            public void clicked(InputEvent evt, float x, float y) {
                 newWorkingItem(new WorkingImageTable(item, 0, 0, 0, true));
-                return true;
             }
         });
 
@@ -298,13 +297,16 @@ public class InventoryManagementView {
     private class WorkingImageTable extends WidgetGroup {
 
         private final Drawable rotateRightButtonDrawable = new TextureRegionDrawable(
-                new TextureRegion(new Texture(Gdx.files.internal("rotateRightButton.png"))));
+                new TextureRegion(new Texture(Gdx.files.internal("menu/rotateRightButton.png"))));
         private final Drawable rotateLeftButtonDrawable = new TextureRegionDrawable(
-                new TextureRegion(new Texture(Gdx.files.internal("rotateLeftButton.png"))));
+                new TextureRegion(new Texture(Gdx.files.internal("menu/rotateLeftButton.png"))));
         private final Drawable acceptButtonDrawable = new TextureRegionDrawable(
-                new TextureRegion(new Texture(Gdx.files.internal("acceptButton.png"))));
+                new TextureRegion(new Texture(Gdx.files.internal("menu/acceptButton.png"))));
         private final Drawable discardButtonDrawable = new TextureRegionDrawable(
-                new TextureRegion(new Texture(Gdx.files.internal("discardButton.png"))));
+                new TextureRegion(new Texture(Gdx.files.internal("menu/discardButton.png"))));
+        private final Drawable storeButtonDrawable = new TextureRegionDrawable(
+                new TextureRegion(new Texture(Gdx.files.internal("menu/storeButton.png"))));
+
         private final Label debugLabel;
         private final Label itemNameLabel;
         private final ImageButton rotateRightButton = new ImageButton(rotateRightButtonDrawable);
@@ -312,6 +314,7 @@ public class InventoryManagementView {
         private final ImageButton rotateLeftButton = new ImageButton(rotateLeftButtonDrawable);
         private final ImageButton acceptButton = new ImageButton(acceptButtonDrawable);
         private final ImageButton discardButton = new ImageButton(discardButtonDrawable);
+        private ImageButton storeButton = new ImageButton(storeButtonDrawable);
         private final Item workingItem;
         private final Image itemImage;
 
@@ -350,6 +353,12 @@ public class InventoryManagementView {
             discardButton.setPosition(getWidth(), getHeight());
             addActor(discardButton);
 
+            if (!isFromStorage) {
+                storeButton.setSize(SIZE, SIZE);
+                storeButton.setPosition(getWidth()/2 - storeButton.getWidth()/2, getHeight());
+                addActor(storeButton);
+            }
+
             acceptButton.setSize(SIZE, SIZE);
             acceptButton.setPosition(-SIZE + negativeOffsetPx.x, getHeight());
             addActor(acceptButton);
@@ -371,7 +380,7 @@ public class InventoryManagementView {
             initInputListeners();
 
             debugLabel = new Label("", mySkin);
-            debugLabel.setVisible(true);
+            debugLabel.setVisible(false);
             debugLabel.setPosition(itemImage.getOriginX(),
                     itemImage.getOriginY());
 
@@ -465,6 +474,15 @@ public class InventoryManagementView {
                             }
                         }
                     }
+                }
+            });
+            storeButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent evt, float x, float y) {
+                    for (InventoryManagementListener iml : listeners) {
+                        iml.inventoryItemToStorage(workingItem);
+                    }
+                    newWorkingItem(null);
                 }
             });
         }

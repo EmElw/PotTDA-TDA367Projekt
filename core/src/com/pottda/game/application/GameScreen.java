@@ -72,8 +72,6 @@ class GameScreen extends AbstractScreen {
 
     private void create() {
         modelState = new ModelState();
-        modelState.getStorage().addItem(new MultiShot());
-        modelState.getStorage().addItem(new ChainAttack());
 
         initStages();
 
