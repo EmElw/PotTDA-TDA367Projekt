@@ -110,12 +110,12 @@ public class Box2DPhysicsActorFactory implements PhysicsActorFactory{
     @Override
     public PhysicsActor getObstaclePhysicsActor(Obstacle obstacle) {
         Shape tempShape;
-        if(obstacle.isRound){
+        if(obstacle.getRound()){
             tempShape = new CircleShape();
-            ((CircleShape)tempShape).setRadius(obstacle.size.getX());
+            ((CircleShape)tempShape).setRadius(obstacle.getSize().getX());
         } else {
             tempShape = new PolygonShape();
-            ((PolygonShape)tempShape).setAsBox(obstacle.size.x / 2, obstacle.size.y / 2);
+            ((PolygonShape)tempShape).setAsBox(obstacle.getSize().x / 2, obstacle.getSize().y / 2);
         }
         obstacleFixtureDef.shape = tempShape;
 

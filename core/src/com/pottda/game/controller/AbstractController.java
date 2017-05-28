@@ -52,7 +52,7 @@ public abstract class AbstractController {
      */
     protected abstract void setInputVectors();
 
-    public boolean shouldBeRemoved() {
+    boolean shouldBeRemoved() {
         return modelActor.isShouldBeRemoved();
     }
 

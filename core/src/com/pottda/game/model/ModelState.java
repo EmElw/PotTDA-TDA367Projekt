@@ -18,7 +18,7 @@ public class ModelState implements DeathListener, NewModelListener {
     private final Storage storage;
     private final List<ScoreChangeListener> scoreChangeListeners;
 
-    public Set<Item> droppedItems;
+    private Set<Item> droppedItems;
 
     public ModelState() {
         storage = new Storage();
@@ -34,6 +34,10 @@ public class ModelState implements DeathListener, NewModelListener {
 
     public int getScore() {
         return score;
+    }
+
+    public Set<Item> getDroppedItems() {
+        return droppedItems;
     }
 
     @Override

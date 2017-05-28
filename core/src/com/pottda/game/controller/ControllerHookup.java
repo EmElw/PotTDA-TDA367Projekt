@@ -53,12 +53,12 @@ public class ControllerHookup implements NewModelListener {
                 throw new Error("bad team");
             }
         } else if (m instanceof Obstacle) {
-            if (((Obstacle) m).isRound) {
-                Vector2f size = new Vector2f(((Obstacle) m).size.x, ((Obstacle) m).size.x);
+            if (((Obstacle) m).getRound()) {
+                Vector2f size = new Vector2f(((Obstacle) m).getSize().x, ((Obstacle) m).getSize().x);
                 size.scale(2);
-                view = new ActorView(ObstacleTextureFactory.getCircularObstacleTexture(((Obstacle) m).size.x), size);
+                view = new ActorView(ObstacleTextureFactory.getCircularObstacleTexture(((Obstacle) m).getSize().x), size);
             } else {
-                view = new ActorView(ObstacleTextureFactory.getRectangularObstacleTexture((Vector2f) ((Obstacle) m).size), ((Vector2f) ((Obstacle) m).size));
+                view = new ActorView(ObstacleTextureFactory.getRectangularObstacleTexture((Vector2f) ((Obstacle) m).getSize()), ((Vector2f) ((Obstacle) m).getSize()));
             }
             controller = new ObstacleController(m, view);
         }
