@@ -24,7 +24,13 @@ public abstract class SizedItem extends Item {
         if (itemSize != ItemSize.NORMAL) {
             this.name = itemSize.getName() + name;
         }
+        setConcreteValues();
     }
+
+    /**
+     * Set the values of this item that relies on itemSize
+     */
+    protected abstract void setConcreteValues();
 
     protected abstract void setBasePositions();
 }

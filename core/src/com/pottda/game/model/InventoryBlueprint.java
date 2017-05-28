@@ -118,7 +118,6 @@ public class InventoryBlueprint {
                 item = entry.getValue().getDeclaredConstructor().newInstance();
                 if (itemSizeMap.containsKey(entry.getKey())) {
                     ((SizedItem) item).setSize(itemSizeMap.get(entry.getKey()));
-                    item.initDynamic();
                 }
                 item.setX(entry.getKey().x);
                 item.setY(entry.getKey().y);

@@ -7,8 +7,6 @@ public class DamageItem extends GenericProjectileModifier {
 
     @Override
     protected void initDynamic() {
-        damage = Math.round(10 * itemSize.getStatMultiplier());
-        dropRate = 0.5f * itemSize.getDropRate();
         name = "Damage";
         isProjectileModifier = true;
     }
@@ -16,5 +14,11 @@ public class DamageItem extends GenericProjectileModifier {
     @Override
     public void onAttack(Projectile p) {
         p.damage += damage;
+    }
+
+    @Override
+    protected void setConcreteValues() {
+        damage = Math.round(10 * itemSize.getStatMultiplier());
+        dropRate = 0.5f * itemSize.getDropRate();
     }
 }

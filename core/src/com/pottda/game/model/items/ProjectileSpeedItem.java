@@ -7,8 +7,6 @@ public class ProjectileSpeedItem extends GenericProjectileModifier {
 
     @Override
     protected void initDynamic() {
-        projectileSpeedMultiplier = 1f + (float)(0.1 * itemSize.getStatMultiplier());
-        dropRate = 0.5f * itemSize.getDropRate();
         name = "P. Speed";
         isProjectileModifier = true;
     }
@@ -16,5 +14,11 @@ public class ProjectileSpeedItem extends GenericProjectileModifier {
     @Override
     public void onAttack(Projectile p) {
         p.changeSpeed(projectileSpeedMultiplier);
+    }
+
+    @Override
+    protected void setConcreteValues() {
+        projectileSpeedMultiplier = 1f + (float) (0.1 * itemSize.getStatMultiplier());
+        dropRate = 0.5f * itemSize.getDropRate();
     }
 }
