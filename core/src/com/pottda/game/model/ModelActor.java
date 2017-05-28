@@ -70,6 +70,10 @@ public abstract class ModelActor {
         return physicsActor;
     }
 
+    public void setShouldBeRemoved(boolean shouldBeRemoved) {
+        this.shouldBeRemoved = shouldBeRemoved;
+    }
+
     public enum Behaviour {
         NONE,
         DUMB,
