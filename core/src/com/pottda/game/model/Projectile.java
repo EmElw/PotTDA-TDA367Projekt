@@ -9,10 +9,9 @@ public class Projectile extends ModelActor {
     public static final int DEFAULT_PROJECTILE_LIFETIME_MS = 10000;
 
     public int damage;
-    public boolean isBouncy = false;
-    public boolean isPiercing = false;
-    public long lifeTimeMS;
-
+    private boolean isBouncy = false;
+    private boolean isPiercing = false;
+    private long lifeTimeMS;
     private Vector2f movementVector;
     /**
      * Listeners that care about various game-oriented events
@@ -28,6 +27,7 @@ public class Projectile extends ModelActor {
      * (Supposedly better performance-wise)
      */
     private List<Boolean> ignored;
+    private Boolean piercing;
     //public List<Character> hasDamaged;
 
     public void addListener(ProjectileListener listener) {
@@ -139,17 +139,17 @@ public class Projectile extends ModelActor {
 
     public void onCollision() {
         if (!isBouncy) {
-            shouldBeRemoved = true;
+            setShouldBeRemoved(true);
             onDestruction();
         }
     }
 
     private boolean isDying() {
         if (lifeTimeMS <= 0) {
-            shouldBeRemoved = true;
+            setShouldBeRemoved(true);
             onDestruction();
         }
-        return shouldBeRemoved;
+        return isShouldBeRemoved();
     }
 
     /**
@@ -170,5 +170,33 @@ public class Projectile extends ModelActor {
                 listeners.get(i).onDestruction();
             }
         }
+    }
+
+    public void setBouncy(Boolean bouncy) {
+        this.isBouncy = bouncy;
+    }
+
+    public void setPiercing(Boolean piercing) {
+        this.piercing = piercing;
+    }
+
+    public boolean isBouncy() {
+        return isBouncy;
+    }
+
+    public boolean isPiercing() {
+        return piercing;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public long getLifeTimeMS() {
+        return lifeTimeMS;
+    }
+
+    public void setLifeTimeMS(long lifeTimeMS) {
+        this.lifeTimeMS = lifeTimeMS;
     }
 }

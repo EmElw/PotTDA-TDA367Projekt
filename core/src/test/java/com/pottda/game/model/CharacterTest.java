@@ -122,7 +122,7 @@ public class CharacterTest {
 
         inventory.addItem(item);
 
-        character.inventory = inventory;
+        character.setInventory(inventory);
         inventory.addInventoryChangeListener(character);
 
         return inventory;

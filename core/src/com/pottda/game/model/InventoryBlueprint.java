@@ -42,7 +42,7 @@ public class InventoryBlueprint {
      * @param inventory an {@link XMLInventory}
      */
     public static void newBlueprint(XMLInventory inventory) {
-        blueprints.put(inventory.name, new InventoryBlueprint(inventory));
+        blueprints.put(inventory.getName(), new InventoryBlueprint(inventory));
     }
 
     // ----------------------------------------------
@@ -62,11 +62,11 @@ public class InventoryBlueprint {
     private InventoryBlueprint(XMLInventory inventory) {
         itemMap = new HashMap<PointAndOrientation, Class<? extends Item>>();
         itemSizeMap = new HashMap<PointAndOrientation, ItemSize>();
-        width = inventory.width;
-        height = inventory.height;
+        width = inventory.getWidth();
+        height = inventory.getHeight();
 
         try {
-            for (XMLItem i : inventory.items) {
+            for (XMLItem i : inventory.getItems()) {
                 if (i instanceof XMLSizedItem) {
                     addSizedItemClass(ItemClassLoader.getSizedItemClass(i.getClassName()),
                             i.getX(),

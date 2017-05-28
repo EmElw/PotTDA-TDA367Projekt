@@ -2,6 +2,7 @@ package com.pottda.game.controller;
 
 import com.pottda.game.model.Character;
 import com.pottda.game.model.ModelActor;
+import com.pottda.game.model.Projectile;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,7 +29,7 @@ public class ControllerManager implements NewControllerListener {
     public void onNewController(AbstractController c) {
         controllerBuffer.push(c);
         if (c.getModel() instanceof Character) {
-            if (c.getModel().team == ModelActor.PLAYER_TEAM) {
+            if (c.getModel().getTeam() == ModelActor.PLAYER_TEAM) {
                 if (playerController == null) {
                     playerController = c;
                 } else throw new Error("Created another player");
@@ -80,5 +81,15 @@ public class ControllerManager implements NewControllerListener {
 
     public AbstractController getPlayerController() {
         return playerController;
+    }
+
+    public void clearProjectiles() {
+        for (AbstractController c: controllers) {
+            if (c.getModel() instanceof Projectile) {
+                if (c.getModel().team == 1)
+                    c.setShouldBeRemoved(true);
+            }
+        }
+        removeDeadActors();
     }
 }

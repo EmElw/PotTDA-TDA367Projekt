@@ -1,0 +1,4 @@
+<enemygroup name="BounceCannonGroup0">
+    <difficulty>5</difficulty>
+    <enemy>EliteBounceCannon</enemy>
+</enemygroup>

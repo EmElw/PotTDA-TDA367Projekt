@@ -1,5 +1,7 @@
 package com.pottda.game.model;
 
+import com.pottda.game.assets.Sprites;
+
 import javax.vecmath.Vector2f;
 
 
@@ -8,22 +10,30 @@ import javax.vecmath.Vector2f;
  */
 
 public abstract class ModelActor {
-    public boolean shouldBeRemoved = false;
+    private boolean shouldBeRemoved = false;
     boolean isProjectile;
-    public int team;
+    private int team;
     //    public AbstractController controller;
     float angle = 0;
 
-    public com.pottda.game.assets.Sprites sprite;
+    private com.pottda.game.assets.Sprites sprite;
 
     public final static int PLAYER_TEAM = 0;
     public final static int ENEMY_TEAM = 1;
 
     PhysicsActor physicsActor;
-    public Behaviour behaviour;
+    private Behaviour behaviour;
 
     ModelActor() {
 
+    }
+
+    public Behaviour getBehaviour() {
+        return behaviour;
+    }
+
+    public void setBehaviour(Behaviour behaviour) {
+        this.behaviour = behaviour;
     }
 
     /**
@@ -70,11 +80,36 @@ public abstract class ModelActor {
         return physicsActor;
     }
 
+    public Sprites getSprite() {
+        return sprite;
+    }
+
+    public void setSprite(Sprites sprite) {
+        this.sprite = sprite;
+    }
+
+    public boolean isShouldBeRemoved() {
+        return shouldBeRemoved;
+    }
+
+    public void setShouldBeRemoved(boolean shouldBeRemoved) {
+        this.shouldBeRemoved = shouldBeRemoved;
+    }
+
     public abstract void update(float delta);
 
     public enum Behaviour {
         NONE,
         DUMB,
-        STATIONARY
+        STATIONARY,
+        FIXATING
+    }
+
+    public int getTeam() {
+        return team;
+    }
+
+    public void setTeam(int team) {
+        this.team = team;
     }
 }

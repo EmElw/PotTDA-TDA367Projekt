@@ -26,5 +26,7 @@ public class BouncingBallCannon extends AttackItem {
 
         cooldownMS = 300;
         damage = 10;
+
+        dropRate = 0.2f;
     }
 }

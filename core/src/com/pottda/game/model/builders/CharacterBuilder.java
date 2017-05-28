@@ -19,11 +19,11 @@ public class CharacterBuilder extends AbstractModelBuilder implements ICharacter
     public ModelActor create() {
         Character character = new Character();
 
-        character.team = team;
+        character.setTeam(team);
         if (team == Character.PLAYER_TEAM) {
             Character.setPlayer(character);
         }
-        character.inventory = inventory;
+        character.setInventory(inventory);
 
         inventory.addInventoryChangeListener(character);
 
@@ -33,7 +33,7 @@ public class CharacterBuilder extends AbstractModelBuilder implements ICharacter
 
         character.setPhysicsActor(physiscActorFactory.getCharacterPhysicsActor(character));
 
-        character.behaviour = behaviour;
+        character.setBehaviour(behaviour);
 
         character.setScoreValue(scoreValue);
 

@@ -74,7 +74,7 @@ public class BuilderTest {
     public void obstacleTest() {
         ModelActor obstacle = new ObstacleBuilder().setSprite(BORDER).create();
 
-        assertEquals(BORDER, obstacle.sprite);
+        assertEquals(BORDER, obstacle.getSprite());
 
         assertEquals(1, myDummyListener.calls);
     }
@@ -96,16 +96,16 @@ public class BuilderTest {
                 create();
 
         // Test the fiddled projectile
-        assertEquals(true, projA.isBouncy);
-        assertEquals(true, projA.isPiercing);
+        assertEquals(true, projA.isBouncy());
+        assertEquals(true, projA.isPiercing());
         assertEquals(10, projA.damage);
-        assertEquals(50, projA.lifeTimeMS);
-        assertEquals(ENEMYPROJECTILE, projA.sprite);
+        assertEquals(50, projA.getLifeTimeMS());
+        assertEquals(ENEMYPROJECTILE, projA.getSprite());
         assertEquals(0, projA.getListeners().size());
 
         // Test the mostly default projectile
         assertEquals(0, projB.damage);
-        assertEquals(ENEMYPROJECTILE, projB.sprite);
+        assertEquals(ENEMYPROJECTILE, projB.getSprite());
         assertEquals(0, projB.getListeners().size());
 
 
