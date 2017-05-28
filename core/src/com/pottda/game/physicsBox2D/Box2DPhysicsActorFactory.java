@@ -66,7 +66,7 @@ public class Box2DPhysicsActorFactory implements PhysicsActorFactory{
         if (projectile.isPiercing) {
             projectileFixtureDef.filter.categoryBits = PROJECTILE_PIERCING_FILTER.categoryBits;
             projectileFixtureDef.filter.maskBits = PROJECTILE_PIERCING_FILTER.maskBits;
-        } else if (projectile.team == ENEMY_TEAM) {
+        } else if (projectile.getTeam() == ENEMY_TEAM) {
             projectileFixtureDef.filter.categoryBits = PROJECTILE_ENEMY_FILTER.categoryBits;
             projectileFixtureDef.filter.maskBits = PROJECTILE_ENEMY_FILTER.maskBits;
         } else {
@@ -87,7 +87,7 @@ public class Box2DPhysicsActorFactory implements PhysicsActorFactory{
     @Override
     public PhysicsActor getCharacterPhysicsActor(Character character) {
         // Set collision filters for character
-        switch (character.team){
+        switch (character.getTeam()){
             case PLAYER_TEAM:
                 characterFixtureDef.filter.categoryBits = CHARACTER_PLAYER_FILTER.categoryBits;
                 characterFixtureDef.filter.maskBits = CHARACTER_PLAYER_FILTER.maskBits;

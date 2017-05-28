@@ -40,13 +40,13 @@ public class ControllerHookup implements NewModelListener {
 
         AbstractController controller = null;
         if (m instanceof Projectile) {
-            view = new ActorView(m.sprite);
+            view = new ActorView(m.getSprite());
             controller = new ProjectileController(m, view);
         } else if (m instanceof Character) {
-            view = new ActorView(m.sprite);
-            if (m.team == Character.PLAYER_TEAM) {
+            view = new ActorView(m.getSprite());
+            if (m.getTeam() == Character.PLAYER_TEAM) {
                 controller = createInputController(m, view);
-            } else if (m.team == Character.ENEMY_TEAM) {
+            } else if (m.getTeam() == Character.ENEMY_TEAM) {
                 enemyHealthBarController = new EnemyHealthBarController(HEALTHBAR_WIDTH, HEALTHBAR_HEIGHT, ((Character) m).getMaxHealth());
                 controller = createController(m, view, enemyHealthBarController);
             } else {
@@ -82,7 +82,7 @@ public class ControllerHookup implements NewModelListener {
     }
 
     private AbstractController createController(ModelActor m, ActorView view, EnemyHealthBarController enemyHealthBarController) {
-        switch (m.behaviour) {
+        switch (m.getBehaviour()) {
             case NONE:
                 break;
             case DUMB:
@@ -90,7 +90,7 @@ public class ControllerHookup implements NewModelListener {
             case STATIONARY:
                 return new StationaryAIController(m, view, enemyHealthBarController);
         }
-        throw new Error("Missing controller setup for behaviour: " + m.behaviour.toString());
+        throw new Error("Missing controller setup for behaviour: " + m.getBehaviour().toString());
     }
 
     private AbstractController createInputController(ModelActor m, ActorView view) {

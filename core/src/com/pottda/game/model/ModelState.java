@@ -38,8 +38,8 @@ public class ModelState implements DeathListener, NewModelListener {
 
     @Override
     public void onDeath(Character character) {
-        if (character.team == ModelActor.ENEMY_TEAM) {
-            droppedItems = character.inventory.getItemDropList();
+        if (character.getTeam() == ModelActor.ENEMY_TEAM) {
+            droppedItems = character.getInventory().getItemDropList();
             storage.addItems(droppedItems);
             enemiesAlive--;
             score += character.getScoreValue();
@@ -56,7 +56,7 @@ public class ModelState implements DeathListener, NewModelListener {
     @Override
     public void onNewModel(ModelActor m) {
         if (m instanceof Character) {
-            if (m.team == ModelActor.ENEMY_TEAM) {
+            if (m.getTeam() == ModelActor.ENEMY_TEAM) {
                 enemiesAlive++;
             } else {
                 if (player == null) {

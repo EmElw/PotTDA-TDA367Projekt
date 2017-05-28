@@ -39,7 +39,7 @@ public class CollisionListener implements ContactListener {
             return;
         }
 
-        if (target.team == projectile.team) {
+        if (target.getTeam() == projectile.getTeam()) {
             return;
         }
 

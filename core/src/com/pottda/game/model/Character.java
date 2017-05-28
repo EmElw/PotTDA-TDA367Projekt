@@ -19,7 +19,7 @@ public class Character extends ModelActor implements InventoryChangeListener {
     /**
      * A reference to the character's inventory, should be effectively final
      */
-    public Inventory inventory;
+    private Inventory inventory;
     /**
      * Current health of a character
      */
@@ -61,7 +61,7 @@ public class Character extends ModelActor implements InventoryChangeListener {
     }
 
     private void attack(Vector2f direction) {
-        inventory.attack(direction, getPosition(), team);
+        inventory.attack(direction, getPosition(), getTeam());
     }
 
     /**
@@ -71,8 +71,8 @@ public class Character extends ModelActor implements InventoryChangeListener {
      */
     void takeDamage(int incomingDamage) {
         currentHealth -= incomingDamage;
-        if (currentHealth <= 0 && !shouldBeRemoved) {
-            shouldBeRemoved = true;
+        if (currentHealth <= 0 && !isShouldBeRemoved()) {
+            setShouldBeRemoved(true);
             if (deathListeners != null) {
                 for (DeathListener dl : deathListeners) {
                     dl.onDeath(this);
@@ -137,6 +137,14 @@ public class Character extends ModelActor implements InventoryChangeListener {
 
     public void setScoreValue(int scoreValue) {
         this.scoreValue = scoreValue;
+    }
+
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
     }
 
     public static Character getPlayer() {

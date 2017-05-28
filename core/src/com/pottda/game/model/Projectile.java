@@ -135,17 +135,17 @@ public class Projectile extends ModelActor {
 
     public void onCollision() {
         if (!isBouncy) {
-            shouldBeRemoved = true;
+            setShouldBeRemoved(true);
             onDestruction();
         }
     }
 
     private boolean isDying() {
         if (System.currentTimeMillis() - timeOfConstructionMS > lifeTimeMS) {
-            shouldBeRemoved = true;
+            setShouldBeRemoved(true);
             onDestruction();
         }
-        return shouldBeRemoved;
+        return isShouldBeRemoved();
     }
 
     /**
