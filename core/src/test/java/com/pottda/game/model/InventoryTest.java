@@ -7,15 +7,12 @@ import com.pottda.game.model.items.ChainAttack;
 import com.pottda.game.model.items.MultiShot;
 import com.pottda.game.model.items.SimpleCannon;
 import com.pottda.game.model.items.Switcher;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-
 import javax.vecmath.Vector2f;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;

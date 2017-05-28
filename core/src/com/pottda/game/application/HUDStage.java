@@ -10,18 +10,15 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.model.Character;
-import com.pottda.game.model.DeathListener;
-import com.pottda.game.model.Inventory;
-import com.pottda.game.model.Item;
-import com.pottda.game.model.ScoreChangeListener;
-import com.pottda.game.model.Sprites;
+import com.pottda.game.model.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import static com.pottda.game.application.Constants.SKIN_QH;
 

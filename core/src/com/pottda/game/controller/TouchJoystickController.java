@@ -2,8 +2,8 @@ package com.pottda.game.controller;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.pottda.game.model.ModelActor;
-import com.pottda.game.view.JoysticksView;
 import com.pottda.game.view.ActorView;
+import com.pottda.game.view.JoysticksView;
 
 import javax.vecmath.Vector2f;
 

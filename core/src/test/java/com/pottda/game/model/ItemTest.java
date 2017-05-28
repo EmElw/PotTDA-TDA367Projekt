@@ -1,17 +1,6 @@
 package com.pottda.game.model;
 
-import com.pottda.game.model.items.BouncingBallCannon;
-import com.pottda.game.model.items.DamageItem;
-import com.pottda.game.model.items.DemoItemA;
-import com.pottda.game.model.items.DemoItemB;
-import com.pottda.game.model.items.EnemySimpleCannon;
-import com.pottda.game.model.items.GenericProjectileModifier;
-import com.pottda.game.model.items.HealthItem;
-import com.pottda.game.model.items.PenetratingCannon;
-import com.pottda.game.model.items.ProjectileSpeedItem;
-import com.pottda.game.model.items.SpeedItem;
-import com.pottda.game.model.items.SupportItem;
-
+import com.pottda.game.model.items.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -64,7 +53,7 @@ public class ItemTest {
     @Test
     public void rotateTest() {
         List<Point2i> positionsA = a.getTransformedRotatedPositions();
-        List<Point2i> outputA = a.getTransformedRotatedPositions();
+        List<Point2i> outputA = a.getTransformedRotatedOutputs();
 
         List<Point2i> expectedPositionsA = new ArrayList<Point2i>();
         {
@@ -85,12 +74,6 @@ public class ItemTest {
 
     @Test
     public void testBouncingBallCannon() {
-        assertFalse(bouncingBallCannon.isPrimaryAttack);
-        assertFalse(bouncingBallCannon.bounces);
-        assertEquals(bouncingBallCannon.basePositions, null);
-        assertEquals(bouncingBallCannon.baseOutputs, null);
-        assertFalse(bouncingBallCannon.cooldownMS == 300);
-        assertFalse(bouncingBallCannon.damage == 10);
 
 
         assertTrue(bouncingBallCannon.isPrimaryAttack);
@@ -125,13 +108,6 @@ public class ItemTest {
 
     @Test
     public void testEnemySimpleCannon() {
-        assertFalse(enemySimpleCannon.isPrimaryAttack);
-        assertFalse(enemySimpleCannon.bounces);
-        assertEquals(enemySimpleCannon.basePositions, null);
-        assertEquals(enemySimpleCannon.baseOutputs, null);
-        assertFalse(enemySimpleCannon.cooldownMS == 500);
-        assertFalse(enemySimpleCannon.damage == 20);
-
 
         assertTrue(enemySimpleCannon.isPrimaryAttack);
         assertFalse(enemySimpleCannon.bounces);
@@ -152,13 +128,6 @@ public class ItemTest {
 
     @Test
     public void testPenetratingCannon() {
-        assertFalse(penetratingCannon.isPrimaryAttack);
-        assertFalse(penetratingCannon.piercing);
-        assertFalse(penetratingCannon.bounces);
-        assertEquals(penetratingCannon.basePositions, null);
-        assertEquals(penetratingCannon.baseOutputs, null);
-        assertFalse(penetratingCannon.cooldownMS == 300);
-        assertFalse(penetratingCannon.damage == 10);
 
         assertTrue(penetratingCannon.isPrimaryAttack);
         assertTrue(penetratingCannon.piercing);

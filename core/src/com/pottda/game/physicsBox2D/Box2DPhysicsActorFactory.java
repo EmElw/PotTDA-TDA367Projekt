@@ -1,8 +1,8 @@
 package com.pottda.game.physicsBox2D;
 
 import com.badlogic.gdx.physics.box2d.*;
-import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
+import com.pottda.game.model.*;
 
 import static com.pottda.game.model.ModelActor.ENEMY_TEAM;
 import static com.pottda.game.model.ModelActor.PLAYER_TEAM;

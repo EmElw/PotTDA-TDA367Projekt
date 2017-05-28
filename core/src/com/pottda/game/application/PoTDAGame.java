@@ -3,8 +3,8 @@ package com.pottda.game.application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.pottda.game.model.*;
 import com.pottda.game.model.Constants;
+import com.pottda.game.model.Item;
 import com.pottda.game.model.items.*;
 import com.pottda.game.view.AtlasCreator;
 

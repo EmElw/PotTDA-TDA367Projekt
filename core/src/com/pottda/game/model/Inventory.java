@@ -2,7 +2,6 @@ package com.pottda.game.model;
 
 import javax.vecmath.Point2i;
 import javax.vecmath.Vector2f;
-
 import java.util.*;
 
 /**
@@ -161,7 +160,7 @@ public class Inventory {
         }
 
         compile();
-        return true;
+        return legal;
     }
 
     void attack(Vector2f direction, Vector2f origin, int team) {

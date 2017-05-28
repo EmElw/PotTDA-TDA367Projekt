@@ -1,11 +1,6 @@
 package com.pottda.game.controller.view;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.pottda.game.model.*;
-import com.pottda.game.view.AtlasCreator;
 import com.pottda.game.view.InventoryManagementListener;
 import com.pottda.game.view.InventoryManagementView;
 

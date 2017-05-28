@@ -1,9 +1,8 @@
 package com.pottda.game.model.builders;
 
-import com.pottda.game.model.*;
 import com.pottda.game.model.Character;
+import com.pottda.game.model.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

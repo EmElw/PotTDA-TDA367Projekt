@@ -3,7 +3,6 @@ package com.pottda.game.model;
 import com.pottda.game.model.builders.ProjectileBuilder;
 
 import javax.vecmath.Vector2f;
-
 import java.util.ArrayList;
 import java.util.List;
 
