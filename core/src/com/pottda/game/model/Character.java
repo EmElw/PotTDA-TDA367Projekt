@@ -48,7 +48,6 @@ public class Character extends ModelActor implements InventoryChangeListener {
 //            stats.put(stat, 0 + inventory.getStatSum(stat));
 //        }
 
-        inventoryChanged();
     }
 
     @Override

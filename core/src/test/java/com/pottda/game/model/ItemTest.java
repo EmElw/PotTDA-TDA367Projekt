@@ -41,14 +41,12 @@ public class ItemTest {
     public void setUp() {
         a = new DemoItemA() {
         };
-        a.init();
         a.setOrientation(2);
         a.setX(2);
         a.setY(5);
 
         b = new DemoItemB() {
         };
-        b.init();
         b.setOrientation(3);
         b.setX(8);
         b.setY(4);
@@ -94,7 +92,6 @@ public class ItemTest {
         assertFalse(bouncingBallCannon.cooldownMS == 300);
         assertFalse(bouncingBallCannon.damage == 10);
 
-        bouncingBallCannon.init();
 
         assertTrue(bouncingBallCannon.isPrimaryAttack);
         assertTrue(bouncingBallCannon.bounces);
@@ -114,7 +111,6 @@ public class ItemTest {
     @Test
     public void testDamageItem() {
         // Drop rate: 0.25f, 0.5f, 0.1f
-        damageItem.init();
         assertTrue(damageItem.dropRate == 0.25f * 0.5f
                 || damageItem.dropRate == 0.5f * 0.5f
                 || damageItem.dropRate == 0.1f * 0.5f);
@@ -136,7 +132,6 @@ public class ItemTest {
         assertFalse(enemySimpleCannon.cooldownMS == 500);
         assertFalse(enemySimpleCannon.damage == 20);
 
-        enemySimpleCannon.init();
 
         assertTrue(enemySimpleCannon.isPrimaryAttack);
         assertFalse(enemySimpleCannon.bounces);
@@ -148,7 +143,6 @@ public class ItemTest {
 
     @Test
     public void testHealthItem() {
-        healthItem.init();
         assertTrue(healthItem.statMap.containsKey(Stat.HEALTH));
         assertTrue(healthItem.dropRate == 0.25f * 0.75f
                 || healthItem.dropRate == 0.5f * 0.75f
@@ -166,8 +160,6 @@ public class ItemTest {
         assertFalse(penetratingCannon.cooldownMS == 300);
         assertFalse(penetratingCannon.damage == 10);
 
-        penetratingCannon.init();
-
         assertTrue(penetratingCannon.isPrimaryAttack);
         assertTrue(penetratingCannon.piercing);
         assertFalse(penetratingCannon.bounces);
@@ -179,7 +171,6 @@ public class ItemTest {
 
     @Test
     public void testProjectileSpeedItem() {
-        projectileSpeedItem.init();
         assertTrue(projectileSpeedItem.dropRate == 0.25f * 0.5f
                 || projectileSpeedItem.dropRate == 0.5f * 0.5f
                 || projectileSpeedItem.dropRate == 0.1f * 0.5f);
@@ -189,7 +180,6 @@ public class ItemTest {
 
     @Test
     public void testSpeedItem() {
-        speedItem.init();
         assertTrue(speedItem.statMap.containsKey(Stat.ACCEL));
         assertTrue(speedItem.dropRate == 0.25f * 0.5f
                 || speedItem.dropRate == 0.5f * 0.5f

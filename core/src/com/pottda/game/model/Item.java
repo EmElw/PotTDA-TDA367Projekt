@@ -55,6 +55,7 @@ public abstract class Item extends ProjectileListenerAdapter {
 
     // -------------------------------------------------
 
+
     protected Map<Stat, Double> statMap;
 
     // Direction of the item in terms of number pi/2 rotations
@@ -72,7 +73,7 @@ public abstract class Item extends ProjectileListenerAdapter {
     /**
      * Pseudo-constructor, called if instantiated without constructor (probably really bad practice)
      */
-    public void init() {
+    protected void init() {
         basePositions = new ArrayList<Point2i>();
         baseOutputs = new ArrayList<Point2i>();
         statMap = new EnumMap<Stat, Double>(Stat.class);
