@@ -59,7 +59,7 @@ public class Storage {
      * @return an item with the same name as the param
      * @throws Exception
      */
-    public Item popItem(String name)  {
+    public Item popItem(String name) {
         ItemStorage storage;
         if ((storage = storageMap.get(name)) != null) {
             Item i = storage.items.get(0);
@@ -100,7 +100,14 @@ public class Storage {
     }
 
     public void addItems(Collection<Item> items) {
-        items.addAll(items);
+        for (Item item : items) {
+            if (storageMap.containsKey(item.getName())) {
+                storageMap.get(item.getName()).items.add(item);
+            } else {
+                storageMap.put(item.getName(), new ItemStorage(item));
+            }
+        }
+        notifyListeners();
     }
 
     /**

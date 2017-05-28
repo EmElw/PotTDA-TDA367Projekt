@@ -283,7 +283,7 @@ class GameScreen extends AbstractScreen {
                 public void run() {
                     switchScreen(new InventoryManagementScreen(game,
                             thisScreen,
-                            modelState.getInventory(),
+                            modelState.getPlayer().inventory,
                             modelState.getStorage()));
                     waveManager.newLevel();
                 }

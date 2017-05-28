@@ -26,6 +26,12 @@
       b: 0.85490196078
       a: 1
     }
+    color-font: {
+      r: 1
+      g: 1
+      b: 1
+      a: 1
+    }
     pressed: {
       r: 0.03
       g: 0.69
@@ -327,7 +333,11 @@
   com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
     default: {
       font: font
-      fontColor: color
+      fontColor: color-font
+    }
+    white:{
+      font: font
+      fontColor: white
     }
     title: {
       font: title

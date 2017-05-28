@@ -22,7 +22,7 @@ public class InventoryManagementScreen extends AbstractMenuScreen {
 
     InventoryManagementScreen(Game game, Screen parentScreen, Inventory inventory, Storage storage) {
         super(game);
-        this.parentScreen = this.parentScreen;
+        this.parentScreen = parentScreen;
         create(inventory, storage);
     }
 
@@ -43,6 +43,7 @@ public class InventoryManagementScreen extends AbstractMenuScreen {
             @Override
             public void clicked(InputEvent evt, float x, float y) {
                 switchScreen(parentScreen);
+                dispose();
             }
         });
         stage.addActor(resumeButton);

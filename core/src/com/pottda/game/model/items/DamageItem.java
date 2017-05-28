@@ -9,7 +9,7 @@ public class DamageItem extends GenericProjectileModifier {
     protected void initDynamic() {
         damage = Math.round(10 * itemSize.getStatMultiplier());
         dropRate = 0.5f * itemSize.getDropRate();
-        name = itemSize.getName() + "Damage Module";
+        name = "Damage";
         setBasePositions();
         isProjectileModifier = true;
     }

@@ -25,18 +25,16 @@ import static com.pottda.game.application.Constants.SKIN_QH;
 class HUDStage extends Stage implements ScoreChangeListener {
 
     private List<ItemDropLabel> itemDropLabelList;
-    private Label.LabelStyle labelStyle;
     private static final float labelMargin = 3f;
     private static final long WAITING_TIME_LABEL_SECONDS = 3;
 
     private Label scoreLabel;
     private static final String scoreLabelText = "Score: ";
 
-    private Inventory inventory;
-
     private int score = 0;
 
     private Image healthBarRed;
+    private Label healthLabel;
 
     private boolean toPause = false;
 
@@ -49,7 +47,6 @@ class HUDStage extends Stage implements ScoreChangeListener {
         itemDropLabelList = new ArrayList<ItemDropLabel>();
 
         BitmapFont bf = new BitmapFont();
-        labelStyle = new Label.LabelStyle(bf, Color.WHITE);
         scoreLabel = new Label(scoreLabelText + "0", SKIN_QH);
         scoreLabel.setPosition(getWidth() / 6, getHeight() - 30);
         scoreLabel.setFontScale(1.5f);
@@ -67,6 +64,10 @@ class HUDStage extends Stage implements ScoreChangeListener {
         healthBarRed.setPosition(10, getHeight() - 30);
         addActor(healthBarRed);
 
+        healthLabel = new Label("", SKIN_QH, "white");
+        healthLabel.setPosition(20, getHeight() - 30);
+        addActor(healthLabel);
+
         Image pauseButton = new Image(new Texture(Gdx.files.internal(Sprites.PAUSEBUTTON.fileName)));
         pauseButton.setPosition(getWidth() - 60, getHeight() - 50);
         pauseButton.addListener(new ClickListener() {
@@ -80,7 +81,6 @@ class HUDStage extends Stage implements ScoreChangeListener {
 
     @Override
     public void draw() {
-        inventory = Character.player.inventory;
 
         setHealthbar();
 
@@ -100,6 +100,7 @@ class HUDStage extends Stage implements ScoreChangeListener {
             health = 0;
         }
         healthBarRed.setWidth((health / playerMaxHealth) * 100f);
+        healthLabel.setText(Integer.toString(Math.round(health)));
     }
 
     private void addItemLabel(String name) {

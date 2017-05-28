@@ -7,7 +7,7 @@ public class SpeedItem extends SupportItem {
     protected void initDynamic() {
         statMap.put(Stat.ACCEL, 5.0 * itemSize.getStatMultiplier());
         dropRate = 0.5f * itemSize.getDropRate();
-        name = itemSize.getName() + "Speed Module";
+        name = "Speed";
         setBasePositions();
     }
 }

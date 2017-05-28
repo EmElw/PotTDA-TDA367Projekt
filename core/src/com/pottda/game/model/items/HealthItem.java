@@ -7,7 +7,7 @@ public class HealthItem extends SupportItem{
     protected void initDynamic() {
         statMap.put(Stat.HEALTH, 50.0 * itemSize.getStatMultiplier());
         dropRate = 0.75f * itemSize.getDropRate();
-        name = itemSize.getName() + "Health Module";
+        name = "Health";
         setBasePositions();
     }
 }

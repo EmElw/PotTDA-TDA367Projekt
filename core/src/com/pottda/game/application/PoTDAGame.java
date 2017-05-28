@@ -49,9 +49,28 @@ public class PoTDAGame extends Game {
         LinkedList<Item> itemList = new LinkedList<Item>();
         itemList.add(new BouncingBallCannon());
         itemList.add(new ChainAttack());
+        itemList.add(new PenetratingCannon());
         itemList.add(new MultiShot());
         itemList.add(new SimpleCannon());
         itemList.add(new Switcher());
+
+        for (ItemSize size : ItemSize.values()) {
+            DamageItem damageItem = new DamageItem();
+            damageItem.setSize(size);
+            itemList.add(damageItem);
+
+            HealthItem healthItem = new HealthItem();
+            healthItem.setSize(size);
+            itemList.add(healthItem);
+
+            ProjectileSpeedItem projectileSpeedItem = new ProjectileSpeedItem();
+            projectileSpeedItem.setSize(size);
+            itemList.add(projectileSpeedItem);
+
+            SpeedItem speedItem = new SpeedItem();
+            speedItem.setSize(size);
+            itemList.add(speedItem);
+        }
 
         AtlasCreator.createAtlas(itemList);
     }

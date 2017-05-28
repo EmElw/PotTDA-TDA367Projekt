@@ -1,6 +1,8 @@
 package com.pottda.game.view;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -18,6 +20,7 @@ import com.pottda.game.model.Item;
 import com.pottda.game.model.Storage;
 
 import javax.vecmath.Point2i;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,13 +47,14 @@ public class InventoryManagementView {
 
     private List<InventoryManagementListener> listeners;
 
-    private Texture connection = new Texture(Gdx.files.internal("testconnection.png"));
-    private Texture notConnection = new Texture(Gdx.files.internal("outputTest.png"));
+    private static Texture connection;
+    private static Texture notConnection;
+
     private Texture background = new Texture(Gdx.files.internal("bg/bg.png"));
 
     public InventoryManagementView(final Stage stage) {
         this.stage = stage;
-        stage.setDebugAll(true);
+        stage.setDebugAll(false);
         this.listeners = new ArrayList<InventoryManagementListener>();
         create();
     }
@@ -86,6 +90,28 @@ public class InventoryManagementView {
         superTable.row();
         superTable.add(storage).width(275);
         superTable.add(inventorySuperTable).fill().expand();
+
+        createPixmaps();
+    }
+
+    private void createPixmaps() {
+        if (connection == null && notConnection == null) {
+            Pixmap con = new Pixmap(SIZE, SIZE, Pixmap.Format.RGBA8888);
+            con.setColor(Color.WHITE);
+            con.drawRectangle(0, 0, con.getWidth(), con.getHeight());
+            con.setColor(Color.BLACK);
+            con.drawRectangle(1, 1, con.getWidth() - 2, con.getHeight() - 2);
+            connection = new Texture(con);
+            con.dispose();
+
+            Pixmap nCon = new Pixmap(SIZE, SIZE, Pixmap.Format.RGBA8888);
+            nCon.setColor(Color.RED);
+            nCon.drawRectangle(0, 0, nCon.getWidth(), nCon.getHeight());
+            nCon.setColor(Color.ORANGE);
+            nCon.drawRectangle(1, 1, nCon.getWidth() - 2, nCon.getHeight() - 2);
+            notConnection = new Texture(nCon);
+            nCon.dispose();
+        }
     }
 
     // Interesting stuff
@@ -183,9 +209,13 @@ public class InventoryManagementView {
         List<Point2i> connections = new ArrayList<Point2i>();
 
         for (Item i : inventory.getItems()) {
-            TextureAtlas.AtlasRegion region = atlas.findRegion(i.getName());
-            final ItemImage itemImage = new ItemImage(region, i);
+            final ItemImage itemImage;
 
+            TextureAtlas.AtlasRegion region = atlas.findRegion(i.getName());
+            if (region == null) {
+                throw new Error("no region for item: " + i.getName());
+            }
+            itemImage = new ItemImage(region, i);
             final Point2i negativeOffset = i.getBaseBottomLeft();
 
             connections.addAll(i.getTransformedRotatedOutputs());
@@ -276,6 +306,7 @@ public class InventoryManagementView {
         private final Drawable discardButtonDrawable = new TextureRegionDrawable(
                 new TextureRegion(new Texture(Gdx.files.internal("discardButton.png"))));
         private final Label debugLabel;
+        private final Label itemNameLabel;
         private ImageButton rotateRightButton = new ImageButton(rotateRightButtonDrawable);
 
         private ImageButton rotateLeftButton = new ImageButton(rotateLeftButtonDrawable);
@@ -331,11 +362,16 @@ public class InventoryManagementView {
             rotateRightButton.setPosition(getWidth(), -SIZE + negativeOffsetPx.y);
             addActor(rotateRightButton);
 
+            itemNameLabel = new Label(item.getName(), SKIN_QH);
+            itemNameLabel.setPosition(getWidth(), getHeight() / 2);
+            addActor(itemNameLabel);
+
             inventoryGroup.addActor(this);
 
             initInputListeners();
 
             debugLabel = new Label("", mySkin);
+            debugLabel.setVisible(false);
             debugLabel.setPosition(itemImage.getOriginX(),
                     itemImage.getOriginY());
 
@@ -428,7 +464,7 @@ public class InventoryManagementView {
                                         orientation);
                             }
                         }
-                    } else throw new Error("shouldn't get here with disabled button");
+                    }
                 }
             });
         }

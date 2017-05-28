@@ -33,9 +33,16 @@ public class AtlasCreator {
      */
     public static void createAtlas(LinkedList<Item> itemList) {
 
-        for (Item i : itemList) {
-            atlas.addRegion(i.getName(), new TextureRegion(createTextureForItem(i)));
-            atlas.findRegion(i.getName()).flip(false, true);
+        String name;
+        for (Item item : itemList) {
+            try {
+                name = item.getName();
+                atlas.addRegion(name, new TextureRegion(createTextureForItem(item)));
+                TextureAtlas.AtlasRegion r = atlas.findRegion(name);
+                r.flip(false, true);
+            } catch (Exception e) {
+                System.out.println("u dun goofd");
+            }
         }
 
     }

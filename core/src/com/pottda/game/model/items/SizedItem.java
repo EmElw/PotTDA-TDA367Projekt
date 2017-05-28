@@ -13,6 +13,9 @@ public abstract class SizedItem extends Item {
 
     public void setSize(ItemSize itemSize) {
         this.itemSize = itemSize;
+        if (itemSize != ItemSize.NORMAL) {
+            this.name = itemSize.getName() + name;
+        }
     }
 
     protected abstract void setBasePositions();
