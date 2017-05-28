@@ -263,7 +263,6 @@ public class Inventory {
     }
 
     private void notifyListeners() {
-        // Calls all the InventoryChangeListeners
         for (InventoryChangeListener icl : inventoryChangeListeners) {
             icl.inventoryChanged();
         }

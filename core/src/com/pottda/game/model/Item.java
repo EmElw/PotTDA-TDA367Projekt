@@ -61,11 +61,11 @@ public abstract class Item extends ProjectileListenerAdapter {
     private int x;
     private int y;
 
-    private boolean changedPositions = true;
-    private boolean changedOutputs = true;
+    protected boolean changedPositions = true;
+    protected boolean changedOutputs = true;
 
-    private Set<Point2i> rotatedOutputs;
-    private Set<Point2i> rotatedPositions;
+    protected Set<Point2i> rotatedOutputs;
+    protected Set<Point2i> rotatedPositions;
 
     /**
      * Pseudo-constructor, called if instantiated without constructor (probably really bad practice)
