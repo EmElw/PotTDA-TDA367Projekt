@@ -8,6 +8,5 @@ public class HealthItem extends SupportItem{
         statMap.put(Stat.HEALTH, 50.0 * itemSize.getStatMultiplier());
         dropRate = 0.5f * itemSize.getDropRate();
         name = "Health";
-        setBasePositions();
     }
 }

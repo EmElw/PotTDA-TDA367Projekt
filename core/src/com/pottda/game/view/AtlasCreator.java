@@ -11,6 +11,7 @@ import com.pottda.game.model.Item;
 import javax.vecmath.Point2i;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Class for generating a {@code TextureAtlas} from {@link Item}
@@ -63,8 +64,8 @@ public class AtlasCreator {
         Pixmap pmUpPointer = new Pixmap(Gdx.files.internal("upArrow.png"));
 
         // Retrieve position data from the item
-        List<Point2i> basePos = item.getBasePositions();
-        List<Point2i> baseOut = item.getBaseOutputs();
+        Set<Point2i> basePos = (Set<Point2i>) item.getBasePositions();
+        Set<Point2i> baseOut = (Set<Point2i>) item.getBaseOutputs();
 
         // Create the pixmap to draw onto
         Pixmap itemPix = createPixmap(item);

@@ -10,7 +10,6 @@ public class ProjectileSpeedItem extends GenericProjectileModifier {
         projectileSpeedMultiplier = 1f + (float)(0.1 * itemSize.getStatMultiplier());
         dropRate = 0.5f * itemSize.getDropRate();
         name = "P. Speed";
-        setBasePositions();
         isProjectileModifier = true;
     }
 

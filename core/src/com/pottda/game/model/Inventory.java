@@ -2,7 +2,9 @@ package com.pottda.game.model;
 
 import javax.vecmath.Point2i;
 import javax.vecmath.Vector2f;
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * An Inventory, containing {@link Item}.
@@ -25,6 +27,7 @@ public class Inventory {
         inventoryChangeListeners = new ArrayList<InventoryChangeListener>();
         items = new HashSet<Item>();
         positionMap = new TreeMap<Integer, Item>();
+        overlapPoint = new HashMap<Point2i, Item>();
     }
 
     //Starting points, set when compile() is called
@@ -35,6 +38,7 @@ public class Inventory {
 
     // Set to true in compile() if there are overlap between items
     private boolean overlap;
+    private Map<Point2i, Item> overlapPoint;
     // Set to true if an item's position is outside the item range ( p < 0 || p > width || p > height)
     private boolean outOfBounds;
 
@@ -48,15 +52,20 @@ public class Inventory {
         // Map out all the positions of the items
         positionMap.clear();
         overlap = false;
+        outOfBounds = false;
+        overlapPoint.clear();
         for (Item item : items) {
             for (Point2i point : item.getTransformedRotatedPositions()) {
-                if (point.x < 0 || point.y < 0) {
+                if (point.x < 0 || point.y < 0 || point.x >= width || point.y >= height) {
                     outOfBounds = true;
+                    continue;
                 }
                 int n = point.x + point.y * width;
-                if ((positionMap.put(n, item)) != null) {
+                if (positionMap.containsKey(n)) {
+                    overlapPoint.put(point, positionMap.get(n));
                     overlap = true;
                 }
+                positionMap.put(n,item);
             }
         }
 
@@ -68,7 +77,7 @@ public class Inventory {
             }
             // Map each output to an Item or null
             item.outputItems.clear();
-            List<Point2i> outputs = item.getTransformedRotatedOutputs();
+            Set<Point2i> outputs = (Set<Point2i>) item.getTransformedRotatedOutputs();
             for (Point2i point : outputs) {
                 int n = point.x + point.y * width;
                 item.outputItems.add(positionMap.get(n));
