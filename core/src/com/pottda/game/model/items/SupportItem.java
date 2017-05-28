@@ -1,5 +1,7 @@
 package com.pottda.game.model.items;
 
+import com.pottda.game.model.Item;
+
 import javax.vecmath.Point2i;
 
 public abstract class SupportItem extends SizedItem {
@@ -26,5 +28,10 @@ public abstract class SupportItem extends SizedItem {
             case MINOR:
                 basePositions.add(new Point2i(0, 0));
         }
+    }
+
+    @Override
+    protected Item getNext(){
+        return null;
     }
 }
