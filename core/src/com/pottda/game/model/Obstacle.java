@@ -3,10 +3,16 @@ package com.pottda.game.model;
 import javax.vecmath.Tuple2f;
 
 public class Obstacle extends ModelActor {
-    private Tuple2f size;
-    private Boolean isRound;
+    public Tuple2f size;
+    public Boolean isRound;
+
 
     public Obstacle() {
+    }
+
+    @Override
+    public void update(float delta) {
+
     }
 
     public Tuple2f getSize() {

@@ -79,7 +79,7 @@ public class ModelState implements DeathListener, NewModelListener {
     }
 
     public void expandPlayerInventory() {
-        Inventory playerInventory = player.inventory;
+        Inventory playerInventory = player.getInventory();
         playerInventory.setDimensions(Math.min(MAX_INVENTORY_WIDTH, playerInventory.getWidth() + 1),
                 Math.min(MAX_INVENTORY_HEIGHT, playerInventory.getHeight() + 1));
     }

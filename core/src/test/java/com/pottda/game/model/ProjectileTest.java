@@ -16,6 +16,7 @@ public class ProjectileTest {
     private final PhysicsActorFactory paf = new PhysicsActorFactory() {
         final PhysicsActor pa = new PhysicsActor() {
             Vector2f position = new Vector2f();
+
             @Override
             public Vector2f getPosition() {
                 return position;
@@ -36,6 +37,7 @@ public class ProjectileTest {
                 this.position = position;
             }
         };
+
         @Override
         public PhysicsActor getProjectilePhysicsActor(Projectile projectile) {
             return pa;
@@ -52,6 +54,7 @@ public class ProjectileTest {
         }
     };
     private Projectile projectile;
+
     @Before
     public void setUp() throws Exception {
         AbstractModelBuilder.setPhysiscActorFactory(paf);
@@ -71,7 +74,7 @@ public class ProjectileTest {
         // Check if giveInput works in the eight main directions
         for (int x = -1; x < 2; x++) {
             for (int y = -1; y < 2; y++) {
-                if(x != 0 || y!= 0) {
+                if (x != 0 || y != 0) {
                     movementVector.set(x, y);
                     movementVector.normalize();
 
@@ -92,7 +95,7 @@ public class ProjectileTest {
         // Check if getAngle works for movements in the eight main directions
         for (int x = -1; x < 2; x++) {
             for (int y = -1; y < 2; y++) {
-                if(x != 0 || y!= 0) {
+                if (x != 0 || y != 0) {
                     movementVector.set(x, y);
                     movementVector.normalize();
 
@@ -133,9 +136,8 @@ public class ProjectileTest {
 
     @Test
     public void isDying() throws Exception {
-        long lifeTime = 100;
-        projectile.setLifeTimeMS(lifeTime);
-        TimeUnit.MILLISECONDS.sleep(lifeTime + 5);
+        projectile.setLifeTimeMS(100);
+        projectile.update(0.11f);
         projectile.giveInput(new Vector2f(), new Vector2f());
 
         assertTrue(projectile.isShouldBeRemoved());

@@ -96,6 +96,8 @@ public abstract class ModelActor {
         this.shouldBeRemoved = shouldBeRemoved;
     }
 
+    public abstract void update(float delta);
+
     public enum Behaviour {
         NONE,
         DUMB,

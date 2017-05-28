@@ -38,17 +38,17 @@ public class ControllerManager implements NewControllerListener {
 
     }
 
-    public void updateControllers() {
+    public void update(float delta) {
         addNewActors();
 
-        updateActors();
+        updateActors(delta);
 
         removeDeadActors();
     }
 
-    private void updateActors() {
+    private void updateActors(float delta) {
         for (AbstractController c : controllers) {
-            c.onNewFrame();
+            c.update(delta);
         }
     }
 
@@ -84,9 +84,9 @@ public class ControllerManager implements NewControllerListener {
     }
 
     public void clearProjectiles() {
-        for (AbstractController c: controllers) {
+        for (AbstractController c : controllers) {
             if (c.getModel() instanceof Projectile) {
-                if (c.getModel().team == 1)
+                if (c.getModel().getTeam() == ModelActor.ENEMY_TEAM)
                     c.setShouldBeRemoved(true);
             }
         }

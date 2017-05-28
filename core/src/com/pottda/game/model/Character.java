@@ -60,6 +60,13 @@ public class Character extends ModelActor implements InventoryChangeListener {
         }
     }
 
+    @Override
+    public void update(float delta) {
+        for (AttackItem i : inventory.attackItems) {
+            i.decreaseCooldown(delta);
+        }
+    }
+
     private void attack(Vector2f direction) {
         inventory.attack(direction, getPosition(), getTeam());
     }
