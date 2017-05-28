@@ -26,7 +26,7 @@ public class InventoryManagementScreen extends AbstractMenuScreen {
         create(inventory, storage);
     }
 
-    private void create(Inventory inventory, Storage storage) {
+    private void create(Inventory inventory, final Storage storage) {
 
         stage = new Stage(new StretchViewport(WIDTH_VIEWPORT, HEIGHT_VIEWPORT));
 
@@ -43,6 +43,7 @@ public class InventoryManagementScreen extends AbstractMenuScreen {
             @Override
             public void clicked(InputEvent evt, float x, float y) {
                 switchScreen(parentScreen);
+                storage.unflagNewItems();
                 dispose();
             }
         });
