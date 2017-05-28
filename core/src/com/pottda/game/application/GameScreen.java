@@ -21,7 +21,11 @@ import com.pottda.game.model.builders.ObstacleBuilder;
 import com.pottda.game.physicsBox2D.Box2DPhysicsActorFactory;
 import com.pottda.game.physicsBox2D.CollisionListener;
 
+import javax.vecmath.Tuple2f;
 import javax.vecmath.Vector2f;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.pottda.game.model.Constants.*;
 
@@ -31,6 +35,8 @@ class GameScreen extends AbstractScreen {
     private static final float OBSTACLE_MIN_RADIUS = 0.5f;
     private static final float SCALING = 2f;
     private static final long WAITING_TIME_GAME_OVER_SECONDS = 3;
+    private static final int MAX_ITERATIONS = 1000;
+    private static final float OBSTACLE_OFFSET = 1f;
 
     private OrthographicCamera camera;
 
@@ -120,7 +126,7 @@ class GameScreen extends AbstractScreen {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
-        backgroundStage.getCamera().position.set(new Vector2(camera.position.x / 2 / WIDTH_RATIO, camera.position.y / 2 / HEIGHT_RATIO),0);
+        backgroundStage.getCamera().position.set(new Vector2(camera.position.x / 2 / WIDTH_RATIO, camera.position.y / 2 / HEIGHT_RATIO), 0);
         backgroundStage.draw();
         gameStage.draw();
         if (modelState.droppedItems.size() > 0) {
@@ -184,16 +190,45 @@ class GameScreen extends AbstractScreen {
         float xx;
         float yy;
         float r;
-        for (int i = 0; i < OBSTACLE_AMOUNT; i++) {
-            xx = (float) Math.random() * WIDTH_METERS;
-            yy = (float) Math.random() * HEIGHT_METERS;
-            r = (float) (Math.random() * (OBSTACLE_MAX_RADIUS - OBSTACLE_MIN_RADIUS)) + OBSTACLE_MIN_RADIUS;
+        List<Vector2f> obstaclePositions = new ArrayList<Vector2f>();
+        Boolean arenaFull = false;
+        for (int i = 0; i < OBSTACLE_AMOUNT && !arenaFull; i++) {
+            Boolean legalPlacement;
+            int iterationCounter = 0;
+            do {
+                xx = (float) (Math.random() * (WIDTH_METERS - 2 * (OBSTACLE_OFFSET + OBSTACLE_MAX_RADIUS))) + OBSTACLE_OFFSET + OBSTACLE_MAX_RADIUS;
+                yy = (float) (Math.random() * (HEIGHT_METERS - 2 * (OBSTACLE_OFFSET + OBSTACLE_MAX_RADIUS))) + OBSTACLE_OFFSET + OBSTACLE_MAX_RADIUS;
+                r = (float) (Math.random() * (OBSTACLE_MAX_RADIUS - OBSTACLE_MIN_RADIUS)) + OBSTACLE_MIN_RADIUS;
 
-            new ObstacleBuilder().
-                    setRadius(r).
-                    setPosition(new Vector2f(xx, yy)).
-                    setSprite(Sprites.BORDER).
-                    create();
+                Vector2f position = new Vector2f();
+                legalPlacement = true;
+
+                if (obstaclePositions.size() > 0) {
+                    for (Tuple2f pos : obstaclePositions) {
+                        position.set(xx, yy);
+                        position.sub(pos);
+                        if (position.length() < 2 * OBSTACLE_MAX_RADIUS + OBSTACLE_OFFSET) {
+                            legalPlacement = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (legalPlacement) {
+                    position.set(xx, yy);
+                    obstaclePositions.add(position);
+                }
+            } while (!legalPlacement && iterationCounter++ < MAX_ITERATIONS);
+
+            if (iterationCounter <= MAX_ITERATIONS && legalPlacement) {
+                new ObstacleBuilder().
+                        setRadius(r).
+                        setPosition(new Vector2f(xx, yy)).
+                        setSprite(Sprites.BORDER).
+                        create();
+            } else {
+                arenaFull = true;
+            }
         }
     }
 
