@@ -7,7 +7,7 @@ public class SoundsAndMusic {
     private static Music music;
 
     /**
-     *  Plays the current music track
+     * Plays the current music track
      */
     public static void play() {
         if (music == null) {
@@ -25,7 +25,7 @@ public class SoundsAndMusic {
     }
 
     /**
-     *  Pauses the music if playing
+     * Pauses the music if playing
      */
     public static void pauseMusic() {
         if (music == null) {
