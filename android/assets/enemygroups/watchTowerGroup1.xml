@@ -1,4 +1,4 @@
 <enemygroup name="WatchTowerGroup1">
-    <difficulty>4</difficulty>
+    <difficulty>7</difficulty>
     <enemy>Fortress</enemy>
 </enemygroup>
