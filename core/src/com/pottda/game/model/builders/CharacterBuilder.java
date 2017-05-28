@@ -29,6 +29,8 @@ public class CharacterBuilder extends AbstractModelBuilder implements ICharacter
 
         inventory.compile();
 
+        character.inventoryChanged();
+
         character.setPhysicsActor(physiscActorFactory.getCharacterPhysicsActor(character));
 
         character.behaviour = behaviour;
