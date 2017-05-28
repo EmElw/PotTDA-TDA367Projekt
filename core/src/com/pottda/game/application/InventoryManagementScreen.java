@@ -12,9 +12,9 @@ import com.pottda.game.model.Inventory;
 import com.pottda.game.model.Storage;
 import com.pottda.game.view.InventoryManagementView;
 
+import static com.pottda.game.assets.Constants.HEIGHT_VIEWPORT;
 import static com.pottda.game.assets.Constants.SKIN_QH;
-import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
-import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
+import static com.pottda.game.assets.Constants.WIDTH_VIEWPORT;
 
 class InventoryManagementScreen extends AbstractMenuScreen {
 

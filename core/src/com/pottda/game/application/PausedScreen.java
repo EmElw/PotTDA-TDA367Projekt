@@ -16,8 +16,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pottda.game.view.SoundsAndMusic;
 
 import static com.pottda.game.assets.Constants.*;
-import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
-import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
 
 class PausedScreen extends AbstractMenuScreen {
 

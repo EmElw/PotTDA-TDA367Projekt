@@ -32,7 +32,12 @@ import javax.vecmath.Vector2f;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.pottda.game.model.Constants.*;
+import static com.pottda.game.assets.Constants.HEIGHT_METERS;
+import static com.pottda.game.assets.Constants.HEIGHT_RATIO;
+import static com.pottda.game.assets.Constants.HEIGHT_VIEWPORT;
+import static com.pottda.game.assets.Constants.WIDTH_METERS;
+import static com.pottda.game.assets.Constants.WIDTH_RATIO;
+import static com.pottda.game.assets.Constants.WIDTH_VIEWPORT;
 
 class GameScreen extends AbstractScreen {
     private static final int OBSTACLE_AMOUNT = 10;

@@ -3,7 +3,7 @@ package com.pottda.game.view;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.pottda.game.model.Constants;
+import com.pottda.game.assets.Constants;
 
 import javax.vecmath.Vector2f;
 

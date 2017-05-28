@@ -18,9 +18,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.pottda.game.controller.ControllerOptions;
 import com.pottda.game.view.SoundsAndMusic;
 
+import static com.pottda.game.assets.Constants.HEIGHT_VIEWPORT;
 import static com.pottda.game.assets.Constants.SKIN_QH;
-import static com.pottda.game.model.Constants.HEIGHT_VIEWPORT;
-import static com.pottda.game.model.Constants.WIDTH_VIEWPORT;
+import static com.pottda.game.assets.Constants.WIDTH_VIEWPORT;
 
 class MenuScreen extends AbstractMenuScreen {
 

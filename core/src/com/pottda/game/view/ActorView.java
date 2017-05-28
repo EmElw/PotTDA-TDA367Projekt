@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.pottda.game.model.Constants;
+import com.pottda.game.assets.Constants;
 import com.pottda.game.assets.Sprites;
 
 import javax.vecmath.Vector2f;
