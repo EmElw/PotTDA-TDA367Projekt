@@ -142,18 +142,19 @@ public class InventoryManagementView {
     public void updateStorageTable(Storage storage) {
         if (storageSuperTable != null)
             storageSuperTable.clearChildren();
-        for (String s : storage.getItems()) {
+        for (String name : storage.getItems()) {
             try {
-                addToStorageTable(storage.getNrOf(s), storage.getItem(s));
+                addToStorageTable(storage.getNrOf(name), storage.getItem(name), storage.isNewItemInStorage(name));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private void addToStorageTable(int itemCount, final Item item) {
+    private void addToStorageTable(int itemCount, final Item item, boolean isNew) {
         // Create a table to hold name + image
-        Button storageTable = new Button(mySkin);
+
+        Button storageTable = new Button(mySkin, isNew ? "new-item" : "default");
         final StorageImage storageImage = new StorageImage(item);
         Stack storageStack = new Stack();
         Image itemImage;
@@ -166,6 +167,13 @@ public class InventoryManagementView {
         itemNameLabel.setFontScale(0.75f, 0.75f);
         internalItemGroupTable.add(itemNameLabel).left();
         internalItemGroupTable.row();
+
+        // Label holds if it's a new item
+        if (isNew) {
+            Label isNewLabel = new Label("NEW", mySkin, "title");
+            isNewLabel.setFontScale(1, 1);
+            internalItemGroupTable.add(isNewLabel).left();
+        }
 
         // Label holds item count
         Label itemCountLabel = new Label("#" + itemCount, mySkin);
@@ -311,10 +319,10 @@ public class InventoryManagementView {
         private final Label itemNameLabel;
         private final ImageButton rotateRightButton = new ImageButton(rotateRightButtonDrawable);
 
+        private final ImageButton storeButton = new ImageButton(storeButtonDrawable);
         private final ImageButton rotateLeftButton = new ImageButton(rotateLeftButtonDrawable);
         private final ImageButton acceptButton = new ImageButton(acceptButtonDrawable);
         private final ImageButton discardButton = new ImageButton(discardButtonDrawable);
-        private ImageButton storeButton = new ImageButton(storeButtonDrawable);
         private final Item workingItem;
         private final Image itemImage;
 
@@ -355,7 +363,7 @@ public class InventoryManagementView {
 
             if (!isFromStorage) {
                 storeButton.setSize(SIZE, SIZE);
-                storeButton.setPosition(getWidth()/2 - storeButton.getWidth()/2, getHeight());
+                storeButton.setPosition(getWidth() / 2 - storeButton.getWidth() / 2, getHeight());
                 addActor(storeButton);
             }
 
@@ -419,8 +427,8 @@ public class InventoryManagementView {
                     float pxY = getY() + y - yOffset;
 
                     newPoint.set(   // Magical expression to convert and clamp within inventory
-                            Math.min(Math.max(Math.round(pxX / SIZE), 0), inventory.getWidth()-1),
-                            Math.min(Math.max(Math.round(pxY / SIZE), 0), inventory.getHeight()-1));
+                            Math.min(Math.max(Math.round(pxX / SIZE), 0), inventory.getWidth() - 1),
+                            Math.min(Math.max(Math.round(pxY / SIZE), 0), inventory.getHeight() - 1));
 
                     if (!inventoryPosition.equals(newPoint)) {
                         inventoryPosition.set(newPoint);

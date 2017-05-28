@@ -159,10 +159,14 @@ class GameScreen extends AbstractScreen {
 
     @Override
     public void dispose() {
-        gameStage.dispose();
-        backgroundStage.dispose();
-        hudStage.dispose();
-        SoundsAndMusic.dispose();
+        try {
+            gameStage.dispose();
+            backgroundStage.dispose();
+            hudStage.dispose();
+            SoundsAndMusic.dispose();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

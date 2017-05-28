@@ -99,6 +99,18 @@ public class Storage {
         listeners.remove(storageChangeListener);
     }
 
+    public void unflagNewItems() {
+        for (ItemStorage im : storageMap.values()) {
+            im.setNew(false);
+        }
+    }
+
+    public boolean isNewItemInStorage(String itemName) {
+        if(storageMap.containsKey(itemName))
+            return storageMap.get(itemName).isNew;
+        return false;
+    }
+
     public void addItems(Collection<Item> items) {
         for (Item item : items) {
             if (storageMap.containsKey(item.getName())) {

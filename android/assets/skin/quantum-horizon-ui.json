@@ -62,11 +62,27 @@
       b: 0.7176471
       a: 0
     }
+    color-new: {
+      r: 1
+      g: 0.2
+      b: 0.2
+      a: 1
+    }
+    pressed-new: {
+      r: 0.5
+      g: 0.1
+      b: 0.1
+      a: 1
+    }
   }
   com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
     button-c: {
       name: button
       color: color
+    }
+    button-c-new: {
+      name: button
+      color: color-new
     }
     globe-c_1: {
       name: globe_1
@@ -164,13 +180,25 @@
       name: button-pressed
       color: color
     }
+    button-over-c-new: {
+      name: button-pressed
+      color: color-new
+    }
     button-over-pressed-c: {
       name: button-pressed
       color: pressed
     }
+    button-over-pressed-c-new: {
+      name: button-pressed
+      color: color-new
+    }
     button-pressed-c: {
       name: button
       color: pressed
+    }
+    button-pressed-c-new: {
+      name: button
+      color: pressed-new
     }
     clear: {
       name: white
@@ -279,6 +307,11 @@
       up: button-c
       down: button-over-pressed-c
       over: button-over-c
+    }
+    new-item: {
+      up: button-c-new
+      down: button-over-pressed-c-new
+      over: button-over-c-new
     }
     toggle: {
       up: button-c
