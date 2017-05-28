@@ -46,8 +46,8 @@ class DumbAIController extends AIController {
      */
     @Override
     public void setInputVectors() {
-        if (Character.player != null && Character.player.getPosition() != null) {
-            movementVector.set(Character.player.getPosition());
+        if (Character.getPlayer() != null && Character.getPlayer().getPosition() != null) {
+            movementVector.set(Character.getPlayer().getPosition());
             movementVector.sub(modelActor.getPosition());
 
             attackVector.set(movementVector);
