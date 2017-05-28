@@ -6,7 +6,7 @@ public class HealthItem extends SupportItem{
     @Override
     protected void initDynamic() {
         statMap.put(Stat.HEALTH, 50.0 * itemSize.getStatMultiplier());
-        dropRate = 0.75f * itemSize.getDropRate();
+        dropRate = 0.5f * itemSize.getDropRate();
         name = "Health";
         setBasePositions();
     }
