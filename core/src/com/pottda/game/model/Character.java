@@ -96,21 +96,19 @@ public class Character extends ModelActor implements InventoryChangeListener {
 
     @Override
     public void inventoryChanged() {
-        double healthFraction = 1;
+        int missingHealth = 0;
         // Check the missing health if currentHealth is bigger than zero
         if (currentHealth > 0) {
-            int health;
-            if ((health = stats.get(HEALTH).intValue()) == 0) {
-                healthFraction = 0;
-            } else {
-                healthFraction = currentHealth / health;
+            int health = stats.get(HEALTH).intValue();
+            if (health > 0) {
+                missingHealth = health - currentHealth;
             }
         }
 
         updateStats();
 
         // Assign further as necessary
-        currentHealth = (int) Math.max(Math.round(stats.get(Stat.HEALTH) * healthFraction), 1);
+        currentHealth = (int) Math.max(Math.round(stats.get(Stat.HEALTH) - missingHealth), 1);
     }
 
     private void updateStats() {
