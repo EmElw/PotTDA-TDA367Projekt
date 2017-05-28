@@ -120,6 +120,7 @@ class GameScreen extends AbstractScreen {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
+        backgroundStage.getCamera().position.set(new Vector2(camera.position.x / 2 / WIDTH_RATIO, camera.position.y / 2 / HEIGHT_RATIO),0);
         backgroundStage.draw();
         gameStage.draw();
         if (modelState.droppedItems.size() > 0) {
