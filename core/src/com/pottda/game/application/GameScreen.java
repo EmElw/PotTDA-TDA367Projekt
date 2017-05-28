@@ -24,6 +24,7 @@ import com.pottda.game.model.items.ChainAttack;
 import com.pottda.game.model.items.MultiShot;
 import com.pottda.game.physicsBox2D.Box2DPhysicsActorFactory;
 import com.pottda.game.physicsBox2D.CollisionListener;
+import com.pottda.game.view.SoundsAndMusic;
 
 import javax.vecmath.Vector2f;
 
@@ -79,6 +80,8 @@ class GameScreen extends AbstractScreen {
         AbstractModelBuilder.addListener(modelState);
 
         waveManager = new WaveManager();
+
+        SoundsAndMusic.play();
 
         createPlayer();
 
@@ -150,6 +153,7 @@ class GameScreen extends AbstractScreen {
         gameStage.dispose();
         backgroundStage.dispose();
         hudStage.dispose();
+        SoundsAndMusic.dispose();
     }
 
     @Override
