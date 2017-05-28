@@ -27,7 +27,7 @@ public class Character extends ModelActor implements InventoryChangeListener {
     private final Map<Stat, Double> stats;
     private final Vector2f movementVector;
 
-    public static Character player;
+    private static Character player;
 
     private List<DeathListener> deathListeners;
     private int scoreValue;
@@ -137,5 +137,13 @@ public class Character extends ModelActor implements InventoryChangeListener {
 
     public void setScoreValue(int scoreValue) {
         this.scoreValue = scoreValue;
+    }
+
+    public static Character getPlayer() {
+        return player;
+    }
+
+    public static void setPlayer(Character playerCharacter) {
+        player = playerCharacter;
     }
 }

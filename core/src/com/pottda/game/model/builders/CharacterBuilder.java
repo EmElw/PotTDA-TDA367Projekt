@@ -21,7 +21,7 @@ public class CharacterBuilder extends AbstractModelBuilder implements ICharacter
 
         character.team = team;
         if (team == Character.PLAYER_TEAM) {
-            Character.player = character;
+            Character.setPlayer(character);
         }
         character.inventory = inventory;
 
