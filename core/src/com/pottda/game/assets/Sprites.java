@@ -1,4 +1,4 @@
-package com.pottda.game.model;
+package com.pottda.game.assets;
 
 public enum Sprites {
     PLAYER("charactersprites/player.png"),

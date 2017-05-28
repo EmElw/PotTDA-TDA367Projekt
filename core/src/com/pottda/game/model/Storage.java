@@ -4,12 +4,12 @@ import java.util.*;
 
 public class Storage {
 
-    private List<StorageChangeListener> listeners;
+    private final List<StorageChangeListener> listeners;
 
     /**
      * A map with a String key (for the name of the item to be added) and an ItemStorage
      */
-    private Map<String, ItemStorage> storageMap;
+    private final Map<String, ItemStorage> storageMap;
 
 
     /**
@@ -129,7 +129,7 @@ public class Storage {
         /**
          * A list to store items of a certain name
          */
-        private List<Item> items = new ArrayList<Item>();
+        private final List<Item> items = new ArrayList<Item>();
 
         /**
          * Boolean used to check if the item is a new addition to storage
@@ -139,7 +139,7 @@ public class Storage {
         /**
          * String to check what kind of item it is (its name)
          */
-        private String type;
+        private final String type;
 
         /**
          * Constructor, creates an ItemStorage from an item

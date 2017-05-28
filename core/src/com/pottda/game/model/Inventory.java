@@ -2,7 +2,7 @@ package com.pottda.game.model;
 
 import javax.vecmath.Point2i;
 import javax.vecmath.Vector2f;
-import java.awt.*;
+
 import java.util.*;
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class Inventory {
 
     // Set to true in compile() if there are overlap between items
     private boolean overlap;
-    private Map<Point2i, Item> overlapPoint;
+    private final Map<Point2i, Item> overlapPoint;
     // Set to true if an item's position is outside the item range ( p < 0 || p > width || p > height)
     private boolean outOfBounds;
 
