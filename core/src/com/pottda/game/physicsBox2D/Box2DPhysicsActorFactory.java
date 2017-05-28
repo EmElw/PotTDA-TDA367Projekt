@@ -56,14 +56,14 @@ public class Box2DPhysicsActorFactory implements PhysicsActorFactory{
 
     @Override
     public PhysicsActor getProjectilePhysicsActor(Projectile projectile) {
-        if (projectile.isBouncy) {
+        if (projectile.isBouncy()) {
             projectileFixtureDef.restitution = PROJECTILE_BOUNCINESS_BOUNCY;
         } else {
             projectileFixtureDef.restitution = PROJECTILE_BOUNCINESS_DEFAULT;
         }
 
         // Determine collision filtering
-        if (projectile.isPiercing) {
+        if (projectile.isPiercing()) {
             projectileFixtureDef.filter.categoryBits = PROJECTILE_PIERCING_FILTER.categoryBits;
             projectileFixtureDef.filter.maskBits = PROJECTILE_PIERCING_FILTER.maskBits;
         } else if (projectile.getTeam() == ENEMY_TEAM) {

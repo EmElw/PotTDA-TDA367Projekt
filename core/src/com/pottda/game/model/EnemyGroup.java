@@ -21,7 +21,7 @@ public class EnemyGroup {
      * @param xmlGroup a {@link XMLEnemyGroup}
      */
     public static void newGroup(XMLEnemyGroup xmlGroup) {
-        int difficulty = xmlGroup.difficulty;
+        int difficulty = xmlGroup.getDifficulty();
         EnemyGroup group = new EnemyGroup(xmlGroup);
 
         if (groups.containsKey(difficulty)) {
@@ -75,13 +75,13 @@ public class EnemyGroup {
      * @param xmlEnemyGroup an {@link XMLEnemyGroup}
      */
     private EnemyGroup(XMLEnemyGroup xmlEnemyGroup) {
-        this.difficulty = xmlEnemyGroup.difficulty;
+        this.difficulty = xmlEnemyGroup.getDifficulty();
         this.enemies = new ArrayList<EnemyBlueprint>();
 
         for (String s : xmlEnemyGroup.enemies) {
             enemies.add(EnemyBlueprint.getBlueprint(s));
         }
-        name = xmlEnemyGroup.name;
+        name = xmlEnemyGroup.getName();
     }
 
     /**

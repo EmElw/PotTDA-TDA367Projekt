@@ -96,10 +96,10 @@ public class BuilderTest {
                 create();
 
         // Test the fiddled projectile
-        assertEquals(true, projA.isBouncy);
-        assertEquals(true, projA.isPiercing);
+        assertEquals(true, projA.isBouncy());
+        assertEquals(true, projA.isPiercing());
         assertEquals(10, projA.damage);
-        assertEquals(50, projA.lifeTimeMS);
+        assertEquals(50, projA.getLifeTimeMS());
         assertEquals(ENEMYPROJECTILE, projA.getSprite());
         assertEquals(0, projA.getListeners().size());
 

@@ -134,7 +134,7 @@ public class ProjectileTest {
     @Test
     public void isDying() throws Exception {
         long lifeTime = 100;
-        projectile.lifeTimeMS = lifeTime;
+        projectile.setLifeTimeMS(lifeTime);
         TimeUnit.MILLISECONDS.sleep(lifeTime + 5);
         projectile.giveInput(new Vector2f(), new Vector2f());
 
