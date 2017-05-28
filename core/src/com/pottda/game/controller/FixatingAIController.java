@@ -25,7 +25,7 @@ public class FixatingAIController extends AIController {
 
     @Override
     protected void setInputVectors() {
-        if(Character.getPlayer() != null && Character.getPlayer().getPosition() != null) {
+        if (Character.getPlayer() != null && Character.getPlayer().getPosition() != null) {
             movementVector.set(getMovementVector());
             attackVector.set(Character.getPlayer().getPosition());
             attackVector.sub(modelActor.getPosition());
@@ -36,14 +36,14 @@ public class FixatingAIController extends AIController {
         }
     }
 
-    private Vector2f getMovementVector(){
+    private Vector2f getMovementVector() {
         Vector2f temp = new Vector2f(fixationPoint);
         temp.sub(modelActor.getPosition());
         float currentDistanceToFixationPoint = temp.length();
 
-        if(currentDistanceToFixationPoint < 0
-                || Math.abs(currentDistanceToFixationPoint - lastDistanceToFixationPoint) < 0.0001
-                || lastDistanceToFixationPoint == 0f){
+        if (currentDistanceToFixationPoint < 0
+                || Math.abs(currentDistanceToFixationPoint - lastDistanceToFixationPoint) < 0.000001
+                || lastDistanceToFixationPoint == 0f) {
             fixationPoint = getNewFixationPoint();
         }
 
@@ -54,7 +54,7 @@ public class FixatingAIController extends AIController {
         return temp;
     }
 
-    private Vector2f getNewFixationPoint(){
+    private Vector2f getNewFixationPoint() {
         float r = (float) Math.random() * MAX_FIXATION_POINT_DISTANCE_FROM_PLAYER;
         float rad = (float) (Math.random() * Math.PI * 2);
 
