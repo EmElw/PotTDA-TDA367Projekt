@@ -3,6 +3,6 @@
     <item name="EnemySimpleCannon" x="0" y="4" orientation="0"/>
     <sizedItem name="DamageItem" x="2" y="3" orientation="0" size="2"/>
     <sizedItem name="ProjectileSpeedItem" x="4" y="3" orientation="0" size="2"/>
-    <sizedItem name="HealthItem" x="0" y="0" orientation="0" size="2"/>
-    <sizedItem name="HealthItem" x="2" y="0" orientation="0" size="2"/>
+    <sizedItem name="HealthItem" x="0" y="0" orientation="0" size="1"/>
+    <sizedItem name="HealthItem" x="2" y="0" orientation="0" size="1"/>
 </inventory>

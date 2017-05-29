@@ -2,7 +2,7 @@
 <enemy>
     <name>BounceCannon</name>
     <scorevalue>30</scorevalue>
-    <difficulty>3</difficulty>
+    <difficulty>4</difficulty>
     <behaviour>FIXATING</behaviour>
     <inventoryname>bounceCannonInventory.xml</inventoryname>
     <spriteenum>BOUNCE_CANNON</spriteenum>

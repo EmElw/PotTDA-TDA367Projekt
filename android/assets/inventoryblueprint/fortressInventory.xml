@@ -6,4 +6,5 @@
     <sizedItem name="DamageItem" x="2" y="0" orientation="0" size="2"/>
     <sizedItem name="HealthItem" x="4" y="0" orientation="0" size="2"/>
     <sizedItem name="HealthItem" x="6" y="0" orientation="0" size="2"/>
+    <sizedItem name="HealthItem" x="8" y="0" orientation="0" size="2"/>
 </inventory>

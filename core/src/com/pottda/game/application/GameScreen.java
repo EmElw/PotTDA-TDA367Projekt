@@ -272,7 +272,7 @@ class GameScreen extends AbstractScreen {
     private void createPlayer() {
         new CharacterBuilder().
                 setTeam(Character.PLAYER_TEAM).
-                setInventoryFromFile("sizedItemTestInv.xml").
+                setInventoryFromFile("playerStartInventory.xml").
                 setBehaviour(ModelActor.Behaviour.NONE).
                 setPosition(new Vector2f(WIDTH_METERS / 2, HEIGHT_METERS / 2)).
                 setSprite(com.pottda.game.assets.Sprites.PLAYER).
