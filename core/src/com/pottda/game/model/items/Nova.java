@@ -3,6 +3,7 @@ package com.pottda.game.model.items;
 import com.pottda.game.model.Item;
 import com.pottda.game.model.Projectile;
 import com.pottda.game.model.builders.ProjectileBuilder;
+import com.sun.org.apache.xpath.internal.operations.Mult;
 
 import javax.vecmath.Point2i;
 import javax.vecmath.Vector2f;
@@ -13,7 +14,7 @@ import javax.vecmath.Vector2f;
  * It creates copies at in a fan-pattern
  */
 public class Nova extends Item {
-    private final static float RAD_SPREAD = (float)(2*Math.PI);
+    private final static double RAD_SPREAD = 2*Math.PI;
     private final Vector2f temporaryVector = new Vector2f();
 
     private int additionalProjectiles;
@@ -43,7 +44,7 @@ public class Nova extends Item {
 
         baseOutputs.add(new Point2i(2, 0));
 
-        additionalProjectiles = 4;
+        additionalProjectiles = 3;
     }
 
     @Override
@@ -57,8 +58,8 @@ public class Nova extends Item {
          */
 
         int sumAdditionalProjectiles = 0;
-        int hasMultiShot = 0;
-        float totalSpreadRad = RAD_SPREAD;
+        int count = 0;
+        double totalSpreadRad = RAD_SPREAD;
 
         /*
          Get all the Nova listeners of the projectile
@@ -72,10 +73,15 @@ public class Nova extends Item {
             if (p.getListeners().get(i) instanceof Nova) {
                 p.ignoreListener(i);
                 sumAdditionalProjectiles += ((Nova) p.getListeners().get(i)).additionalProjectiles;
+                count++;
+            }
+            if (p.getListeners().get(i) instanceof MultiShot) {
+                p.ignoreListener(i);
+                sumAdditionalProjectiles += 2;
             }
         }
 
-        totalSpreadRad /= sumAdditionalProjectiles;
+        totalSpreadRad = totalSpreadRad/(sumAdditionalProjectiles + count);
 
 
         Vector2f position = p.getPosition();
@@ -85,8 +91,8 @@ public class Nova extends Item {
         Create thew new projectiles, set their appropriate direction
         and call their onAttack()
          */
-        for (int i = 0; i < sumAdditionalProjectiles; i++) {
-            double newDir = direction - totalSpreadRad * sumAdditionalProjectiles / 2
+        for (int i = 0; i < (sumAdditionalProjectiles+count); i++) {
+            double newDir = direction - totalSpreadRad * (sumAdditionalProjectiles+count)
                     + totalSpreadRad * i;
             if (newDir >= direction) {
                 newDir += totalSpreadRad;
