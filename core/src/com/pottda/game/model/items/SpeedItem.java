@@ -12,6 +12,7 @@ public class SpeedItem extends SupportItem {
     protected void setConcreteValues() {
         statMap.put(Stat.ACCEL, 5.0 * itemSize.getStatMultiplier());
         dropRate = 0.5f * itemSize.getDropRate();
+        setColor(0, 100 + ((int) itemSize.getStatMultiplier() * 40), 180);
 
     }
 }

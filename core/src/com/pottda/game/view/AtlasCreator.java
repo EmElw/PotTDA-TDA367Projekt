@@ -55,12 +55,18 @@ public class AtlasCreator {
      */
     private static Texture createTextureForItem(Item item) {
         // Create pixmaps from resources to assemble into the images
-        Pixmap pmBackground = new Pixmap(Gdx.files.internal("positionTest.png"));
         Pixmap pmOut = new Pixmap(Gdx.files.internal("outputTest.png"));
         Pixmap pmLeftPointer = new Pixmap(Gdx.files.internal("leftArrow.png"));
         Pixmap pmRightPointer = new Pixmap(Gdx.files.internal("rightArrow.png"));
         Pixmap pmDownPointer = new Pixmap(Gdx.files.internal("downArrow.png"));
         Pixmap pmUpPointer = new Pixmap(Gdx.files.internal("upArrow.png"));
+
+        Pixmap pmBackground = new Pixmap(SIZE, SIZE, Pixmap.Format.RGBA8888);
+        pmBackground.setColor(item.getColor().getRed(),
+                item.getColor().getGreen(),
+                item.getColor().getBlue(),
+                0.8f);
+        pmBackground.fill();
 
         // Retrieve position data from the item
         Set<Point2i> basePos = (Set<Point2i>) item.getBasePositions();

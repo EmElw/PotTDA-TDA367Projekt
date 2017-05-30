@@ -20,5 +20,6 @@ public class DamageItem extends GenericProjectileModifier {
     protected void setConcreteValues() {
         damage = Math.round(10 * itemSize.getStatMultiplier());
         dropRate = 0.5f * itemSize.getDropRate();
+        setColor((int) (100 + 25 * itemSize.getStatMultiplier()), 40, 40);
     }
 }

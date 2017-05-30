@@ -31,6 +31,7 @@ public class Nova extends Item {
     @Override
     protected void initDynamic() {
         name = "Nova";
+        setColor(100,175,40);
 
         isProjectileModifier = true;
 

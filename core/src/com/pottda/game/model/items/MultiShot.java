@@ -26,6 +26,7 @@ public class MultiShot extends Item {
     @Override
     protected void initDynamic() {
         name = "Multishot";
+        setColor(200, 100, 100);
 
         isProjectileModifier = true;
 

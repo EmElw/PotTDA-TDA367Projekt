@@ -23,6 +23,7 @@ public class Switcher extends Item {
     @Override
     protected void initDynamic() {
         name = "Switcher";
+        setColor(100, 100, 100);
 
         dropRate = 0.1f;
 
