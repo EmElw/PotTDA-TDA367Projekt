@@ -13,5 +13,6 @@ public class HealthItem extends SupportItem {
         statMap.put(Stat.HEALTH, 50.0 * itemSize.getStatMultiplier());
         statMap.put(Stat.ACCEL, -2.5 * itemSize.getStatMultiplier());
         dropRate = 0.5f * itemSize.getDropRate();
+        setColor(40, (int) (100 + 25 * itemSize.getStatMultiplier()), 90);
     }
 }

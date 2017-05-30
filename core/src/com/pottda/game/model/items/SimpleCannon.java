@@ -11,6 +11,7 @@ public class SimpleCannon extends AttackItem {
     @Override
     protected void initDynamic() {
         name = "Simple Cannon";
+        setColor(240, 10, 5);
 
         isPrimaryAttack = true;
 

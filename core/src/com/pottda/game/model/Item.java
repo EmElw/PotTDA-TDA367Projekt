@@ -1,7 +1,9 @@
 package com.pottda.game.model;
 
 import javax.vecmath.Point2i;
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * A basic Item, heavily modifiable based on properties
@@ -50,22 +52,25 @@ public abstract class Item extends ProjectileListenerAdapter {
 
     protected String name;
 
+    private Color color;
+
     // -------------------------------------------------
 
-
     protected Map<Stat, Double> statMap;
+
 
     // Direction of the item in terms of number pi/2 rotations
     private int orientation;
 
     private int x;
+
     private int y;
-
     private boolean changedPositions = true;
-    private  boolean changedOutputs = true;
 
-    private  Set<Point2i> rotatedOutputs;
-    private  Set<Point2i> rotatedPositions;
+    private boolean changedOutputs = true;
+    private Set<Point2i> rotatedOutputs;
+
+    private Set<Point2i> rotatedPositions;
 
     /**
      * Pseudo-constructor, called if instantiated without constructor (probably really bad practice)
@@ -75,6 +80,7 @@ public abstract class Item extends ProjectileListenerAdapter {
         baseOutputs = new HashSet<Point2i>();
         statMap = new EnumMap<Stat, Double>(Stat.class);
         outputItems = new ArrayList<Item>();
+        color = new Color(255, 255, 255);     // Default white
 
         changedPositions = true;
         changedOutputs = true;
@@ -163,7 +169,6 @@ public abstract class Item extends ProjectileListenerAdapter {
         return output;
     }
 
-
     /**
      * Call to randomly determine if this item should be dropped
      *
@@ -173,6 +178,7 @@ public abstract class Item extends ProjectileListenerAdapter {
     boolean drop(float rateMultiplier) {
         return Math.random() < dropRate * rateMultiplier;
     }
+
 
     private Point2i bottomLeft;
 
@@ -230,7 +236,7 @@ public abstract class Item extends ProjectileListenerAdapter {
     private static Point2i rotate(int x, int y, int rotation) {
         Point2i returnValue = new Point2i();
         rotation = rotation % 4;
-        if (rotation < 0){
+        if (rotation < 0) {
             rotation += 4;
         }
         returnValue.x = a[rotation] * x + b[rotation] * y;
@@ -243,11 +249,11 @@ public abstract class Item extends ProjectileListenerAdapter {
      * R = [ a[r] b[r] ; c[r] a[r]]
      */
     private static final int[] a = {1, 0, -1, 0};
+
     private static final int[] b = {0, -1, 0, 1};
     private static final int[] c = {0, 1, 0, -1};
-
-
     // Getters and setters
+
 
     public int getOrientation() {
         return orientation;
@@ -278,5 +284,15 @@ public abstract class Item extends ProjectileListenerAdapter {
 
     public String getName() {
         return name;
+    }
+
+    protected void setColor(int r, int g, int b) {
+        color = new Color(Math.min(r, 255),
+                Math.min(g, 255),
+                Math.min(b, 255));
+    }
+
+    public Color getColor() {
+        return color;
     }
 }

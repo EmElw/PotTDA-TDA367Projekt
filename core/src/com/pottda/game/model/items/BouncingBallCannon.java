@@ -9,6 +9,7 @@ public class BouncingBallCannon extends AttackItem {
     @Override
     protected void initDynamic() {
         name = "Ricochet Cannon";
+        setColor(200,50,89);
         bounces = true;
         isPrimaryAttack = true;
 

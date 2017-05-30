@@ -8,6 +8,7 @@ public class PenetratingCannon extends AttackItem{
     @Override
     protected void initDynamic() {
         name = "Penetrating Cannon";
+        setColor(170,10,40);
 
         isPrimaryAttack = true;
 
