@@ -62,9 +62,9 @@ public class AtlasCreator {
         Pixmap pmUpPointer = new Pixmap(Gdx.files.internal("upArrow.png"));
 
         Pixmap pmBackground = new Pixmap(SIZE, SIZE, Pixmap.Format.RGBA8888);
-        pmBackground.setColor(item.getColor().getRed(),
-                item.getColor().getGreen(),
-                item.getColor().getBlue(),
+        pmBackground.setColor(item.getColor().r,
+                item.getColor().g,
+                item.getColor().b,
                 0.8f);
         pmBackground.fill();
 

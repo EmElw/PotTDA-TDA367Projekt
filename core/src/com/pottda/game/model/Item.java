@@ -1,7 +1,8 @@
 package com.pottda.game.model;
 
+import com.badlogic.gdx.graphics.Color;
+
 import javax.vecmath.Point2i;
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -80,7 +81,7 @@ public abstract class Item extends ProjectileListenerAdapter {
         baseOutputs = new HashSet<Point2i>();
         statMap = new EnumMap<Stat, Double>(Stat.class);
         outputItems = new ArrayList<Item>();
-        color = new Color(255, 255, 255);     // Default white
+        //color = new Color(255, 255, 255);     // Default white
 
         changedPositions = true;
         changedOutputs = true;
@@ -289,7 +290,7 @@ public abstract class Item extends ProjectileListenerAdapter {
     protected void setColor(int r, int g, int b) {
         color = new Color(Math.min(r, 255),
                 Math.min(g, 255),
-                Math.min(b, 255));
+                Math.min(b, 255), 1);
     }
 
     public Color getColor() {
