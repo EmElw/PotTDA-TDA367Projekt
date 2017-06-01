@@ -81,7 +81,7 @@ public abstract class Item extends ProjectileListenerAdapter {
         baseOutputs = new HashSet<Point2i>();
         statMap = new EnumMap<Stat, Double>(Stat.class);
         outputItems = new ArrayList<Item>();
-        //color = new Color(255, 255, 255);     // Default white
+        color = new Color(255, 255, 255, 1);     // Default white
 
         changedPositions = true;
         changedOutputs = true;
